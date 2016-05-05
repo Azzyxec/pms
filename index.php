@@ -11,18 +11,29 @@ require '.\vendor\autoload.php';
 
 //Core require needed for other to work
 require_once __DIR__.'\AppConfig.php';
+
+
+//loading datalayer files
 require_once __DIR__.'\datalayer\DBHelper.php';
+require_once __DIR__.'\datalayer\UserDB.php';
+require_once __DIR__.'\datalayer\DoctorDB.php';
+
+
 use Pms\Datalayer\DBHelper;
+use Pms\Datalayer\UserDB;
+use Pms\Datalayer\DoctorDB;
+
 
 //require once for entites
 require_once __DIR__.'\entities\User.php';
 require_once __DIR__.'\entities\Doctor.php';
+require_once __DIR__.'\entities\UserSessionManager.php';
 
 
 //importing entites
 use Pms\Entities\User;
 use Pms\Entities\Doctor;
-
+use Pms\Entities\UserSessionManager;
 
 
 $configuration = [
@@ -92,37 +103,6 @@ $app->get('/doctorDashboard', function ($request, $response) {
     return $this->view->render($response, '/doctor/doctor-dash.html');
 });
 
-
-//BOC user management
-
-class UserSessionManager{
-
-  public static function getUser(){
-    if(isset($_SESSION['user'])){
-       $user = $_SESSION['user'];
-       return $user;
-     }else{
-       $user = new User();
-       $user->id = "-1";
-       $user->type = "-1";
-       $user->name = "-1";
-       return $user;
-     }
-  }//getUser
-
-  public static function setUser($user){
-    if(isset($user)){
-      $_SESSION['user'] = $user;
-    }
-  }
-
-  public static function destroySession(){
-    $_SESSION['user'] = null;
-    session_destroy();
-  }
-
-}//UserSessionManager
-
 $app->post('/isLoggedIn', function ($request, $response) {
 
    $user = UserSessionManager::getUser();
@@ -130,41 +110,24 @@ $app->post('/isLoggedIn', function ($request, $response) {
    return $response->withJson($data);
 });
 
-
 $app->post('/authenitcateUser', function ($request, $response) {
 
   $user = new User();
-  $user->id = "-1";
-  $user->type = "-1";
-  $user->name = "-1";
 
   try{
 
      $postedData = $request->getParsedBody();
      if( isset($postedData['loginId']) && isset($postedData['password']) ){
 
-       $paramArray = array(
-                            'plogin_id' => $postedData['loginId'],
-                            'password' => $postedData['password']
-                          );
-
-       $statement = DBHelper::generateStatement('authenticate',  $paramArray);
-
-       $statement->execute();
-
-       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-         $user->id = $result['id'];
-         $user->type = $result['type'];
-         $user->name = $result['name'];
-       }
+       $userDb = new UserDB();
+       $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
 
        UserSessionManager::setUser($user);
-     } else {
-       UserSessionManager::destroySession();
      }
 
      $data = array('data' => $user);
      return $response->withJson($data);
+
  }catch(Exception $e){
 
    $data = array('data' => $user);
@@ -188,80 +151,58 @@ $app->get('/logout', function($request, $response){
 //EOC user management
 
 // BOC Doctor management
-
-//
 $app->get('/getDoctorDetails', function ($request, $response) {
 
-  $allGetVars = $request->getQueryParams();
-  $docId = $allGetVars['id'];
-  $paramArray = array('pid' => $docId);
-  $statement = DBHelper::generateStatement('getDoctorInfo',  $paramArray);
-
-  $statement->execute();
   $doc = new Doctor();
-  $row = $statement->fetch();
 
-  $doc->id = $docId;
-  $doc->name = $row['name'];
-  $doc->contact = $row['contact1'];
-  $doc->alternateContact = $row['contact2'];
-  $doc->email = $row['email'];
-  $doc->qualifications = $row['qualification'];
-  $doc->address = $row['address'];
-  $doc->recoveryContact = $row['recovery_contact'];
-  $doc->recoveryEmail = $row['recovery_email'];
-  $doc->userName = $row['login_id'];
-  $doc->password = $row['password'];
-  $doc->isActive = $row['is_active'];
+  try {
 
+    $allGetVars = $request->getQueryParams();
 
-  $data = array('data' => $doc);
-  return $response->withJson($data);
+    if(isset($allGetVars['id'])){
+      $doctorDB = new DoctorDB();
+      $doc = $doctorDB->getDoctor($allGetVars['id']);
+    }
+
+    $data = array('data' => $doc);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('data' => $doc);
+    return $response->withJson($data);
+  }
 
 });
 
 $app->post('/saveUpdateDoctor', function($request, $response){
 
+  $doctor = new Doctor();
   $user = new User();
-  $user->id = "-1";
-  $user->type = "-1";
-  $user->name = "-1";
+  $status = -2;
 
-  $postedData = $request->getParsedBody();
+  try {
 
-  $paramArray = array(
-                      'pid' => $postedData['id'],
-                      'pname' =>  $postedData['name'],
-                      'pcontact1' =>  $postedData['contact'],
-                      'pcontact2' => $postedData['alternateContact'],
-                      'pemail' =>  $postedData['email'],
-                      'pqualification' => $postedData['qualifications'],
-                      'paddress' => $postedData['address'],
-                      'precovery_contact' =>  $postedData['recoveryContact'],
-                      'precovery_email' => $postedData['recoveryEmail'],
-                      'plogin_id' => $postedData['userName'],
-                      'ppassword' => $postedData['password'],
-                      'pis_active' =>  $postedData['isActive']
-                    );
+    $postedData = $request->getParsedBody();
+    $doctor = Doctor::getInsanceFromArray($postedData);
 
-  $statement = DBHelper::generateStatement('add_update_doctor',  $paramArray);
+    $doctorDB = new DoctorDB();
+    $resultArray = $doctorDB->persistDoctor($doctor);
 
-  $statement->execute();
+    $status = $resultArray['status'];
 
-  $row = $statement->fetch();
-  $status = $row['status'];
+    //log the user in on succesful insert or update
+    if(strcmp($status, "1") == 0){
+      $user = $resultArray['data'];
+      UserSessionManager::setUser($user);
+    }
 
-  if(strcmp($status, "1") == 0){
-    $user = new User();
-    $user->id = $row['id'];
-    $user->type = $row['type'];
-    $user->name = $row['name'];
-    UserSessionManager::setUser($user);
+    $data = array('data' => array('status' => $status, "user"=> $user));
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('data' => array('status' => $status, "user"=> $user));
+    return $response->withJson($data);
   }
-
-  $data = array('data' => array('status' => $status, "user"=> $user));
-  return $response->withJson($data);
-
 
 });
 
