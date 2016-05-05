@@ -4,8 +4,25 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \PDO;
 
-require '../pms/vendor/autoload.php';
-require_once __DIR__.'/AppConfig.php';
+require '.\vendor\autoload.php';
+
+
+//specific to the application
+
+//Core require needed for other to work
+require_once __DIR__.'\AppConfig.php';
+require_once __DIR__.'\datalayer\DBHelper.php';
+use Pms\Datalayer\DBHelper;
+
+//require once for entites
+require_once __DIR__.'\entities\User.php';
+require_once __DIR__.'\entities\Doctor.php';
+
+
+//importing entites
+use Pms\Entities\User;
+use Pms\Entities\Doctor;
+
 
 
 $configuration = [
@@ -51,16 +68,6 @@ $container['view'] = function ($container) {
     return $view;
 };
 
-//database function
-function getConnection() {
-
-   $dns = 'mysql:host='.AppConfig::$dbhost.';dbname='.AppConfig::$dbname.';port='. AppConfig::$port ;
-   $pdo = new PDO($dns, AppConfig::$dbuser, AppConfig::$dbpass);
-   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-   return $pdo;
-
-}
-
 //end of database section
 
 //default route
@@ -87,12 +94,6 @@ $app->get('/doctorDashboard', function ($request, $response) {
 
 
 //BOC user management
-
-class User {
-  public $id;
-  public $type;
-  public $name;
-}
 
 class UserSessionManager{
 
@@ -130,23 +131,7 @@ $app->post('/isLoggedIn', function ($request, $response) {
 });
 
 
-
 $app->post('/authenitcateUser', function ($request, $response) {
-
-  /*
-   $postedData = $request->getParsedBody();
-
-   $loginId = $postedData['loginId'];
-   $password = $postedData['password'];
-
-   $user = new User();
-   $user->id = "-1";
-   $user->type = $loginId;
-   $user->name = $password;
-
-    $data = array('data' => $user);
-    return $response->withJson($data);
-    */
 
   $user = new User();
   $user->id = "-1";
@@ -155,23 +140,15 @@ $app->post('/authenitcateUser', function ($request, $response) {
 
   try{
 
-    //$allGetVars = $request->getQueryParams();
-    //$loginId = $allGetVars['loginId'];
-    //$password = $allGetVars['password'];
-
      $postedData = $request->getParsedBody();
      if( isset($postedData['loginId']) && isset($postedData['password']) ){
-       $loginId = $postedData['loginId'];
-       $password = $postedData['password'];
 
-       $pdo = getConnection();
+       $paramArray = array(
+                            'plogin_id' => $postedData['loginId'],
+                            'password' => $postedData['password']
+                          );
 
-       $sql = 'call authenticate(:plogin_id, :ppassword)';
-
-       $statement = $pdo->prepare($sql);
-
-       $statement->bindValue(':plogin_id' , $loginId, PDO::PARAM_STR);
-       $statement->bindValue(':ppassword' , $password, PDO::PARAM_STR );
+       $statement = DBHelper::generateStatement('authenticate',  $paramArray);
 
        $statement->execute();
 
@@ -185,7 +162,6 @@ $app->post('/authenitcateUser', function ($request, $response) {
      } else {
        UserSessionManager::destroySession();
      }
-     //$data = array('data' => $user);
 
      $data = array('data' => $user);
      return $response->withJson($data);
@@ -213,37 +189,17 @@ $app->get('/logout', function($request, $response){
 
 // BOC Doctor management
 
-class Doctor{
-  public $id;
-  public $name;
-  public $contact;
-  public $alternateContact;
-  public $email;
-  public $qualifications;
-  public $address;
-  public $recoveryContact;
-  public $recoveryEmail;
-  public $userName;
-  public $password;
-  public $isActive;
-}
-
 //
 $app->get('/getDoctorDetails', function ($request, $response) {
 
   $allGetVars = $request->getQueryParams();
   $docId = $allGetVars['id'];
+  $paramArray = array('pid' => $docId);
+  $statement = DBHelper::generateStatement('getDoctorInfo',  $paramArray);
 
-  $pdo = getConnection();
-
-  $sql = 'call getDoctorInfo(:pid)';
-  $statement = $pdo->prepare($sql);
-  $statement->bindValue(':pid', $docId);
   $statement->execute();
-
   $doc = new Doctor();
   $row = $statement->fetch();
-
 
   $doc->id = $docId;
   $doc->name = $row['name'];
@@ -273,24 +229,22 @@ $app->post('/saveUpdateDoctor', function($request, $response){
 
   $postedData = $request->getParsedBody();
 
-  $pdo = getConnection();
+  $paramArray = array(
+                      'pid' => $postedData['id'],
+                      'pname' =>  $postedData['name'],
+                      'pcontact1' =>  $postedData['contact'],
+                      'pcontact2' => $postedData['alternateContact'],
+                      'pemail' =>  $postedData['email'],
+                      'pqualification' => $postedData['qualifications'],
+                      'paddress' => $postedData['address'],
+                      'precovery_contact' =>  $postedData['recoveryContact'],
+                      'precovery_email' => $postedData['recoveryEmail'],
+                      'plogin_id' => $postedData['userName'],
+                      'ppassword' => $postedData['password'],
+                      'pis_active' =>  $postedData['isActive']
+                    );
 
-  $sql = 'call add_update_doctor(:pid, :pname, :pcontact1,:pcontact2, :pemail, :pqualification , :paddress , :precovery_contact , :precovery_email,:plogin_id, :ppassword, :pis_active)';
-
-  $statement = $pdo->prepare($sql);
-
-  $statement->bindValue(':pid' , $postedData['id'], PDO::PARAM_INT);
-  $statement->bindValue(':pname' , $postedData['name'], PDO::PARAM_STR );
-  $statement->bindValue(':pcontact1' , $postedData['contact'], PDO::PARAM_STR);
-  $statement->bindValue(':pcontact2', $postedData['alternateContact'], PDO::PARAM_STR);
-  $statement->bindValue(':pemail', $postedData['email'], PDO::PARAM_STR);
-  $statement->bindValue(':pqualification', $postedData['qualifications'], PDO::PARAM_STR);
-  $statement->bindValue(':paddress', $postedData['address'], PDO::PARAM_STR);
-  $statement->bindValue(':precovery_contact', $postedData['recoveryContact'], PDO::PARAM_STR);
-  $statement->bindValue(':precovery_email', $postedData['recoveryEmail'], PDO::PARAM_STR);
-  $statement->bindValue(':plogin_id', $postedData['userName'], PDO::PARAM_STR);
-  $statement->bindValue(':ppassword', $postedData['password'], PDO::PARAM_STR);
-  $statement->bindValue(':pis_active', $postedData['isActive'], PDO::PARAM_INT);
+  $statement = DBHelper::generateStatement('add_update_doctor',  $paramArray);
 
   $statement->execute();
 
@@ -307,6 +261,7 @@ $app->post('/saveUpdateDoctor', function($request, $response){
 
   $data = array('data' => array('status' => $status, "user"=> $user));
   return $response->withJson($data);
+
 
 });
 
@@ -333,15 +288,17 @@ $app->post('/createUpdateSchedule', function ($request, $response) {
   array_to_xml($postedLocationJson, $xml_data);
   $scheduleXML = $xml_data->asXML();
 
-  $pdo = getConnection();
-  $sql = 'call create_modify_schedule(:pdoctor_id, :pstart_date, :pend_date, :pschedule_count, :plocation_count, :pschedule_xml)';
-  $statement = $pdo->prepare($sql);
-  $statement->bindValue(':pdoctor_id', $docId);
-  $statement->bindValue(':pstart_date', $startDate);
-  $statement->bindValue(':pend_date', $endDate);
-  $statement->bindValue(':pschedule_count', $scheduleCount);
-  $statement->bindValue(':plocation_count', $locationCount, PDO::PARAM_INT);
-  $statement->bindValue(':pschedule_xml', $scheduleXML);
+  $paramArray = array(
+                      'pdoctor_id' => $docId,
+                      'pstart_date' =>  $startDate,
+                      'pend_date' =>  $endDate,
+                      'pschedule_count' => $scheduleCount,
+                      'plocation_count' =>  $locationCount,
+                      'pschedule_xml' => $scheduleXML
+                    );
+
+  $statement = DBHelper::generateStatement('create_modify_schedule',  $paramArray);
+
   $statement->execute();
 
   $resArray = array();
@@ -352,12 +309,6 @@ $app->post('/createUpdateSchedule', function ($request, $response) {
 
   $data = array('data'=>$resArray);
 
-
-    //$data = array('data' => 'ola');
-    //$response = $response->withHeader('Content-type', 'text/text');
-    //return $response->write($scheduleXML);
-
-  //$data = array('data'=>$postedLocationJson);
   return $response->withJson($data);
 
 
@@ -367,66 +318,6 @@ $app->post('/createUpdateSchedule', function ($request, $response) {
     return $response->withJson($data);
 
   }
-
-
-
-  /*
-  $schedule = '{
-    "scheduleCount":"2",
-    "schedule":[
-              {
-              "date": "12-04-2016",
-              "timeSlots":{
-                            "locationId": "1",
-                            "startTime":"123",
-                            "endTime":"456"
-                          }
-              },
-              {
-              "date": "11-05-2016",
-              "timeSlots":{
-                            "locationId": "2",
-                            "startTime":"123",
-                            "endTime":"456"
-                          }
-              }
-            ]
-  }';
-
-  $scheduleArray = json_decode($schedule, true);
-
-  $xml_data = new SimpleXMLElement('<?xml version="1.0"?><schedules></schedules>');
-  array_to_xml($scheduleArray, $xml_data);
-
-
-  $startDate = "10-04-2016";
-  $endDate = "11-05-2016";
-  $docId = 1;
-  $scheduleXML = $xml_data->asXML();
-
-  $pdo = getConnection();
-  $sql = 'call create_update_schedule(:pdoctor_id, :pstart_date, :pend_date, :pschedule_xml)';
-  $statement = $pdo->prepare($sql);
-  $statement->bindValue(':pdoctor_id', $docId);
-  $statement->bindValue(':pstart_date', $startDate);
-  $statement->bindValue(':pend_date', $endDate);
-  $statement->bindValue(':pschedule_xml', $scheduleXML);
-  $statement->execute();
-
-  $resArray = array();
-  while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-      $resArray['schedule'] = $result['schedule'];
-  }
-
-
-  $data = array('data'=>$resArray);
-  return $response->withJson($data);
-
-  //$data = array('data' => 'ola');
-  //$response = $response->withHeader('Content-type', 'text/text');
-  //return $response->write($scheduleXML);
-
-  */
 });
 
 function array_to_xml( $data, &$xml_data ) {
@@ -445,8 +336,6 @@ function array_to_xml( $data, &$xml_data ) {
 
 
 //EOC Schedule Management
-
-
 
 // Run app
 $app->run();
