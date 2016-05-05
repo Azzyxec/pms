@@ -17,12 +17,12 @@ require_once __DIR__.'\AppConfig.php';
 require_once __DIR__.'\datalayer\DBHelper.php';
 require_once __DIR__.'\datalayer\UserDB.php';
 require_once __DIR__.'\datalayer\DoctorDB.php';
-
+require_once __DIR__.'\datalayer\ScheduleDB.php';
 
 use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
 use Pms\Datalayer\DoctorDB;
-
+use Pms\Datalayer\ScheduleDB;
 
 //require once for entites
 require_once __DIR__.'\entities\User.php';
@@ -217,64 +217,22 @@ $app->post('/createUpdateSchedule', function ($request, $response) {
 
   if($user->id != "-1"){
 
-  $postedData = $request->getParsedBody();
-  $startDate = $postedData['startDate'];
-  $endDate = $postedData['endDate'];
-  $docId = $user->id;
-  $scheduleCount = $postedData['scheduleDaysCount'];
-  $locationCount = $postedData['locationCount'];
-  $postedLocationJson = $postedData['locationList'];
+    $postedData = $request->getParsedBody();
 
-  $xml_data = new SimpleXMLElement('<?xml version="1.0"?><schedules></schedules>');
-  array_to_xml($postedLocationJson, $xml_data);
-  $scheduleXML = $xml_data->asXML();
+    $scheduleDB = new ScheduleDB();
+    $arrayCopy = $postedData;
+    $arrayCopy['userId'] =  $user->id;
+    $resultArray = $scheduleDB->persistSchedule($arrayCopy);
 
-  $paramArray = array(
-                      'pdoctor_id' => $docId,
-                      'pstart_date' =>  $startDate,
-                      'pend_date' =>  $endDate,
-                      'pschedule_count' => $scheduleCount,
-                      'plocation_count' =>  $locationCount,
-                      'pschedule_xml' => $scheduleXML
-                    );
-
-  $statement = DBHelper::generateStatement('create_modify_schedule',  $paramArray);
-
-  $statement->execute();
-
-  $resArray = array();
-  while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-      $resArray['schedule'] = $result['schedule'];
-  }
-
-
-  $data = array('data'=>$resArray);
-
-  return $response->withJson($data);
-
+  return $response->withJson($resultArray);
 
   }else{
 
-    $data = array('data'=> '-1');
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
     return $response->withJson($data);
 
   }
 });
-
-function array_to_xml( $data, &$xml_data ) {
-    foreach( $data as $key => $value ) {
-        if( is_array($value) ) {
-            if( is_numeric($key) ){
-                $key = 'item'; //dealing with <0/>..<n/> issues
-            }
-            $subnode = $xml_data->addChild($key);
-            array_to_xml($value, $subnode);
-        } else {
-            $xml_data->addChild("$key",htmlspecialchars("$value"));
-        }
-     }
-}
-
 
 //EOC Schedule Management
 
