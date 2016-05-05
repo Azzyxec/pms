@@ -5,17 +5,15 @@ use \Psr\Http\Message\ResponseInterface as Response;
 use \PDO;
 
 require '../pms/vendor/autoload.php';
+require_once __DIR__.'/AppConfig.php';
 
 
 $configuration = [
     'settings' => [
-        'displayErrorDetails' => true,
+        'displayErrorDetails' => AppConfig::$displayErrorDetails,
     ],
 ];
 
-
-//Path for the html templates
-$templatePath = '../pms/templates';
 // initilizing and setting the container
 
 $container = new \Slim\Container($configuration);
@@ -42,9 +40,9 @@ $app = new \Slim\App($container);
 $container = $app->getContainer();
 
 // Register component on container
-$container['view'] = function ($container) use ($templatePath) {
+$container['view'] = function ($container) {
   //$view = new \Slim\Views\Twig($templatePath, ['cache' => $templatePath ]);
-  $view = new \Slim\Views\Twig($templatePath, []);  //cache can be added later
+  $view = new \Slim\Views\Twig(AppConfig::$templatePath, []);  //cache can be added later
     $view->addExtension(new \Slim\Views\TwigExtension(
         $container['router'],
         $container['request']->getUri()
@@ -53,21 +51,11 @@ $container['view'] = function ($container) use ($templatePath) {
     return $view;
 };
 
-
-//Database  section
-class DBConfig{
-  public static $dbhost = 'localhost';
-  public static $dbname = 'pms';
-  public static $port = '3306';
-  public static $dbuser = 'pms';
-  public static $dbpass = 'pms';
-}
-
 //database function
 function getConnection() {
 
-   $dns = 'mysql:host='.DBConfig::$dbhost.';dbname='.DBConfig::$dbname.';port='. DBConfig::$port ;
-   $pdo = new PDO($dns, DBConfig::$dbuser, DBConfig::$dbpass);
+   $dns = 'mysql:host='.AppConfig::$dbhost.';dbname='.AppConfig::$dbname.';port='. AppConfig::$port ;
+   $pdo = new PDO($dns, AppConfig::$dbuser, AppConfig::$dbpass);
    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
    return $pdo;
 
