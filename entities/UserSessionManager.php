@@ -12,9 +12,6 @@ class UserSessionManager{
        return $user;
      }else{
        $user = new User();
-       $user->id = "-1";
-       $user->type = "-1";
-       $user->name = "-1";
        return $user;
      }
   }//getUser

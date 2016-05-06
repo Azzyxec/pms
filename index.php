@@ -100,8 +100,38 @@ $app->get('/scheduleManagement', function ($request, $response) {
 
 
 $app->get('/doctorDashboard', function ($request, $response) {
-    return $this->view->render($response, '/doctor/doctor-dash.html');
+    return $this->view->render($response, '/doctor/dash-home.html');
 });
+
+$app->get('/doctorProfile', function ($request, $response) {
+    return $this->view->render($response, '/doctor/doctor-profile.html');
+});
+
+$app->get('/bookAppointment', function ($request, $response) {
+    return $this->view->render($response, '/appointment/book-appointment.html');
+});
+
+$app->get('/closeAppointment', function ($request, $response) {
+    return $this->view->render($response, '/appointment/close-appointment.html');
+});
+
+$app->get('/newSchedule', function ($request, $response) {
+    return $this->view->render($response, '/schedule/new-schedule.html');
+});
+
+$app->get('/scheduleList', function ($request, $response) {
+    return $this->view->render($response, '/schedule/schedule-list.html');
+});
+
+$app->get('/staffEntry', function ($request, $response) {
+    return $this->view->render($response, '/staffManage/add-staff.html');
+});
+
+$app->get('/patientHistory', function ($request, $response) {
+    return $this->view->render($response, '/patient/patient-history.html');
+});
+
+
 
 $app->post('/isLoggedIn', function ($request, $response) {
 

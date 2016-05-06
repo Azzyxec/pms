@@ -1,0 +1,103 @@
+{% extends "/doctor/doctor-dash-base.html" %}
+{% block content %}
+    <section id="doctors-Manage-Schedule-Section">
+
+     <!-- /.panel -->
+            <div class="panel panel-default">
+                 <hr class="invisible">
+                <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw"></i> manage Schedule
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#">Create Schedule</a>
+                                </li>
+                                <li><a href="#">Modify Schedule</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                              <div class="table-responsive">
+                                <table class="table text-center table-bordered table-hover table-striped">
+                                    <thead >
+                                        <tr>
+                                            <th>Clinics</th>
+                                            <th>Date</th>
+
+                                            <th>1st</th>
+                                            <th>2nd</th>
+                                            <th>3rd</th>
+                                            <th>4th</th>
+                                            <th>5th</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td rowspan="2">Margao</td>
+                                            <td>Start</td>
+
+                                            <td>9:am</td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                        </tr>
+                                        <tr>
+
+                                            <td>End</td>
+
+                                           <td>12:am</td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">Canacona</td>
+                                            <td>Start</td>
+
+                                            <td>4:pm</td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                        </tr>
+                                        <tr>
+
+                                            <td>End</td>
+
+                                           <td>7:pm</td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                             <td></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.table-responsive -->
+                        </div>
+                        <!-- /.col-lg-4 (nested) -->
+                        <div class="col-lg-8">
+                            <div id="morris-bar-chart"></div>
+                        </div>
+                        <!-- /.col-lg-8 (nested) -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+</section>
+{% endblock %}
