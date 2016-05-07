@@ -1,6 +1,90 @@
 {% extends "/doctor/doctor-dash-base.html" %}
 {% block content %}
-<h5>New schedule</h5>
+<div class="container">
+
+  <hr class="invisible">
+  <hr class="invisible">
+  <hr class="invisible">
+
+  <!-- Appointment step one  -->
+
+  <div id="schedule-step-one" class="  col-sm-8 panel panel-default col-sm-offset-2">
+    <div class="panel-tittle">
+
+    <h2 class="text-center">Create Schedule</h2>
+    </div>
+    <div class="panel-body">
+    <form class="form-horizontal">
+
+      <div class="form-group">
+        <label for="from-date" class="col-sm-2 control-label">From Date</label>
+        <div class="col-sm-6">
+          <input type="date" class="form-control" name="from-date" id="from-date" >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="to-date" class="col-sm-2 control-label">To Date</label>
+        <div class="col-sm-6">
+          <input type="date" class="form-control" name="to-date" id="to-date" >
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-info col-sm-offset-2 col-sm-2" id="btn-schedule-next">Next</button>
+
+      </div>
+    </form>
+    </div>
+
+  <!-- Appointment step one  -->
+
+
+  <!-- Appointment step two  -->
+
+  <div id="schedule-step-two" class="col-sm-12 panel panel-default col-sm-offset-2">
+    <div class="panel-tittle">
+
+    <h2 class="text-center">Create Schedule</h2>
+    </div>
+    <div class="panel-body">
+    <form class="form-horizontal">
+
+    <div id="calander">
+
+    <table class=" table table-hover table-bordered">
+
+      <thead>
+         <tr class="info" id="table-header-row-schedule-calander">
+           <td></td>
+         </tr>
+      </thead>
+
+      <tbody id="table-body-schedule-calander" >
+
+         <tr id="table-row-schedule-calander" >
+         </tr>
+
+
+    </tbody>
+
+    </table>
+    </div>
+
+
+
+      <button type="button" class="btn btn-info " id="btn-schedule-create">Create Schedule</button>
+
+      </div>
+    </form>
+    </div>
+
+  <!-- Appointment step two  -->
+
+  </div>
+
+
+</div>
+</body>
 {% endblock %}
 {% block addScripts %}
 <script src="js/new.schedule.js"></script>

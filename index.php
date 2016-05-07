@@ -119,7 +119,7 @@ $app->get('/closeAppointment', function ($request, $response) {
     return $this->view->render($response, '/appointment/close-appointment.html');
 });
 
-$app->get('/newSchedule', function ($request, $response) {
+$app->get('/scheduleEntry', function ($request, $response) {
     return $this->view->render($response, '/schedule/new-schedule.html');
 });
 
@@ -266,6 +266,30 @@ $app->post('/createUpdateSchedule', function ($request, $response) {
     return $response->withJson($data);
 
   }
+});
+
+$app->get('/getScheduleList', function ($request, $response) {
+
+  try {
+
+    $user = UserSessionManager::getUser();
+
+    if($user->id != "-1"){
+
+      $scheduleDB = new ScheduleDB();
+
+      $scheduleResponse = $scheduleDB->getScheduleList($user->id);
+
+      return $response->withJson($scheduleResponse);
+
+    }
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+    return $response->withJson($data);
+  }
+
+
 });
 
 //EOC Schedule Management

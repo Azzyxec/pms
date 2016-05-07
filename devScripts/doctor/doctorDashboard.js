@@ -14,7 +14,7 @@ $(document).ready(function(){
           this.newAppointmentUrl = "index.php/bookAppointment";
           this.closeAppointmentUrl = "index.php/closeAppointment";
           this.doctorsAppointmentsListUrl = "index.php/listAppointment";
-          this.newScheduleUrl = "index.php/newSchedule";
+          this.newScheduleUrl = "index.php/scheduleEntry";
           this.listScheduleUrl = "index.php/scheduleList";
           this.addStaffUrl = "index.php/staffEntry";
           this.patientsHistoryUrl = "index.php/patientHistory";

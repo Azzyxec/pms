@@ -60,6 +60,33 @@ class ScheduleDB
     }
   }
 
+
+  public function getScheduleList($doctorId){
+    try {
+
+      $paramArray = array('pdoctor_id' => $doctorId);
+
+      $statement = DBHelper::generateStatement('get_schedule_list',  $paramArray);
+
+      $statement->execute();
+
+      $scheduleList = array();
+
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+        $scheduleList[] = array(
+                                  'id' => $result['id'],
+                                  'startDate' => $result['start_date'],
+                                  'endDate' => $result['end_date'],
+                                  'createdDate' => $result['created_date'],
+                               );
+      }
+
+        return array('status' => "1", 'data' => $scheduleList, 'message' => 'success' );
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+    }
+  }
+
   //shift this to a utility class
   function array_to_xml( $data, $xml_data ) {
 

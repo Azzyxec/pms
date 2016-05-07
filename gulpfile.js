@@ -9,7 +9,8 @@ var watchify = require('watchify');
 
 var objConfig = {
   scriptsBasePath: "./devScripts/",
-  scriptDestinationFolder: "./js"
+  scriptDestinationFolder: "./js",
+  watchPath: ['./devScripts/*.js', './devScripts/**/*.js']
 };
 
 var filesList = [
@@ -36,6 +37,7 @@ var filesList = [
                     objConfig.scriptsBasePath +"appointment/list.appointment.js"
                   ], buildName: "list.appointment.js"},
  {build:true, files: [
+                    objConfig.scriptsBasePath +"moment.js",
                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                     objConfig.scriptsBasePath +"schedule/new.schedule.js"
                   ], buildName: "new.schedule.js"},
@@ -62,10 +64,10 @@ gulp.task('build-scripts', function(){
 
       if(filesList[i].build == true){
         gulp.src(filesList[i].files)
-            //.pipe(sourcemaps.init())
+            .pipe(sourcemaps.init())
             //.pipe(uglify())
             .pipe(concat(filesList[i].buildName))
-            //.pipe(sourcemaps.write())
+            .pipe(sourcemaps.write())
             .pipe(gulp.dest(objConfig.scriptDestinationFolder));
       }
   }
@@ -87,5 +89,5 @@ gulp.task('scripts', function() {
 
 
 gulp.task('watch-scripts', function() {
-  gulp.watch(paths.scripts, ['scripts']);
+  gulp.watch(objConfig.watchPath, ['build-scripts']);
 });
