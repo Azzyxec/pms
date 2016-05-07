@@ -4,7 +4,7 @@ $(document).ready(function(){
 
       console.log('Doctor Dashboard js loaded');
 
-      //top level controller
+          //top level controller
       var controller = {
         init: function(){
           //wiring the navigation
@@ -12,9 +12,11 @@ $(document).ready(function(){
           this.doctorProfile = "index.php/doctorProfile";
           this.dashboardHomeUrl = "index.php/doctorDashboard";
           this.newAppointmentUrl = "index.php/bookAppointment";
+          this.patientsEntryUrl = "index.php/patientsEntry";
           this.closeAppointmentUrl = "index.php/closeAppointment";
           this.doctorsAppointmentsListUrl = "index.php/listAppointment";
-          this.newScheduleUrl = "index.php/scheduleEntry";
+          this.createProgramForPatientUrl = "index.php/createProgramForPatient";
+          this.newScheduleUrl = "index.php/newSchedule";
           this.listScheduleUrl = "index.php/scheduleList";
           this.addStaffUrl = "index.php/staffEntry";
           this.patientsHistoryUrl = "index.php/patientHistory";
@@ -37,6 +39,18 @@ $(document).ready(function(){
               console.log('PMS brand click');
 
           });
+            
+            $("#create-program-for-patient-section").click(function(e){
+                    e.preventDefault();
+            console.log('create program for patient');
+            window.location.href = controller.createProgramForPatientUrl;     
+            });
+            
+            $("#patients-Entry-Section-Link-Btn").click(function(e){
+            e.preventDefault();
+            console.log('patients Entryclick');
+            window.location.href = controller.patientsEntryUrl;                         
+             });
 
           $("#user-Profile-Btn-Link").click(function(e){
               e.preventDefault();
