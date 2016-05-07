@@ -91,7 +91,7 @@ $app->get('/login', function ($request, $response) {
 });
 
 $app->get('/doctorInfo', function ($request, $response) {
-    return $this->view->render($response, '/doctor/doctor-info.html');
+    return $this->view->render($response, '/doctor/doctor-registration.html');
 });
 
 $app->get('/scheduleManagement', function ($request, $response) {
@@ -109,6 +109,10 @@ $app->get('/doctorProfile', function ($request, $response) {
 
 $app->get('/bookAppointment', function ($request, $response) {
     return $this->view->render($response, '/appointment/book-appointment.html');
+});
+
+$app->get('/listAppointment', function ($request, $response) {
+    return $this->view->render($response, '/appointment/list-appointment.html');
 });
 
 $app->get('/closeAppointment', function ($request, $response) {
