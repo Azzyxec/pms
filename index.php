@@ -86,6 +86,7 @@ $app->get('/', function ($request, $response) {
     return $this->view->render($response, 'login.html');
 });
 
+
 $app->get('/login', function ($request, $response) {
     return $this->view->render($response, 'login.html');
 });
@@ -96,6 +97,9 @@ $app->get('/doctorInfo', function ($request, $response) {
 
 $app->get('/scheduleManagement', function ($request, $response) {
     return $this->view->render($response, '/doctor/schedule.html');
+});
+$app->get('/createProgramForPatient', function ($request, $response) {
+    return $this->view->render($response, '/programs/create-program.html');
 });
 
 
@@ -119,13 +123,18 @@ $app->get('/closeAppointment', function ($request, $response) {
     return $this->view->render($response, '/appointment/close-appointment.html');
 });
 
-$app->get('/scheduleEntry', function ($request, $response) {
+$app->get('/newSchedule', function ($request, $response) {
     return $this->view->render($response, '/schedule/new-schedule.html');
 });
 
 $app->get('/scheduleList', function ($request, $response) {
     return $this->view->render($response, '/schedule/schedule-list.html');
 });
+
+$app->get('/patientsEntry', function ($request, $response) {
+    return $this->view->render($response, '/patient/patient-entry.html');
+});
+
 
 $app->get('/staffEntry', function ($request, $response) {
     return $this->view->render($response, '/staffManage/add-staff.html');
