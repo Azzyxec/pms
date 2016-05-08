@@ -18,23 +18,26 @@ require_once __DIR__.'\datalayer\DBHelper.php';
 require_once __DIR__.'\datalayer\UserDB.php';
 require_once __DIR__.'\datalayer\DoctorDB.php';
 require_once __DIR__.'\datalayer\ScheduleDB.php';
+require_once __DIR__.'\datalayer\PatientDB.php';
 
 use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
 use Pms\Datalayer\DoctorDB;
 use Pms\Datalayer\ScheduleDB;
+use Pms\Datalayer\PatientDB;
 
 //require once for entites
 require_once __DIR__.'\entities\User.php';
 require_once __DIR__.'\entities\Doctor.php';
 require_once __DIR__.'\entities\UserSessionManager.php';
+require_once __DIR__.'\entities\Patient.php';
 
 
 //importing entites
 use Pms\Entities\User;
 use Pms\Entities\Doctor;
 use Pms\Entities\UserSessionManager;
-
+use Pms\Entities\Patient;
 
 $configuration = [
     'settings' => [
@@ -302,6 +305,64 @@ $app->get('/getScheduleList', function ($request, $response) {
 });
 
 //EOC Schedule Management
+
+//BOC Patient Management
+
+$app->get('/addUpdatePatient', function ($request, $response) {
+  try {
+
+    $user = UserSessionManager::getUser();
+
+    if($user->id != "-1"){
+      //need to check for the user type too
+
+
+      $patient =  new Patient();
+      $patient->id = 9;
+      $patient->name = "Travolda";
+      $patient->dateOfBirth = "01-04-2016";
+      $patient->weight = "2 kgs";
+      $patient->height = "20 cms";
+      $patient->gender = 1;
+      $patient->contact1 = "14242341";
+      $patient->contact2 = "12412341";
+      $patient->email = "revolution@singing.com";
+      $patient->address = "Kanas";
+      $patient->picturePath = "2.jpg";
+      $patient->medicalProgrammeId = 1;
+      $patient->isGuardian = 0;
+      $patient->GuardianId = null;
+
+      $guardian =  new Patient();
+
+
+      $moreInfoXMLArray = array();
+      $moreInfoXMLArray['doctorId'] = $user->id;
+      $moreInfoXMLArray['programmeListCount'] = 3;
+
+      $moreInfoXMLArray['programmeList'] = array();
+
+      $moreInfoXMLArray['programmeList'] []  = array('id' => 1, 'dueOn' => '08-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4132' );
+      $moreInfoXMLArray['programmeList'] []  = array('id' => 2, 'dueOn' => '09-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4523452' );
+      $moreInfoXMLArray['programmeList'] []  = array('id' => 3, 'dueOn' => '10-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4134536532' );
+
+      $patientDB = new PatientDB();
+      $callResponse = $patientDB->saveUpdatePatientInfo($patient, $guardian, $moreInfoXMLArray);
+
+      return $response->withJson($callResponse);
+
+  } else {
+    return array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this oeration' );
+  }
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
+
+//EOC end of patient Management
 
 // Run app
 $app->run();

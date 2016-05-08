@@ -52,7 +52,11 @@ var filesList = [
 {build:true, files: [
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath +"patient/patient.history.js"
-                ], buildName: "patient.history.js"}
+                ], buildName: "patient.history.js"},
+                {build:true, files: [
+                                  objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                                  objConfig.scriptsBasePath +"patient/patient.entry.js"
+                                ], buildName: "patient.entry.js"}
 ];
 
 gulp.task('build-scripts', function(){
@@ -75,18 +79,6 @@ gulp.task('build-scripts', function(){
   return;
 
 });
-
-gulp.task('scripts', function() {
-  // Minify and copy all JavaScript (except vendor scripts)
-  // with sourcemaps all the way down
-  return gulp.src(paths.scripts)
-    .pipe(sourcemaps.init())
-      //.pipe(uglify())
-      .pipe(concat('bundle.min.js'))
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./js'));
-});
-
 
 gulp.task('watch-scripts', function() {
   gulp.watch(objConfig.watchPath, ['build-scripts']);

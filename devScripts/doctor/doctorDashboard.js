@@ -39,18 +39,18 @@ $(document).ready(function(){
               console.log('PMS brand click');
 
           });
-            
+
             $("#create-program-for-patient-section").click(function(e){
                     e.preventDefault();
             console.log('create program for patient');
-            window.location.href = controller.createProgramForPatientUrl;     
+            window.location.href = controller.createProgramForPatientUrl;
             });
-            
-            $("#patients-Entry-Section-Link-Btn").click(function(e){
-            e.preventDefault();
-            console.log('patients Entryclick');
-            window.location.href = controller.patientsEntryUrl;                         
-             });
+
+            $("#patients-entry-create-section-link-Btn").click(function(e){
+              e.preventDefault();
+              console.log('patients Entryclick');
+              window.location.href = controller.patientsEntryUrl;
+            });
 
           $("#user-Profile-Btn-Link").click(function(e){
               e.preventDefault();
