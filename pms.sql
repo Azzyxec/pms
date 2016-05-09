@@ -887,6 +887,31 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229053 ;
 
+
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patients_appointment`
+--
+
+CREATE TABLE IF NOT EXISTS `patients_appointment` (
+  `patients_appointment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `patients_name` varchar(45) DEFAULT NULL,
+  `patients_appointment_date` date DEFAULT NULL,
+  `patients_appointment-time` time(4) DEFAULT NULL,
+  `patients_contact` varchar(45) DEFAULT NULL,
+  `patients_description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`patients_appointment_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+
+--
+-- Dumping data for table `patients_appointment`
+--
+
+
+
 --
 -- Dumping data for table `schedule_day`
 --
