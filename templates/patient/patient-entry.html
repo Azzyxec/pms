@@ -39,7 +39,7 @@
                         <hr>
                         <div class=' col-md-offset-4 col-md-4'>
                           <label for="focusedinput" class=" control-label">Upload pic</label>
-                          <input type="file" class="form-control">
+                          <input id="patient-picture" type="file" class="form-control">
                         </div>
 
                       </div>
@@ -56,8 +56,7 @@
                         <div class="form-group">
                           <label for="focusedinput" class="col-md-2 control-label">Name</label>
                           <div class='col-md-6'>
-
-                            <input type="text" class="form-control" name="username" id="username" placeholder="Patients Name">
+                            <input type="text" class="form-control" name="username" id="patient-name" placeholder="Patients Name">
                           </div>
 
                         </div>
@@ -66,7 +65,7 @@
                           <div class='col-md-6'>
 
                             <div class='input-group date' >
-                              <input type='date' class="form-control" />
+                              <input id="patient-date-of-birth" type='date' class="form-control" />
                               <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-time"></span>
                               </span>
@@ -75,38 +74,44 @@
                           </div>
                         </div>
 
-
-                        <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">weight<span class="required">*</span></label>
-                          <div class="col-md-6">
-                            <input type="text" class="form-control"  id="patient-entry-section-form-weight-input" placeholder="Patients Weight">
-                          </div>
-
-                        </div>
-                        <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Height<span class="required">*</span></label>
-                          <div class="col-md-6">
-                            <input type="text" class="form-control"  id="username" placeholder="Patients Height">
-                          </div>
-
-
-                        </div>
-
                         <div class="form-group">
                           <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
                           <div class=" col-sm-6">
                             <div class="radio-inline">
                               <label>
-                                <input type="radio"> Male
+                                <input id="rb-male" type="radio"> Male
                               </label>
                             </div>
 
                             <div class="radio-inline">
                               <label>
-                                <input type="radio"> Female
+                                <input id="rb-female" type="radio"> Female
                               </label>
                             </div>
                           </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Blood Group<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">weight<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-weight-input" placeholder="Patients Weight">
+                          </div>
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Height<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-height" placeholder="Patients Height">
+                          </div>
+
                         </div>
 
                         <div class="form-group">
@@ -128,7 +133,7 @@
                         <div class="form-group">
                           <label for="focusedinput" class="col-md-2 control-label">Address</label>
                           <div class="col-md-6">
-                            <textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+                            <textarea class="form-control"  rows ="5" name="address" id="patient-address" ></textarea>
                             <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                           </div>
@@ -142,7 +147,7 @@
                 <div class="panel-footer">
                   <div class="row">
                     <div class="text-center">
-                      <input type="submit" class="btn-success btn" name="submit" value="Save"/>
+                      <input id="patient-save-button" type="button" class="btn-success btn" value="Save"/>
                     </div>
 
                   </div>
@@ -189,7 +194,7 @@
                           <label for="focusedinput" class="col-md-2 control-label">Name</label>
                           <div class='col-md-6'>
 
-                            <input type="text" class="form-control" name="username" id="username" placeholder="Patients Name">
+                            <input type="text" class="form-control" name="username" id="guardian-name" placeholder="Name">
                           </div>
 
                         </div>
@@ -197,30 +202,8 @@
                           <label for="focusedinput" class="col-md-2 control-label">Age:</label>
                           <div class='col-md-6'>
 
-                            <div class='input-group date' >
-                              <input type='date' class="form-control" />
-                              <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-time"></span>
-                              </span>
-                            </div>
-
+                            <input type="text" class="form-control" name="username" id="guardian-age" placeholder="Age">
                           </div>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Blood group:<span class="required">*</span></label>
-                          <div class="col-md-6">
-                            <input type="text" class="form-control"  id="patient-entry-section-form-weight-input" placeholder="Patients Weight">
-                          </div>
-
-                        </div>
-                        <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Height<span class="required">*</span></label>
-                          <div class="col-md-6">
-                            <input type="text" class="form-control"  id="username" placeholder="Patients Height">
-                          </div>
-
-
                         </div>
 
                         <div class="form-group">
@@ -228,13 +211,13 @@
                           <div class=" col-sm-6">
                             <div class="radio-inline">
                               <label>
-                                <input type="radio"> Male
+                                <input id="rb-male-guardian" type="radio"> Male
                               </label>
                             </div>
 
                             <div class="radio-inline">
                               <label>
-                                <input type="radio"> Female
+                                <input  id="rb-female-guardian" type="radio"> Female
                               </label>
                             </div>
                           </div>
@@ -243,7 +226,7 @@
                         <div class="form-group">
                           <label for="focusedinput" class="col-md-2 control-label">Contact 1:<span class="required">*</span></label>
                           <div class="col-md-6">
-                            <input type="text" class="form-control"  id="username" placeholder="Contact info">
+                            <input type="text" class="form-control"  id="guardian-contact1" placeholder="Contact info">
                           </div>
 
 
@@ -252,7 +235,7 @@
                         <div class="form-group">
                           <label for="focusedinput" class="col-md-2 control-label">Contact 2:<span class="required">*</span></label>
                           <div class="col-md-6">
-                            <input type="text" class="form-control"  id="username" placeholder="Contact info">
+                            <input type="text" class="form-control"  id="guardian-contact2" placeholder="Contact info">
                           </div>
 
 
@@ -262,7 +245,7 @@
                         <div class="form-group">
                           <label for="focusedinput" class="col-md-2 control-label">Address</label>
                           <div class="col-md-6">
-                            <textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+                            <textarea class="form-control"  rows ="5" name="address" id="guardian-address" ></textarea>
                             <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                           </div>

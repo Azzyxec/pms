@@ -19,12 +19,15 @@ require_once __DIR__.'\datalayer\UserDB.php';
 require_once __DIR__.'\datalayer\DoctorDB.php';
 require_once __DIR__.'\datalayer\ScheduleDB.php';
 require_once __DIR__.'\datalayer\PatientDB.php';
+require_once __DIR__.'\datalayer\ProgrammeDB.php';
 
 use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
 use Pms\Datalayer\DoctorDB;
 use Pms\Datalayer\ScheduleDB;
 use Pms\Datalayer\PatientDB;
+use Pms\Datalayer\ProgrammeDB;
+
 
 //require once for entites
 require_once __DIR__.'\entities\User.php';
@@ -308,37 +311,52 @@ $app->get('/getScheduleList', function ($request, $response) {
 
 //BOC Patient Management
 
-$app->get('/addUpdatePatient', function ($request, $response) {
+$app->post('/addUpdatePatient', function ($request, $response) {
   try {
+
+    /*
+    $postedData = $request->getParsedBody();
+
+    $data = array('status' => "1", 'data' => $postedData, 'message' => 'test' );
+    return $response->withJson($data);
+*/
+
+
 
     $user = UserSessionManager::getUser();
 
     if($user->id != "-1"){
       //need to check for the user type too
 
+      $postedData = $request->getParsedBody();
+      $patient = Patient::getInsanceFromArray($postedData);
 
+      /*
       $patient =  new Patient();
-      $patient->id = 9;
+      $patient->id = 0;
       $patient->name = "Travolda";
       $patient->dateOfBirth = "01-04-2016";
+      $patient->bloodGroup = "AB+";
       $patient->weight = "2 kgs";
       $patient->height = "20 cms";
       $patient->gender = 1;
       $patient->contact1 = "14242341";
       $patient->contact2 = "12412341";
-      $patient->email = "revolution@singing.com";
+      //$patient->email = "revolution@singing.com";
       $patient->address = "Kanas";
       $patient->picturePath = "2.jpg";
-      $patient->medicalProgrammeId = 1;
       $patient->isGuardian = 0;
-      $patient->GuardianId = null;
+      $patient->guardianId = null;
+      */
 
+      //settign the gurdain details
       $guardian =  new Patient();
 
 
       $moreInfoXMLArray = array();
       $moreInfoXMLArray['doctorId'] = $user->id;
       $moreInfoXMLArray['programmeListCount'] = 3;
+      $moreInfoXMLArray['medicalProgrammeId'] = 1;
 
       $moreInfoXMLArray['programmeList'] = array();
 
@@ -352,12 +370,57 @@ $app->get('/addUpdatePatient', function ($request, $response) {
       return $response->withJson($callResponse);
 
   } else {
-    return array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this oeration' );
+    $data = array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this oeration' );
+    return $response->withJson($data);
   }
+
+
 
   } catch (Exception $e) {
     $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
     return $response->withJson($data);
+  }
+
+});
+
+$app->get('/getPatientDetails', function ($request, $response) {
+  try {
+
+      $allGetVars = $request->getQueryParams();
+
+      if(isset($allGetVars['id'])){
+
+        $patientDB = new PatientDB();
+
+        $result = $patientDB->getPatientDetails($allGetVars['id']);
+
+        return $response->withJson($result);
+
+      }
+
+  } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+      return $response->withJson($data);
+  }
+
+});
+
+$app->get('/getMedicationProgrammeList', function ($request, $response) {
+  try {
+
+      $allGetVars = $request->getQueryParams();
+
+      if(isset($allGetVars['id'])){
+
+        $programmeDB = new ProgrammeDB();
+        $result = $programmeDB->getMedicationProgrammeList($allGetVars['id']);
+        return $response->withJson($result);
+
+      }
+
+  } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+      return $response->withJson($data);
   }
 
 });

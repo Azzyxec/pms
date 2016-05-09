@@ -54,6 +54,7 @@ var filesList = [
                   objConfig.scriptsBasePath +"patient/patient.history.js"
                 ], buildName: "patient.history.js"},
                 {build:true, files: [
+                                  objConfig.scriptsBasePath +"moment.js",
                                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                                   objConfig.scriptsBasePath +"patient/patient.entry.js"
                                 ], buildName: "patient.entry.js"}

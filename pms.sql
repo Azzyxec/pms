@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2016 at 07:06 PM
+-- Generation Time: May 09, 2016 at 06:43 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -32,16 +32,16 @@ begin
 	declare llogin_id int;
 	declare ldoctor_id int;
 
-	if COALESCE(pid, 0) > 0 then 
+	if COALESCE(pid, 0) > 0 then
 
 		select fk_login_id
 		into @llogin_id
 		from doctor
 		where  id = pid;
-		  
+
 	end if;
 
-    select count(id) 
+    select count(id)
     into  @llogin_id_exists
     from login
     where login_id = plogin_id
@@ -51,26 +51,26 @@ begin
 	if  COALESCE(@llogin_id_exists, 0) = 0 then
 
 		if pid <= 0 then
-			
+
 			INSERT INTO `login`( `type`
 								, `login_id`
 								, `password`
 								, `created`
 								,last_modified
 								)
-								VALUES 
+								VALUES
 								('D'
 								,plogin_id
 								,ppassword
 								,now()
 								,null
 								);
-								
+
 			 select max(id)
 			 into @llogin_id
 			 from login;
-			 
-			 
+
+
 			INSERT INTO `doctor`
 							(`fk_login_id`
 							, `name`
@@ -82,7 +82,7 @@ begin
 							, `recovery_contact`
 							, `recovery_email`
 							,is_active
-							) 
+							)
 					VALUES (@llogin_id
 							,pname
 							,pcontact1
@@ -94,28 +94,28 @@ begin
 							,precovery_email
 							,pis_active
 							);
-							
+
 		     select max(id)
 			 into @ldoctor_id
 			 from doctor;
-			
+
 		else
 
 			select fk_login_id
 			into @llogin_id
-			from doctor 
+			from doctor
 			where id = pid;
-			
+
 			set @ldoctor_id = pid;
-			
-			UPDATE `login` 
+
+			UPDATE `login`
 					SET `login_id`= plogin_id
 					,`password`= ppassword
 					,`last_modified`= now()
 			WHERE id = @llogin_id;
-			
-			
-			UPDATE `doctor` 
+
+
+			UPDATE `doctor`
 						SET `name`= pname
 						,`contact1`= pcontact1
 						,`contact2`= pcontact2
@@ -128,7 +128,7 @@ begin
 			WHERE id = pid;
 
 	end if;
-	
+
         commit;
 		select '1' as status
 			   ,@ldoctor_id as id
@@ -143,6 +143,154 @@ begin
 				,'-1' as `type`;
 
 	end if;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` DATE, IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pmedical_programme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_xml` VARCHAR(65535))
+begin
+
+declare lmaxPatientId int;
+declare lprogrammeName varchar(100);
+
+DECLARE lprogrammeListCount int DEFAULT 0;
+declare lcounter int;
+declare lprogrammeId  int;
+declare ldueDate varchar(20);
+declare lgivenOn varchar(20);
+declare lbatchNo varchar(100);
+
+if pid <= 0 then
+
+INSERT INTO `patient`
+					(fk_doctor_id
+					,`name`
+					, `date_of_birth`
+					, `weight`
+					, `height`
+					, `gender`
+					, `contact1`
+					, `contact2`
+					, `email`
+					, `address`
+					, `picture_path`
+					, `is_guardian`
+					, `patient_id`
+					, `created_date`
+					, `is_active`
+					) VALUES (
+					pdoctor_id
+					,pname
+					,pdate_of_birth
+					,pweight
+					,pheight
+					,pgender
+					,pcontact1
+					,pcontact2
+					,pemail
+					,paddress
+					,ppicture_path
+					,pis_guardain
+					,ppatient_id
+					,now()
+					,1
+					);
+
+	select max(id)
+	into @lmaxPatientId
+	from patient;
+
+	select name
+	into @lprogrammeName
+	from medication_programme
+	where id = pmedical_programme_id;
+
+
+
+	INSERT INTO `patient_medication_programme`
+										(`fk_patient_id`
+										, `fk_doctor_id`
+										, `fk_medication_pogramme_id`
+										, `name`
+										, `created_date`
+										) VALUES (
+										@lmaxPatientId
+										,pdoctor_id
+										,pmedical_programme_id
+										,@lprogrammeName
+										,now()
+										);
+
+	INSERT INTO `patient_medication_programme_list`(
+													`fk_patient_id`
+													, `fk_doctor_id`
+													, `fk_medication_programme_id`
+													, `fk_medication_programme_list_id`
+													, `duration_days`
+													, `medicine`
+													, `dose_no`
+													, due_on
+													, give_on
+													, batch_no
+													)
+											SELECT 	@lmaxPatientId
+													,pdoctor_id
+													,mpl.`fk_medication_programme_id`
+													,mpl.id
+													,mpl.`duration_days`
+													,mpl.`medicine`
+													,mpl.`dose_no`
+													,null
+													,null
+													,null
+											FROM `medication_programme_list` mpl
+											WHERE mpl.fk_medication_programme_id = pmedical_programme_id;
+
+else
+
+	UPDATE `patient` SET `name`= pname
+						  ,`date_of_birth`= pdate_of_birth
+						  ,`weight`= pweight
+						  ,`height`= pheight
+						  ,`gender`= pgender
+						  ,`contact1`= pcontact1
+						  ,`contact2`= pcontact2
+						  ,`email`= pemail
+						  ,`address`= paddress
+						  ,`picture_path`= ppicture_path
+						  ,`is_guardian`= pis_guardain
+						  ,`patient_id`= ppatient_id
+					WHERE id = pid;
+
+	SELECT ExtractValue(pprogramme_xml, 'programe/programmeListCount')
+	into @lprogrammeListCount;
+
+	set @lcounter = 1;
+
+	while @lcounter <= @lprogrammeListCount do
+
+		SELECT ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/id')
+			   ,ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/dueOn')
+			   ,ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/givenOn')
+			   ,ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/batchNo')
+		into @lprogrammeId
+			 ,@ldueDate
+			 ,@lgivenOn
+			 ,@lbatchNo;
+
+		UPDATE `patient_medication_programme_list` pmpl
+		SET `due_on` = STR_TO_DATE(@ldueDate, '%m-%d-%Y')
+			,`give_on`= STR_TO_DATE(@lgivenOn, '%m-%d-%Y')
+			,`batch_no`= @lbatchNo
+		WHERE pmpl.id = @lprogrammeId;
+
+		SET @lcounter = @lcounter + 1;
+	END WHILE;
+
+end if;
+
+commit;
+
+select @lprogrammeListCount as status;
 
 end$$
 
@@ -162,20 +310,20 @@ select id
        from login
        where login_id = plogin_id
        		  and `password` = ppassword;
-              
+
 if @lUserType is null then
 
     select '-1' as id
     	   ,'-1' as `type`
            ,'-1' as name;
-              
-              
+
+
 elseif @lUserType = 'A' then
 
 	select 1 as id
     	   ,@lUserType as `type`
            ,'admin' as name;
-           
+
 elseif @lUserType = 'D' then
 
 	select name
@@ -193,23 +341,95 @@ end if;
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pdoctor_id` INT)
+begin
+
+declare lmaxPatientId int;
+
+if pid <= 0 then
+
+INSERT INTO `patient`
+					(fk_doctor_id
+					,`name`
+					, `date_of_birth`
+					,  blood_group
+					, `weight`
+					, `height`
+					, `gender`
+					, `contact1`
+					, `contact2`
+					, `address`
+					, `picture_path`
+					, `is_guardian`
+					, `patient_id`
+					, `created_date`
+					, `is_active`
+					) VALUES (
+					pdoctor_id
+					,pname
+					,STR_TO_DATE(pdate_of_birth, '%d-%m-%Y')
+					,pblood_group
+					,pweight
+					,pheight
+					,pgender
+					,pcontact1
+					,pcontact2
+					,paddress
+					,ppicture_path
+					,pis_guardain
+					,ppatient_id
+					,now()
+					,1
+					);
+	select max(id)
+	into @lmaxPatientId
+	from patient;
+
+	select 1 as status
+		   ,@lmaxPatientId as patient_id;
+
+else
+
+	UPDATE `patient` SET `name`= pname
+						  ,`date_of_birth`= STR_TO_DATE(pdate_of_birth, '%d-%m-%Y')
+						  ,blood_group = pblood_group
+						  ,`weight`= pweight
+						  ,`height`= pheight
+						  ,`gender`= pgender
+						  ,`contact1`= pcontact1
+						  ,`contact2`= pcontact2
+						  ,`address`= paddress
+						  ,`picture_path`= ppicture_path
+					WHERE id = pid;
+
+	select 1 as status
+		  ,pid as patient_id;
+
+end if;
+
+commit;
+
+
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
     NO SQL
 begin
 
 
     DECLARE lmaxScheduleId INT;
-	
+
 	DECLARE lnodeCount int DEFAULT 0;
 	DECLARE lcounter INT DEFAULT 1;
 	declare lcounter2 int;
-	
+
 	DECLARE lscheduleDate varchar(20);
 	DECLARE llocationId INT;
 	DECLARE lstartTimeMins varchar(20);
 	DECLARE lendTimeMins varchar(20);
-	
-	
+
+
 	INSERT INTO `schedule`
 							(`fk_doctor_id`
 							, `start_date`
@@ -217,7 +437,7 @@ begin
 							, `created_date`
 							, `created_by`
 							, `is_active`
-							) 
+							)
 					VALUES (pdoctor_id
 							,STR_TO_DATE(pstart_date, '%m-%d-%Y')
 							,STR_TO_DATE(pend_date, '%m-%d-%Y')
@@ -228,26 +448,26 @@ begin
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
-	
-	
+
+
 	set @lcounter = 1;
 	WHILE @lcounter <= plocation_count DO
-	
+
 		SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/id')
 		into @llocationId;
-		
+
 		set @lcounter2 = 1;
-		
+
 		while @lcounter2 <= pschedule_count do
-		
+
 			SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/schedule/item[$@lcounter2]/date')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/schedule/item[$@lcounter2]/timeSlots/startTime')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/schedule/item[$@lcounter2]/timeSlots/startTime')
 			into @lscheduleDate
 				 ,@lstartTimeMins
 				 ,@lendTimeMins;
-		
-		
+
+
 			INSERT INTO `schedule_day`
 					(
 					  fk_doctor_id
@@ -257,7 +477,7 @@ begin
 					  ,start_time_mins
 					  ,end_time_mins
 					  ,is_active
-					 ) 
+					 )
 			 VALUES (
 					 pdoctor_id
 					,@lmaxScheduleId
@@ -267,16 +487,16 @@ begin
 					,@lendTimeMins
 					,1
 					 );
-		
-				 
+
+
 			SET @lcounter2 = @lcounter2 + 1;
 		end while;
-		
+
 		SET @lcounter = @lcounter + 1;
 	END WHILE;
-	
+
 	commit;
-	
+
 	SELECT plocation_count as schedule;
 
 end$$
@@ -299,6 +519,37 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme_list`(IN `pdoctor_id` INT)
+    READS SQL DATA
+select id
+	   , name
+from medication_programme
+where fk_doctors_id = pdoctor_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
+    NO SQL
+begin
+
+SELECT  `name`
+		, DATE_FORMAT(`date_of_birth`, '%d-%m-%Y') as date_of_birth
+		, `blood_group`
+		, `weight`
+		, `height`
+		, `gender`
+		, `contact1`
+		, `contact2`
+		, `email`
+		, `address`
+		, `picture_path`
+		, `is_guardian`
+		, `patient_id`
+FROM `patient`
+WHERE id = ppatient_id;
+
+
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
 begin
@@ -308,7 +559,7 @@ SELECT s.id
 	   ,s.end_date
 	   ,s.created_date
 	   ,s.is_active
-FROM schedule s 
+FROM schedule s
 where s.fk_doctor_id = pdoctor_id;
 
 end$$
@@ -414,6 +665,180 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `medication_programme`
+--
+
+CREATE TABLE IF NOT EXISTS `medication_programme` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_doctors_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_date` date NOT NULL,
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `medication_programme`
+--
+
+INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date`, `is_active`) VALUES
+(1, 18, 'Newnatal', '2016-05-07', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `medication_programme_list`
+--
+
+CREATE TABLE IF NOT EXISTS `medication_programme_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_medication_programme_id` int(11) NOT NULL,
+  `duration_days` int(11) NOT NULL,
+  `medicine` varchar(100) NOT NULL,
+  `dose_no` int(11) NOT NULL,
+  `created_date` date NOT NULL,
+  `is_active` int(11) NOT NULL,
+  `fk_doctor_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `medication_programme_list`
+--
+
+INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `duration_days`, `medicine`, `dose_no`, `created_date`, `is_active`, `fk_doctor_id`) VALUES
+(1, 1, 0, 'BCG', 0, '2016-05-07', 1, 18),
+(2, 1, 0, 'OPV', 0, '2016-05-07', 1, 18),
+(3, 1, 0, 'Hepatatis B', 1, '2016-05-07', 1, 18);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient`
+--
+
+CREATE TABLE IF NOT EXISTS `patient` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_doctor_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `blood_group` varchar(10) NOT NULL,
+  `weight` varchar(50) NOT NULL,
+  `height` varchar(50) NOT NULL,
+  `gender` int(11) NOT NULL DEFAULT '0',
+  `contact1` varchar(50) NOT NULL,
+  `contact2` varchar(50) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `address` varchar(1000) NOT NULL,
+  `picture_path` varchar(200) DEFAULT NULL,
+  `is_guardian` int(11) NOT NULL DEFAULT '0',
+  `patient_id` int(11) DEFAULT NULL,
+  `created_date` date NOT NULL,
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+--
+-- Dumping data for table `patient`
+--
+
+INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_group`, `weight`, `height`, `gender`, `contact1`, `contact2`, `email`, `address`, `picture_path`, `is_guardian`, `patient_id`, `created_date`, `is_active`) VALUES
+(1, 0, 'Donald', '2016-04-01', '', '', '25 Centimeters', 1, '04918093241', '345324523452', 'elgore@executive.com', 'White House, Washington DC', '1.jpg', 0, 0, '2016-05-07', 1),
+(2, 0, 'Hillary', '2016-04-01', '', '', '5.5 Feet', 0, '04918093241', '345324523452', 'elgore@executive.com', 'White House, Washington DC', '2.jpg', 1, 1, '2016-05-07', 1),
+(3, 0, 'Ted', '2016-04-01', '', '2.1 kgs', '25 cms', 1, '41243', '234123', 'ted@republican.gov', 'dfasdfasdf', '1.jpg', 0, 0, '2016-05-07', 1),
+(4, 0, 'Cruz', '2016-04-01', '', '2.1 kgs', '25 cms', 1, '41243', '234123', 'ted@republican.gov', 'dfasdfasdf', '1.jpg', 0, 0, '2016-05-07', 1),
+(5, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
+(6, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
+(7, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
+(8, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
+(9, 18, 'Travolda', '2016-04-02', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', '', 'Kanas', NULL, 0, NULL, '2016-05-08', 1),
+(10, 18, 'Travolda', '0000-00-00', '', '2 kgs', '20 cms', 1, '14242341', '12412341', 'revolution@singing.com', 'Kanas', '2.jpg', 0, NULL, '2016-05-08', 1),
+(11, 18, 'Travolda', '0000-00-00', '', '2 kgs', '20 cms', 1, '14242341', '12412341', 'revolution@singing.com', 'Kanas', '2.jpg', 0, NULL, '2016-05-08', 1),
+(12, 18, 'Travolda', '0000-00-00', '', '2 kgs', '20 cms', 1, '14242341', '12412341', 'revolution@singing.com', 'Kanas', '2.jpg', 0, NULL, '2016-05-08', 1),
+(28, 18, 'Travolda', '2016-01-01', '', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', NULL, 0, 0, '2016-05-09', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient_birth_details`
+--
+
+CREATE TABLE IF NOT EXISTS `patient_birth_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_patient_id` int(11) NOT NULL,
+  `fk_delivery_method_id` int(11) NOT NULL,
+  `birth_weight` varchar(20) NOT NULL,
+  `length` varchar(20) NOT NULL,
+  `head` varchar(20) NOT NULL,
+  `blood_group` varchar(10) NOT NULL,
+  `mother_name` varchar(1000) NOT NULL,
+  `mother_blood_group` varchar(10) NOT NULL,
+  `father_name` varchar(100) NOT NULL,
+  `father_blood_group` varchar(10) NOT NULL,
+  `siblings` varchar(1000) NOT NULL,
+  `remarks` int(11) NOT NULL,
+  `created_date` date NOT NULL,
+  `modified_date` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient_medication_programme`
+--
+
+CREATE TABLE IF NOT EXISTS `patient_medication_programme` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_patient_id` int(11) NOT NULL,
+  `fk_doctor_id` int(11) NOT NULL,
+  `fk_medication_pogramme_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_date` date NOT NULL,
+  `is_active` int(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `patient_medication_programme`
+--
+
+INSERT INTO `patient_medication_programme` (`id`, `fk_patient_id`, `fk_doctor_id`, `fk_medication_pogramme_id`, `name`, `created_date`, `is_active`) VALUES
+(1, 9, 18, 1, 'Newnatal', '2016-05-08', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `patient_medication_programme_list`
+--
+
+CREATE TABLE IF NOT EXISTS `patient_medication_programme_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_patient_id` int(11) NOT NULL,
+  `fk_doctor_id` int(11) NOT NULL,
+  `fk_medication_programme_id` int(11) NOT NULL,
+  `fk_medication_programme_list_id` int(11) NOT NULL,
+  `duration_days` int(11) NOT NULL,
+  `medicine` varchar(100) NOT NULL,
+  `dose_no` int(11) NOT NULL,
+  `due_on` date DEFAULT NULL,
+  `give_on` date DEFAULT NULL,
+  `batch_no` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `patient_medication_programme_list`
+--
+
+INSERT INTO `patient_medication_programme_list` (`id`, `fk_patient_id`, `fk_doctor_id`, `fk_medication_programme_id`, `fk_medication_programme_list_id`, `duration_days`, `medicine`, `dose_no`, `due_on`, `give_on`, `batch_no`) VALUES
+(1, 9, 18, 1, 1, 0, 'BCG', 0, '2016-08-05', '2016-04-05', '4132'),
+(2, 9, 18, 1, 2, 0, 'OPV', 0, '2016-09-05', '2016-04-05', '4523452'),
+(3, 9, 18, 1, 3, 0, 'Hepatatis B', 1, '2016-10-05', '2016-04-05', '4134536532');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `schedule`
 --
 
@@ -426,14 +851,23 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by` int(11) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=35 ;
 
 --
 -- Dumping data for table `schedule`
 --
 
 INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created_date`, `created_by`, `is_active`) VALUES
-(25, 18, '2016-05-03', '2016-05-07', '2016-05-04 00:00:00', 1, 1);
+(25, 18, '2016-05-03', '2016-05-07', '2016-05-04 00:00:00', 1, 1),
+(26, 18, '2016-05-03', '2016-05-07', '2016-05-05 00:00:00', 1, 1),
+(27, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(28, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(29, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(30, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(31, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(32, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(33, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1),
+(34, 18, '2016-05-03', '2016-05-07', '2016-05-06 00:00:00', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -451,7 +885,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `end_time_mins` int(11) NOT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=228981 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229053 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -465,7 +899,79 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (228977, 18, 25, 2, 20160305, 60, 60, 1),
 (228978, 18, 25, 2, 20160405, 240, 240, 1),
 (228979, 18, 25, 2, 20160505, 120, 120, 1),
-(228980, 18, 25, 2, 20160605, 180, 180, 1);
+(228980, 18, 25, 2, 20160605, 180, 180, 1),
+(228981, 18, 26, 1, 20160305, 0, 0, 1),
+(228982, 18, 26, 1, 20160405, 0, 0, 1),
+(228983, 18, 26, 1, 20160505, 0, 0, 1),
+(228984, 18, 26, 1, 20160605, 0, 0, 1),
+(228985, 18, 26, 2, 20160305, 0, 0, 1),
+(228986, 18, 26, 2, 20160405, 0, 0, 1),
+(228987, 18, 26, 2, 20160505, 0, 0, 1),
+(228988, 18, 26, 2, 20160605, 0, 0, 1),
+(228989, 18, 27, 1, 20160305, 0, 0, 1),
+(228990, 18, 27, 1, 20160405, 0, 0, 1),
+(228991, 18, 27, 1, 20160505, 0, 0, 1),
+(228992, 18, 27, 1, 20160605, 0, 0, 1),
+(228993, 18, 27, 2, 20160305, 0, 0, 1),
+(228994, 18, 27, 2, 20160405, 0, 0, 1),
+(228995, 18, 27, 2, 20160505, 0, 0, 1),
+(228996, 18, 27, 2, 20160605, 0, 0, 1),
+(228997, 18, 28, 1, 20160305, 0, 0, 1),
+(228998, 18, 28, 1, 20160405, 0, 0, 1),
+(228999, 18, 28, 1, 20160505, 0, 0, 1),
+(229000, 18, 28, 1, 20160605, 0, 0, 1),
+(229001, 18, 28, 2, 20160305, 0, 0, 1),
+(229002, 18, 28, 2, 20160405, 0, 0, 1),
+(229003, 18, 28, 2, 20160505, 0, 0, 1),
+(229004, 18, 28, 2, 20160605, 0, 0, 1),
+(229005, 18, 29, 1, 20160305, 0, 0, 1),
+(229006, 18, 29, 1, 20160405, 0, 0, 1),
+(229007, 18, 29, 1, 20160505, 0, 0, 1),
+(229008, 18, 29, 1, 20160605, 0, 0, 1),
+(229009, 18, 29, 2, 20160305, 0, 0, 1),
+(229010, 18, 29, 2, 20160405, 0, 0, 1),
+(229011, 18, 29, 2, 20160505, 0, 0, 1),
+(229012, 18, 29, 2, 20160605, 0, 0, 1),
+(229013, 18, 30, 1, 20160305, 0, 0, 1),
+(229014, 18, 30, 1, 20160405, 0, 0, 1),
+(229015, 18, 30, 1, 20160505, 0, 0, 1),
+(229016, 18, 30, 1, 20160605, 0, 0, 1),
+(229017, 18, 30, 2, 20160305, 0, 0, 1),
+(229018, 18, 30, 2, 20160405, 0, 0, 1),
+(229019, 18, 30, 2, 20160505, 0, 0, 1),
+(229020, 18, 30, 2, 20160605, 0, 0, 1),
+(229021, 18, 31, 1, 20160305, 0, 0, 1),
+(229022, 18, 31, 1, 20160405, 0, 0, 1),
+(229023, 18, 31, 1, 20160505, 0, 0, 1),
+(229024, 18, 31, 1, 20160605, 0, 0, 1),
+(229025, 18, 31, 2, 20160305, 0, 0, 1),
+(229026, 18, 31, 2, 20160405, 0, 0, 1),
+(229027, 18, 31, 2, 20160505, 0, 0, 1),
+(229028, 18, 31, 2, 20160605, 0, 0, 1),
+(229029, 18, 32, 1, 20160305, 0, 0, 1),
+(229030, 18, 32, 1, 20160405, 0, 0, 1),
+(229031, 18, 32, 1, 20160505, 0, 0, 1),
+(229032, 18, 32, 1, 20160605, 0, 0, 1),
+(229033, 18, 32, 2, 20160305, 0, 0, 1),
+(229034, 18, 32, 2, 20160405, 0, 0, 1),
+(229035, 18, 32, 2, 20160505, 0, 0, 1),
+(229036, 18, 32, 2, 20160605, 0, 0, 1),
+(229037, 18, 33, 1, 20160305, 0, 0, 1),
+(229038, 18, 33, 1, 20160405, 0, 0, 1),
+(229039, 18, 33, 1, 20160505, 0, 0, 1),
+(229040, 18, 33, 1, 20160605, 0, 0, 1),
+(229041, 18, 33, 2, 20160305, 0, 0, 1),
+(229042, 18, 33, 2, 20160405, 0, 0, 1),
+(229043, 18, 33, 2, 20160505, 0, 0, 1),
+(229044, 18, 33, 2, 20160605, 0, 0, 1),
+(229045, 18, 34, 1, 20160305, 0, 0, 1),
+(229046, 18, 34, 1, 20160405, 0, 0, 1),
+(229047, 18, 34, 1, 20160505, 0, 0, 1),
+(229048, 18, 34, 1, 20160605, 0, 0, 1),
+(229049, 18, 34, 2, 20160305, 0, 0, 1),
+(229050, 18, 34, 2, 20160405, 0, 0, 1),
+(229051, 18, 34, 2, 20160505, 0, 0, 1),
+(229052, 18, 34, 2, 20160605, 0, 0, 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
