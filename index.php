@@ -20,6 +20,7 @@ require_once __DIR__.'\datalayer\DoctorDB.php';
 require_once __DIR__.'\datalayer\ScheduleDB.php';
 require_once __DIR__.'\datalayer\PatientDB.php';
 require_once __DIR__.'\datalayer\ProgrammeDB.php';
+require_once __DIR__.'\datalayer\bookAppointmentAbstraction.php';
 
 use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
@@ -27,20 +28,22 @@ use Pms\Datalayer\DoctorDB;
 use Pms\Datalayer\ScheduleDB;
 use Pms\Datalayer\PatientDB;
 use Pms\Datalayer\ProgrammeDB;
-
+use Pms\Datalayer\bookAppointmentEntryDB;
 
 //require once for entites
 require_once __DIR__.'\entities\User.php';
 require_once __DIR__.'\entities\Doctor.php';
 require_once __DIR__.'\entities\UserSessionManager.php';
 require_once __DIR__.'\entities\Patient.php';
-
+require_once __DIR__.'\entities\bookAppointment.php';
 
 //importing entites
 use Pms\Entities\User;
 use Pms\Entities\Doctor;
 use Pms\Entities\UserSessionManager;
 use Pms\Entities\Patient;
+use Pms\Entities\bookAppointmentObject;
+
 
 $configuration = [
     'settings' => [
@@ -222,6 +225,55 @@ $app->get('/getDoctorDetails', function ($request, $response) {
   }
 
 });
+
+
+
+
+$app->post('/saveBookPatientEntry', function ($request, $response) {
+ try {
+ $bookAppointmentFormData = json_decode($_POST['data']);
+
+
+
+if (isset($bookAppointmentFormData))
+    {
+    
+    
+    
+    //2016-01-22 -- Y-m-d  -- Asia/Calcutta
+    $bookAppointmentDate = date_create_from_format('Y-m-d', $bookAppointmentFormData->bookAppointmentDate, new DateTimeZone('Asia/Calcutta'));
+    
+    
+
+    $bookAppointmentObj = new bookAppointmentObject(
+                            $bookAppointmentFormData->patientsName,
+                            $bookAppointmentFormData->bookAppointmentTime,
+                            $bookAppointmentDate->format('d-m-Y'), 
+                            $bookAppointmentFormData->contact, 
+                            $bookAppointmentFormData->description 
+                         );
+    
+    $bookAppoinmentDl = new bookAppointmentEntryDB();
+    $res =  $bookAppoinmentDl->Persist($bookAppointmentObj);
+    
+    echo json_encode($bookAppointmentObj);
+}
+else{
+    echo json_encode("form not posted");
+}
+
+   
+  }  catch(PDOException $e){
+                        die('Could not connect to the database:<br/>' . $e);
+                        $dberror = "could not connect to database";
+                        return "there was an error";
+             }
+ 
+
+
+});
+
+ 
 
 $app->post('/saveUpdateDoctor', function($request, $response){
 
