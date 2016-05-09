@@ -21,14 +21,14 @@
               <div class="content_bottom">
 
               <div class="col-md-offset-2">
-              <form id="addCompanyForm"  class="form-horizontal">
+                     <form id="addCompanyForm"  class="form-horizontal">
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Appointment Date</label>
               <div class='col-md-6'>
 
 
               <div class='input-group date' id='datetimepicker2'>
-              <input type='text' class="form-control" />
+              <input type='date' id="book-appointment-date-form-input" class="form-control" />
               <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
               </span>
@@ -42,7 +42,7 @@
               <div class='col-md-6'>
 
               <div class='input-group date' id='datetimepicker3'>
-              <input type='text' class="form-control" />
+              <input type='time'id="book-appointment-patientsTime-form-input" class="form-control" />
               <span class="input-group-addon">
               <span class="glyphicon glyphicon-time"></span>
               </span>
@@ -58,14 +58,14 @@
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
               <div class="col-md-6">
-              <input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+              <input type="text" class="form-control" name="username" id="book-appointment-patientsName-form-input" placeholder="Patients Name">
               </div>
 
               </div>
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
               <div class="col-md-6">
-              <input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+              <input type="text" class="form-control" name="username" id="book-appointment-contact-form-input" placeholder="Your telephone contact no">
               </div>
 
               </div>
@@ -73,10 +73,10 @@
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Description</label>
               <div class="col-md-6">
-              <textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+              <textarea class="form-control"  rows ="5" name="address" id="book-appointment-description-form-input" ></textarea>
               <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
-              </div>
+              </div> 
               </div>
 
 
