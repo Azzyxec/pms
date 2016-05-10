@@ -47,12 +47,8 @@ class PatientDB{
 
   }
 
-  public function saveUpdatePatientInfo($patient, $guardian, $moreInfoXMLArray){
+  public function saveUpdatePatientInfo($patient, $guardian, $doctorId){
     try {
-
-      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><programe></programe>');
-      $this->array_to_xml($moreInfoXMLArray, $xml_data);
-      $programmeXML = $xml_data->asXML();
 
       $paramArray = array(
                           'pid' => $patient->id,
@@ -68,7 +64,7 @@ class PatientDB{
                           'ppicture_path' => $patient->picturePath,
                           'pis_guardain' =>  $patient->isGuardian,
                           'ppatient_id' =>  $patient->guardianId,
-                          'pdoctor_id' =>  $moreInfoXMLArray['doctorId']
+                          'pdoctor_id' =>  $doctorId
                         );
 
       $statement = DBHelper::generateStatement('create_modify_patient',  $paramArray);

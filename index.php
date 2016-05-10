@@ -315,13 +315,11 @@ $app->post('/addUpdatePatient', function ($request, $response) {
   try {
 
     /*
-    $postedData = $request->getParsedBody();
+      $postedData = $request->getParsedBody();
 
-    $data = array('status' => "1", 'data' => $postedData, 'message' => 'test' );
-    return $response->withJson($data);
-*/
-
-
+      $data = array('status' => "1", 'data' => $postedData, 'message' => 'test' );
+      return $response->withJson($data);
+   */
 
     $user = UserSessionManager::getUser();
 
@@ -329,10 +327,9 @@ $app->post('/addUpdatePatient', function ($request, $response) {
       //need to check for the user type too
 
       $postedData = $request->getParsedBody();
-      $patient = Patient::getInsanceFromArray($postedData);
+      //$patient = Patient::getInsanceFromArray($postedData['patient']);
 
-      /*
-      $patient =  new Patient();
+      $patient = new Patient();
       $patient->id = 0;
       $patient->name = "Travolda";
       $patient->dateOfBirth = "01-04-2016";
@@ -347,12 +344,11 @@ $app->post('/addUpdatePatient', function ($request, $response) {
       $patient->picturePath = "2.jpg";
       $patient->isGuardian = 0;
       $patient->guardianId = null;
-      */
 
       //settign the gurdain details
       $guardian =  new Patient();
 
-
+      /*
       $moreInfoXMLArray = array();
       $moreInfoXMLArray['doctorId'] = $user->id;
       $moreInfoXMLArray['programmeListCount'] = 3;
@@ -363,17 +359,23 @@ $app->post('/addUpdatePatient', function ($request, $response) {
       $moreInfoXMLArray['programmeList'] []  = array('id' => 1, 'dueOn' => '08-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4132' );
       $moreInfoXMLArray['programmeList'] []  = array('id' => 2, 'dueOn' => '09-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4523452' );
       $moreInfoXMLArray['programmeList'] []  = array('id' => 3, 'dueOn' => '10-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4134536532' );
-
+*/
       $patientDB = new PatientDB();
-      $callResponse = $patientDB->saveUpdatePatientInfo($patient, $guardian, $moreInfoXMLArray);
+      $callResponse = $patientDB->saveUpdatePatientInfo($patient, $guardian, $user->id);
 
-      return $response->withJson($callResponse);
+      $programmeList =  $postedData['programmeLists'];
+      $programmeList['doctorId'] = $user->id;
+      $programmeList['patientId'] =  $callResponse['data']['patientId'];
+      $programmeList['programmeCount'] = $postedData['programmeCount'];
+      $programmeDB = new ProgrammeDB();
+      $programmeResponse = $programmeDB->createUpdatePatientsProgramme($programmeList);
+
+      return $response->withJson($programmeResponse);
 
   } else {
     $data = array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this oeration' );
     return $response->withJson($data);
   }
-
 
 
   } catch (Exception $e) {
@@ -421,6 +423,48 @@ $app->get('/getMedicationProgrammeList', function ($request, $response) {
   } catch (Exception $e) {
       $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
       return $response->withJson($data);
+  }
+
+});
+
+$app->get('/getProgrammeListDetails', function ($request, $response) {
+  try {
+
+      $allGetVars = $request->getQueryParams();
+
+      if(isset($allGetVars['id'])){
+
+        $programmeDB = new ProgrammeDB();
+        $result = $programmeDB->getProgrammeListDetails($allGetVars['id']);
+        return $response->withJson($result);
+
+      }
+
+  } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+      return $response->withJson($data);
+  }
+
+});
+
+$app->get('/getPatientProgrammes', function ($request, $response) {
+  try {
+
+    $allGetVars = $request->getQueryParams();
+
+
+    if(isset($allGetVars['id'])){
+
+      $patientId = $allGetVars['id'];
+      $programmeDB = new ProgrammeDB();
+      $result = $programmeDB->getPatientsProgramme($patientId);
+      return $response->withJson($result);
+      
+    }
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+    return $response->withJson($data);
   }
 
 });
