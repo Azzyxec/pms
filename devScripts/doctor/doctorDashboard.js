@@ -32,6 +32,7 @@ $(document).ready(function(){
           this.dashboardHomeUrl = "index.php/doctorDashboard";
           this.newAppointmentUrl = "index.php/bookAppointment";
           this.patientsEntryUrl = "index.php/patientsEntry";
+          this.patientsListingUrl = "index.php/patientsListing";
           this.closeAppointmentUrl = "index.php/closeAppointment";
           this.doctorsAppointmentsListUrl = "index.php/listAppointment";
           this.createProgramForPatientUrl = "index.php/createProgramForPatient";
@@ -39,6 +40,7 @@ $(document).ready(function(){
           this.listScheduleUrl = "index.php/scheduleList";
           this.addStaffUrl = "index.php/staffEntry";
           this.patientsHistoryUrl = "index.php/patientHistory";
+
           //do somethng about doctors info and registration
 
           //The url from the browser  can be compared to set the active navigation
@@ -70,6 +72,12 @@ $(document).ready(function(){
               console.log('patients Entryclick');
               window.location.href = controller.patientsEntryUrl;
             });
+
+          $("#patients-entry-list-section-link-Btn").click(function(e){
+            e.preventDefault();
+            console.log('patients listing click');
+            window.location.href = controller.patientsListingUrl;
+          });
 
           $("#user-Profile-Btn-Link").click(function(e){
               e.preventDefault();

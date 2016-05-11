@@ -47,6 +47,10 @@ var filesList = [
                  ], buildName: "list.schedule.js"},
 {build:true, files: [
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath +"patient/list.patient.js"
+                ], buildName: "list.patient.js"},
+{build:true, files: [
+                  objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath +"staffManage/add.staff.js"
                 ], buildName: "add.staff.js"},
 {build:true, files: [

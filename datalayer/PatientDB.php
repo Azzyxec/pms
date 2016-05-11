@@ -23,14 +23,14 @@ class PatientDB{
        $patient = array();
        $patient['id'] = $result['id'];
        $patient['name'] = $result['name'];
-       $patient[''] = $result['date_of_birth'];
-       $patient[''] = $result['blood_group'];
-       $patient[''] = $result['weight'];
-       $patient[''] = $result['height'];
-       $patient[''] = $result['gender'];
-       $patient[''] = $result['contact1'];
-       $patient[''] = $result['address'];
-       $patient[''] = $result['picture_path'];
+       $patient['dateOfBirth'] = $result['date_of_birth'];
+       $patient['bloodGroup'] = $result['blood_group'];
+       $patient['weight'] = $result['weight'];
+       $patient['height'] = $result['height'];
+       $patient['gender'] = $result['gender'];
+       $patient['contact'] = $result['contact1'];
+       $patient['address'] = $result['address'];
+       $patient['picturePath'] = $result['picture_path'];
 
        $patientList[] = $patient;
      }

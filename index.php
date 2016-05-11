@@ -358,18 +358,24 @@ $app->get('/getScheduleList', function ($request, $response) {
 //EOC Schedule Management
 
 //BOC Patient Management
+
+$app->get('/patientsListing', function ($request, $response) {
+    return $this->view->render($response, '/patient/patient-listing.html', array('basePath' => AppConfig::$basePath));
+});
+
+
 $app->get('/getPatientList', function ($request, $response) {
   try {
 
     $data = "";
-    $message = "try passing doctor id";
+    $message = "you might need to log in as a doctor";
 
-    $allGetVars = $request->getQueryParams();
+    $user = UserSessionManager::getUser();
 
-    if(isset($allGetVars['id'])){
+    if($user->id != "-1"){
 
       $patientDB =  new PatientDB();
-      $resultArray = $patientDB->getPatienList($allGetVars['id']);
+      $resultArray = $patientDB->getPatienList($user->id);
 
       $message = "success";
       $data = $resultArray['data'];

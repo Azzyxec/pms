@@ -12,7 +12,7 @@ $(document).ready(function(){
 
             listView.init();
 
-            $.get(   this.getListUrl , {})
+            $.get( this.getListUrl , {})
              .done(function( response ) {
                //console.log('response ' + JSON.stringify(response));
                model = response.data;
@@ -68,7 +68,7 @@ $(document).ready(function(){
 
                     console.log("schedule id: " + JSON.stringify(schedule.id));
                     controller.scheduleEditRedirect(schedule.id);
-                    
+
                   }
                 })(listModel[key]));
 
