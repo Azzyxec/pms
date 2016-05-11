@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2016 at 03:37 PM
+-- Generation Time: May 11, 2016 at 05:25 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -664,6 +664,22 @@ select id
 	   , name
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT)
+    READS SQL DATA
+SELECT `id`
+		,`name`
+		, `date_of_birth`
+		, `blood_group`,
+		`weight`
+		, `height`
+		, `gender`
+		, `contact1`
+		,`address`
+		, `picture_path`
+FROM `patient` 
+WHERE fk_doctor_id = pdoctor_id
+	  and is_guardian = 0$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
     NO SQL
