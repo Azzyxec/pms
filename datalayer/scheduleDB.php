@@ -3,7 +3,6 @@
 namespace Pms\Datalayer;
 
 use Pms\Datalayer\DBHelper;
-use \SimpleXMLElement;
 use \PDO;
 
 
@@ -28,7 +27,7 @@ class ScheduleDB
       $locationCount = $infoArray['locationCount'];
       $postedLocationJson = $infoArray['locationList'];
 
-      $xml_data = new SimpleXMLElement('<?xml version="1.0"?><schedules></schedules>');
+      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><schedules></schedules>');
       $this->array_to_xml($postedLocationJson, $xml_data);
       $scheduleXML = $xml_data->asXML();
 

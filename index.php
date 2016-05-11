@@ -1,26 +1,38 @@
 <?php
 
+require './vendor/autoload.php';
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \PDO;
-
-require '.\vendor\autoload.php';
 
 
 //specific to the application
 
 //Core require needed for other to work
-require_once __DIR__.'\AppConfig.php';
+require_once './AppConfig.php';
 
+//require once for entites
+require_once './entities/User.php';
+require_once './entities/Doctor.php';
+require_once './entities/UserSessionManager.php';
+require_once './entities/Patient.php';
+require_once './entities/bookAppointment.php';
 
-//loading datalayer files
-require_once __DIR__.'\datalayer\DBHelper.php';
-require_once __DIR__.'\datalayer\UserDB.php';
-require_once __DIR__.'\datalayer\DoctorDB.php';
-require_once __DIR__.'\datalayer\ScheduleDB.php';
-require_once __DIR__.'\datalayer\PatientDB.php';
-require_once __DIR__.'\datalayer\ProgrammeDB.php';
-require_once __DIR__.'\datalayer\bookAppointmentAbstraction.php';
+//importing entites
+use Pms\Entities\User;
+use Pms\Entities\Doctor;
+use Pms\Entities\UserSessionManager;
+use Pms\Entities\Patient;
+use Pms\Entities\bookAppointmentObject;
+
+require_once './datalayer/DBHelper.php';
+require_once './datalayer/UserDB.php';
+require_once './datalayer/DoctorDB.php';
+require_once './datalayer/ScheduleDB.php';
+require_once './datalayer/PatientDB.php';
+require_once './datalayer/ProgrammeDB.php';
+require_once './datalayer/bookAppointmentAbstraction.php';
 
 use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
@@ -29,20 +41,6 @@ use Pms\Datalayer\ScheduleDB;
 use Pms\Datalayer\PatientDB;
 use Pms\Datalayer\ProgrammeDB;
 use Pms\Datalayer\bookAppointmentEntryDB;
-
-//require once for entites
-require_once __DIR__.'\entities\User.php';
-require_once __DIR__.'\entities\Doctor.php';
-require_once __DIR__.'\entities\UserSessionManager.php';
-require_once __DIR__.'\entities\Patient.php';
-require_once __DIR__.'\entities\bookAppointment.php';
-
-//importing entites
-use Pms\Entities\User;
-use Pms\Entities\Doctor;
-use Pms\Entities\UserSessionManager;
-use Pms\Entities\Patient;
-use Pms\Entities\bookAppointmentObject;
 
 
 $configuration = [
@@ -92,65 +90,65 @@ $container['view'] = function ($container) {
 
 //default route
 $app->get('/', function ($request, $response) {
-    return $this->view->render($response, 'login.html');
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
 });
 
 
 $app->get('/login', function ($request, $response) {
-    return $this->view->render($response, 'login.html');
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/doctorInfo', function ($request, $response) {
-    return $this->view->render($response, '/doctor/doctor-registration.html');
+    return $this->view->render($response, '/doctor/doctor-registration.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/scheduleManagement', function ($request, $response) {
-    return $this->view->render($response, '/doctor/schedule.html');
+    return $this->view->render($response, '/doctor/schedule.html', array('basePath' => AppConfig::$basePath));
 });
 $app->get('/createProgramForPatient', function ($request, $response) {
-    return $this->view->render($response, '/programs/create-program.html');
+    return $this->view->render($response, '/programs/create-program.html', array('basePath' => AppConfig::$basePath));
 });
 
 
 $app->get('/doctorDashboard', function ($request, $response) {
-    return $this->view->render($response, '/doctor/dash-home.html');
+    return $this->view->render($response, '/doctor/dash-home.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/doctorProfile', function ($request, $response) {
-    return $this->view->render($response, '/doctor/doctor-profile.html');
+    return $this->view->render($response, '/doctor/doctor-profile.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/bookAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/book-appointment.html');
+    return $this->view->render($response, '/appointment/book-appointment.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/listAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/list-appointment.html');
+    return $this->view->render($response, '/appointment/list-appointment.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/closeAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/close-appointment.html');
+    return $this->view->render($response, '/appointment/close-appointment.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/newSchedule', function ($request, $response) {
-    return $this->view->render($response, '/schedule/new-schedule.html');
+    return $this->view->render($response, '/schedule/new-schedule.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/scheduleList', function ($request, $response) {
-    return $this->view->render($response, '/schedule/schedule-list.html');
+    return $this->view->render($response, '/schedule/schedule-list.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/patientsEntry', function ($request, $response) {
-    return $this->view->render($response, '/patient/patient-entry.html');
+    return $this->view->render($response, '/patient/patient-entry.html', array('basePath' => AppConfig::$basePath));
 });
 
 
 $app->get('/staffEntry', function ($request, $response) {
-    return $this->view->render($response, '/staffManage/add-staff.html');
+    return $this->view->render($response, '/staffManage/add-staff.html', array('basePath' => AppConfig::$basePath));
 });
 
 $app->get('/patientHistory', function ($request, $response) {
-    return $this->view->render($response, '/patient/patient-history.html');
+    return $this->view->render($response, '/patient/patient-history.html', array('basePath' => AppConfig::$basePath));
 });
 
 
@@ -226,9 +224,7 @@ $app->get('/getDoctorDetails', function ($request, $response) {
 
 });
 
-
-
-
+/*
 $app->post('/saveBookPatientEntry', function ($request, $response) {
  try {
  $bookAppointmentFormData = json_decode($_POST['data']);
@@ -237,43 +233,43 @@ $app->post('/saveBookPatientEntry', function ($request, $response) {
 
 if (isset($bookAppointmentFormData))
     {
-    
-    
-    
+
+
+
     //2016-01-22 -- Y-m-d  -- Asia/Calcutta
     $bookAppointmentDate = date_create_from_format('Y-m-d', $bookAppointmentFormData->bookAppointmentDate, new DateTimeZone('Asia/Calcutta'));
-    
-    
+
+
 
     $bookAppointmentObj = new bookAppointmentObject(
                             $bookAppointmentFormData->patientsName,
                             $bookAppointmentFormData->bookAppointmentTime,
-                            $bookAppointmentDate->format('d-m-Y'), 
-                            $bookAppointmentFormData->contact, 
-                            $bookAppointmentFormData->description 
+                            $bookAppointmentDate->format('d-m-Y'),
+                            $bookAppointmentFormData->contact,
+                            $bookAppointmentFormData->description
                          );
-    
+
     $bookAppoinmentDl = new bookAppointmentEntryDB();
     $res =  $bookAppoinmentDl->Persist($bookAppointmentObj);
-    
+
     echo json_encode($bookAppointmentObj);
 }
 else{
     echo json_encode("form not posted");
 }
 
-   
+
   }  catch(PDOException $e){
                         die('Could not connect to the database:<br/>' . $e);
                         $dberror = "could not connect to database";
                         return "there was an error";
              }
- 
+
 
 
 });
+*/
 
- 
 
 $app->post('/saveUpdateDoctor', function($request, $response){
 
@@ -511,7 +507,7 @@ $app->get('/getPatientProgrammes', function ($request, $response) {
       $programmeDB = new ProgrammeDB();
       $result = $programmeDB->getPatientsProgramme($patientId);
       return $response->withJson($result);
-      
+
     }
 
   } catch (Exception $e) {
