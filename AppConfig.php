@@ -5,6 +5,7 @@ class AppConfig{
   //slim config
   public static $templatePath = '../pms/templates';
   public static $displayErrorDetails = true;
+  public static $basePath = '/pms/';
 
   //Database config
   public static $dbhost = 'localhost';

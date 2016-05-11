@@ -358,6 +358,34 @@ $app->get('/getScheduleList', function ($request, $response) {
 //EOC Schedule Management
 
 //BOC Patient Management
+$app->get('/getPatientList', function ($request, $response) {
+  try {
+
+    $data = "";
+    $message = "try passing doctor id";
+
+    $allGetVars = $request->getQueryParams();
+
+    if(isset($allGetVars['id'])){
+
+      $patientDB =  new PatientDB();
+      $resultArray = $patientDB->getPatienList($allGetVars['id']);
+
+      $message = "success";
+      $data = $resultArray['data'];
+
+    }
+
+    $data = array('status' => "1", 'data' => $data, 'message' => $message);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
+
 
 $app->post('/addUpdatePatient', function ($request, $response) {
   try {

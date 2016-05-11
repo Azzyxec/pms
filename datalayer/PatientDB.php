@@ -7,6 +7,42 @@ use Pms\Entities\Patient;
 
 class PatientDB{
 
+  public function getPatienList($doctorId){
+    try {
+
+    $paramArray = array(
+                          'pdoctor_id' => $doctorId
+                        );
+
+     $statement = DBHelper::generateStatement('get_patients_list',  $paramArray);
+
+     $statement->execute();
+
+     $patientList = array();
+     while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+       $patient = array();
+       $patient['id'] = $result['id'];
+       $patient['name'] = $result['name'];
+       $patient[''] = $result['date_of_birth'];
+       $patient[''] = $result['blood_group'];
+       $patient[''] = $result['weight'];
+       $patient[''] = $result['height'];
+       $patient[''] = $result['gender'];
+       $patient[''] = $result['contact1'];
+       $patient[''] = $result['address'];
+       $patient[''] = $result['picture_path'];
+
+       $patientList[] = $patient;
+     }
+
+      return array('status' => 1, 'data' => $patientList, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
   public function getPatientDetails($patientId){
     try {
 
