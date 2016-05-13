@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2016 at 06:28 AM
+-- Generation Time: May 13, 2016 at 10:12 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -57,6 +57,7 @@ begin
 								, `password`
 								, `created`
 								,last_modified
+                                ,is_active
 								)
 								VALUES 
 								('D'
@@ -64,6 +65,7 @@ begin
 								,ppassword
 								,now()
 								,null
+                                ,1
 								);
 								
 			 select max(id)
@@ -112,6 +114,7 @@ begin
 					SET `login_id`= plogin_id
 					,`password`= ppassword
 					,`last_modified`= now()
+                    ,is_active = pis_active
 			WHERE id = @llogin_id;
 			
 			
@@ -309,7 +312,8 @@ select id
        		,@lUserType
        from login
        where login_id = plogin_id
-       		  and `password` = ppassword;
+       		  and `password` = ppassword
+              and is_active = 1;
               
 if @lUserType is null then
 
@@ -338,6 +342,37 @@ elseif @lUserType = 'D' then
            ,@lname as name;
 
 end if;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `book_appointment`(IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))
+    NO SQL
+begin
+
+	#insert into appointment table
+	
+	INSERT INTO `appointment`(
+								`fk_doctor_id`
+								, `fk_patient_id`
+								, `appointment_date`
+								, `appointment_time_minutes`
+								, `description`
+								, `appointment_state`
+								, `created_date`
+								, `is_active`
+								) 
+						 VALUES (
+								  pdoctor_id
+								 ,ppatient_id
+								 ,pappointment_date_time
+								 ,0
+								 ,0
+								 ,pdescription
+								 ,1
+								 );
+	
+	select 1 as state;
+
 
 end$$
 
@@ -822,6 +857,22 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
+    NO SQL
+begin
+
+SELECT `id`
+		, `name`
+		, `contact1`
+		, `email`
+		, `qualification`
+		, `is_active` 
+  FROM `doctor`; 
+
+
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
 select id
@@ -932,6 +983,25 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `appointment`
+--
+
+CREATE TABLE IF NOT EXISTS `appointment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_doctor_id` int(11) NOT NULL,
+  `fk_patient_id` int(11) NOT NULL,
+  `appointment_date` date NOT NULL,
+  `appointment_time_minutes` int(11) NOT NULL,
+  `description` varchar(2000) NOT NULL,
+  `appointment_state` int(11) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `doctor`
 --
 
@@ -948,36 +1018,37 @@ CREATE TABLE IF NOT EXISTS `doctor` (
   `recovery_email` varchar(100) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `doctor`
 --
 
 INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `email`, `qualification`, `address`, `recovery_contact`, `recovery_email`, `is_active`) VALUES
-(1, 33, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 0),
-(2, 34, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 0),
-(3, 35, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 0),
-(4, 36, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(5, 37, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(6, 38, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(7, 39, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(8, 40, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(9, 41, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(10, 42, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(11, 43, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(12, 44, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(13, 45, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(14, 46, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(15, 47, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(16, 48, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
-(17, 49, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 0),
+(1, 33, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 1),
+(2, 34, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 1),
+(3, 35, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 1),
+(4, 36, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(5, 37, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(6, 38, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(7, 39, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(8, 40, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(9, 41, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(10, 42, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(11, 43, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(12, 44, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(13, 45, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(14, 46, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(15, 47, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(16, 48, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
+(17, 49, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
 (18, 50, 'Greg', '2341231111', '12341111', 'asdfasdf', '123411', '1234111', '3333', 'recova', 1),
 (19, 51, 'Dino', '341234', '234123', 'fdafd@gmail.com', 'asdf', 'asdf', '3241234', 'asdfsd', 1),
 (20, 52, 'Dino', '341234', '234123', 'fdafd@gmail.com', 'asdf', 'asdf', '3241234', 'asdfsd', 1),
 (21, 53, 'ddd', '2134', '2134', 'dsaf', 'asdf', 'asdf', 'asdf', 'asdf', 1),
 (22, 54, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1),
-(23, 55, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1);
+(23, 55, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1),
+(24, 56, 'Savio', '1234512345', '', 'savio@dreamlogic.in', 'MA', 'adjnasldn', '123', 'saviothecooliohotmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -992,38 +1063,40 @@ CREATE TABLE IF NOT EXISTS `login` (
   `password` varchar(100) NOT NULL,
   `created` datetime NOT NULL,
   `last_modified` datetime DEFAULT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=56 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
 
 --
 -- Dumping data for table `login`
 --
 
-INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`) VALUES
-(1, 'A', 'admin', 'admin', '1899-11-30 00:00:00', '0000-00-00 00:00:00'),
-(33, 'D', 'gogo', 'gogo', '2016-05-01 18:26:09', '2016-05-01 18:54:07'),
-(34, 'D', 'gog', 'gogo', '2016-05-01 18:54:35', NULL),
-(35, 'D', 'ggg', 'gogo', '2016-05-01 18:56:40', NULL),
-(36, 'D', 'ginna', 'ginna', '2016-05-02 10:44:51', NULL),
-(37, 'D', 'ginna1', 'ginna', '2016-05-02 10:52:49', NULL),
-(38, 'D', 'ginna2', 'ginna', '2016-05-02 11:16:49', NULL),
-(39, 'D', 'ginna3', 'ginna', '2016-05-02 11:18:09', NULL),
-(40, 'D', 'ginna4', 'ginna', '2016-05-02 11:18:56', NULL),
-(41, 'D', 'ginna5', 'ginna', '2016-05-02 11:19:25', NULL),
-(42, 'D', 'ginna6', 'ginna', '2016-05-02 11:19:48', NULL),
-(43, 'D', 'ginna8', 'ginna', '2016-05-02 11:20:39', NULL),
-(44, 'D', 'ginna9', 'ginna', '2016-05-02 11:21:03', NULL),
-(45, 'D', 'ginna10', 'ginna', '2016-05-02 11:21:28', NULL),
-(46, 'D', 'ginna11', 'ginna', '2016-05-02 11:22:34', NULL),
-(47, 'D', 'ginna12', 'ginna', '2016-05-02 11:22:50', NULL),
-(48, 'D', 'ginna13', 'ginna', '2016-05-02 11:23:31', NULL),
-(49, 'D', 'ginna14', 'ginna', '2016-05-02 11:23:47', NULL),
-(50, 'D', 'greg', 'greg', '2016-05-02 13:44:21', '2016-05-05 22:13:14'),
-(51, 'D', 'dino', 'dino', '2016-05-04 00:02:56', NULL),
-(52, 'D', 'dino1', 'dino1', '2016-05-04 00:03:22', NULL),
-(53, 'D', 'kkkk', 'kkkk', '2016-05-04 00:04:30', NULL),
-(54, 'D', 'frank', 'frank', '2016-05-04 00:16:08', NULL),
-(55, 'D', 'frank2', 'frank2', '2016-05-04 00:17:25', '2016-05-04 00:33:15');
+INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`, `is_active`) VALUES
+(1, 'A', 'admin', 'admin', '1899-11-30 00:00:00', '0000-00-00 00:00:00', 1),
+(33, 'D', 'gogo', 'gogo', '2016-05-01 18:26:09', '2016-05-01 18:54:07', 1),
+(34, 'D', 'gog', 'gogo', '2016-05-01 18:54:35', NULL, 1),
+(35, 'D', 'ggg', 'gogo', '2016-05-01 18:56:40', NULL, 1),
+(36, 'D', 'ginna', 'ginna', '2016-05-02 10:44:51', NULL, 1),
+(37, 'D', 'ginna1', 'ginna', '2016-05-02 10:52:49', NULL, 1),
+(38, 'D', 'ginna2', 'ginna', '2016-05-02 11:16:49', NULL, 1),
+(39, 'D', 'ginna3', 'ginna', '2016-05-02 11:18:09', NULL, 1),
+(40, 'D', 'ginna4', 'ginna', '2016-05-02 11:18:56', NULL, 1),
+(41, 'D', 'ginna5', 'ginna', '2016-05-02 11:19:25', NULL, 1),
+(42, 'D', 'ginna6', 'ginna', '2016-05-02 11:19:48', NULL, 1),
+(43, 'D', 'ginna8', 'ginna', '2016-05-02 11:20:39', NULL, 1),
+(44, 'D', 'ginna9', 'ginna', '2016-05-02 11:21:03', NULL, 1),
+(45, 'D', 'ginna10', 'ginna', '2016-05-02 11:21:28', NULL, 1),
+(46, 'D', 'ginna11', 'ginna', '2016-05-02 11:22:34', NULL, 1),
+(47, 'D', 'ginna12', 'ginna', '2016-05-02 11:22:50', NULL, 1),
+(48, 'D', 'ginna13', 'ginna', '2016-05-02 11:23:31', NULL, 1),
+(49, 'D', 'ginna14', 'ginna', '2016-05-02 11:23:47', NULL, 1),
+(50, 'D', 'greg', 'greg', '2016-05-02 13:44:21', '2016-05-14 01:25:54', 1),
+(51, 'D', 'dino', 'dino', '2016-05-04 00:02:56', '2016-05-14 01:38:07', 1),
+(52, 'D', 'dino1', 'dino1', '2016-05-04 00:03:22', NULL, 1),
+(53, 'D', 'kkkk', 'kkkk', '2016-05-04 00:04:30', NULL, 1),
+(54, 'D', 'frank', 'frank', '2016-05-04 00:16:08', NULL, 1),
+(55, 'D', 'frank2', 'frank2', '2016-05-04 00:17:25', '2016-05-04 00:33:15', 1),
+(56, 'D', 'saviopereira88', 'cipla@123', '2016-05-13 21:46:23', '2016-05-14 01:31:31', 1);
 
 -- --------------------------------------------------------
 
