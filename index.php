@@ -108,7 +108,8 @@ $app->get('/scheduleManagement', function ($request, $response) {
 
 
 $app->get('/doctorDashboard', function ($request, $response) {
-    return $this->view->render($response, '/doctor/dash-home.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/doctor/dash-home.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "dashboard"));
 });
 
 $app->get('/doctorProfile', function ($request, $response) {
@@ -116,36 +117,44 @@ $app->get('/doctorProfile', function ($request, $response) {
 });
 
 $app->get('/bookAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/book-appointment.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/appointment/book-appointment.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
 });
 
 $app->get('/listAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/list-appointment.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/appointment/list-appointment.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
 });
 
 $app->get('/closeAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/close-appointment.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/appointment/close-appointment.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
 });
 
 $app->get('/newSchedule', function ($request, $response) {
-    return $this->view->render($response, '/schedule/new-schedule.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/schedule/new-schedule.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "schedule"));
 });
 
 $app->get('/scheduleList', function ($request, $response) {
-    return $this->view->render($response, '/schedule/schedule-list.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/schedule/schedule-list.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "schedule"));
 });
 
 $app->get('/patientsEntry', function ($request, $response) {
-    return $this->view->render($response, '/patient/patient-entry.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/patient/patient-entry.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "patient"));
 });
 
 
 $app->get('/staffEntry', function ($request, $response) {
-    return $this->view->render($response, '/staffManage/add-staff.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/staffManage/add-staff.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "staff"));
 });
 
 $app->get('/patientHistory', function ($request, $response) {
-    return $this->view->render($response, '/patient/patient-history.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/patient/patient-history.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "patient"));
 });
 
 
@@ -199,11 +208,13 @@ $app->get('/logout', function($request, $response){
 
 
 $app->get('/createMedicalProgram', function ($request, $response) {
-    return $this->view->render($response, '/programs/create-program.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/programs/create-program.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "programme"));
 });
 
 $app->get('/programmeList', function ($request, $response) {
-    return $this->view->render($response, '/programs/programme-listing.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/programs/programme-listing.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "programme"));
 });
 
 $app->post('/createModifyProgramme', function($request, $response){

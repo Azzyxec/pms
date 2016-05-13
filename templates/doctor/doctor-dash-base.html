@@ -1,155 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <base href="{{basePath}}" />
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <base href="{{basePath}}" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <title>Online Patient Management</title>
-      <link rel="stylesheet" type="text/css" href="css/style.css">
-      <link rel="stylesheet" type="text/css" href="css/my-custom-style.css">
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-      <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" >
-      <!-- MetisMenu CSS -->
-      <link href="css/metisMenu.min.css" rel="stylesheet">
-      <!-- Custom CSS -->
-      <link href="css/sb-admin-2.css" rel="stylesheet">
-      <!-- Custom Fonts -->
-      <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <title>Online Patient Management</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/my-custom-style.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" >
+  <!-- MetisMenu CSS -->
+  <link href="css/metisMenu.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/sb-admin-2.css" rel="stylesheet">
+  <!-- Custom Fonts -->
+  <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-  </head>
-  <body>
-    <!-- Navigation -->
-     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a id="pms-brand-btn-link" class="navbar-brand" href="#">PMS </a>
-        </div>
-        <!-- /.navbar-header -->
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a id="pms-brand-btn-link" class="navbar-brand" href="#">PMS </a>
+    </div>
+    <!-- /.navbar-header -->
 
-        <ul class="nav navbar-top-links navbar-right">
+    <ul class="nav navbar-top-links navbar-right">
 
 
 
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a  id="user-Profile-Btn-Link"><i class="fa fa-user fa-fw"></i>Profile</a>
-                    <li class="divider"></li>
-                    <li><a  id="doctor-dash-logout-btn"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                    </li>
-                </ul>
-                <!-- /.dropdown-user -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-user">
+          <li><a  id="user-Profile-Btn-Link"><i class="fa fa-user fa-fw"></i>Profile</a>
+            <li class="divider"></li>
+            <li><a  id="doctor-dash-logout-btn"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
             </li>
-            <!-- /.dropdown -->
-        </ul>
-        <!-- /.navbar-top-links -->
+          </ul>
+          <!-- /.dropdown-user -->
+        </li>
+        <!-- /.dropdown -->
+      </ul>
+      <!-- /.navbar-top-links -->
 
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-
-                    <li>
-                        <a href="#" id="dashboard-Section-Btn"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                    </li>
-                   <li>
+      <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse">
+          <ul class="nav" id="side-menu">
 
 
+            <li {% if active == "dashboard" %}class="active"{%endif%}>
+              <a href="#" id="dashboard-Section-Btn"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+            </li>
+            <li  {% if active == "appointment" %}class="active"{%endif%}>
 
+              <a href="forms.html"><i class="fa fa-edit fa-fw"></i>Appointments<span class="fa arrow"></span></a>
+              <ul class="nav nav-second-level">
+                <li>
+                  <a href="#" id="book-Appointments-Section-Btn">Book Appointments</a>
+                </li>
+                <li>
+                  <a href="#" id="close-Book-Appointment-Section-Link-Btn">Close Appointments</a>
+                </li>
+                <li>
+                  <a href="#" id="view-Appointment-Section-Link-Btn">View Appointments</a>
+                </li>
 
-                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i>Appointments<span class="fa arrow"></span></a>
-                       <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#" id="book-Appointments-Section-Btn">Book Appointments</a>
-                            </li>
-                            <li>
-                                <a href="#" id="close-Book-Appointment-Section-Link-Btn">Close Appointments</a>
-                            </li>
-                            <li>
-                                <a href="#" id="view-Appointment-Section-Link-Btn">View Appointments</a>
-                            </li>
+              </ul>
+              <!-- /.nav-second-level -->
+            </li>
+            <li {% if active == "schedule" %}class="active"{%endif%}>
+              <a href="#" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Schedule Management <span class="fa arrow"></span></a>
+              <ul class="nav nav-second-level">
+                <li>
+                  <a href="#" id="manage-schedule-create-section-link-Btn">New Schedule</a>
+                </li>
+                <li>
+                  <a href="#" id="manage-schedule-list-section-link-Btn">Schedule Listing</a>
+                </li>
 
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
-                    <li>
-                        <a href="#" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Schedule Management <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                             <li>
-                                 <a href="#" id="manage-schedule-create-section-link-Btn">New Schedule</a>
-                             </li>
-                             <li>
-                                 <a href="#" id="manage-schedule-list-section-link-Btn">Schedule Listing</a>
-                             </li>
+              </ul>
 
-                         </ul>
-
-                    </li>
-                        <li>
-                            <a  href="#" id="btn-programme-section-link" ><i class="fa fa-table fa-fw"></i>Program Management<span class="fa arrow"></a>
-                              <ul class="nav nav-second-level">
-                                   <li>
-                                       <a href="#" id="create-program-for-patient-section">New  Programme</a>
-                                   </li>
-                                   <li>
-                                       <a href="#" id="btn-list-program-section">Programme Listing</a>
-                                   </li>
-
-                               </ul>
-                        </li>
-                      <li>
-                        <a href="tables.html" id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patients Management<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                             <li>
-                                 <a href="#" id="patients-entry-create-section-link-Btn">New Patient</a>
-                             </li>
-                             <li>
-                                 <a href="#" id="patients-entry-list-section-link-Btn">patients Listing</a>
-                             </li>
-                             <li>
-                                 <a href="#" id="patients-History-Section-Link-Btn">patients appointment History</a>
-                             </li>
-                         </ul>
-
-                    </li>
-
-                    <li>
-                        <a href="#"><i class="fa fa-edit fa-fw"></i>Staff Management<span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level">
-                            <li>
-                                <a href="#" id="add-Staff-Section-Link-Btn">New Staff</a>
-                            </li>
-                            <li>
-                                <a href="#" id="btn-staff-listing">Staff Listing</a>
-                            </li>
-                        </ul>
-                        <!-- /.nav-second-level -->
-                    </li>
+            </li>
+            <li {% if active == "programme" %}class="active"{%endif%}>
+              <a  href="#" id="btn-programme-section-link" ><i class="fa fa-table fa-fw"></i>Program Management<span class="fa arrow"></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="#" id="create-program-for-patient-section">New  Programme</a>
+                  </li>
+                  <li>
+                    <a href="#" id="btn-list-program-section">Programme Listing</a>
+                  </li>
 
                 </ul>
-            </div>
-            <!-- /.sidebar-collapse -->
+              </li>
+              <li {% if active == "patient" %}class="active"{%endif%}>
+                <a href="tables.html" id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patients Management<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="#" id="patients-entry-create-section-link-Btn">New Patient</a>
+                  </li>
+                  <li>
+                    <a href="#" id="patients-entry-list-section-link-Btn">patients Listing</a>
+                  </li>
+                  <li>
+                    <a href="#" id="patients-History-Section-Link-Btn">patients appointment History</a>
+                  </li>
+                </ul>
+
+              </li>
+
+              <li {% if active == "staff" %}class="active"{%endif%}>
+                <a href="#"><i class="fa fa-edit fa-fw"></i>Staff Management<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="#" id="add-Staff-Section-Link-Btn">New Staff</a>
+                  </li>
+                  <li>
+                    <a href="#" id="btn-staff-listing">Staff Listing</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+
+            </ul>
+          </div>
+          <!-- /.sidebar-collapse -->
         </div>
         <!-- /.navbar-static-side -->
-    </nav>
+      </nav>
 
-    <div id="page-wrapper">
-      <div id="wrapper">{% block content %}{% endblock %}</div>
-    </div>
+      <div id="page-wrapper">
+        <div id="wrapper">{% block content %}{% endblock %}</div>
+      </div>
 
-    <script src="js/jquery-2.1.4.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/metisMenu.min.js"></script>
-    <script src="js/sb-admin-2.js"></script>
-    {% block addScripts %}{% endblock %}
+      <script src="js/jquery-2.1.4.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/metisMenu.min.js"></script>
+      <script src="js/sb-admin-2.js"></script>
+      {% block addScripts %}{% endblock %}
 
-  </body>
-</html>
+    </body>
+    </html>
