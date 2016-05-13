@@ -1,7 +1,7 @@
 <div class="container">
 
   <form class="form-horizontal" >
-    <label class="col-md-12 text-center" >Doctors Registration</label>
+    <label class="col-md-12 text-center" >Doctor Info</label>
     <hr class="invisible">
     <hr class="invisible">
 
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-    <div class="from-group">
+    <div class="from-group" style={% if showActiveContol == "true" %}"visibility:visible;" {% else %} "visibility:hidden;"  {%endif%}>
       <label class="col-md-2 control-label" for="">Status</label>
       <div class="radio col-md-6">
         <label>
@@ -96,9 +96,8 @@
     <hr class="invisible">
     <hr class="invisible">
 
-    <div class="from-group col-md-6 ">
-      <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary">Submit</button>
-      <button type="button" class="btn btn-primary">Back</button>
+    <div class="from-group col-md-6 text-center">
+      <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary">Save</button>
     </div>
 
 

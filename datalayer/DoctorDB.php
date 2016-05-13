@@ -18,6 +18,33 @@ class DoctorDB
     # code...
   }
 
+  public function getAllDoctors(){
+    try {
+
+      $paramArray = array();
+      $statement = DBHelper::generateStatement('get_all_doctors',  $paramArray);
+      $statement->execute();
+
+
+      $allDoctors = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+          $doctor = new Doctor();
+          $doctor->id =  $result['id'];
+          $doctor->name = $result['name'];
+          $doctor->contact = $result['contact1'];
+          $doctor->email = $result['email'];
+          $doctor->qualifications = $result['qualification'];
+          $doctor->isActive = $result['is_active'];
+          $allDoctors[] = $doctor;
+      }
+
+      return array('status' => 1, 'data' => $allDoctors, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exception');
+    }
+  }
+
   public function getDoctor($doctorId){
     $doctor = new Doctor();
     try {

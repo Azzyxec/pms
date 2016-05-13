@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     $(function(){
-        console.log('Doctor Dashboard home js loaded');
+        console.log('Admin Dashboard Home loaded');
     }());
 
 });

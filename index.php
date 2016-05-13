@@ -88,6 +88,44 @@ $container['view'] = function ($container) {
 
 //end of database section
 
+
+$app->get('/admin', function ($request, $response) {
+    return $this->view->render($response, '/admin/dash-home.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
+});
+
+$app->get('/doctorListing', function ($request, $response) {
+    return $this->view->render($response, '/admin/doctor-listing.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
+});
+
+$app->get('/getAllDoctors', function ($request, $response) {
+  try {
+
+    $doctorDB = new DoctorDB();
+    $queryResult = $doctorDB->getAllDoctors();
+
+    $data = array('status' => "1", 'data' => $queryResult['data'], 'message' => 'success' );
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+  }
+
+});
+
+$app->get('/adminDoctorEdit', function ($request, $response) {
+    return $this->view->render($response, '/admin/doctor-edit.html',
+                                                              array('basePath' => AppConfig::$basePath
+                                                                    , 'active' => "doctors"
+                                                                    , 'showActiveContol' => "true"
+                                                                    , 'title' => "Update Doctor"
+                                                                   ));
+});
+
+
+
+
 //default route
 $app->get('/', function ($request, $response) {
     return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
@@ -116,20 +154,6 @@ $app->get('/doctorProfile', function ($request, $response) {
     return $this->view->render($response, '/doctor/doctor-profile.html', array('basePath' => AppConfig::$basePath));
 });
 
-$app->get('/bookAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/book-appointment.html',
-                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
-});
-
-$app->get('/listAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/list-appointment.html',
-                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
-});
-
-$app->get('/closeAppointment', function ($request, $response) {
-    return $this->view->render($response, '/appointment/close-appointment.html',
-                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
-});
 
 $app->get('/newSchedule', function ($request, $response) {
     return $this->view->render($response, '/schedule/new-schedule.html',
@@ -201,10 +225,27 @@ $app->post('/logout', function($request, $response){
 
 $app->get('/logout', function($request, $response){
     UserSessionManager::destroySession();
-    return $this->view->render($response, 'login.html');
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
 });
 
 //EOC user management
+
+//BOC Appointment Management
+$app->get('/bookAppointment', function ($request, $response) {
+    return $this->view->render($response, '/appointment/book-appointment.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
+});
+
+$app->get('/listAppointment', function ($request, $response) {
+    return $this->view->render($response, '/appointment/list-appointment.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
+});
+
+$app->get('/closeAppointment', function ($request, $response) {
+    return $this->view->render($response, '/appointment/close-appointment.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "appointment"));
+});
+//EOC Appointment management
 
 
 $app->get('/createMedicalProgram', function ($request, $response) {
