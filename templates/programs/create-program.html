@@ -3,128 +3,94 @@
 <section id="book-Appointments-Section">
   <!-- /.row -->
   <div class="row">
-      <hr class="invisible">
+    <hr class="invisible">
     <div class="container">
-      <div class="col-lg-12">
+      <div class="col-md-12">
         <div class="panel panel-default">
           <div class="panel-heading">
-          Program create
+            Program
           </div>
-            <div class="panel-body">
+          <div class="panel-body">
+            <div class="content_bottom">
               <div class="row">
-              <div class="text-center">
-              <h1 class="page-header">New Program</h1>
-              </div>
-              <!-- /.col-lg-12 -->
-              </div>
 
-
-              <div class="  content_bottom">
-
-             
-<div class="row">
-    
-     <div class="form-group">
-              <label for="focusedinput" class="col-md-1  control-label">Program Name:<span class="required">*</span></label>
-              <div class="col-md-2">
-             <select class="form-control">
-             <option>Birth </option>    
-              <option>Birth </option>    
-               <option>Birth </option>        
-             </select>
-              </div>
-
-              </div>
+                <div class="form-group">
+                  <label for="focusedinput" class="col-md-2  control-label">Program Name:<span class="required"></span></label>
+                  <div class="col-md-4">
+                    <input id="programme-name" type="text" class="form-control">
                   </div>
 
-             
-                  
-                
-                  
-                  <div class="row">
-                      
-                         <div class="col-md-8">
-                             
-                             <hr>
-                                        <div class="table-responsive table-condensed">
-                                          <table class="table text-center table-bordered table-hover table-striped " id="dataTables-example">
-                                              <thead >
-                                                  <tr>
-                                                      <th class="col-md-1">Duration(weeks)</th>
-                                                      <th class="col-md-1">Text</th>
+                </div>
+              </div>
 
-                                                      <th class="col-md-1">Vaccine</th>
-                                                      <th class="col-md-1">Dose No</th>
-                                                      <th class="col-md-1">delete</th>
-                                                     
-                                                      
-                                                  </tr>
-                                              </thead>
-                                              <tbody>
-                                        <tr>
-                                            <td>
+              <div class="row">
 
-                                         <input type="text" class="form-control input-sm">
+                <div class="col-md-8">
 
-                                            </td>
+                  <hr>
+                  <div class="table-responsive table-condensed">
+                    <table class="table text-center table-bordered table-hover table-striped ">
+                      <thead id="programme-table-header">
+                        <tr>
+                          <th class="col-md-1">Duration(weeks)</th>
+                          <th class="col-md-1">Text</th>
+                          <th class="col-md-1">Vaccine</th>
+                          <th class="col-md-1">Dose No</th>
+                          <th class="col-md-1"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="programme-list-table-body">
+                        <tr>
+                          <td>
+                            <input id="txt-duration" type="text" placeholder="Duration in weeks" class="form-control input-sm">
+                          </td>
+                          <td>
+                            <input id="txt-duration-text" type="text" placeholder="Duration text" class="form-control input-sm">
+                          </td>
+                          <td>
+                            <input id="txt-vaccine" type="text" placeholder="Vaccine" class="form-control input-sm">
+                          </td>
+                          <td>
+                            <input id="txt-dose-no" type="text" placeholder="Dose No." class="form-control input-sm">
+                          </td>
+                          <td>
+                            <button id="btn-add-row" class="btn btn-default btn-sm">+</button>
+                          </td>
+                        </tr>
+                      </tbody>
 
-                                            <td>
-                                         <input type="text" class="form-control input-sm">
-                                            </td>
+                    </table>
+                  </div>
+                  <!-- /.table-responsive -->
+                </div>
 
-                                            <td>
-                                         <input type="text" class="form-control input-sm">
-
-
-                                            </td>
-                                           
-                                            <td>
-                                            <input type="text" class="form-control input-sm">
-                                            </td>
-                                            
-                                              <td>
-                                            <button class="btn btn-default btn-sm">Delete</button>
-                                            </td>
-                                          
-
-                                        </tr>
-                                                  
-                                            </tbody>
-                                             
-                                          </table>
-                                              <button class="btn btn-info btn-sm">add +1</button>
-                                      </div>
-                                      <!-- /.table-responsive -->
-                                  </div>
-                                 
-
-                  </div>     
-
-  
-
-
-           
 
               </div>
-              </div>
+
+
+
+
+
+
             </div>
-          <div class="panel-footer">
-          <div class="row">
-          <div class="text-center">
-          <input type="submit" class="btn-success btn" name="submit" value="Save"/>
-               <input type="submit" class="btn-success btn" name="submit" value="New"/>
-          </div>
-
-          </div>
           </div>
         </div>
-      <div class="clearfix"> </div>
+        <div class="panel-footer">
+          <div class="row">
+            <div class="text-center">
+              <input id="btn-submit-programme" type="button" class="btn-success btn" name="submit" value="Save"/>
+            </div>
+
+          </div>
+        </div>
       </div>
+      <div class="clearfix"> </div>
     </div>
   </div>
+</div>
 </section>
 {% endblock %}
 
 {% block addScripts %}
-<script src="js/new.appointment.js"></script>
+<script src="js/medical.programme.js"></script>
 {% endblock %}

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2016 at 05:25 PM
+-- Generation Time: May 13, 2016 at 06:28 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -341,6 +341,170 @@ end if;
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
+    MODIFIES SQL DATA
+begin
+
+	declare lmaxProgrammeId int;
+	declare lcounter int;
+	
+	declare lprogrammeId int;
+	declare lprogrammeDuration int;
+	declare ldurationText varchar(50);
+	declare lvaccine varchar(100);
+	declare ldoseNo int;
+
+	if pprogramme_id <= 0 then
+			
+		INSERT INTO `medication_programme`(
+											`fk_doctors_id`
+											, `name`
+											, `created_date`
+											, `is_active`
+											) 
+									VALUES (
+											pdoctor_id
+											,pprogramme_name
+											,now()
+											,1
+										   );
+										   
+		select max(id)
+		into @lmaxProgrammeId
+		from medication_programme;
+		
+		set @lcounter = 1;
+	
+		while @lcounter <= pprogrammes_count do
+		
+			SELECT ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/id')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/duration')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/text')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/vaccine')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/doseNo')
+			into @lprogrammeId
+				 ,@lprogrammeDuration
+				 ,@ldurationText
+				 ,@lvaccine
+				 ,@ldoseNo;
+				 
+			INSERT INTO `medication_programme_list`(
+													 `fk_medication_programme_id`
+													, `duration_days`
+													, duration_text
+													, `medicine`
+													, `dose_no`
+													, `created_date`
+													, `fk_doctor_id`
+													, `is_active`
+													) 
+											VALUES (
+													@lmaxProgrammeId
+													,@lprogrammeDuration
+													,@ldurationText
+													,@lvaccine
+													,@ldoseNo
+													,now()
+													,pdoctor_id
+													,1
+												  );
+		
+			SET @lcounter = @lcounter + 1;
+		END WHILE; 
+	
+
+	else
+		
+		UPDATE `medication_programme` 
+		   SET  `name`= pprogramme_name
+		 WHERE id = pprogramme_id;
+		 
+		 set @lcounter = 1;
+	
+		while @lcounter <= pprogrammes_count do
+		
+			SELECT ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/id')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/duration')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/text')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/vaccine')
+				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/doseNo')
+			into @lprogrammeId
+				 ,@lprogrammeDuration
+				 ,@ldurationText
+				 ,@lvaccine
+				 ,@ldoseNo;
+				 
+		    if COALESCE(@lprogrammeId, 0)  <= 0 then
+				 
+			INSERT INTO `medication_programme_list`(
+													 `fk_medication_programme_id`
+													, `duration_days`
+													, duration_text
+													, `medicine`
+													, `dose_no`
+													, `created_date`
+													, `fk_doctor_id`
+													, `is_active`
+													,update_marker
+													) 
+											VALUES (
+													pprogramme_id
+													,@lprogrammeDuration
+													,@ldurationText
+													,@lvaccine
+													,@ldoseNo
+													,now()
+													,pdoctor_id
+													,1
+													,1
+												  );
+			else
+			
+			    #updating and setting the update marker
+				UPDATE `medication_programme_list` 
+				   SET  `duration_days`= @lprogrammeDuration
+						,`duration_text`= @ldurationText
+						,`medicine`= @lvaccine
+						,`dose_no`= @ldoseNo
+						,`modified_date`= now()
+						,`update_marker` = 1 
+				WHERE id = @lprogrammeId
+					  and fk_medication_programme_id  = pprogramme_id
+					  and is_active = 1;
+
+			end if;
+		
+			SET @lcounter = @lcounter + 1;
+		END WHILE; 
+		
+		UPDATE `medication_programme_list` 
+		   SET  is_active = 0
+		WHERE  fk_medication_programme_id  = pprogramme_id
+			  and update_marker = 0
+			  and is_active = 1;
+		
+		#resetting the update marker
+		UPDATE `medication_programme_list` 
+		   SET  `update_marker` = 0 
+		WHERE fk_medication_programme_id  = pprogramme_id
+			  and is_active = 1;
+		 
+		 
+	
+		# if id id zero then insert with a update marker
+		# if id is greater then zero then update the rows and set the row marker to updated
+		
+		# after updating, delete the rows there were not updated and reset the updated marker
+							
+	
+	end if;
+	
+	commit;
+	
+	select 1 as status;
+	
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pdoctor_id` INT)
 begin
 
@@ -658,10 +822,20 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
+    READS SQL DATA
+select id
+	   , name
+       , date_format(created_date, '%d %b %Y') as created_date
+from medication_programme
+where fk_doctors_id = pdoctor_id
+	  and id = pprogramme_id$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme_list`(IN `pdoctor_id` INT)
     READS SQL DATA
 select id
 	   , name
+       , date_format(created_date, '%d %b %Y') as created_date
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
 
@@ -731,11 +905,13 @@ end$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
     READS SQL DATA
 select `duration_days`
+	  , duration_text
 	  , `medicine`
       , `dose_no`
       , id
 from medication_programme_list
-where fk_medication_programme_id = pprogramme_id$$
+where fk_medication_programme_id = pprogramme_id
+	  and is_active = 1$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
@@ -862,7 +1038,7 @@ CREATE TABLE IF NOT EXISTS `medication_programme` (
   `created_date` date NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `medication_programme`
@@ -870,7 +1046,11 @@ CREATE TABLE IF NOT EXISTS `medication_programme` (
 
 INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date`, `is_active`) VALUES
 (1, 18, 'Newnatal', '2016-05-10', 1),
-(2, 18, 'Newnatal1', '2016-05-10', 1);
+(2, 18, 'Newnatal1', '2016-05-10', 1),
+(6, 18, 'Yo self b4 others', '2016-05-12', 1),
+(7, 18, 'Yo self b4 others', '2016-05-12', 1),
+(8, 18, 'Yo self b4 others', '2016-05-12', 1),
+(9, 18, 'Get Will Soon edited', '2016-05-12', 1);
 
 -- --------------------------------------------------------
 
@@ -882,25 +1062,32 @@ CREATE TABLE IF NOT EXISTS `medication_programme_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_medication_programme_id` int(11) NOT NULL,
   `duration_days` int(11) NOT NULL,
+  `duration_text` varchar(50) NOT NULL,
   `medicine` varchar(100) NOT NULL,
   `dose_no` int(11) NOT NULL,
   `created_date` date NOT NULL,
   `is_active` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `update_marker` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `medication_programme_list`
 --
 
-INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `duration_days`, `medicine`, `dose_no`, `created_date`, `is_active`, `fk_doctor_id`) VALUES
-(1, 1, 0, 'BCG', 0, '2016-05-07', 1, 18),
-(2, 1, 0, 'OPV', 0, '2016-05-07', 1, 18),
-(3, 1, 0, 'Hepatatis B', 1, '2016-05-07', 1, 18),
-(4, 2, 14, 'Pnemococcal Conjugate vaccine', 1, '2016-05-09', 1, 18),
-(5, 2, 14, 'DTaP-IPV/Hib', 1, '2016-05-09', 1, 18),
-(6, 2, 14, 'Rotavirus', 1, '2016-05-09', 1, 18);
+INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `duration_days`, `duration_text`, `medicine`, `dose_no`, `created_date`, `is_active`, `fk_doctor_id`, `modified_date`, `update_marker`) VALUES
+(1, 1, 0, '', 'BCG', 0, '2016-05-07', 1, 18, '0000-00-00 00:00:00', 0),
+(2, 1, 0, '', 'OPV', 0, '2016-05-07', 1, 18, '0000-00-00 00:00:00', 0),
+(3, 1, 0, '', 'Hepatatis B', 1, '2016-05-07', 1, 18, '0000-00-00 00:00:00', 0),
+(4, 2, 14, '', 'Pnemococcal Conjugate vaccine', 1, '2016-05-09', 1, 18, '0000-00-00 00:00:00', 0),
+(5, 2, 14, '', 'DTaP-IPV/Hib', 1, '2016-05-09', 1, 18, '0000-00-00 00:00:00', 0),
+(6, 2, 14, '', 'Rotavirus', 1, '2016-05-09', 1, 18, '0000-00-00 00:00:00', 0),
+(7, 9, 1, 'One Week', 'XYZ', 0, '2016-05-12', 0, 18, '2016-05-12 23:19:30', 0),
+(8, 9, 1, 'One Week', 'XYZ1', 1, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
+(9, 9, 2, 'two errk', 'humumculus', 2, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
+(10, 9, 3, 'green', 'Cartao', 3, '2016-05-12', 1, 18, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -927,7 +1114,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `created_date` date NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
 -- Dumping data for table `patient`
@@ -946,7 +1133,8 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (44, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
 (45, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
 (46, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(47, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1);
+(47, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
+(48, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-12', 1);
 
 -- --------------------------------------------------------
 
@@ -1017,7 +1205,7 @@ CREATE TABLE IF NOT EXISTS `patient_medication_programme_list` (
   `give_on` date DEFAULT NULL,
   `batch_no` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
 
 --
 -- Dumping data for table `patient_medication_programme_list`
@@ -1029,7 +1217,10 @@ INSERT INTO `patient_medication_programme_list` (`id`, `fk_patient_id`, `fk_doct
 (42, 45, 18, 1, 3, 0, 'Hepatatis B', 1, '2016-05-18', '2016-05-08', 'qwer'),
 (43, 45, 18, 2, 4, 14, 'Pnemococcal Conjugate vaccine', 1, '2016-05-04', '2016-05-18', 'wer'),
 (44, 45, 18, 2, 5, 14, 'DTaP-IPV/Hib', 1, '2016-05-19', '2016-05-12', 'sdfsd'),
-(45, 45, 18, 2, 6, 14, 'Rotavirus', 1, '2016-05-18', '2016-05-20', 'sssss');
+(45, 45, 18, 2, 6, 14, 'Rotavirus', 1, '2016-05-18', '2016-05-20', 'sssss'),
+(46, 48, 18, 1, 1, 0, 'BCG', 0, '2016-05-11', '2016-05-11', 'qwer'),
+(47, 48, 18, 1, 2, 0, 'OPV', 0, '2016-05-25', '2016-05-24', 'qwer'),
+(48, 48, 18, 1, 3, 0, 'Hepatatis B', 1, '2016-05-18', '2016-05-26', 'qwer');
 
 -- --------------------------------------------------------
 

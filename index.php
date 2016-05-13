@@ -105,9 +105,6 @@ $app->get('/doctorInfo', function ($request, $response) {
 $app->get('/scheduleManagement', function ($request, $response) {
     return $this->view->render($response, '/doctor/schedule.html', array('basePath' => AppConfig::$basePath));
 });
-$app->get('/createProgramForPatient', function ($request, $response) {
-    return $this->view->render($response, '/programs/create-program.html', array('basePath' => AppConfig::$basePath));
-});
 
 
 $app->get('/doctorDashboard', function ($request, $response) {
@@ -199,6 +196,72 @@ $app->get('/logout', function($request, $response){
 });
 
 //EOC user management
+
+
+$app->get('/createMedicalProgram', function ($request, $response) {
+    return $this->view->render($response, '/programs/create-program.html', array('basePath' => AppConfig::$basePath));
+});
+
+$app->get('/programmeList', function ($request, $response) {
+    return $this->view->render($response, '/programs/programme-listing.html', array('basePath' => AppConfig::$basePath));
+});
+
+$app->post('/createModifyProgramme', function($request, $response){
+
+    //$postedData = $request->getParsedBody();
+    //return $response->withJson($postedData);
+
+  try {
+
+    $user = UserSessionManager::getUser();
+
+    if($user->id != "-1"){
+
+      $postedData = $request->getParsedBody();
+
+      $programmeDB = new ProgrammeDB();
+      $resultArray = $programmeDB->createModifyPrograme($postedData['programId']
+                                                        , $user->id
+                                                        , $postedData['programmeName']
+                                                        , $postedData['programeList']
+                                                       );
+
+      $data = array('status' => "1", 'data' => $resultArray['data'], 'message' => 'success');
+      return $response->withJson($resultArray);
+
+    }
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+});
+
+$app->get('/getProgrammes', function ($request, $response) {
+
+  try {
+
+    $user = UserSessionManager::getUser();
+    $allGetVars = $request->getQueryParams();
+
+    if(isset($allGetVars['id']) && $user->id != "-1"){
+
+      $programmeDB = new ProgrammeDB();
+
+      $result = $programmeDB->getMedicationProgrammes($user->id, $allGetVars['id']);
+
+      return $response->withJson($result);
+
+    }
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+    return $response->withJson($data);
+  }
+
+
+});
+
 
 // BOC Doctor management
 $app->get('/getDoctorDetails', function ($request, $response) {
@@ -492,12 +555,13 @@ $app->get('/getPatientDetails', function ($request, $response) {
 $app->get('/getMedicationProgrammeList', function ($request, $response) {
   try {
 
-      $allGetVars = $request->getQueryParams();
 
-      if(isset($allGetVars['id'])){
+        $user = UserSessionManager::getUser();
+
+        if($user->id != "-1"){
 
         $programmeDB = new ProgrammeDB();
-        $result = $programmeDB->getMedicationProgrammeList($allGetVars['id']);
+        $result = $programmeDB->getMedicationProgrammeList($user->id);
         return $response->withJson($result);
 
       }

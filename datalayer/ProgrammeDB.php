@@ -6,6 +6,37 @@ use Pms\Datalayer\DBHelper;
 
 class ProgrammeDB{
 
+  public function createModifyPrograme($programId, $doctorId, $programName, $programmeListArray){
+    try {
+
+      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><programme></programme>');
+      $this->array_to_xml($programmeListArray, $xml_data);
+      $programmeXML = $xml_data->asXML();
+
+      $paramArray = array(
+                          'pprogramme_id' => $programId,
+                          'pdoctor_id' => $doctorId,
+                          'pprogramme_name' => $programName,
+                          'pprogrammes_count' => \count($programmeListArray),
+                          'pprogrammes_xml' => $programmeXML,
+                        );
+
+      $statement = DBHelper::generateStatement('create_modify_medical_programme',  $paramArray);
+
+      $statement->execute();
+
+      $row = $statement->fetch();
+
+      $status = $row['status'];
+
+      return array('status' => $status, 'data' => $status, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
 
   public function getMedicationProgrammeList($doctorId){
     try {
@@ -21,7 +52,7 @@ class ProgrammeDB{
       $programmeList = array();
 
       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-        $programmeList[] = array('id' => $result['id'], 'name' => $result['name']);
+        $programmeList[] = array('id' => $result['id'], 'name' => $result['name'], 'created' =>  $result['created_date']);
       }
 
       return array('status' => 1, 'data' => $programmeList, 'message' => 'success');
@@ -64,6 +95,55 @@ class ProgrammeDB{
     } catch (Exception $e) {
       return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
     }
+  }
+
+  public function getMedicationProgrammes($doctorId, $programmeId){
+    try {
+
+      $paramArray = array(
+                          'pdoctor_id' => $doctorId,
+                          'pprogramme_id' => $programmeId
+                        );
+
+      $statement = DBHelper::generateStatement('get_medication_programme',  $paramArray);
+
+      $statement->execute();
+
+      $programmeRow = $statement->fetch();
+
+      $medicationProgramme = array();
+      $medicationProgramme['programId'] = $programmeRow['id'];
+      $medicationProgramme['programmeName'] = $programmeRow['name'];
+
+      $paramArray = array(
+                          'pprogramme_id' => $medicationProgramme['programId']
+                        );
+
+      $statement = DBHelper::generateStatement('get_programme_list_details',  $paramArray);
+
+      $statement->execute();
+
+      $programmeDetailList = array();  //array containing the lists
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+        $programmeDetailList[] = array(
+                                       'id' => $result['id'],
+                                       'duration' => $result['duration_days'],
+                                       'text' => $result['duration_text'],
+                                       'vaccine' => $result['medicine'],
+                                       'doseNo' => $result['dose_no']
+                                      );
+      }
+
+      $medicationProgramme['programeList'] = $programmeDetailList;
+
+
+      return array('status' => 1, 'data' => $medicationProgramme, 'message' => 'success');
+
+
+    } catch (Exception $e) {
+        return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
   }
 
   public function getPatientProgrammeDetails($patientId, $programmeId){

@@ -35,11 +35,14 @@ $(document).ready(function(){
           this.patientsListingUrl = "index.php/patientsListing";
           this.closeAppointmentUrl = "index.php/closeAppointment";
           this.doctorsAppointmentsListUrl = "index.php/listAppointment";
-          this.createProgramForPatientUrl = "index.php/createProgramForPatient";
+
           this.newScheduleUrl = "index.php/newSchedule";
           this.listScheduleUrl = "index.php/scheduleList";
           this.addStaffUrl = "index.php/staffEntry";
           this.patientsHistoryUrl = "index.php/patientHistory";
+
+          this.createProgramForPatientUrl = "index.php/createMedicalProgram";
+          this.programmeListingsUrl = "index.php/programmeList";
 
           //do somethng about doctors info and registration
 
@@ -61,11 +64,25 @@ $(document).ready(function(){
 
           });
 
+
+
+          $("#btn-programme-section-link").click(function(e){
+                  e.preventDefault();
+
+          });
+
             $("#create-program-for-patient-section").click(function(e){
                     e.preventDefault();
             console.log('create program for patient');
             window.location.href = controller.createProgramForPatientUrl;
             });
+
+            $("#btn-list-program-section").click(function(e){
+              e.preventDefault();
+              window.location.href = controller.programmeListingsUrl;
+            });
+
+
 
             $("#patients-entry-create-section-link-Btn").click(function(e){
               e.preventDefault();
@@ -135,6 +152,11 @@ $(document).ready(function(){
            $("#add-Staff-Section-Link-Btn").click(function(e){
                e.preventDefault();
                window.location.href = controller.addStaffUrl;
+           });
+
+           $("#btn-staff-listing").click(function(e){
+                   e.preventDefault();
+
            });
 
            $("#patients-History-Section-Link-Btn").click(function(e){

@@ -23,9 +23,6 @@ $(document).ready(function(){
           },
           getListModel: function(){
             return listModel;
-          },
-          patientEditRedirect: function(patientId){
-              window.location.href = controller.editPatientRedirect + '?id=' +  patientId;
           }
         };
 
@@ -59,7 +56,7 @@ $(document).ready(function(){
               tr.append(td);
 
               var td = $('<td/>');
-              td.text(patientsList[i].gender);
+              td.text( patientsList[i].gender == 1 ? 'Male' : 'Female');
               tr.append(td);
 
               var td = $('<td/>');
@@ -67,17 +64,10 @@ $(document).ready(function(){
               tr.append(td);
 
               var td = $('<a/>',{
-                text: 'Edit'
+                text: 'Edit',
+                href: controller.editPatientRedirect + '?id=' +  patientsList[i].id
               });
-              td.click((function( id){
-                //e.preventDefault();
-                return function(){
-                  //console.log(id);
-                  controller.patientEditRedirect(id);
-                }
-              })(patientsList[i].id));
               tr.append(td);
-
 
               this.tablebody.append(tr);
             }

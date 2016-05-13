@@ -22,16 +22,13 @@ $(document).ready(function(){
           },
           getModel: function(){
             return model;
-          },
-          scheduleEditRedirect: function(scheduleId){
-            window.location.href = controller.editScheduleRedirect + '?scheduleId=' +  scheduleId;
           }
         };
 
 
         var listView = {
           init: function() {
-            this.tableBody = document.getElementById('schedule-list-table-body');
+            this.tableBody = $('#schedule-list-table-body');
 
 
           },
@@ -43,36 +40,28 @@ $(document).ready(function(){
             for(var key in listModel){
               //console.log(JSON.stringify(listModel[key].startDate));
 
-                var tr = document.createElement('tr');
+                var tr = $('<tr/>');
 
-                var td = document.createElement('td');
-                td.innerHTML =  listModel[key].startDate;
-                tr.appendChild(td);
+                var td = $('<td/>');
+                td.text(listModel[key].startDate);
+                tr.append(td);
 
-                td = document.createElement('td');
-                td.innerHTML =  listModel[key].endDate;
-                tr.appendChild(td);
+                td = $('<td/>');
+                td.text(listModel[key].endDate);
+                tr.append(td);
 
-                td = document.createElement('td');
-                td.innerHTML =  listModel[key].createdDate;
-                tr.appendChild(td);
+                td = $('<td/>');
+                td.text(listModel[key].createdDate);
+                tr.append(td);
 
-                var button = document.createElement('input');
-                button.setAttribute('type', 'button');
-                button.setAttribute('class', 'btn btn-primary');
-                button.setAttribute('value', 'Edit');
-                tr.appendChild(button);
 
-                button.addEventListener('click', (function(schedule){
-      						return function(){
+                var td = $('<a/>',{
+                  text: 'Edit',
+                  href: controller.editScheduleRedirect + '?scheduleId=' +  listModel[key].id
+                });
+                tr.append(td);
 
-                    console.log("schedule id: " + JSON.stringify(schedule.id));
-                    controller.scheduleEditRedirect(schedule.id);
-
-                  }
-                })(listModel[key]));
-
-                this.tableBody.appendChild(tr)
+                this.tableBody.append(tr)
             }
 
           }
