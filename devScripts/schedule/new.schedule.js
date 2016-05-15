@@ -11,6 +11,7 @@ $(document).ready(function(){
           endDate: "",
           scheduleDaysCount: 0,
           locationCount: 2,
+          workLocations: [],
           locationList:[
                         {name:"Margao", id:1, schedule:[]},
                         {name:"Vasco", id:2, schedule:[]}
@@ -21,8 +22,87 @@ $(document).ready(function(){
           init: function(){
             this.createUpdateScheduleUrl = "index.php/createUpdateSchedule";
             this.scheduleListingUrl = "index.php/scheduleListing";
+            this.getLocationUrl = "index.php/getDoctorLocations";
             stepOneView.init();
             createScheduleView.init();
+
+            $.get( controller.getLocationUrl , {})
+             .done(function( response ) {
+               console.log('response ' + JSON.stringify(response));
+               schedulemodel.workLocations = response.data;
+               stepOneView.render();
+             });
+
+
+
+          },
+          getLocationList:function(){
+            return schedulemodel.workLocations;
+          },
+          getDateRange: function(){
+            var fromDateStr = stepOneView.fromDateControl.val(); //2016-05-19
+            var toDateStr = stepOneView.toDateControl.val(); //2016-05-19
+
+            var mfromDate = moment(fromDateStr, "YYYY-MM-DD");
+
+            var mtoDate = moment(toDateStr, "YYYY-MM-DD");
+
+
+            console.log('date range from ' +  mfromDate.format('DD-MM-YYYY') + ' to ' + mtoDate.format('DD-MM-YYYY'));
+
+
+            //getting the difference is dates in terms of dates
+            var daysDuration =  moment.duration(mtoDate.diff(mfromDate)).asDays();
+
+            console.log('duration :' + daysDuration);
+
+            var weekArray = [];
+            if(stepOneView.chkMon.prop('checked')){
+              weekArray.push('Mon');
+            }
+
+            if(stepOneView.chkTue.prop('checked')){
+              weekArray.push('Tue');
+            }
+
+            if(stepOneView.chkWed.prop('checked')){
+              weekArray.push('Wed');
+            }
+
+            if(stepOneView.chkThu.prop('checked')){
+              weekArray.push('Thu');
+            }
+
+            if(stepOneView.chkFri.prop('checked')){
+              weekArray.push('Fri');
+            }
+
+            if(stepOneView.chkSat.prop('checked')){
+              weekArray.push('Sat');
+            }
+
+            if(stepOneView.chkSun.prop('checked')){
+              weekArray.push('Sun');
+            }
+
+            console.log('week array ' + weekArray);
+
+            var startCloneDate =  moment(mfromDate);
+
+            for(var j = 1; j < daysDuration; j++){
+
+                  var mdate = moment( startCloneDate.add(1, 'days'));
+
+                  var weekDay = mdate.format('ddd');
+
+                  if(weekArray.indexOf(weekDay)  >= 0 ){
+                    console.log('contains week ' + mdate.format('ddd DD MMM YYYY'));
+                  }
+
+
+            }; //date loop
+
+            console.log();
 
           },
           generateScheduleModel: function(){
@@ -102,25 +182,80 @@ $(document).ready(function(){
         };
 
 
-        var stepOneView= {
+        var stepOneView = {
 
           init: function(){
             this.panel = $('#schedule-step-one');
+            this.selectLocations = $('#sel-work-locations');
             this.fromDateControl = $('#from-date');
             this.toDateControl = $('#to-date');
 
+            //http://bootstrap-datepicker.readthedocs.io/en/latest/
+
+            this.checkAllWeekDays = $('#chk-all-weekdays');
+            this.chkMon = $('#chk-mon');
+            this.chkTue = $('#chk-tue');
+            this.chkWed = $('#chk-wed');
+            this.chkThu = $('#chk-thu');
+            this.chkFri = $('#chk-fri');
+            this.chkSat = $('#chk-sat');
+            this.chkSun = $('#chk-sun');
+
             //TODO testing code to be removed
-            this.fromDateControl.val('2016-05-03');
-            this.toDateControl.val('2016-05-07');
+            var currDate = moment();
+            this.fromDateControl.val(currDate.format('YYYY-MM-DD'));
+            currDate.add(5, 'days')
+            this.toDateControl.val(currDate.format('YYYY-MM-DD'));
 
             $('#btn-schedule-next').on('click', (function(self){
               return function(){
                 console.log('schedule next click');
 
-                self.panel.hide();
-                createScheduleView.render();
+                controller.getDateRange();
+
+                //self.panel.hide();
+                //createScheduleView.render();
+
+
               };
             })(this));
+
+            this.checkAllWeekDays.change(function(){
+              //console.log(this.checked);
+              if(this.checked){
+                stepOneView.chkMon.prop('checked', true);
+                stepOneView.chkTue.prop('checked', true);
+                stepOneView.chkWed.prop('checked', true);
+                stepOneView.chkThu.prop('checked', true);
+                stepOneView.chkFri.prop('checked', true);
+                stepOneView.chkSat.prop('checked', true);
+                stepOneView.chkSun.prop('checked', true);
+              }else{
+                stepOneView.chkMon.prop('checked', false);
+                stepOneView.chkTue.prop('checked', false);
+                stepOneView.chkWed.prop('checked', false);
+                stepOneView.chkThu.prop('checked', false);
+                stepOneView.chkFri.prop('checked', false);
+                stepOneView.chkSat.prop('checked', false);
+                stepOneView.chkSun.prop('checked', false);
+
+              }
+            });
+
+          },
+          render: function(){
+
+            var locations = controller.getLocationList();
+
+            for(var i = 0; i < locations.length; i++){
+              var option = $('<option/>',{
+                              value: locations[i].id,
+                              text: locations[i].name
+                            }
+                            );
+             this.selectLocations.append(option);
+
+            }
 
           }
         };

@@ -104,16 +104,16 @@
                 </ul>
               </li>
               <li {% if active == "patient" %}class="active"{%endif%}>
-                <a href="tables.html" id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patients Management<span class="fa arrow"></span></a>
+                <a href="tables.html" id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patient Management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                   <li>
                     <a href="#" id="patients-entry-create-section-link-Btn">New Patient</a>
                   </li>
                   <li>
-                    <a href="#" id="patients-entry-list-section-link-Btn">patients Listing</a>
+                    <a href="#" id="patients-entry-list-section-link-Btn">patient Listing</a>
                   </li>
                   <li>
-                    <a href="#" id="patients-History-Section-Link-Btn">patients appointment History</a>
+                    <a href="#" id="patients-History-Section-Link-Btn">patient appointment History</a>
                   </li>
                 </ul>
 
@@ -127,6 +127,16 @@
                   </li>
                   <li>
                     <a href="#" id="btn-staff-listing">Staff Listing</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+
+              <li {% if active == "others" %}class="active"{%endif%}>
+                <a href="#"><i class="fa fa-edit fa-fw"></i>Other Settings<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="#" id="btn-manage-locations">Work Locations</a>
                   </li>
                 </ul>
                 <!-- /.nav-second-level -->

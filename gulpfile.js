@@ -81,7 +81,11 @@ var filesList = [
 {build:true, files: [
                   objConfig.scriptsBasePath + "admin/adminDashboard.js",
                   objConfig.scriptsBasePath + "admin/admin.doctor.edit.js"
-                ], buildName: "admin.doctor.edit.js"}
+                ], buildName: "admin.doctor.edit.js"},
+{build:true, files: [
+                  objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath + "doctor/manage.locations.js"
+                ], buildName: "manage.locations.js"}
 ];
 
 gulp.task('build-scripts', function(){

@@ -18,6 +18,48 @@ class DoctorDB
     # code...
   }
 
+  public function saveUpdateLoction($id, $name, $doctorId){
+    try {
+
+      $paramArray = array('pid' => $id,
+                          'pname' => $name,
+                          'pdoctor_id' =>$doctorId
+                          );
+
+      $statement = DBHelper::generateStatement('add_update_locations',  $paramArray);
+      $statement->execute();
+
+      //$statement->fetch();
+      return  array('status' => "1", 'data' => "1", 'message' => 'success');
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
+  public function getAllLocations($doctorId){
+    try {
+
+      $paramArray = array('pdoctor_id' => $doctorId);
+      $statement = DBHelper::generateStatement('get_all_doctor_locations',  $paramArray);
+      $statement->execute();
+
+      $allLocaions = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+          $location = array();
+          $location['id'] =  $result['id'];
+          $location['name'] = $result['name'];
+          $allLocaions[] = $location;
+      }
+
+      return array('status' => 1, 'data' => $allLocaions, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
   public function getAllDoctors(){
     try {
 

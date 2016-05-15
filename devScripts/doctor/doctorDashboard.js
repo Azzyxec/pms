@@ -12,6 +12,9 @@ var utility = {
     if (!results[2]) return '';
 
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+  },
+  getTimeMinutesArray:  function(){
+    
   }
 }
 
@@ -43,6 +46,8 @@ $(document).ready(function(){
 
           this.createProgramForPatientUrl = "index.php/createMedicalProgram";
           this.programmeListingsUrl = "index.php/programmeList";
+
+          this.ManageLocationsUrl = "index.php/workLocationManagement";
 
           //do somethng about doctors info and registration
 
@@ -76,6 +81,14 @@ $(document).ready(function(){
             console.log('create program for patient');
             window.location.href = controller.createProgramForPatientUrl;
             });
+
+            $("#btn-manage-locations").click(function(e){
+                    e.preventDefault();
+            console.log('manage locations');
+            window.location.href = controller.ManageLocationsUrl;
+            });
+
+
 
             $("#btn-list-program-section").click(function(e){
               e.preventDefault();

@@ -110,6 +110,7 @@ $app->get('/getAllDoctors', function ($request, $response) {
 
   } catch (Exception $e) {
     $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+    return $response->withJson($data);
   }
 
 });
@@ -175,6 +176,50 @@ $app->get('/staffEntry', function ($request, $response) {
     return $this->view->render($response, '/staffManage/add-staff.html',
                                                               array('basePath' => AppConfig::$basePath, 'active' => "staff"));
 });
+
+$app->get('/workLocationManagement', function ($request, $response) {
+    return $this->view->render($response, '/doctor/manage-locations.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "others"));
+});
+
+$app->get('/getDoctorLocations', function ($request, $response) {
+  try {
+
+    $user = UserSessionManager::getUser();
+    $doctorDB = new DoctorDB();
+    $data = $doctorDB->getAllLocations($user->id);
+
+    $data = array('status' => "1", 'data' => $data['data'], 'message' => 'success' );
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+    return $response->withJson($data);
+  }
+
+});
+
+
+
+$app->post('/addUpdateLocation', function ($request, $response) {
+  try {
+
+    $postedData = $request->getParsedBody();
+      $user = UserSessionManager::getUser();
+      $doctorDB = new DoctorDB();
+      $data = $doctorDB->saveUpdateLoction($postedData['id'], $postedData['name'], $user->id);
+
+    $data = array('status' => "1", 'data' => "1", 'message' => 'success' );
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+    return $response->withJson($data);
+  }
+
+});
+
+
 
 $app->get('/patientHistory', function ($request, $response) {
     return $this->view->render($response, '/patient/patient-history.html',
@@ -403,10 +448,10 @@ $app->post('/saveUpdateDoctor', function($request, $response){
     $status = $resultArray['status'];
 
     //log the user in on succesful insert or update
-    if(strcmp($status, "1") == 0){
-      $user = $resultArray['data'];
-      UserSessionManager::setUser($user);
-    }
+    //if(strcmp($status, "1") == 0){
+      //$user = $resultArray['data'];
+      //UserSessionManager::setUser($user);
+    //}
 
     $data = array('data' => array('status' => $status, "user"=> $user));
     return $response->withJson($data);

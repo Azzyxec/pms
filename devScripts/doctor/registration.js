@@ -13,7 +13,7 @@ $(document).ready(function(){
      recoveryEmail:"",
      userName:"",
      password:"",
-     isActive:1
+     isActive:0
   };
 
   var controller = {
@@ -22,6 +22,7 @@ $(document).ready(function(){
         this.doctorDetailsUrl =  "index.php/getDoctorDetails";
         this.loginCheckUrl = "index.php/isLoggedIn";
         this.doctorDashUrl = "index.php/doctorDashboard";
+        this.logoutUrl = "index.php/logout";
         formView.init();
 
         this.getDoctorInfo();
@@ -100,8 +101,8 @@ $(document).ready(function(){
            if(response.data.status == "-1"){
              console.log('Please select another login Id');
            }else if(response.data.user.type == "D"){
-             console.log('saved successfully');
-             window.location.href = controller.doctorDashUrl;
+             console.log('saved successfully, now you will receive a confirmation email, then you can login');
+             window.location.href = controller.logoutUrl;
            }
 
          });
