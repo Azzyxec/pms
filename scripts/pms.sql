@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2016 at 10:12 PM
+-- Generation Time: May 15, 2016 at 06:22 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -65,7 +65,7 @@ begin
 								,ppassword
 								,now()
 								,null
-                                ,1
+                                ,pis_active
 								);
 								
 			 select max(id)
@@ -147,6 +147,27 @@ begin
 
 	end if;
 
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+    NO SQL
+begin
+
+
+	if pid <= 0 then
+	
+		insert into work_locations(
+            						fk_doctor_id
+									,name
+								  )
+							values
+									(
+                                    pdoctor_id
+									,pname
+								   );
+		
+	
+	end if;
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` DATE, IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pmedical_programme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_xml` VARCHAR(65535))
@@ -873,6 +894,18 @@ SELECT `id`
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+    NO SQL
+begin
+
+select id
+	   ,name
+from work_locations
+where fk_doctor_id = fk_doctor_id;
+
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
 select id
@@ -1431,6 +1464,31 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229050, 18, 34, 2, 20160405, 0, 0, 1),
 (229051, 18, 34, 2, 20160505, 0, 0, 1),
 (229052, 18, 34, 2, 20160605, 0, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `work_locations`
+--
+
+CREATE TABLE IF NOT EXISTS `work_locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_doctor_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+
+--
+-- Dumping data for table `work_locations`
+--
+
+INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`) VALUES
+(12, 18, 'Panjim', ''),
+(13, 18, 'Margaon', ''),
+(14, 18, 'asdf', ''),
+(15, 18, 'Temp', ''),
+(16, 18, 'dsaf', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
