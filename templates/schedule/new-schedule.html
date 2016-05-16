@@ -1,12 +1,12 @@
 {% extends "/doctor/doctor-dash-base.html" %}
 {% block content %}
 <div class="container">
+    <hr class="invisible">
+  <hr class="invisible">
+  <hr class="invisible">
 
-  <hr class="invisible">
-  <hr class="invisible">
-  <hr class="invisible">
-
-  <!-- Appointment step one  -->
+<div class="row">
+      <!-- Appointment step one  -->
 
   <div id="schedule-step-one" class="  col-sm-8 panel panel-default col-sm-offset-2">
     <div class="panel-tittle">
@@ -97,7 +97,7 @@
 
   <!-- Appointment step two  -->
 
-  <div id="schedule-step-two" class="col-sm-12 panel panel-default col-sm-offset-2">
+  <div id="schedule-step-two" class="col-sm-10 panel panel-default ">
     <div class="panel-tittle">
 
       <h2 class="text-center">Create Schedule</h2>
@@ -107,7 +107,7 @@
 
         <div id="calander">
 
-          <table class=" table table-hover table-bordered">
+          <table class=" table table-hover table-responsive table-bordered">
 
             <thead>
               <tr class="info" id="table-header-row-schedule-calander">
@@ -137,9 +137,12 @@
   <!-- Appointment step two  -->
 
 </div>
-
+  
 
 </div>
+
+
+
 </body>
 {% endblock %}
 {% block addScripts %}

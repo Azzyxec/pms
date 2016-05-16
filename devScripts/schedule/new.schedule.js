@@ -209,12 +209,12 @@ $(document).ready(function(){
 
             $('#btn-schedule-next').on('click', (function(self){
               return function(){
-                console.log('schedule next click');
+                console.log('schedule next nclick');
 
                 controller.getDateRange();
 
-                //self.panel.hide();
-                //createScheduleView.render();
+                self.panel.hide();
+                createScheduleView.render();
 
 
               };
