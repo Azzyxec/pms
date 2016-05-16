@@ -31,6 +31,9 @@ $(document).ready(function(){
           getLocationList: function(){
             return model.list;
           },
+          getLocationModel: function(){
+            return model.loc;
+          },
           updateLocationFromServer: function(){
             $.get(controller.locationListUrl , {})
              .done(function( response ) {
@@ -38,6 +41,11 @@ $(document).ready(function(){
                model.list = response.data;
                locationListView.render();
              });
+          },
+          updateModel: function(id, name){
+            model.loc.id = id;
+            model.loc.name = name;
+            LocationView.render();
           }
         };
 
@@ -50,13 +58,20 @@ $(document).ready(function(){
               console.log('save click');
 
               var locName = LocationView.locationName.val();
-              model.loc.name =  locName;
+
+              var locationModel = controller.getLocationModel();
+              locationModel.name =  locName;
+
               console.log(JSON.stringify(model.loc));
               LocationView.locationName.val('');
               controller.persistLocationModel();
 
             });
 
+          },
+          render: function(){
+            var locationModel = controller.getLocationModel();
+            this.locationName.val(locationModel.name);
           }
         };
 
@@ -85,6 +100,14 @@ $(document).ready(function(){
               var td = $('<a/>',{
                 text: 'Edit',
               });
+
+              td.click((function(location){
+                return function(){
+                  console.log('edit click ' + JSON.stringify(location));
+                  controller.updateModel(location.id, location.name);
+                }
+              })(locations[i]));
+
               tr.append(td);
 
 
