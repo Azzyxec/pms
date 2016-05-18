@@ -17,6 +17,7 @@
   <link href="css/sb-admin-2.css" rel="stylesheet">
   <!-- Custom Fonts -->
   <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  {% block addCss %}{% endblock %}
 
 </head>
 <body>
@@ -141,6 +142,17 @@
                 </ul>
                 <!-- /.nav-second-level -->
               </li>
+              
+               <li {% if active == "others" %}class="active"{%endif%}>
+                <a href="#"><i class="fa fa-edit fa-fw"></i>Templates<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                  <li>
+                    <a href="#" id="schedule-Table-Link-Btn">Schedule Table</a>
+                  </li>
+                </ul>
+                <!-- /.nav-second-level -->
+              </li>
+
 
             </ul>
           </div>

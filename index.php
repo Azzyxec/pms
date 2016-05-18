@@ -302,6 +302,14 @@ $app->get('/programmeList', function ($request, $response) {
                                                               array('basePath' => AppConfig::$basePath, 'active' => "programme"));
 });
 
+
+$app->get('/scheduleTemp', function ($request, $response) {
+    return $this->view->render($response, '/workingPages/scheduleTable.html',
+                                                              array('basePath' => AppConfig::$basePath, 'active' => "programme"));
+});
+
+
+
 $app->post('/createModifyProgramme', function($request, $response){
 
     //$postedData = $request->getParsedBody();

@@ -48,6 +48,8 @@ $(document).ready(function(){
           this.programmeListingsUrl = "index.php/programmeList";
 
           this.ManageLocationsUrl = "index.php/workLocationManagement";
+            
+          this.scheduleTableUrl = "index.php/scheduleTemp";
 
           //do somethng about doctors info and registration
 
@@ -176,6 +178,12 @@ $(document).ready(function(){
                e.preventDefault();
                window.location.href = controller.patientsHistoryUrl;
            });
+            
+             $("#schedule-Table-Link-Btn").click(function(e){
+               e.preventDefault();
+               window.location.href = controller.scheduleTableUrl;
+           });
+
 
         },
         render: function(){

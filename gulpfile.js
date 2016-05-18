@@ -85,7 +85,16 @@ var filesList = [
 {build:true, files: [
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "doctor/manage.locations.js"
-                ], buildName: "manage.locations.js"}
+                ], buildName: "manage.locations.js"},
+    
+{build:true, files: [
+                  objConfig.scriptsBasePath +"moment.js",
+                  objConfig.scriptsBasePath + "datePicker/bootstrap-datetimepicker.min.js",
+                  objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath + "schedule/manageClinicSchedule.js"
+                    
+                ], buildName: "manageClinicSchedule.js"}
+   
 ];
 
 gulp.task('build-scripts', function(){
