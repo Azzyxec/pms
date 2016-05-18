@@ -1,22 +1,9 @@
 <?php
 
-require './vendor/autoload.php';
+require_once './includes.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
-
-//specific to the application
-
-//Core require needed for other to work
-require_once './AppConfig.php';
-
-//require once for entites
-require_once './entities/User.php';
-require_once './entities/Doctor.php';
-require_once './entities/UserSessionManager.php';
-require_once './entities/Patient.php';
-require_once './entities/bookAppointment.php';
 
 //importing entites
 use Pms\Entities\User;
@@ -24,14 +11,6 @@ use Pms\Entities\Doctor;
 use Pms\Entities\UserSessionManager;
 use Pms\Entities\Patient;
 use Pms\Entities\bookAppointmentObject;
-
-require_once './datalayer/DBHelper.php';
-require_once './datalayer/UserDB.php';
-require_once './datalayer/DoctorDB.php';
-require_once './datalayer/ScheduleDB.php';
-require_once './datalayer/PatientDB.php';
-require_once './datalayer/ProgrammeDB.php';
-require_once './datalayer/bookAppointmentAbstraction.php';
 
 use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
@@ -58,7 +37,7 @@ $container['notFoundHandler'] = function ($container) {
         return $container['response']
             ->withStatus(404)
             ->withHeader('Content-Type', 'text/html')
-            ->write("<html><body><p>Opps, it's not allowed, please go to the main page <a href='/pms/'>Login page</a></p></body></html>");
+            ->write("<html><body><p>Opps, it's not allowed, please go to the main page <a href='/'>Login page</a></p></body></html>");
     };
 };
 
@@ -85,7 +64,61 @@ $container['view'] = function ($container) {
     return $view;
 };
 
-//end of database section
+//Default routes
+
+$app->get('/', function ($request, $response) {
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+});
+
+$app->get('/login', function ($request, $response) {
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+});
+
+
+$app->post('/isLoggedIn', function ($request, $response) {
+
+   $user = UserSessionManager::getUser();
+   $data = array('data' => $user);
+   return $response->withJson($data);
+});
+
+$app->post('/authenitcateUser', function ($request, $response) {
+
+  $user = new User();
+
+  try{
+
+     $postedData = $request->getParsedBody();
+     if( isset($postedData['loginId']) && isset($postedData['password']) ){
+
+       $userDb = new UserDB();
+       $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
+
+       UserSessionManager::setUser($user);
+     }
+
+     $data = array('data' => $user);
+     return $response->withJson($data);
+
+ }catch(Exception $e){
+
+   $data = array('data' => $user);
+   return $response->withJson($data);
+ }
+
+});
+
+
+$app->post('/logout', function($request, $response){
+    UserSessionManager::destroySession();
+    $data = array('data' => "1");
+    return $response->withJson($data);
+});
+
+$app->get('/logout', function($request, $response){
+    UserSessionManager::destroySession();
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+});
 
 
 $app->get('/admin', function ($request, $response) {
@@ -126,15 +159,6 @@ $app->get('/adminDoctorEdit', function ($request, $response) {
 
 
 
-//default route
-$app->get('/', function ($request, $response) {
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-});
-
-
-$app->get('/login', function ($request, $response) {
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-});
 
 $app->get('/doctorInfo', function ($request, $response) {
     return $this->view->render($response, '/doctor/doctor-registration.html', array('basePath' => AppConfig::$basePath));
@@ -225,54 +249,6 @@ $app->get('/patientHistory', function ($request, $response) {
                                                               array('basePath' => AppConfig::$basePath, 'active' => "patient"));
 });
 
-
-
-$app->post('/isLoggedIn', function ($request, $response) {
-
-   $user = UserSessionManager::getUser();
-   $data = array('data' => $user);
-   return $response->withJson($data);
-});
-
-$app->post('/authenitcateUser', function ($request, $response) {
-
-  $user = new User();
-
-  try{
-
-     $postedData = $request->getParsedBody();
-     if( isset($postedData['loginId']) && isset($postedData['password']) ){
-
-       $userDb = new UserDB();
-       $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
-
-       UserSessionManager::setUser($user);
-     }
-
-     $data = array('data' => $user);
-     return $response->withJson($data);
-
- }catch(Exception $e){
-
-   $data = array('data' => $user);
-   return $response->withJson($data);
- }
-
-});
-
-
-$app->post('/logout', function($request, $response){
-    UserSessionManager::destroySession();
-    $data = array('data' => "1");
-    return $response->withJson($data);
-});
-
-$app->get('/logout', function($request, $response){
-    UserSessionManager::destroySession();
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-});
-
-//EOC user management
 
 //BOC Appointment Management
 $app->get('/bookAppointment', function ($request, $response) {
