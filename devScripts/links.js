@@ -52,7 +52,6 @@ var links = {
 
 
    //registartion
-
    doctorUrl:"index.php/doctor/saveUpdateDoctor",
    doctorDetailsUrl:"index.php/doctor/getDoctorDetails",
    loginCheckUrl:"index.php/authenticate/isLoggedIn",
