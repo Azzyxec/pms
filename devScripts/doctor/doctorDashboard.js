@@ -1,23 +1,3 @@
-//helper function to get the url query parameters
-var utility = {
-  getURLParam: function(name){
-    var url = window.location.href;
-
-    name = name.replace(/[\[\]]/g, "\\$&");
-
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-    var results = regex.exec(url);
-
-    if (!results) return null;
-    if (!results[2]) return '';
-
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  },
-  getTimeMinutesArray:  function(){
-    
-  }
-}
-
 $(document).ready(function(){
 
     //defining the helper functions in global
@@ -30,24 +10,24 @@ $(document).ready(function(){
       var controller = {
         init: function(){
           //wiring the navigation
-          this.logoutUrl = "index.php/logout";
-          this.doctorProfile = "index.php/doctorProfile";
-          this.dashboardHomeUrl = "index.php/doctorDashboard";
-          this.newAppointmentUrl = "index.php/bookAppointment";
-          this.patientsEntryUrl = "index.php/patientsEntry";
-          this.patientsListingUrl = "index.php/patientsListing";
-          this.closeAppointmentUrl = "index.php/closeAppointment";
-          this.doctorsAppointmentsListUrl = "index.php/listAppointment";
+          this.logoutUrl = links.logoutUrl;
+          this.doctorProfile = links.doctorProfile;
+          this.dashboardHomeUrl = links.dashboardHomeUrl;
+          this.newAppointmentUrl = links.newAppointmentUrl;
+          this.patientsEntryUrl = links.patientsEntryUrl;
+          this.patientsListingUrl = links.patientsListingUrl;
+          this.closeAppointmentUrl = links.closeAppointmentUrl;
+          this.doctorsAppointmentsListUrl = links.doctorsAppointmentsListUrl;
 
-          this.newScheduleUrl = "index.php/newSchedule";
-          this.listScheduleUrl = "index.php/scheduleList";
-          this.addStaffUrl = "index.php/staffEntry";
-          this.patientsHistoryUrl = "index.php/patientHistory";
+          this.newScheduleUrl = links.newScheduleUrl;
+          this.listScheduleUrl = this.listScheduleUrl;
+          this.addStaffUrl = links.addStaffUrl;
+          this.patientsHistoryUrl = links.patientsHistoryUrl;
 
-          this.createProgramForPatientUrl = "index.php/createMedicalProgram";
-          this.programmeListingsUrl = "index.php/programmeList";
+          this.createProgramForPatientUrl = links.createProgramForPatientUrl ;
+          this.programmeListingsUrl = links.programmeListingsUrl;
 
-          this.ManageLocationsUrl = "index.php/workLocationManagement";
+          this.ManageLocationsUrl = links.ManageLocationsUrl;
 
           //do somethng about doctors info and registration
 

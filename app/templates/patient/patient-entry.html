@@ -1,0 +1,462 @@
+{% extends "/doctor/doctor-dash-base.html" %}
+{% block content %}
+<section id="book-Appointments-Section">
+  <!-- /.row -->
+  <div class="row">
+    <div class="container">
+      <div class="col-lg-12">
+
+        <div>
+
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+
+            <li role="presentation"><a id="patients-entry-link" href="#patients-entry-section"  aria-controls="profile" role="tab" data-toggle="tab">Patients Details</a></li>
+            <li role="presentation"><a id="guardian-entry-link" href="#guardian-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Guardian details</a></li>
+            <li role="presentation"><a id="birth-entry-link" href="#birth-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Births details</a></li>
+            <li role="presentation"><a id="patients-programme-link" href="#patients-entry-more-details-section" aria-controls="messages" role="tab" data-toggle="tab">Vaccination Programme</a></li>
+
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+
+            <div role="tabpanel" class="tab-pane" id="patients-entry-section">
+
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  Patients Entry
+
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+
+
+                    <div class="text-center">
+
+                      <div class="form-group">
+                        <img class="img-rounded" style="height:12em; width:12em;" src="http://www.parenting-with-love.com/wp-content/uploads/2012/08/Happy_child.jpg">
+                        <hr>
+                        <div class=' col-md-offset-4 col-md-4'>
+                          <label for="focusedinput" class=" control-label">Upload pic</label>
+                          <input id="patient-picture" type="file" class="form-control">
+                        </div>
+
+                      </div>
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                  </div>
+
+
+                  <div class="content_bottom">
+                    <hr class="invisible">
+                    <div class="col-md-offset-2">
+                      <form id="addCompanyForm"  class="form-horizontal">
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Name</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="username" id="patient-name" placeholder="Patients Name">
+                          </div>
+
+                        </div>
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">DOB:</label>
+                          <div class='col-md-6'>
+
+                            <div class='input-group date' >
+                              <input id="patient-date-of-birth" type='date' class="form-control" />
+                              <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                              </span>
+                            </div>
+
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
+                          <div class=" col-sm-6">
+                            <div class="radio-inline">
+                              <label>
+                                <input id="rb-male" type="radio"> Male
+                              </label>
+                            </div>
+
+                            <div class="radio-inline">
+                              <label>
+                                <input id="rb-female" type="radio"> Female
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Blood Group<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">weight<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-weight-input" placeholder="Patients Weight">
+                          </div>
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Height<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-height" placeholder="Patients Height">
+                          </div>
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Contact1<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-contact1" placeholder="Contact info">
+                          </div>
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Contact2<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="patient-contact2" placeholder="Contact info">
+                          </div>
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Address</label>
+                          <div class="col-md-6">
+                            <textarea class="form-control"  rows ="5" name="address" id="patient-address" ></textarea>
+                            <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+                          </div>
+                        </div>
+
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-footer">
+                  <div class="row">
+                    <div class="text-center">
+                      <input id="patient-save-button" type="button" class="btn-success btn" value="Save"/>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"> </div>
+
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="guardian-entry-section">
+
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  Guardians Entry
+
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+
+
+                    <div class="text-center">
+
+                      <div class="form-group">
+                        <img class="img-rounded" style="height:12em; width:12em;" src="http://www.parenting-with-love.com/wp-content/uploads/2012/08/Happy_child.jpg">
+                        <hr>
+                        <div class=' col-md-offset-4 col-md-4'>
+                          <label for="focusedinput" class=" control-label">Upload pic</label>
+                          <input type="file" class="form-control">
+                        </div>
+
+                      </div>
+
+                    </div>
+                    <!-- /.col-lg-12 -->
+                  </div>
+
+
+                  <div class="content_bottom">
+                    <hr class="invisible">
+                    <div class="col-md-offset-2">
+                      <form id="addCompanyForm"  class="form-horizontal">
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Name</label>
+                          <div class='col-md-6'>
+
+                            <input type="text" class="form-control" name="username" id="guardian-name" placeholder="Name">
+                          </div>
+
+                        </div>
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Age:</label>
+                          <div class='col-md-6'>
+
+                            <input type="text" class="form-control" name="username" id="guardian-age" placeholder="Age">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
+                          <div class=" col-sm-6">
+                            <div class="radio-inline">
+                              <label>
+                                <input id="rb-male-guardian" type="radio"> Male
+                              </label>
+                            </div>
+
+                            <div class="radio-inline">
+                              <label>
+                                <input  id="rb-female-guardian" type="radio"> Female
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Contact 1:<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="guardian-contact1" placeholder="Contact info">
+                          </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Contact 2:<span class="required">*</span></label>
+                          <div class="col-md-6">
+                            <input type="text" class="form-control"  id="guardian-contact2" placeholder="Contact info">
+                          </div>
+
+
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="focusedinput" class="col-md-2 control-label">Address</label>
+                          <div class="col-md-6">
+                            <textarea class="form-control"  rows ="5" name="address" id="guardian-address" ></textarea>
+                            <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+                          </div>
+                        </div>
+
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-footer">
+                  <div class="row">
+                    <div class="text-center">
+                      <input type="submit" class="btn-success btn" name="submit" value="Save"/>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"> </div>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="birth-entry-section">
+
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  Birth Details
+
+                </div>
+                <div class="panel-body">
+
+
+                  <div class="content_bottom">
+                    <hr class="invisible">
+                    <div class="col-md-offset-2">
+                      <form id="addCompanyForm"  class="form-horizontal">
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Delivery Method</label>
+                          <div class='col-md-6'>
+                            <select id="delivery-method" name="" class="form-control">
+                              <option>Normal</option>
+                              <option>Vaccum</option>
+                              <option>Forceps</option>
+                              <option>Caesarean</option>
+                              <option>Other</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Birth weight</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="birth-weight" placeholder="Weight">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Length</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="birth-length" placeholder="Length">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Head</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="birth-head" placeholder="">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Blood  group</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="birth-blood-group" placeholder="Blood group">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Mother</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="mother-name" placeholder="Name">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Mother Blood group</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="mother-blood-group" placeholder="Blood group">
+                          </div>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Father</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="father-name" placeholder="Name">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Father Blood group</label>
+                          <div class='col-md-6'>
+                            <input type="text" class="form-control" name="" id="father-blood-group" placeholder="Blood group">
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Siblings</label>
+                          <div class='col-md-6'>
+                            <textarea  class="form-control" row="3" name="" id="siblings" placeholder=""></textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="" class="col-md-2 control-label">Remarks</label>
+                          <div class='col-md-6'>
+                            <textarea  class="form-control" row="3" name="" id="birth-remarks" placeholder=""></textarea>
+                          </div>
+                        </div>
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="panel-footer">
+                  <div class="row">
+                    <div class="text-center">
+                      <input type="submit" class="btn-success btn" name="submit" value="Save"/>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="clearfix"> </div>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="patients-entry-more-details-section">
+              <hr class="invisible">
+              <div class="form-group col-md-6">
+                <label>Select Program : </label>
+                <select id="sel-program-list" class="form-control">
+                </select>
+              </div>
+              <div class="">
+
+                <hr class="invisible">
+                <button id="btn-attach-programme" type="button" class="btn btn-default">attach Program</button>
+              </div>
+
+
+
+              <!-- /.panel -->
+              <hr>
+              <div id="programme-table-parent">
+              </div>
+                <div class="panel panel-default" hidden  id="programme-table-panel">
+
+                  <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw"></i><i id="info-prog" class="programme-name">Program Schedule</i>
+                    <div class="pull-right">
+                    </div>
+                  </div>
+                  <!-- /.panel-heading -->
+                  <div class="panel-body">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <div class="table-responsive table-condensed">
+                          <table class="table text-center table-bordered table-hover table-striped " id="">
+                            <thead >
+                              <tr>
+                                <th class="col-md-2">Duration</th>
+                                <th class="col-md-1">Vaccine</th>
+                                <th class="col-md-1">Dose No</th>
+                                <th class="col-md-1">Due on</th>
+                                <th class="col-md-1">Given on</th>
+                                <th class="col-md-1">Batch</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                      </div>
+                      <!-- /.col-lg-4 (nested) -->
+                      <!-- /.col-lg-8 (nested) -->
+                    </div>
+                    <!-- /.row -->
+                  </div>
+                  <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+
+
+            </div>
+
+          </div>
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endblock %}
+
+  {% block addScripts %}
+  <script src="js/patient.entry.js"></script>
+  {% endblock %}

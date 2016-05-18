@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="{{basePath}}" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Online Patient Management</title>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/my-custom-style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" >
+
+    <!-- MetisMenu CSS -->
+    <link href="css/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">PMS </a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+
+
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a  id="user-Profile-Btn-Link"><i class="fa fa-user fa-fw"></i>Profile</a>
+                        <li class="divider"></li>
+                        <li><a  id="doctor-dash-logout-btn"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+
+                        <li>
+                            <a  id="dashboard-Section-Btn"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                        </li>
+                       <li>
+
+
+
+
+                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i>Appointment<span class="fa arrow"></span></a>
+                           <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#" id="book-Appointments-Section-Btn">Book Appointments</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="close-Book-Appointment-Section-Link-Btn">Close Appointments</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="tables.html" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i> Manage Schedule<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                 <li>
+                                     <a href="#" id="manage-schedule-create-section-link-Btn">New Schedule</a>
+                                 </li>
+                                 <li>
+                                     <a href="#" id="manage-schedule-list-section-link-Btn">Schedule List</a>
+                                 </li>
+
+                             </ul>
+
+                        </li>
+                        <li>
+                            <a href="#" id="doctors-Appointments-Section-Link-Btn"><i class="fa fa-table fa-fw"></i> Doctors appointments</a>
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i> More options<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#" id="add-Staff-Section-Link-Btn">Add Staff</a>
+                                </li>
+                                <li>
+                                    <a href="#" id="patients-History-Section-Link-Btn">patients appointment History</a>
+                                </li>
+
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+           <!-----------
+               -
+               -
+              ---- dashboard section ------
+               -
+               -
+               ---------->
+
+
+            <section id="dashboard-Section">
+                 <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Dashboard</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-tasks fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">12</div>
+                                    <div>new Appointments!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">See All Appointments</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                  <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-support fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge invisible">13</div>
+                                    <div>Manage Schedule!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Schedule</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+             </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-8">
+                  <!-- /.panel -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-clock-o fa-fw"></i> Upcoming Appointments
+                            <div class="pull-right">
+
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Patient's Name</th>
+                                                     <th>Ailment</th>
+                                                    <th>Clinic</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Agnelo</td>
+                                                    <td>Back Pain</td>
+                                                     <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>8:29 AM</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>Ignetious</td>
+                                                    <td>sore Throath</td>
+                                                    <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>9:29 AM</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>Ignetious</td>
+                                                    <td>sore Throath</td>
+                                                    <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>10:29 AM</td>
+
+                                                </tr>
+                                                <tr>
+                                                  <td>4</td>
+                                                    <td>Joel</td>
+                                                    <td>Stomach Ache</td>
+                                                    <td>Margao</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>4:10 PM</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>5</td>
+                                                     <td>Ryan</td>
+                                                    <td>Bronchitis</td>
+                                                    <td>Margao</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>5:10 PM</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>6</td>
+                                                    <td>Ruban</td>
+                                                    <td>Stomach Ache</td>
+                                                    <td>Margao</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>5:50 PM</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.col-lg-4 (nested) -->
+                                <div class="col-lg-8">
+                                    <div id="morris-bar-chart"></div>
+                                </div>
+                                <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+
+                   <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-8 -->
+                <div class="col-lg-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="list-group">
+
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-twitter fa-fw"></i> 3 New Staff members added
+                                    <span class="pull-right text-muted small"><em>12 minutes ago</em>
+                                    </span>
+                                </a>
+
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-tasks fa-fw"></i> new Appointments
+                                    <span class="pull-right text-muted small"><em>43 minutes ago</em>
+                                    </span>
+                                </a>
+                                <a href="#" class="list-group-item">
+                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                    <span class="pull-right text-muted small"><em>11:32 AM</em>
+                                    </span>
+                                </a>
+
+
+                            </div>
+                            <!-- /.list-group -->
+                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                   <!-- /.panel -->
+                   <!-- /.panel .chat-panel -->
+                </div>
+                <!-- /.col-lg-4 -->
+            </div>
+            <!-- /.row -->
+            </section>
+           <!---------- end dashboard section----------->
+
+
+            <!-----------
+                -
+                -
+               ---- Book appointments section ------
+                -
+                -
+                ---------->
+
+       <section id="book-Appointments-Section">
+
+
+            <!-- /.row -->
+            <div class="row">
+                <div class="container">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                           Book appointment
+                        </div>
+                        <div class="panel-body">
+                         <div class="row">
+		<div class="text-center">
+			<h1 class="page-header">New Appointment</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+<div class="content_bottom">
+
+
+
+
+        <div class="col-md-offset-2">
+             	<form id="addCompanyForm"  class="form-horizontal">
+                <div class="form-group">
+              <label for="focusedinput" class="col-md-2 control-label">Appointment Date</label>
+	<div class='col-md-6'>
+
+
+		   <div class='input-group date' id='datetimepicker2'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+
+    </div>
+
+                </div>
+    <div class="form-group">
+           <label for="focusedinput" class="col-md-2 control-label">Appointment Time</label>
+	<div class='col-md-6'>
+
+            <div class='input-group date' id='datetimepicker3'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+
+    </div>
+    </div>
+
+
+
+
+
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
+		<div class="col-md-6">
+		<input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+		</div>
+
+		</div>
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
+		<div class="col-md-6">
+		<input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+		</div>
+
+		</div>
+
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-2 control-label">Description</label>
+		<div class="col-md-6">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+		</div>
+
+
+
+
+
+	</form>
+
+        </div>
+    </div>
+    </div>
+                        	<div class="panel-footer">
+	<div class="row">
+	<div class="text-center">
+	<input type="submit" class="btn-success btn" name="submit" value="Book An Appointment"/>
+	</div>
+
+	</div>
+	</div>
+</div>
+<div class="clearfix"> </div>
+</div>
+
+
+
+		</div>
+
+
+
+
+
+
+                        </div>
+
+
+       </section>
+
+            <!---------- end book appointments section----------->
+
+
+    <section id="doctors-Registration-Form-Section">
+      <hr class="invisible">
+      <hr class="invisible">
+      <div class="container">
+
+        <form class="form-horizontal" >
+          <input type="hidden" id="did" value="0" >
+
+          <div class="form-group ">
+            <label  class="col-md-2 control-label" for="dcontact">Name</label>
+              <div class="col-md-6">
+                <input type="text" id="dname"  class="form-control" placeholder="Name">
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label  class="col-md-2 control-label" for="dcontact">Contact</label>
+              <div class="col-md-6">
+                <input type="text" id="dcontact"  class="form-control" placeholder="Contact">
+              </div>
+          </div>
+
+          <div class="form-group 2">
+            <label  class="col-md-2 control-label" for="dalternate-contact">Alternate Contact</label>
+              <div class="col-md-6">
+                <input type="text" id="dalternate-contact"  class="form-control" placeholder="Contact">
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="col-md-2 control-label">Email</label>
+            <div class="col-md-6">
+                <input type="text" id="demail"  name="email" class="form-control" placeholder="Email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="qualifications" class="col-md-2 control-label">Qualifications</label>
+            <div class="col-md-6">
+              <input type="text" id="dqualifications"  name="qualifications" class="form-control" placeholder="Qualifications">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address" class="col-md-2 control-label">Address</label>
+            <div class="col-md-6">
+              <textarea name="address" id="daddress" class="form-control" rows="3" placeholder="Address"></textarea>
+            </div>
+          </div>
+
+
+
+          <div class="form-group">
+            <label for="username" class="col-md-2 control-label">Username</label>
+            <div class="col-md-6">
+              <input type="text" id="duser-name"  name="username" class="form-control" placeholder="Qualifications">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="col-md-2 control-label">Password</label>
+            <div class="col-md-6">
+              <input type="password" id="dpassword"  name="password" class="form-control" placeholder="Password">
+            </div>
+          </div>
+
+          <div class="form-group 2">
+            <label  class="col-md-2 control-label" for="drecovery-contact">Recovery Contact</label>
+              <div class="col-md-6">
+                <input type="text" id="drecovery-contact" name="drecovery-contact" class="form-control" placeholder="Contact">
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label for="drecovery-email" class="col-md-2 control-label">Recovery Email</label>
+            <div class="col-md-6">
+                <input type="text" id="drecovery-email"  name="drecovery-email" class="form-control" placeholder="Email">
+            </div>
+          </div>
+
+          <div class="from-group">
+            <label class="col-md-2 control-label" for="">Status</label>
+            <div class="radio col-md-6">
+              <label>
+                <input type="radio" name="activeOptions" id="dactive"  value="1" checked>
+                Active
+              </label>
+              <label>
+                <input type="radio" name="activeOptions" id="dinactive" value="0">
+                Inactive
+              </label>
+            </div>
+          </div>
+
+          <hr class="invisible">
+          <hr class="invisible">
+
+          <div class="from-group col-md-6 ">
+            <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-primary">Back</button>
+          </div>
+
+
+        </form>
+
+      </div>
+    </section>
+
+
+
+            <section id="doctors-Manage-Schedule-Section">
+
+             <!-- /.panel -->
+                    <div class="panel panel-default">
+                         <hr class="invisible">
+                        <div class="panel-heading">
+                            <i class="fa fa-clock-o fa-fw"></i> manage Schedule
+                            <div class="pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                        Actions
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu">
+                                        <li><a href="#">Create Schedule</a>
+                                        </li>
+                                        <li><a href="#">Modify Schedule</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                      <div class="table-responsive">
+                                        <table class="table text-center table-bordered table-hover table-striped">
+                                            <thead >
+                                                <tr>
+                                                    <th>Clinics</th>
+                                                    <th>Date</th>
+
+                                                    <th>1st</th>
+                                                    <th>2nd</th>
+                                                    <th>3rd</th>
+                                                    <th>4th</th>
+                                                    <th>5th</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td rowspan="2">Margao</td>
+                                                    <td>Start</td>
+
+                                                    <td>9:am</td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td>End</td>
+
+                                                   <td>12:am</td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td rowspan="2">Canacona</td>
+                                                    <td>Start</td>
+
+                                                    <td>4:pm</td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td>End</td>
+
+                                                   <td>7:pm</td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                     <td></td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.col-lg-4 (nested) -->
+                                <div class="col-lg-8">
+                                    <div id="morris-bar-chart"></div>
+                                </div>
+                                <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+    </section>
+
+
+
+    <section id="close-Book-Appointments-Section">
+             <!-- /.row -->
+            <div class="row">
+                <div class="container">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                           close Book appointment
+                        </div>
+                        <div class="panel-body">
+                         <div class="row">
+		<div class="text-center">
+			<h1 class="page-header">Closing Appointment</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+<div class="content_bottom">
+
+
+
+
+        <div >
+             	<form id="addCompanyForm"  class="form-horizontal">
+
+                    <div class="col-md-6">
+
+                    <div class="form-group">
+              <label for="focusedinput" class="col-md-3 control-label">Closing date</label>
+	<div class='col-md-9'>
+
+
+		   <div class='input-group date' id='datetimepicker2'>
+                <input type='date' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+
+    </div>
+
+                </div>
+
+                          <div class="form-group">
+           <label for="focusedinput" class="col-md-3 control-label">Closing time</label>
+	<div class='col-md-9'>
+
+            <div class='input-group date' id='datetimepicker3'>
+               <select class="form-control">
+                <option>1:00</option>
+
+                </select>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+
+    </div>
+    </div>
+
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                              <div class="form-group">
+              <label for="focusedinput" class="col-md-3 control-label">Next Appointment</label>
+	<div class='col-md-9'>
+
+
+		   <div class='input-group date' id='datetimepicker2'>
+                <input type='date' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+
+    </div>
+
+                </div>
+
+                          <div class="form-group">
+           <label for="focusedinput" class="col-md-3 control-label">Next Appt. Time:</label>
+	<div class='col-md-9'>
+
+            <div class='input-group date' id='datetimepicker3'>
+
+                <select class="form-control">
+                <option>1:00</option>
+
+                </select>
+
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                </span>
+            </div>
+
+    </div>
+    </div>
+
+                    </div>
+
+
+  <div class="row">
+    <div class="col-md-6">
+
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Patient Name<span class="required">*</span></label>
+		<div class="col-md-9">
+		<input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+		</div>
+
+		</div>
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Prescription List<span class="required">*</span></label>
+		<div class="col-md-9">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+
+		</div>
+
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Remarks:</label>
+		<div class="col-md-9">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+		</div>
+
+
+
+       </div>
+
+       <div class="col-md-6">
+           <div class="form-group">
+
+           <div class="btn-group  col-md-offset-4">
+               <a href="#" class="btn btn-info">Upload file</a>
+
+            <a href="#" class="btn btn-info"> Remove Selected</a>
+            </div>
+
+
+           </div>
+
+             	<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Scanned Document List:</label>
+		<div class="col-md-9">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+		</div>
+       </div>
+  </div>
+
+
+
+
+
+	</form>
+
+        </div>
+    </div>
+    </div>
+                        	<div class="panel-footer">
+	<div class="row">
+	<div class="text-center">
+	<input type="submit" class="btn-success btn" name="submit" value="Close Appointment"/>
+	</div>
+
+	</div>
+	</div>
+</div>
+<div class="clearfix"> </div>
+</div>
+
+
+
+		</div>
+
+
+
+
+
+
+                        </div>
+
+
+    </section>
+
+
+
+          <section id="doctors-Apointments-Section">
+              <!-- /.panel -->
+                    <div class="panel panel-default">
+                         <hr class="invisible">
+                        <div class="panel-heading">
+                            <i class="fa fa-clock-o fa-fw"></i> Appointments
+                            <div class="pull-right">
+
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Patient's Name</th>
+                                                     <th>Ailment</th>
+                                                    <th>Clinic</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Agnelo</td>
+                                                    <td>Back Pain</td>
+                                                     <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>8:29 AM</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>Ignetious</td>
+                                                    <td>sore Throath</td>
+                                                    <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>9:29 AM</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>Ignetious</td>
+                                                    <td>sore Throath</td>
+                                                    <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>10:29 AM</td>
+
+                                                </tr>
+                                                <tr>
+                                                  <td>4</td>
+                                                    <td>Joel</td>
+                                                    <td>Stomach Ache</td>
+                                                    <td>Margao</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>4:10 PM</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>5</td>
+                                                     <td>Ryan</td>
+                                                    <td>Bronchitis</td>
+                                                    <td>Margao</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>5:10 PM</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>6</td>
+                                                    <td>Ruban</td>
+                                                    <td>Stomach Ache</td>
+                                                    <td>Margao</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>5:50 PM</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.col-lg-4 (nested) -->
+                                <div class="col-lg-8">
+                                    <div id="morris-bar-chart"></div>
+                                </div>
+                                <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+
+            </section>
+
+
+            <section id="patients-Appointment-History-Section">
+                    <!-- /.panel -->
+                    <div class="panel panel-default">
+                         <hr class="invisible">
+                        <div class="panel-heading">
+                            <i class="fa fa-clock-o fa-fw"></i> Patient's History
+                            <div class="pull-right">
+
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <div class="row">
+                            <form class="form-inline">
+
+
+                          <div class="form-group col-md-8">
+           <label for="focusedinput" class="col-md-2 control-label">Patients Name:</label>
+	<div class='col-md-8'>
+
+            <div class='input-group date' id='datetimepicker3'>
+               <select class="form-control" style="width:16em">
+                <option>Agnelo</option>
+                   <option>Savio</option>
+                   <option>Mathews</option>
+
+                </select>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-user"></span>
+                </span>
+            </div>
+        <a href="#" class="form-control btn btn-default btn-success">Get Details</a>
+
+    </div>
+
+    </div>
+
+
+
+                            </form>
+                            </div>
+                            <hr class="invisible">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+
+                                                    <th>Location</th>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>Remarks</th>
+                                                    <th>Details</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+
+                                                     <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>8:29 AM</td>
+                                                    <td></td>
+                                                    <td><a href="#" class="viewPatientsHistoryBtn btn btn-info">View Details</a></td>
+
+                                                </tr>
+
+                                                <tr>
+                                                    <td>1</td>
+
+                                                     <td>Panjim</td>
+                                                    <td>4/5/2016</td>
+                                                    <td>8:29 AM</td>
+                                                    <td></td>
+                                                    <td><a href="#" class="viewPatientsHistoryBtn btn btn-info">View Details</a></td>
+
+                                                </tr>
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.table-responsive -->
+                                </div>
+                                <!-- /.col-lg-4 (nested) -->
+                                <div class="col-lg-8">
+                                    <div id="morris-bar-chart"></div>
+                                </div>
+                                <!-- /.col-lg-8 (nested) -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+
+            </section>
+
+            <section id="patents-Appointment-History-Section2">
+                 <!-- /.row -->
+            <div class="row">
+                <div class="container">
+                     <hr class="invisible">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                           close  Appointment
+                        </div>
+                        <div class="panel-body">
+                         <div class="row">
+		<div class="text-center">
+            <div class="col-md-8">
+                <hr class="invisible">
+                  <hr class="invisible">
+                  <hr class="invisible">
+            <h1 >Appointment Time: 4<sup>th</sup> March 2016</h1>
+
+            </div>
+            <div class="col-md-4">
+            <img class="img-thumbnail" src="images/1.jpg" style="  height:15em; width:13em;">
+
+
+            </div>
+
+		</div>
+
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+<div class="content_bottom">
+
+
+
+
+        <div >
+            <hr>
+             	<form id="addCompanyForm"  class="form-horizontal">
+
+
+
+
+
+
+
+
+  <div class="row">
+    <div class="col-md-6">
+
+
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Prescription List<span class="required">*</span></label>
+		<div class="col-md-9">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+
+		</div>
+
+		<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Remarks:</label>
+		<div class="col-md-9">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+		</div>
+
+
+
+       </div>
+
+       <div class="col-md-6">
+
+
+             	<div class="form-group">
+		<label for="focusedinput" class="col-md-3 control-label">Scanned Document List:</label>
+		<div class="col-md-9">
+		<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+		<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+		</div>
+		</div>
+       </div>
+  </div>
+
+
+
+
+
+	</form>
+
+        </div>
+    </div>
+    </div>
+                        	<div class="panel-footer">
+	<div class="row">
+	<div class="text-center">
+	<input type="submit" class="btn-success btn" name="submit" value="Close"/>
+
+	</div>
+
+	</div>
+	</div>
+</div>
+<div class="clearfix"> </div>
+</div>
+
+
+
+		</div>
+
+
+
+
+
+
+                        </div>
+
+            </section>
+
+
+           <section id="add-Staff-Form-Section">
+            	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Staff management for doctor
+				</div>
+				<div class="panel-body">
+				<form name="staffFrm" id="staffFrm" role="form" method="POST">
+					<div class="row">
+						<div class="col-md-6">
+								<div class="form-group">
+									<label for="fname">First Name:<span style="color:red;">*</span></label>
+									<input id="fname" name="fname" class="form-control" placeholder="Enter First Name" value="">
+								</div>
+								<div class="form-group">
+									<label for="lname">Last Name:<span style="color:red;">*</span></label>
+									<input id="lname" name="lname" class="form-control" placeholder="Enter Last Name" value="">
+								</div>
+								<div class="form-group">
+									<label for="phone1">Contact 1:<span style="color:red;">*</span></label>
+									<input id="phone1" name="phone1" class="form-control" placeholder="Enter Phone-1" value="">
+								</div>
+								<div class="form-group">
+									<label for="phone2">Contact 2:</label>
+									<input id="phone2" name="phone2" class="form-control" placeholder="Enter Phone-2" value="">
+								</div>
+								<div class="form-group">
+									<label for="email">Email:<span style="color:red;">*</span></label>
+									<input id="email" name="email" class="form-control" placeholder="Enter Email" value="">
+								</div>
+								<div class="form-group">
+									<label for="address">Address:<span style="color:red;">*</span></label>
+									<textarea id="address" name="address" class="form-control" placeholder="Enter Address" rows="3"></textarea>
+								</div>
+					   </div>
+					   <div class="col-md-6">
+								<div class="form-group">
+									<label for="uname">Username:<span style="color:red;">*</span></label>
+									<input id="uname" name="uname" class="form-control" placeholder="Enter Username" value="">
+								</div>
+								<div class="form-group">
+									<label for="pswd">Password:<span style="color:red;">*</span></label>
+									<input id="pswd" name="pswd" class="form-control" placeholder="Enter Password" value="">
+								</div>
+								<div class="form-group">
+									<label for="rcont">Recovery Contact:<span style="color:red;">*</span></label>
+									<input id="rcont" name="rcont" class="form-control" placeholder="Enter Recovery Phone" value="">
+								</div>
+								<div class="form-group">
+									<label for="remail">Recovery Email:<span style="color:red;">*</span></label>
+									<input id="remail" name="remail" class="form-control" placeholder="Enter Recovery Email" value="">
+								</div>
+								<div class="form-group">
+									<label for="location">Work Locations:<span style="color:red;">*</span></label>
+									<select id="location" name="location" class="form-control">
+										<option value="0">--Select--</option>
+
+											<option value="">
+
+											</option>
+
+									</select>
+								</div>
+					   </div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<button id="staffSub" class="btn btn-primary">Save</button>
+							<a href="" class="btn btn-danger">Cancel</a>
+						</div>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+            </section>
+
+
+
+
+
+
+
+
+
+
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bundle.min.js"></script>
+      <!-- Metis Menu Plugin JavaScript -->
+    <script src="js/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/sb-admin-2.js"></script>
+
+</body>
+
+</html>

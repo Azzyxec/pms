@@ -1,20 +1,3 @@
-//helper function to get the url query parameters
-var utility = {
-  getURLParam: function(name){
-    var url = window.location.href;
-
-    name = name.replace(/[\[\]]/g, "\\$&");
-
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-    var results = regex.exec(url);
-
-    if (!results) return null;
-    if (!results[2]) return '';
-
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
-  }
-}
-
 $(document).ready(function(){
 
     $(function(){
@@ -25,8 +8,8 @@ $(document).ready(function(){
     var controller = {
       init: function(){
         //wiring the navigation
-        this.logoutUrl = "index.php/logout";
-        this.DoctorListingUrl = "index.php/doctorListing";
+        this.logoutUrl = links.logoutUrl;
+        this.DoctorListingUrl = links.doctorListingUrl;
 
         //do somethng about doctors info and registration
 
@@ -68,8 +51,6 @@ $(document).ready(function(){
           }
 
         controller.init();
-
-
 
     }());
 

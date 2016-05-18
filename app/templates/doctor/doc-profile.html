@@ -1,0 +1,106 @@
+<div class="container">
+
+  <form class="form-horizontal" >
+    <label class="col-md-12 text-center" >Doctor Info</label>
+    <hr class="invisible">
+    <hr class="invisible">
+
+    <input type="hidden" id="did" value="0" >
+
+    <div class="form-group ">
+      <label  class="col-md-2 control-label" for="dcontact">Name</label>
+        <div class="col-md-6">
+          <input type="text" id="dname"  class="form-control" placeholder="Name">
+        </div>
+    </div>
+
+    <div class="form-group">
+      <label  class="col-md-2 control-label" for="dcontact">Contact</label>
+        <div class="col-md-6">
+          <input type="text" id="dcontact"  class="form-control" placeholder="Contact">
+        </div>
+    </div>
+
+    <div class="form-group 2">
+      <label  class="col-md-2 control-label" for="dalternate-contact">Alternate Contact</label>
+        <div class="col-md-6">
+          <input type="text" id="dalternate-contact"  class="form-control" placeholder="Contact">
+        </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="col-md-2 control-label">Email</label>
+      <div class="col-md-6">
+          <input type="text" id="demail"  name="email" class="form-control" placeholder="Email">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="qualifications" class="col-md-2 control-label">Qualifications</label>
+      <div class="col-md-6">
+        <input type="text" id="dqualifications"  name="qualifications" class="form-control" placeholder="Qualifications">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address" class="col-md-2 control-label">Address</label>
+      <div class="col-md-6">
+        <textarea name="address" id="daddress" class="form-control" rows="3" placeholder="Address"></textarea>
+      </div>
+    </div>
+
+
+
+    <div class="form-group">
+      <label for="username" class="col-md-2 control-label">Username</label>
+      <div class="col-md-6">
+        <input type="text" id="duser-name"  name="username" class="form-control" placeholder="Username">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="col-md-2 control-label">Password</label>
+      <div class="col-md-6">
+        <input type="password" id="dpassword"  name="password" class="form-control" placeholder="Password">
+      </div>
+    </div>
+
+    <div class="form-group 2">
+      <label  class="col-md-2 control-label" for="drecovery-contact">Recovery Contact</label>
+        <div class="col-md-6">
+          <input type="text" id="drecovery-contact" name="drecovery-contact" class="form-control" placeholder="Contact">
+        </div>
+    </div>
+
+    <div class="form-group">
+      <label for="drecovery-email" class="col-md-2 control-label">Recovery Email</label>
+      <div class="col-md-6">
+          <input type="text" id="drecovery-email"  name="drecovery-email" class="form-control" placeholder="Email">
+      </div>
+    </div>
+
+    <div class="from-group" style={% if showActiveContol == "true" %}"visibility:visible;" {% else %} "visibility:hidden;"  {%endif%}>
+      <label class="col-md-2 control-label" for="">Status</label>
+      <div class="radio col-md-6">
+        <label>
+          <input type="radio" name="activeOptions" id="dactive"  value="1" checked>
+          Active
+        </label>
+        <label>
+          <input type="radio" name="activeOptions" id="dinactive" value="0">
+          Inactive
+        </label>
+      </div>
+    </div>
+
+    <hr class="invisible">
+    <hr class="invisible">
+
+    <div class="from-group col-md-6 text-center">
+      <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary">Save</button>
+    </div>
+
+
+</form>
+
+</div>

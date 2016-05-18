@@ -1,0 +1,20 @@
+<html>
+<head>
+<base href="{{basePath}}" />
+<title>Online Appointment System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css/my-custom-style.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" >
+</head>
+
+<!-- 3. Display the application -->
+<body>
+  <div id="page-wrapper">
+    <div id="wrapper">{% block content %}{% endblock %}</div>
+  </div>
+  <script src="js/jquery-2.1.4.min.js"></script>
+  {% block addScripts %}{% endblock %}
+</body>
+</html>

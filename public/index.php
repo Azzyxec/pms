@@ -12,7 +12,6 @@ use Pms\Entities\UserSessionManager;
 use Pms\Entities\Patient;
 use Pms\Entities\bookAppointmentObject;
 
-use Pms\Datalayer\DBHelper;
 use Pms\Datalayer\UserDB;
 use Pms\Datalayer\DoctorDB;
 use Pms\Datalayer\ScheduleDB;
@@ -64,101 +63,55 @@ $container['view'] = function ($container) {
     return $view;
 };
 
-//Default routes
-
+//Default route
 $app->get('/', function ($request, $response) {
     return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
 });
 
-$app->get('/login', function ($request, $response) {
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-});
+require '../app/routes/authenticate.php';
 
 
-$app->post('/isLoggedIn', function ($request, $response) {
+//Admin group
+$app->group('/admin', function(){
 
-   $user = UserSessionManager::getUser();
-   $data = array('data' => $user);
-   return $response->withJson($data);
-});
+  $this->get('/admin', function ($request, $response) {
+      return $this->view->render($response, '/admin/dash-home.html',
+                                                                array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
+  });
 
-$app->post('/authenitcateUser', function ($request, $response) {
+  $this->get('/doctorListing', function ($request, $response) {
+      return $this->view->render($response, '/admin/doctor-listing.html',
+                                                                array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
+  });
 
-  $user = new User();
+  $this->get('/getAllDoctors', function ($request, $response) {
+    try {
 
-  try{
+      $doctorDB = new DoctorDB();
+      $queryResult = $doctorDB->getAllDoctors();
 
-     $postedData = $request->getParsedBody();
-     if( isset($postedData['loginId']) && isset($postedData['password']) ){
+      $data = array('status' => "1", 'data' => $queryResult['data'], 'message' => 'success' );
+      return $response->withJson($data);
 
-       $userDb = new UserDB();
-       $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+      return $response->withJson($data);
+    }
 
-       UserSessionManager::setUser($user);
-     }
+  });
 
-     $data = array('data' => $user);
-     return $response->withJson($data);
+  $this->get('/adminDoctorEdit', function ($request, $response) {
+      return $this->view->render($response, '/admin/doctor-edit.html',
+                                                                array('basePath' => AppConfig::$basePath
+                                                                      , 'active' => "doctors"
+                                                                      , 'showActiveContol' => "true"
+                                                                      , 'title' => "Update Doctor"
+                                                                     ));
+  });
 
- }catch(Exception $e){
-
-   $data = array('data' => $user);
-   return $response->withJson($data);
- }
-
-});
-
-
-$app->post('/logout', function($request, $response){
-    UserSessionManager::destroySession();
-    $data = array('data' => "1");
-    return $response->withJson($data);
-});
-
-$app->get('/logout', function($request, $response){
-    UserSessionManager::destroySession();
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-});
-
-
-$app->get('/admin', function ($request, $response) {
-    return $this->view->render($response, '/admin/dash-home.html',
-                                                              array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
-});
-
-$app->get('/doctorListing', function ($request, $response) {
-    return $this->view->render($response, '/admin/doctor-listing.html',
-                                                              array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
-});
-
-$app->get('/getAllDoctors', function ($request, $response) {
-  try {
-
-    $doctorDB = new DoctorDB();
-    $queryResult = $doctorDB->getAllDoctors();
-
-    $data = array('status' => "1", 'data' => $queryResult['data'], 'message' => 'success' );
-    return $response->withJson($data);
-
-  } catch (Exception $e) {
-    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
-    return $response->withJson($data);
-  }
 
 });
-
-$app->get('/adminDoctorEdit', function ($request, $response) {
-    return $this->view->render($response, '/admin/doctor-edit.html',
-                                                              array('basePath' => AppConfig::$basePath
-                                                                    , 'active' => "doctors"
-                                                                    , 'showActiveContol' => "true"
-                                                                    , 'title' => "Update Doctor"
-                                                                   ));
-});
-
-
-
-
+//Admin group
 
 $app->get('/doctorInfo', function ($request, $response) {
     return $this->view->render($response, '/doctor/doctor-registration.html', array('basePath' => AppConfig::$basePath));

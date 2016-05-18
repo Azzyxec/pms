@@ -7,8 +7,8 @@ $(document).ready(function(){
 
         var controller = {
           init: function(){
-            this.doctorListingUrl = "index.php/getAllDoctors";
-            this.adminDoctorEditRedirect = "index.php/adminDoctorEdit";
+            this.doctorListingUrl = "index.php/admin/getAllDoctors";
+            this.adminDoctorEditRedirect = "index.php/admin/adminDoctorEdit";
 
             listView.init();
 

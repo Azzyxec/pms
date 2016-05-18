@@ -5,9 +5,10 @@ $(document).ready(function(){
                       init: function(){
                         loginView.init();
                       },
-                      authenticateUrl: "index.php/authenitcateUser",
-                      successRedirectUrl: "index.php/doctorDashboard",
-                      registerDoctorUrl: "index.php/doctorInfo"
+                      authenticateUrl: links.authenticateUrl,
+                      successRedirectUrl: links.successRedirectUrl,
+                      registerDoctorUrl: links.registerDoctorUrl,
+                      adminUrl: links.adminUrl
                    };
 
     var loginView = {
@@ -36,7 +37,7 @@ $(document).ready(function(){
                                     console.log('invalid username or password');
                                   }else if(response.data.type == "A"){
                                     console.log('authenticated as admin');
-                                    window.location.href = "index.php/admin";
+                                    window.location.href = controller.adminUrl;
                                   }else if(response.data.type == "D"){
                                     console.log('authenticated as doctor');
                                     window.location.href = controller.successRedirectUrl;

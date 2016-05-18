@@ -1,0 +1,104 @@
+{% extends "/doctor/doctor-dash-base.html" %}
+{% block content %}
+<section id="doctors-Apointments-Section">
+    <!-- /.panel -->
+          <div class="panel panel-default">
+               <hr class="invisible">
+              <div class="panel-heading">
+                  <i class="fa fa-clock-o fa-fw"></i> Appointments
+                  <div class="pull-right">
+
+                  </div>
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body">
+                  <div class="row">
+                      <div class="col-lg-12">
+                          <div class="table-responsive">
+                              <table class="table table-bordered table-hover table-striped">
+                                  <thead>
+                                      <tr>
+                                          <th>No</th>
+                                          <th>Patient's Name</th>
+                                           <th>Ailment</th>
+                                          <th>Clinic</th>
+                                          <th>Date</th>
+                                          <th>Time</th>
+
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td>1</td>
+                                          <td>Agnelo</td>
+                                          <td>Back Pain</td>
+                                           <td>Panjim</td>
+                                          <td>4/5/2016</td>
+                                          <td>8:29 AM</td>
+
+                                      </tr>
+                                      <tr>
+                                          <td>2</td>
+                                          <td>Ignetious</td>
+                                          <td>sore Throath</td>
+                                          <td>Panjim</td>
+                                          <td>4/5/2016</td>
+                                          <td>9:29 AM</td>
+
+                                      </tr>
+                                      <tr>
+                                          <td>3</td>
+                                          <td>Ignetious</td>
+                                          <td>sore Throath</td>
+                                          <td>Panjim</td>
+                                          <td>4/5/2016</td>
+                                          <td>10:29 AM</td>
+
+                                      </tr>
+                                      <tr>
+                                        <td>4</td>
+                                          <td>Joel</td>
+                                          <td>Stomach Ache</td>
+                                          <td>Margao</td>
+                                          <td>4/5/2016</td>
+                                          <td>4:10 PM</td>
+                                      </tr>
+                                      <tr>
+                                          <td>5</td>
+                                           <td>Ryan</td>
+                                          <td>Bronchitis</td>
+                                          <td>Margao</td>
+                                          <td>4/5/2016</td>
+                                          <td>5:10 PM</td>
+                                      </tr>
+                                      <tr>
+                                          <td>6</td>
+                                          <td>Ruban</td>
+                                          <td>Stomach Ache</td>
+                                          <td>Margao</td>
+                                          <td>4/5/2016</td>
+                                          <td>5:50 PM</td>
+                                      </tr>
+
+                                  </tbody>
+                              </table>
+                          </div>
+                          <!-- /.table-responsive -->
+                      </div>
+                      <!-- /.col-lg-4 (nested) -->
+                      <div class="col-lg-8">
+                          <div id="morris-bar-chart"></div>
+                      </div>
+                      <!-- /.col-lg-8 (nested) -->
+                  </div>
+                  <!-- /.row -->
+              </div>
+              <!-- /.panel-body -->
+          </div>
+          <!-- /.panel -->
+
+  </section>
+{% endblock %}
+{% block addScripts %}
+<script src="js/list.appointment.js"></script>
+{% endblock %}
