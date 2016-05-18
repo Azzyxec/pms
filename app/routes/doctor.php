@@ -1,6 +1,7 @@
 <?php
 
 use Pms\Entities\User;
+use Pms\Entities\Doctor;
 use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\DoctorDB;
 

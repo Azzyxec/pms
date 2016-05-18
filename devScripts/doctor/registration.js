@@ -18,11 +18,11 @@ $(document).ready(function(){
 
   var controller = {
       init: function(){
-        this.doctorUrl =  "index.php/saveUpdateDoctor";
-        this.doctorDetailsUrl =  "index.php/getDoctorDetails";
-        this.loginCheckUrl = "index.php/isLoggedIn";
-        this.doctorDashUrl = "index.php/doctorDashboard";
-        this.logoutUrl = "index.php/logout";
+        this.doctorUrl =  links.doctorUrl;
+        this.doctorDetailsUrl =  links.doctorDetailsUrl;
+        this.loginCheckUrl = links.loginCheckUrl;
+        this.doctorDashUrl = links.doctorDashUrl;
+        this.logoutUrl = links.logoutUrl;
         formView.init();
 
         this.getDoctorInfo();

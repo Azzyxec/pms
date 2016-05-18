@@ -3,7 +3,7 @@ var links = {
   //login js urls
    authenticateUrl : "index.php/authenticate/authenitcateUser",
    successRedirectUrl : "index.php/doctorDashboard/",
-   registerDoctorUrl : "index.php/doctorInfo",
+   registerDoctorUrl : "index.php/doctor/doctorInfo",
    adminUrl:"index.php/adminDashboard/admin",
 
    //admin related
@@ -12,7 +12,7 @@ var links = {
    logoutUrl : "index.php/authenticate/logout",
 
    //doctor dashboard links
-   doctorProfile : "index.php/doctorProfile",
+   doctorProfile : "index.php/doctorDashboard/doctorProfile",
    dashboardHomeUrl : "index.php/doctorDashboard/",
    newAppointmentUrl : "index.php/doctorDashboard/bookAppointment",
    patientsEntryUrl : "index.php/doctorDashboard/patientsEntry",
@@ -48,7 +48,15 @@ var links = {
    patientListingUrl:"index.php/patient/getPatientList",
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
-   locationListUrl:"index.php/locations/getDoctorLocations"
+   locationListUrl:"index.php/locations/getDoctorLocations",
 
+
+   //registartion
+
+   doctorUrl:"index.php/doctor/saveUpdateDoctor",
+   doctorDetailsUrl:"index.php/doctor/getDoctorDetails",
+   loginCheckUrl:"index.php/authenticate/isLoggedIn",
+   doctorDashUrl:"index.php/doctorDashboard/",
+   logoutUrl:"index.php/authenticate/logout"
 
 }

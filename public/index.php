@@ -6,8 +6,6 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 //importing entites
-use Pms\Entities\User;
-use Pms\Entities\Doctor;
 use Pms\Entities\UserSessionManager;
 use Pms\Entities\Patient;
 use Pms\Entities\bookAppointmentObject;
