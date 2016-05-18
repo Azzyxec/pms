@@ -10,8 +10,8 @@ $(document).ready(function(){
 
         var controller = {
           init: function(){
-            this.saveUpdateLocations = "index.php/addUpdateLocation";
-            this.locationListUrl = "index.php/getDoctorLocations";
+            this.saveUpdateLocations = links.saveUpdateLocations;
+            this.locationListUrl = links.locationListUrl;
 
             LocationView.init();
             locationListView.init();

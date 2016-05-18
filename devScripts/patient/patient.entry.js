@@ -26,12 +26,12 @@ $(document).ready(function(){
 
     var controller = {
       init :function(){
-        this.patientDetailPersistUrl ="index.php/addUpdatePatient";
-        this.patientsDetailsUrl = "index.php/getPatientDetails";
-        this.loginCheckUrl = "index.php/isLoggedIn";
-        this.getProgrammeList = "index.php/getMedicationProgrammeList";
-        this.programmeListDetailsUrl = "index.php/getProgrammeListDetails";
-        this.patientsProgrammesUrl = "index.php/getPatientProgrammes";
+        this.patientDetailPersistUrl = links.patientDetailPersistUrl;
+        this.patientsDetailsUrl = links.patientsDetailsUrl;
+        this.loginCheckUrl = links.loginCheckUrl;
+        this.getProgrammeList = links.getProgrammeList;
+        this.programmeListDetailsUrl = links.programmeListDetailsUrl;
+        this.patientsProgrammesUrl = links.patientsProgrammesUrl;
 
         patientDetailsView.init();
         patientGuardianDetailsView.init();

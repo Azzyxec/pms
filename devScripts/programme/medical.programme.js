@@ -12,8 +12,8 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
-        this.createModifyProgrammeUrl = "index.php/createModifyProgramme";
-        this.getProgrammeUrl = "index.php/getProgrammes";
+        this.createModifyProgrammeUrl = links.createModifyProgrammeUrl;
+        this.getProgrammeUrl = links.getProgrammeUrl;
 
         programmeView.init();
 

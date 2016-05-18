@@ -20,9 +20,9 @@ $(document).ready(function(){
 
         var controller = {
           init: function(){
-            this.createUpdateScheduleUrl = "index.php/createUpdateSchedule";
-            this.scheduleListingUrl = "index.php/scheduleListing";
-            this.getLocationUrl = "index.php/getDoctorLocations";
+            this.createUpdateScheduleUrl = links.createUpdateScheduleUrl;
+            this.scheduleListingUrl =   links.listScheduleUrl;
+            this.getLocationUrl = links.getLocationUrl;
             stepOneView.init();
             createScheduleView.init();
 

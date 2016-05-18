@@ -7,8 +7,8 @@ $(document).ready(function(){
 
         var controller = {
           init: function(){
-            this.patientListingUrl = "index.php/getPatientList";
-            this.editPatientRedirect = "index.php/patientsEntry";
+            this.patientListingUrl = links.patientListingUrl;
+            this.editPatientRedirect = links.patientsEntryUrl;
 
             listView.init();
 

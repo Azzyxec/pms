@@ -8,8 +8,8 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
-        this.programmeListUrl = "index.php/getMedicationProgrammeList";
-        this.programmeEditUrl = "index.php/createMedicalProgram";
+        this.programmeListUrl = links.programmeListUrl ;
+        this.programmeEditUrl = links.programmeEditUrl;
 
         ProgrammeListView.init();
 
