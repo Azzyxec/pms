@@ -5,7 +5,7 @@
 require '../vendor/autoload.php';
 
 
-//Core require needed for other to work
+//Core require needed for other to work 
 require_once '../AppConfig.php';
 
 
