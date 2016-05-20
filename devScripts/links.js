@@ -22,6 +22,7 @@ var links = {
    newScheduleUrl : "index.php/doctorDashboard/newSchedule",
    listScheduleUrl : "index.php/doctorDashboard/scheduleList",
    addStaffUrl : "index.php/doctorDashboard/staffEntry",
+   doctorsStaffListingUr : "index.php/doctorDashboard/staffListing",
    patientsHistoryUrl : "index.php/doctorDashboard/patientHistory",
    createProgramForPatientUrl : "index.php/doctorDashboard/createMedicalProgram",
    programmeListingsUrl : "index.php/doctorDashboard/programmeList",
@@ -58,6 +59,10 @@ var links = {
    doctorDetailsUrl:"index.php/doctor/getDoctorDetails",
    loginCheckUrl:"index.php/authenticate/isLoggedIn",
    doctorDashUrl:"index.php/doctorDashboard/",
-   logoutUrl:"index.php/authenticate/logout"
+   logoutUrl:"index.php/authenticate/logout",
+
+   createModifyStaffUrl:"index.php/staff/createModifyStaff",
+   getStaffDetailsUrl: "index.php/staff/getStaffDetails",
+   staffListingUrl: "index.php/staff/getDoctorsStaffList"
 
 }

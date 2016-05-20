@@ -5,25 +5,27 @@
 require '../vendor/autoload.php';
 
 
-//Core require needed for other to work 
+//Core require needed for other to work
 require_once '../AppConfig.php';
 
 
 //can put a loop to include all the files from the folder
 //require once for entites
-require_once '../entities/User.php';
-require_once '../entities/Doctor.php';
-require_once '../entities/UserSessionManager.php';
-require_once '../entities/Patient.php';
-require_once '../entities/bookAppointment.php';
+require_once '../app/entities/User.php';
+require_once '../app/entities/Doctor.php';
+require_once '../app/entities/UserSessionManager.php';
+require_once '../app/entities/Patient.php';
+require_once '../app/entities/bookAppointment.php';
+require_once '../app/entities/Staff.php';
 
 //Datalayer
-require_once '../datalayer/DBHelper.php';
-require_once '../datalayer/UserDB.php';
-require_once '../datalayer/DoctorDB.php';
-require_once '../datalayer/ScheduleDB.php';
-require_once '../datalayer/PatientDB.php';
-require_once '../datalayer/ProgrammeDB.php';
-require_once '../datalayer/bookAppointmentAbstraction.php';
+require_once '../app/datalayer/DBHelper.php';
+require_once '../app/datalayer/UserDB.php';
+require_once '../app/datalayer/DoctorDB.php';
+require_once '../app/datalayer/ScheduleDB.php';
+require_once '../app/datalayer/PatientDB.php';
+require_once '../app/datalayer/ProgrammeDB.php';
+require_once '../app/datalayer/bookAppointmentAbstraction.php';
+require_once '../app/datalayer/StaffDB.php';
 
 //controller files

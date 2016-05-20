@@ -22,6 +22,8 @@ $(document).ready(function(){
           this.newScheduleUrl = links.newScheduleUrl;
           this.listScheduleUrl = this.listScheduleUrl;
           this.addStaffUrl = links.addStaffUrl;
+          this.doctorsStaffListingUr = links.doctorsStaffListingUr;
+
           this.patientsHistoryUrl = links.patientsHistoryUrl;
 
           this.createProgramForPatientUrl = links.createProgramForPatientUrl ;
@@ -149,8 +151,8 @@ $(document).ready(function(){
            });
 
            $("#btn-staff-listing").click(function(e){
-                   e.preventDefault();
-
+                e.preventDefault();
+                window.location.href = controller.doctorsStaffListingUr;
            });
              
             $("#calendar-Template-Btn-Link").click(function(e){

@@ -7,10 +7,10 @@
 <div class="col-md-12">
 <div class="panel panel-green">
 <div class="panel-heading">
-  Staff management for doctor
+  Staff Details
 </div>
 <div class="panel-body">
-<form name="staffFrm" id="staffFrm" role="form" method="POST">
+<form name="staffFrm" id="staffFrm" role="form" >
   <div class="row">
     <div class="col-md-6">
         <div class="form-group">
@@ -22,12 +22,12 @@
           <input id="lname" name="lname" class="form-control" placeholder="Enter Last Name" value="">
         </div>
         <div class="form-group">
-          <label for="phone1">Contact 1:<span style="color:red;">*</span></label>
-          <input id="phone1" name="phone1" class="form-control" placeholder="Enter Phone-1" value="">
+          <label for="contact1">Contact 1:<span style="color:red;">*</span></label>
+          <input id="contact1" name="phone1" class="form-control" placeholder="Enter Phone-1" value="">
         </div>
         <div class="form-group">
-          <label for="phone2">Contact 2:</label>
-          <input id="phone2" name="phone2" class="form-control" placeholder="Enter Phone-2" value="">
+          <label for="contact2">Contact 2:</label>
+          <input id="contact2" name="phone2" class="form-control" placeholder="Enter Phone-2" value="">
         </div>
         <div class="form-group">
           <label for="email">Email:<span style="color:red;">*</span></label>
@@ -48,31 +48,43 @@
           <input id="pswd" name="pswd" class="form-control" placeholder="Enter Password" value="">
         </div>
         <div class="form-group">
-          <label for="rcont">Recovery Contact:<span style="color:red;">*</span></label>
-          <input id="rcont" name="rcont" class="form-control" placeholder="Enter Recovery Phone" value="">
+          <label for="recovery-contact">Recovery Contact:<span style="color:red;">*</span></label>
+          <input id="recovery-contact" name="rcont" class="form-control" placeholder="Enter Recovery Phone" value="">
         </div>
         <div class="form-group">
-          <label for="remail">Recovery Email:<span style="color:red;">*</span></label>
-          <input id="remail" name="remail" class="form-control" placeholder="Enter Recovery Email" value="">
+          <label for="recovery-email">Recovery Email:<span style="color:red;">*</span></label>
+          <input id="recovery-email" name="remail" class="form-control" placeholder="Enter Recovery Email" value="">
         </div>
         <div class="form-group">
           <label for="location">Work Locations:<span style="color:red;">*</span></label>
-          <select id="location" name="location" class="form-control">
-            <option value="0">--Select--</option>
-
-              <option value="">
-
-              </option>
-
+          <select id="sel-locations" name="location" class="form-control">
           </select>
+        </div>
+        <div class="from-group" style={% if showActiveContol == "true" %}"visibility:visible;" {% else %} "visibility:hidden;"  {%endif%}>
+          <label class="col-md-2 control-label" for="">Status</label>
+          <div class="radio col-md-6">
+            <label>
+              <input type="radio" name="activeOptions" id="sactive"  value="1" checked>
+              Active
+            </label>
+            <label>
+              <input type="radio" name="activeOptions" id="sinactive" value="0">
+              Inactive
+            </label>
+          </div>
         </div>
      </div>
   </div>
   <div class="row">
     <div class="col-md-6">
+<<<<<<< HEAD:app/templates/staff/add-staff.html
+      <button type="button" id="btn-save" class="btn btn-primary">Save</button>
+      <a href="" class="btn btn-danger">Cancel</a>
+=======
       <button id="staffSub" class="btn btn-primary">Save</button>
         <button id="staffSub" class="btn  btn-danger">Cancel</button>
     
+>>>>>>> f2db06e4e4eaf1734ffc09c12dc7f2633e9cf196:app/templates/staffManage/add-staff.html
     </div>
   </div>
 </form>
