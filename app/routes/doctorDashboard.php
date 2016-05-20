@@ -102,7 +102,7 @@ $app->group('/doctorDashboard', function(){
      $this->get('/calendarTemplate', function ($request, $response) {
       return $this->view->render($response, '/WorkPages/calendarTemplate.html',
                                                                 array('basePath' => AppConfig::$basePath, 'active' => "others"));
-  });
+  }); 
 
 
 });

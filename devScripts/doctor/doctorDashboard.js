@@ -159,12 +159,32 @@ $(document).ready(function(){
                 e.preventDefault();
                 window.location.href = controller.CalendarTemplateUrl;
                console.log("hello hid"); 
-            });
+            }); 
 
            $("#patients-History-Section-Link-Btn").click(function(e){
                e.preventDefault();
                window.location.href = controller.patientsHistoryUrl;
            });
+             $("#appointment-section-link-btn").click(function(e){
+               e.preventDefault();
+           });
+            $("#patients-Entry-Section-Link-Btn").click(function(e){
+               e.preventDefault();
+           });
+            
+             $("#staff-managment-section-link-btn").click(function(e){
+               e.preventDefault();
+           });
+             $("#other-settings-section-link-btn").click(function(e){
+               e.preventDefault();
+           });
+             $("#calendar-template-section-link-btn").click(function(e){
+               e.preventDefault();
+           });
+            
+            
+            
+           
 
         },
         render: function(){
