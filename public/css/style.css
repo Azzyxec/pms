@@ -1,3 +1,99 @@
 .login-btn{
     width:100% !important
 }
+
+
+
+/*
+ *
+ *
+ *styles to change the admin theme
+ * 
+ *
+ *
+ */
+.navbar-default{
+    
+ //   background-image: linear-gradient(to bottom, #151515 0%, #3e3e3e 100%) !important;
+}
+
+body{
+    background-color:#222!important;
+}
+.nav > li > a{
+color:white !important;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none !important;
+   background-color: #000000 !important;
+    
+}
+
+.nav-tabs > li > a{
+    color:black !important;
+}
+
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus{
+    text-decoration : none !important;
+    background-color: #ededed !important;
+}
+.navbar-brand{
+  //  color:white !important;
+}
+.navbar-brand:hover{
+  //  color: darkgrey !important;
+}
+.panel-default > .panel-heading{
+   // color:white !important;
+   // background-image: linear-gradient(to bottom, #2ecc71 0%, #2ecc71 100%) !important;
+}
+#page-wrapper{
+   // background-color:white !important;
+}
+
+.nav-tabs > li.active > a{
+    
+  //  background-color:#3498db!important;
+}
+.nav-tabs > li > a
+{
+    
+     //background-color:#3498db !important;
+}
+.panel-footer{
+    
+     //   background-color: #2ecc71 !important;
+}
+/********** end styles to change the admin theme *************/
+
+
+/*
+ *
+ *
+ *style for calendar table
+ * 
+ *
+ *
+ */
+
+.calendar-date{
+    
+    color: #C1C1C1;
+}
+.collapse-style{
+    background-color:#3498db;
+    text-align:center;
+}
+.collapse-style:hover{
+    background-color:#2577af !important;
+   
+}
+.calendarTable > thead > tr > th {
+    border: none !important;
+}
+.calendarTable{
+    border: none !important;
+}
+
+/********** end style for calendar *************/
