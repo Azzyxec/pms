@@ -4,8 +4,7 @@
   <!-- /.row -->
   <div class="row">
     
-      <div class="col-lg-12">
-
+    
         <div>
 
           <!-- Nav tabs -->
@@ -22,7 +21,8 @@
           <div class="tab-content">
               <hr class="invisible">
 
-            <div role="tabpanel" class="tab-pane" id="patients-entry-section">
+              
+         <div role="tabpanel" class="col-lg-10 col-md-12 tab-pane" id="patients-entry-section">
 
               <div class="panel panel-green">
                 <div class="panel-heading">
@@ -52,18 +52,20 @@
 
                   <div class="content_bottom">
                     <hr class="invisible">
-                    <div class="col-md-offset-2">
+                    
                       <form id="addCompanyForm"  class="form-horizontal">
-                        <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Name</label>
-                          <div class='col-md-6'>
+                          
+                          <div class="col-lg-6 col-md-6">
+                                <div class="form-group">
+                          <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Name</label>
+                          <div class=' col-lg-9 col-md-9'>
                             <input type="text" class="form-control" name="username" id="patient-name" placeholder="Patients Name">
                           </div>
 
                         </div>
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">DOB:</label>
-                          <div class='col-md-6'>
+                          <label for="focusedinput" class="col-md-3  col-lg-3 control-label">DOB:</label>
+                          <div class='col-md-9 col-lg-9'>
 
                             <div class='input-group date' >
                               <input id="patient-date-of-birth" type='date' class="form-control" />
@@ -76,8 +78,8 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
-                          <div class=" col-sm-6">
+                          <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Gender:</label>
+                          <div class=" col-lg-9 col-md-9">
                             <div class="radio-inline">
                               <label>
                                 <input id="rb-male" type="radio"> Male
@@ -93,56 +95,63 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Blood Group<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="" class="col-md-3 col-lg-3 control-label">Blood Group<span class="required">*</span></label>
+                          <div class="col-md-9 col-lg-9">
                             <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">weight<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-3 col-lg-3 control-label">weight<span class="required">*</span></label>
+                          <div class="col-md-9 col-lg-9 ">
                             <input type="text" class="form-control"  id="patient-weight-input" placeholder="Patients Weight">
                           </div>
 
                         </div>
-
+                          </div>
+                          <div class="col-lg-6 col-md-6">
+                          
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Height<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Height<span class="required">*</span></label>
+                          <div class="col-md-9 col-lg-9">
                             <input type="text" class="form-control"  id="patient-height" placeholder="Patients Height">
                           </div>
 
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Contact1<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Contact1<span class="required">*</span></label>
+                          <div class="col-md-9 col-lg-9">
                             <input type="text" class="form-control"  id="patient-contact1" placeholder="Contact info">
                           </div>
 
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Contact2<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Contact2<span class="required">*</span></label>
+                          <div class="col-md-9 col-lg-9">
                             <input type="text" class="form-control"  id="patient-contact2" placeholder="Contact info">
                           </div>
 
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Address</label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Address</label>
+                          <div class="col-md-9 col-lg-9">
                             <textarea class="form-control"  rows ="5" name="address" id="patient-address" ></textarea>
                             <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                           </div>
                         </div>
 
+                          </div>
+                  
+
                       </form>
 
-                    </div>
+                   
+                      
+                      
                   </div>
                 </div>
                 <div class="panel-footer">
@@ -157,11 +166,14 @@
               <div class="clearfix"> </div>
 
             </div>
+        
 
+              
+   
+          
+            <div role="tabpanel" class="col-lg-8 col-md-9 tab-pane" id="guardian-entry-section">
 
-            <div role="tabpanel" class="tab-pane" id="guardian-entry-section">
-
-              <div class="panel panel-default">
+              <div class="panel panel-green">
                 <div class="panel-heading">
                   Guardians Entry
 
@@ -189,27 +201,28 @@
 
                   <div class="content_bottom">
                     <hr class="invisible">
-                    <div class="col-md-offset-2">
+                    <div class="">
                       <form id="addCompanyForm"  class="form-horizontal">
+                          
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Name</label>
-                          <div class='col-md-6'>
+                          <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Name</label>
+                          <div class='col-md-9'>
 
                             <input type="text" class="form-control" name="username" id="guardian-name" placeholder="Name">
                           </div>
 
                         </div>
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Age:</label>
-                          <div class='col-md-6'>
+                          <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Age:</label>
+                          <div class='col-md-9'>
 
                             <input type="text" class="form-control" name="username" id="guardian-age" placeholder="Age">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
-                          <div class=" col-sm-6">
+                          <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Gender:</label>
+                          <div class=" col-sm-9">
                             <div class="radio-inline">
                               <label>
                                 <input id="rb-male-guardian" type="radio"> Male
@@ -225,8 +238,8 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Contact 1:<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-2 col-lg-2  control-label">Contact 1:<span class="required">*</span></label>
+                          <div class="col-md-9">
                             <input type="text" class="form-control"  id="guardian-contact1" placeholder="Contact info">
                           </div>
 
@@ -234,8 +247,8 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Contact 2:<span class="required">*</span></label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Contact 2:<span class="required">*</span></label>
+                          <div class="col-md-9">
                             <input type="text" class="form-control"  id="guardian-contact2" placeholder="Contact info">
                           </div>
 
@@ -244,8 +257,8 @@
 
 
                         <div class="form-group">
-                          <label for="focusedinput" class="col-md-2 control-label">Address</label>
-                          <div class="col-md-6">
+                          <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Address</label>
+                          <div class="col-md-9">
                             <textarea class="form-control"  rows ="5" name="address" id="guardian-address" ></textarea>
                             <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
@@ -269,10 +282,12 @@
               <div class="clearfix"> </div>
 
             </div>
+    
+        
+ 
+           <div role="tabpanel" class="tab-pane col-lg-8 col-md-8" id="birth-entry-section">
 
-            <div role="tabpanel" class="tab-pane" id="birth-entry-section">
-
-              <div class="panel panel-default">
+              <div class="panel panel-green">
                 <div class="panel-heading">
                   Birth Details
 
@@ -282,12 +297,12 @@
 
                   <div class="content_bottom">
                     <hr class="invisible">
-                    <div class="col-md-offset-2">
+                    <div class="">
                       <form id="addCompanyForm"  class="form-horizontal">
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Delivery Method</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Delivery Method</label>
+                          <div class='col-md-9'>
                             <select id="delivery-method" name="" class="form-control">
                               <option>Normal</option>
                               <option>Vaccum</option>
@@ -299,72 +314,72 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Birth weight</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Birth weight</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="birth-weight" placeholder="Weight">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Length</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Length</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="birth-length" placeholder="Length">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Head</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Head</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="birth-head" placeholder="">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Blood  group</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Blood  group</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="birth-blood-group" placeholder="Blood group">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Mother</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Mother</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="mother-name" placeholder="Name">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Mother Blood group</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Mother Blood group</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="mother-blood-group" placeholder="Blood group">
                           </div>
                         </div>
 
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Father</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Father</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="father-name" placeholder="Name">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Father Blood group</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Father Blood group</label>
+                          <div class='col-md-9'>
                             <input type="text" class="form-control" name="" id="father-blood-group" placeholder="Blood group">
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Siblings</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Siblings</label>
+                          <div class='col-md-9'>
                             <textarea  class="form-control" row="3" name="" id="siblings" placeholder=""></textarea>
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="" class="col-md-2 control-label">Remarks</label>
-                          <div class='col-md-6'>
+                          <label for="" class="col-md-3 control-label">Remarks</label>
+                          <div class='col-md-9'>
                             <textarea  class="form-control" row="3" name="" id="birth-remarks" placeholder=""></textarea>
                           </div>
                         </div>
@@ -385,8 +400,12 @@
               <div class="clearfix"> </div>
 
             </div>
+        
+              
 
-            <div role="tabpanel" class="tab-pane" id="patients-entry-more-details-section">
+          
+              
+                <div role="tabpanel" class="tab-pane col-lg-8" id="patients-entry-more-details-section">
               <hr class="invisible">
               <div class="form-group col-md-6">
                 <label>Select Program : </label>
@@ -445,7 +464,9 @@
 
 
             </div>
-
+    
+       
+      
           </div>
 
 
@@ -453,7 +474,7 @@
 
 
         </div>
-      </div>
+      
 
   </section>
   {% endblock %}

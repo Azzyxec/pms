@@ -156,7 +156,7 @@ $(document).ready(function(){
             $("#calendar-Template-Btn-Link").click(function(e){
                 e.preventDefault();
                 window.location.href= controller.CalendarTemplateUrl;
-                console.log("hello"); 
+               // console.log("hello"); 
             });
 
            $("#patients-History-Section-Link-Btn").click(function(e){
