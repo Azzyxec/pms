@@ -157,8 +157,8 @@ $(document).ready(function(){
              
             $("#calendar-Template-Btn-Link").click(function(e){
                 e.preventDefault();
-                window.location.href= controller.CalendarTemplateUrl;
-               // console.log("hello"); 
+                window.location.href = controller.CalendarTemplateUrl;
+               console.log("hello hid"); 
             });
 
            $("#patients-History-Section-Link-Btn").click(function(e){
