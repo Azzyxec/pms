@@ -32,8 +32,8 @@ $(document).ready(function(){
 
         $.get(this.getLocationsUrl , {})
          .done(function( response ) {
-           console.log('response ' + JSON.stringify(response));
-           model.staff = response.data;
+           console.log('locs ' + JSON.stringify(response));
+           model.locations = response.data;
            CreateUpdateView.render();
 
 

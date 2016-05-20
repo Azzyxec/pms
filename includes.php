@@ -22,7 +22,7 @@ require_once '../app/entities/Staff.php';
 require_once '../app/datalayer/DBHelper.php';
 require_once '../app/datalayer/UserDB.php';
 require_once '../app/datalayer/DoctorDB.php';
-require_once '../app/datalayer/ScheduleDB.php';
+require_once '../app/datalayer/scheduleDB.php';
 require_once '../app/datalayer/PatientDB.php';
 require_once '../app/datalayer/ProgrammeDB.php';
 require_once '../app/datalayer/bookAppointmentAbstraction.php';
