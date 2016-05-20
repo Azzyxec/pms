@@ -54,7 +54,7 @@ color:white !important;
 
 .nav-tabs > li.active > a{
     
-  //  background-color:#3498db!important;
+  //  background-color:#3498db!important; 
 }
 .nav-tabs > li > a
 {
@@ -82,7 +82,7 @@ color:white !important;
     color: #C1C1C1;
 }
 .collapse-style{
-    background-color:#3498db;
+    background-color:#14517b;
     text-align:center;
 }
 .collapse-style:hover{

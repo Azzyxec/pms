@@ -89,7 +89,7 @@ $app->group('/doctorDashboard', function(){
       return $this->view->render($response, '/doctor/manage-locations.html',
                                                                 array('basePath' => AppConfig::$basePath, 'active' => "others"));
   });
-    
+     
      $this->get('/calendarTemplate', function ($request, $response) {
       return $this->view->render($response, '/WorkPages/calendarTemplate.html',
                                                                 array('basePath' => AppConfig::$basePath, 'active' => "others"));
