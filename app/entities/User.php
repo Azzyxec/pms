@@ -6,10 +6,13 @@ namespace Pms\Entities;
   public $id;
   public $type;
   public $name;
+  public $doctorId;
 
   function __construct(){
     $this->id = "-1";
     $this->type = "-1";
     $this->name = "-1";
+    $this->doctorId = "-1";
   }
+
 }

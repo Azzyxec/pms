@@ -82,6 +82,8 @@ require '../app/routes/programme.php';
 
 require '../app/routes/doctor.php';
 
+require '../app/routes/staff.php';
+
 /*
 $app->post('/saveBookPatientEntry', function ($request, $response) {
  try {

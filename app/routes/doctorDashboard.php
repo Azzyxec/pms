@@ -80,8 +80,17 @@ $app->group('/doctorDashboard', function(){
   //staff management
 
   $this->get('/staffEntry', function ($request, $response) {
-      return $this->view->render($response, '/staffManage/add-staff.html',
-                                                                array('basePath' => AppConfig::$basePath, 'active' => "staff"));
+      return $this->view->render($response, '/staff/add-staff.html',
+                                                                array('basePath' => AppConfig::$basePath,
+                                                                      'active' => "staff",
+                                                                      'showActiveContol' => true));
+  });
+
+
+  $this->get('/staffListing', function ($request, $response) {
+      return $this->view->render($response, '/staff/staff-listing.html',
+                                                                array('basePath' => AppConfig::$basePath,
+                                                                      'active' => "staff"));
   });
 
   //location management

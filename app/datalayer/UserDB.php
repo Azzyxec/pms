@@ -26,6 +26,7 @@ class UserDb{
         $user->id = $result['id'];
         $user->type = $result['type'];
         $user->name = $result['name'];
+        $user->doctorId = $result['doctor_id'];
       }
 
       return $user;
