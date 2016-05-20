@@ -30,6 +30,7 @@ $(document).ready(function(){
           this.programmeListingsUrl = links.programmeListingsUrl;
 
           this.ManageLocationsUrl = links.ManageLocationsUrl;
+          this.CalendarTemplateUrl = links.getCalenderUrl;
 
           //do somethng about doctors info and registration
 
@@ -153,6 +154,12 @@ $(document).ready(function(){
                 e.preventDefault();
                 window.location.href = controller.doctorsStaffListingUr;
            });
+             
+            $("#calendar-Template-Btn-Link").click(function(e){
+                e.preventDefault();
+                window.location.href= controller.CalendarTemplateUrl;
+               // console.log("hello"); 
+            });
 
            $("#patients-History-Section-Link-Btn").click(function(e){
                e.preventDefault();

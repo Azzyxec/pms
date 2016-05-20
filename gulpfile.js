@@ -46,6 +46,14 @@ var filesList = [
                      objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                      objConfig.scriptsBasePath +"appointment/close.appointment.js"
                    ], buildName: "close.appointment.js"},
+    
+    {build:true, files: [
+                     objConfig.scriptsBasePath +"utility.js",
+                     objConfig.scriptsBasePath +"links.js",
+                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                     objConfig.scriptsBasePath +"schedule/manageClinicSchedule.js"
+                   ], buildName: "schedule.manageClinicSchedule.js"},
+     
  {build:true, files: [
                     objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"links.js",

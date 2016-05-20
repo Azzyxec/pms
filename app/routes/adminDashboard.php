@@ -11,6 +11,9 @@ $app->group('/adminDashboard', function(){
       return $this->view->render($response, '/admin/doctor-listing.html',
                                                                 array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
   });
+    
+
+   
 
   $this->get('/getAllDoctors', function ($request, $response) {
     try {
