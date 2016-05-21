@@ -37,7 +37,7 @@ $(document).ready(function(){
         patientGuardianDetailsView.init();
         patientBirthDetailsView.init();
         patientProgrammeView.init();
-        patientProgrammesDetailsView.init();
+        patientProgrammesDetailsView.init(); 
 
         $.post( controller.loginCheckUrl , {})
         .done(function( response ) {

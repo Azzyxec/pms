@@ -30,7 +30,7 @@ $app->group('/programme', function(){
         $data = array('status' => "1", 'data' => $resultArray['data'], 'message' => 'success');
         return $response->withJson($resultArray);
 
-      }
+      } 
 
     } catch (Exception $e) {
       $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());

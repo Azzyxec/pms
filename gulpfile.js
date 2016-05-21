@@ -69,7 +69,7 @@ var filesList = [
                     objConfig.scriptsBasePath +"schedule/new.schedule.js"
                   ], buildName: "new.schedule.js"},
 {build:true, files: [
-                   objConfig.scriptsBasePath +"utility.js",
+                   objConfig.scriptsBasePath +"utility.js", 
                    objConfig.scriptsBasePath +"links.js",
                    objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                    objConfig.scriptsBasePath +"schedule/list.schedule.js"
