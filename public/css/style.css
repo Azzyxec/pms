@@ -82,11 +82,12 @@ body{
     color: #C1C1C1;
 }
 .collapse-style{
-    background-color:#14517b;
+    
+    background-color:#ffffff;
     text-align:center;
 }
 .collapse-style:hover{
-    background-color:#2577af !important;
+    background-color:#dfe2da !important;
    
 }
 .calendarTable > thead > tr > th {
@@ -94,6 +95,11 @@ body{
 }
 .calendarTable{
     border: none !important;
+}
+
+.location-label{
+    margin-bottom:5px;
+    display:inline-block !important;
 }
 
 /********** end style for calendar *************/

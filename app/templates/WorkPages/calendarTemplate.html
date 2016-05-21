@@ -2,7 +2,7 @@
 {% block addCss %}
 <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
 {% endblock %}
-{% block content %}
+{% block content %} 
 <section id="schedule-Table">
   <!-- /.row -->
      <div class="row">
@@ -11,7 +11,7 @@
           <!-- /.panel -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-clock-o fa-fw"></i>Manage Schedule
+                    <i class="fa fa-clock-o fa-fw"></i>Schedule Calendar
                     <div class="pull-right">
 
                     </div>
@@ -26,7 +26,7 @@
                         <h3 class="text-center">May 2016</h3>
                                <div class="btn-group" role="group" aria-label="...">
   <button type="button" class="btn btn-primary"><span class='glyphicon glyphicon-menu-left'></span></button>
-  <button type="button" class="btn btn-primary">Today</button>
+
   <button type="button" class="btn btn-primary"><span class='glyphicon glyphicon-menu-right'></span></button>
 </div>
                             <div class="table-responsive">
@@ -47,40 +47,35 @@
                                         <tr  class="text-center">
 <td height="100">
            
-            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">1</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">1</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am
             To 14:04:Am</span> 
 </td>
                                          
                                          
-                                                <td><span class="pull-right font-16 calendar-date">2</span><br> <br> <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>
-                                               </span>    </td>
-                                                <td><span class="pull-right font-16  calendar-date">3</span><br> <br>  <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">4</span><br> <br> <span class="label font-16 label-info">No Schedule</span>   </td>
-                                                <td><span class="pull-right font-16 calendar-date">5</span><br> <br>  <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">6</span><br> <br><span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>   </td>
-                                                <td><span class="pull-right font-16 calendar-date">7</span><br> <br><span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">2</span><br> <br>
+                                                    <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>
+                                                  </td>
+                                                <td><span class="pull-right font-16  calendar-date">3</span><br> <br>   <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">4</span><br> <br>  <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample1">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">5</span><br> <br>   <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">6</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">7</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"   data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>    </td>
 
                                         </tr>
                                         
+                                         <!---------- collapse section----------->
                                         
-                                        <!---------- collapse section----------->
-                                        
-                                        <tr  class="collapse collapse-style"  id="collapseExample1">
-                                        <td colspan="7" >
-                                 <form class="form-inline">
-  <div class="form-group">
-    <label class="white">From</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker5' >
-  </div>
-  <div class="form-group">
-    <label class="white">To</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker6'>
-  </div>
- 
-  <button type="button" class="btn btn-success btn-sm">Save</button>
-                                      <button type="button" class="btn btn-primary btn-sm ">delete</button>
-</form>
- 
+                                        <tr  class="collapse"  id="collapseExample1">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location : Margao</h4>
+  
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
                                         </td> 
                                         </tr>
                     
@@ -88,15 +83,15 @@
                                              <tr  class="text-center">
 <td height="100">
            
-            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">8</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample2">14:04:Am
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">8</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample2">14:04:Am
             To 14:04:Am</span> 
 </td>
                                          
                                          
-                                                <td><span class="pull-right font-16 calendar-date">9</span><br> <br> <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>
+                                                <td><span class="pull-right font-16 calendar-date">9</span><br> <br>  <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample2">14:04:Am To 14:04:Am</span>
                                                </span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">10</span><br> <br>  <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">11</span><br> <br> <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">10</span><br> <br>   <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample2">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">11</span><br> <br>  <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample2">14:04:Am To 14:04:Am</span>   </td>
                                                 <td><span class="pull-right font-16 calendar-date">12</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
                                                 <td><span class="pull-right font-16 calendar-date">13</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>   </td>
                                                 <td><span class="pull-right font-16 calendar-date">14</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
@@ -104,67 +99,57 @@
                                         </tr>
                                         
                                         
-                                        <!---------- collapse section----------->
+                                   
                                         
-                                        <tr  class="collapse collapse-style"  id="collapseExample2">
-                                        <td colspan="7" >
-                                 <form class="form-inline">
-  <div class="form-group">
-    <label class="white" >From</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker5' >
-  </div>
-  <div class="form-group">
-    <label class="white" >To</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker6'>
-  </div>
- 
-  <button type="button" class="btn btn-success btn-sm">Save</button>
-                                      <button type="button" class="btn btn-primary btn-sm ">delete</button>
-</form>
- 
-                                        </td>
+                                           <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExample2">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
+     
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
+                                        </td> 
                                         </tr>
-    
     
     
                              <tr  class="text-center">
 <td height="100">
            
-            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">15</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample3">14:04:Am
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">15</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample3">14:04:Am
             To 14:04:Am</span> 
 </td>
                                          
                                          
-                                                <td><span class="pull-right font-16 calendar-date">16</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>  
+                                                <td><span class="pull-right font-16 calendar-date">16</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>  
                                                </span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">17</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>      </td>
-                                                <td><span class="pull-right font-16 calendar-date">18</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">19</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>   </td>
-                                                <td><span class="pull-right font-16 calendar-date">20</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">21</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>  </td>
+                                                <td><span class="pull-right font-16 calendar-date">17</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>      </td>
+                                                <td><span class="pull-right font-16 calendar-date">18</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">19</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">20</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">21</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>  </td>
 
                                         </tr>
                                         
-                                        
                                         <!---------- collapse section----------->
                                         
-                                        <tr  class="collapse collapse-style"  id="collapseExample3">
-                                        <td colspan="7" >
-                                 <form class="form-inline">
-  <div class="form-group">
-    <label class="white">From</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker5' >
-  </div>
-  <div class="form-group">
-    <label class="white">To</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker6'>
-  </div>
- 
-  <button type="button" class="btn btn-success btn-sm">Save</button>
-                                      <button type="button" class="btn btn-primary btn-sm ">delete</button>
-</form>
-</div>  
-                                        </td>
+                                        <tr  class="collapse"  id="collapseExample3">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location : Margao</h4>
+   
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
+                                        </td> 
                                         </tr>
 
 
@@ -174,43 +159,36 @@
                          <tr  class="text-center">
 <td height="100">
            
-            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">22</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample4">14:04:Am
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">22</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample4">14:04:Am
             To 14:04:Am</span> 
 </td>
                                          
                                          
-                                                <td><span class="pull-right font-16 calendar-date">23</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>  
+                                                <td><span class="pull-right font-16 calendar-date">23</span><br> <br> <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>  
                                                </span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">24</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>      </td>
-                                                <td><span class="pull-right font-16 calendar-date">25</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>   </td>
-                                                <td><span class="pull-right font-16 calendar-date">26</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>     </td>
-                                                <td><span class="pull-right font-16 calendar-date">27</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">28</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>  </td>
+                                                <td><span class="pull-right font-16 calendar-date">24</span><br> <br>  <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>      </td>
+                                                <td><span class="pull-right font-16 calendar-date">25</span><br> <br> <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">26</span><br> <br>  <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>     </td>
+                                                <td><span class="pull-right font-16 calendar-date">27</span><br> <br><span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">28</span><br> <br><span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>  </td>
 
                                         </tr>
-                                        
-                                        
+                                      
                                         <!---------- collapse section----------->
                                         
-                                        <tr  class="collapse collapse-style"  id="collapseExample4">
-                                        <td colspan="7" >
-                                 <form class="form-inline">
-  <div class="form-group">
-    <label class="white">From</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker5' >
-  </div>
-  <div class="form-group">
-    <label class="white">To</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker6'>
-  </div>
- 
-  <button type="button" class="btn btn-success btn-sm">Save</button>
-                                      <button type="button" class="btn btn-primary btn-sm ">delete</button>
-</form>
-
-                                        </td>
+                                        <tr  class="collapse"  id="collapseExample4">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
+      
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
+                                        </td> 
                                         </tr>
-
 
 
 
@@ -218,42 +196,34 @@
                          <tr  class="text-center">
 <td height="100">
            
-            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">29</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample4">14:04:Am
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">29</span><br> <br> <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample5">14:04:Am
             To 14:04:Am</span> 
 </td>
                                          
                                          
-                                                <td><span class="pull-right font-16 calendar-date">30</span><br> <br> <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>
+                                                <td><span class="pull-right font-16 calendar-date">30</span><br> <br>  <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample5">14:04:Am To 14:04:Am</span>
                                                </span>    </td>
-                                                <td><span class="pull-right font-16 calendar-date">31</span><br> <br>  <span class="label font-16 label-danger">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">31</span><br> <br>   <span class="label font-16 label-primary location-label">Margao CLinic</span> <br><span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample5" >14:04:Am To 14:04:Am</span>    </td>
                                               
 
                                         </tr>
+    
+    
+                                     <!---------- collapse section----------->
                                         
-                                        
-                                        <!---------- collapse section----------->
-                                        
-                                        <tr  class="collapse collapse-style"  id="collapseExample4">
-                                        <td colspan="7" >
-                                 <form class="form-inline">
-  <div class="form-group">
-    <label class="white">From</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker5' >
-  </div>
-  <div class="form-group">
-    <label class="white">To</label>
-    <input type="text" class="form-control input-sm" id='datetimepicker6'>
-  </div>
- 
-  <button type="button" class="btn btn-success btn-sm">Save</button>
-                                      <button type="button" class="btn btn-primary btn-sm ">delete</button>
-</form>
- 
-                                        </td>
+                                        <tr  class="collapse"  id="collapseExample5">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location : Margao</h4>
+    
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
+                                        </td> 
                                         </tr>
-
-
-
 
 
                     
@@ -296,4 +266,6 @@
 
 {% block addScripts %}
 <script src="js/schedule.manageClinicSchedule.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+
 {% endblock %}

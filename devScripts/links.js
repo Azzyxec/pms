@@ -29,7 +29,7 @@ var links = {
    ManageLocationsUrl : "index.php/doctorDashboard/workLocationManagement",
    getCalenderUrl : "index.php/doctorDashboard/calendarTemplate",
      
-     
+      
    //schedule
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",

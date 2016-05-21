@@ -1,4 +1,7 @@
 {% extends "/doctor/doctor-dash-base.html" %}
+{% block addCss %}
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
 {% block content %}
 
    
@@ -119,39 +122,257 @@
 
   <!-- Appointment step two  -->
 
-  <div id="schedule-step-two" class="col-sm-10 panel panel-green ">
+  <div id="schedule-step-two" class=" panel panel-green ">
     <div class="panel-tittle">
 
       <h2 class="text-center">Create Schedule</h2>
     </div>
     <div class="panel-body">
-      <form class="form-horizontal">
+         <div class="col-lg-12">
+                              <h3 class="text-left">Location : Margao</h3>
+                        <h3 class="text-center">May 2016</h3>
+                               <div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-primary"><span class='glyphicon glyphicon-menu-left'></span></button>
 
-        <div id="calander">
+  <button type="button" class="btn btn-primary"><span class='glyphicon glyphicon-menu-right'></span></button>
+</div>
+                            <div class="table-responsive">
+                                <table class="calendarTable table table-bordered table-hover ">
+                                    <thead >
+                                        <tr>
+                                            <th class="text-center">Monday</th>
+                                            <th class="text-center" >Tuesday</th>
+                                            <th class="text-center">Wenesday</th>
+                                            <th class="text-center">Thursday</th>
+                                            <th class="text-center">Friday</th>
+                                            <th class="text-center">Saturday</th>
+                                            <th class="text-center">Sunday</th>
 
-          <table class=" table table-hover table-responsive table-bordered">
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr  class="text-center">
+<td height="100">
+           
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">1</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am
+            To 14:04:Am</span> 
+</td>
+                                         
+                                         
+                                                <td><span class="pull-right font-16 calendar-date">2</span><br> <br> <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>
+                                               </span>    </td>
+                                                <td><span class="pull-right font-16  calendar-date">3</span><br> <br>  <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">4</span><br> <br> <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample1">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">5</span><br> <br>  <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">6</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">7</span><br> <br><span class="label font-16 label-danger"   data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>    </td>
 
-            <thead>
-              <tr class="info" id="table-header-row-schedule-calander">
-                <td></td>
-              </tr>
-            </thead>
+                                        </tr>
+                                        
+                                        
+                                        <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse collapse-style"  id="collapseExample1">
+                                        <td colspan="7" >
+                                 <form class="form-inline">
+  <div class="form-group">
 
-            <tbody id="table-body-schedule-calander" >
-
-              <tr id="table-row-schedule-calander" >
-              </tr>
-
-
-            </tbody>
-
-          </table>
-        </div>
-
-
-
-        <button type="button" class="btn btn-info " id="btn-schedule-create">Create Schedule</button>
+                <div id="datetimepicker5">
+      <label class=" font-18">From</label></div>
+  </div>
+  <div class="form-group">
+                <div id="datetimepicker6">
+       <label class=" font-18">To</label></div>
+  </div>
 </form>
+ 
+                                        </td> 
+                                        </tr>
+                    
+                    
+                                             <tr  class="text-center">
+<td height="100">
+           
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">8</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample2">14:04:Am
+            To 14:04:Am</span> 
+</td>
+                                         
+                                         
+                                                <td><span class="pull-right font-16 calendar-date">9</span><br> <br> <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample2">14:04:Am To 14:04:Am</span>
+                                               </span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">10</span><br> <br>  <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample2">14:04:Am To 14:04:Am</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">11</span><br> <br> <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample2">14:04:Am To 14:04:Am</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">12</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">13</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">14</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample2">No Schedule</span>    </td>
+
+                                        </tr>
+                                        
+                                        
+                                   
+                                        
+                                        <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse collapse-style"  id="collapseExample2">
+                                        <td colspan="7" >
+                                 <form class="form-inline">
+  <div class="form-group">
+
+                <div id="datetimepicker7">
+      <label class=" font-18">From</label></div>
+  </div>
+  <div class="form-group">
+                <div id="datetimepicker8">
+       <label class=" font-18">To</label></div>
+  </div>
+</form>
+ 
+                                        </td> 
+                                        </tr>
+    
+    
+                             <tr  class="text-center">
+<td height="100">
+           
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">15</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample3">14:04:Am
+            To 14:04:Am</span> 
+</td>
+                                         
+                                         
+                                                <td><span class="pull-right font-16 calendar-date">16</span><br> <br> <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>  
+                                               </span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">17</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>      </td>
+                                                <td><span class="pull-right font-16 calendar-date">18</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">19</span><br> <br>  <span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">20</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">21</span><br> <br><span class="label font-16 label-info" data-toggle="collapse" href="#collapseExample3">No Schedule</span>  </td>
+
+                                        </tr>
+                                        
+                                        
+                                       <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse collapse-style"  id="collapseExample3">
+                                        <td colspan="7" >
+                                 <form class="form-inline">
+  <div class="form-group">
+
+                <div id="datetimepicker9">
+      <label class=" font-18">From</label></div>
+  </div>
+  <div class="form-group">
+                <div id="datetimepicker10">
+       <label class=" font-18">To</label></div>
+  </div>
+</form>
+ 
+                                        </td> 
+                                        </tr>
+
+
+
+
+
+                         <tr  class="text-center">
+<td height="100">
+           
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">22</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample4">14:04:Am
+            To 14:04:Am</span> 
+</td>
+                                         
+                                         
+                                                <td><span class="pull-right font-16 calendar-date">23</span><br> <br> <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>  
+                                               </span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">24</span><br> <br>  <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>      </td>
+                                                <td><span class="pull-right font-16 calendar-date">25</span><br> <br> <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>   </td>
+                                                <td><span class="pull-right font-16 calendar-date">26</span><br> <br>  <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>     </td>
+                                                <td><span class="pull-right font-16 calendar-date">27</span><br> <br><span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">28</span><br> <br><span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample4">No Schedule</span>  </td>
+
+                                        </tr>
+                                        
+                                            <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse collapse-style"  id="collapseExample4">
+                                        <td colspan="7" >
+                                 <form class="form-inline">
+  <div class="form-group">
+
+                <div id="datetimepicker11">
+      <label class=" font-18">From</label></div>
+  </div>
+  <div class="form-group">
+                <div id="datetimepicker12">
+       <label class=" font-18">To</label></div>
+  </div>
+</form>
+ 
+                                        </td> 
+                                        </tr>
+
+
+
+
+                         <tr  class="text-center">
+<td height="100">
+           
+            <input type='text' class="hidden"  /><span class="pull-right font-16 calendar-date">29</span><br> <br><span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample5">14:04:Am
+            To 14:04:Am</span> 
+</td>
+                                         
+                                         
+                                                <td><span class="pull-right font-16 calendar-date">30</span><br> <br> <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample5">14:04:Am To 14:04:Am</span>
+                                               </span>    </td>
+                                                <td><span class="pull-right font-16 calendar-date">31</span><br> <br>  <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample5" >14:04:Am To 14:04:Am</span>    </td>
+                                              
+
+                                        </tr>
+                                        
+                                       <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse collapse-style"  id="collapseExample5">
+                                        <td colspan="7" >
+                                 <form class="form-inline">
+  <div class="form-group">
+
+                <div id="datetimepicker13">
+      <label class=" font-18">From</label></div>
+  </div>
+  <div class="form-group">
+                <div id="datetimepicker14">
+       <label class=" font-18">To</label></div>
+  </div>
+</form>
+ 
+                                        </td> 
+                                        </tr>
+
+
+
+
+                    
+                    
+                    
+                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                          
+                           
+                                    </tbody>
+                                </table>
+<button type="button" class="btn col-md-offset-6 btn-info " id="btn-schedule-create">Create Schedule</button>
+                            </div>
+                     
+                            <!-- /.table-responsive -->
+                        </div>
+          
+
+
+        
+
       </div>
     
   </div>
@@ -168,5 +389,8 @@
 </body>
 {% endblock %}
 {% block addScripts %}
+
+<script src="js/schedule.manageClinicSchedule.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/new.schedule.js"></script>
 {% endblock %}
