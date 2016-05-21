@@ -91,7 +91,7 @@
                                </div>
                             <hr class="invisible" >
                                     <hr >
-                                <table class="calendarTable table table-bordered table-hover ">
+                                <table class="calendarTable table table-bordered  ">
                                     <thead >
                                         <tr>
                                             <th class="text-center">Monday</th>
@@ -110,7 +110,7 @@
            
           <span class="pull-right font-16 calendar-date">1</span><br>
    <span class="label label-primary location-label" >3</span>  <span class="location-label label label-info">5</span>  <span class="location-label label label-warning">4</span><br>
-    <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">14:00 PM to 15:00 PM</span>
+    <span class="label font-16 label-danger calendar-time-Btn"  data-toggle="collapse" href="#collapseExample1">14:00 PM to 15:00 PM</span>
 </td>
                                          
                                          
@@ -169,7 +169,7 @@
 <td height="100">
           <span class="pull-right font-16 calendar-date">8</span><br>
    <span class="label label-primary location-label" >3</span>  <span class="location-label label label-info">5</span>  <span class="location-label label label-warning">4</span><br>
-    <span class="label font-16 label-danger">14:00 PM to 15:00 PM</span>
+    <span class="label font-16 label-danger calendar-time-Btn " data-toggle="collapse" href="#collapseExample2">14:00 PM to 15:00 PM</span>
 </td>
                                          
                                          
@@ -193,19 +193,28 @@
                                         
                                            <!---------- collapse section----------->
                                         
-                                        <tr  class="collapse"  id="collapseExample2">
+                                         <tr  class="collapse"  id="collapseExample2">
                                           
-                                        <td colspan="6" >
+                                        <td colspan="7" >
                                <ul class="list-group">
-  <li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
-     
-      <p >    Back Diagnosis of Joseph Pinto</p><br>
-                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+  <li class="list-group-item"><button type="button" class="btn inline-block-imp btn-sm btn-primary" data-toggle="collapse" href="#collapseAppointmentDetails2">+</button><h4 class="calendar-list-group-heading list-group-item-heading"><label>Patient Name:</label> Joseph Pinto <span class="invisible">....</span><label class="label label-danger">13:00 Pm</label></h4>
+    <div class="collapse" id="collapseAppointmentDetails2">
+       <label>Diagnosis:</label><p >    Back Diagnosis of Joseph Pinto</p>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button>
+      </div>
+     </li>
+                                   <li class="list-group-item"><button type="button" class="inline-block-imp btn btn-sm btn-primary " data-toggle="collapse" href="#collapseAppointmentDetails3">+</button> <h4 class="calendar-list-group-heading list-group-item-heading"><label>Patient Name:</label> Gerald Fernandes <span class="invisible">....</span><label class="label label-danger">13:00 Pm</label></h4>
+    <div class="collapse" id="collapseAppointmentDetails3">
+       <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button>
+      </div>
+     </li>
                               
   
 </ul>
                                         </td> 
                                         </tr>
+    
     
     
                              <tr  class="text-center">

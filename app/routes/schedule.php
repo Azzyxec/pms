@@ -30,6 +30,11 @@ $app->group('/schedule', function(){
 
     }
   });
+    
+    
+         $this->get('/ScheduleCalenderView', function ($request, $response) {
+      return $this->view->render($response, '/schedule/schedule-calendar.html', array('basePath' => AppConfig::$basePath));
+  });
 
   $this->get('/getScheduleList', function ($request, $response) {
 

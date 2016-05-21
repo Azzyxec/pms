@@ -33,6 +33,7 @@ var links = {
    //schedule
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
+   getScheduleCalendarUrl: "index.php/schedule/ScheduleCalenderView",
 
    //programme
    programmeListUrl:"index.php/programme/getMedicationProgrammeList",

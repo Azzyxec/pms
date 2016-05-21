@@ -12,7 +12,13 @@ $(document).ready(function(){
                
             });
         }); 
-      
+    
+    $(document).on("click", ".calendar-time-Btn", function (ev) {
+        $(".calendar-time-Btn").parent().css("background-color","white");
+    $(this).parent().css("background-color","#e6ecf4");
+});
+    
+     
   });
     
 

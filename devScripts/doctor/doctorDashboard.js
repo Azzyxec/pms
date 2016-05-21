@@ -21,6 +21,7 @@ $(document).ready(function(){
 
           this.newScheduleUrl = links.newScheduleUrl;
           this.listScheduleUrl = this.listScheduleUrl;
+          this.ScheduleCalendarUrl = links.getScheduleCalendarUrl;
           this.addStaffUrl = links.addStaffUrl;
           this.doctorsStaffListingUr = links.doctorsStaffListingUr;
 
@@ -165,6 +166,13 @@ $(document).ready(function(){
                e.preventDefault();
                window.location.href = controller.patientsHistoryUrl;
            });
+            
+            
+            $("#manage-schedule-list-section-link-Btn").click(function(e){
+               e.preventDefault();
+               window.location.href = controller.ScheduleCalendarUrl;
+           });
+            
              $("#appointment-section-link-btn").click(function(e){
                e.preventDefault();
            });
@@ -181,6 +189,8 @@ $(document).ready(function(){
              $("#calendar-template-section-link-btn").click(function(e){
                e.preventDefault();
            });
+            
+            
             
             
             

@@ -12,44 +12,79 @@
  *
  *
  */
-.navbar-default{
+
+html,#wrapper{
+    background-color:white;
+}
+.navbar-inverse{
     
- //   background-image: linear-gradient(to bottom, #151515 0%, #3e3e3e 100%) !important;
+   /background-image: linear-gradient(to bottom, #3498db 0%, #1b83c9 100%) !important;
 }
  
-body{
-    //background-color:#222!important;
-}
-.nav > li > a{
-//color:white !important;
+
+
+.navbar-inverse > ul > li > a{
+/color:white !important;
+
 }
 
-.nav > li > a:hover, .nav > li > a:focus {
-   // text-decoration: none !important;
-  // background-color: #000000 !important;
+.navbar-inverse > ul > li > a:hover, .navbar-inverse > ul > li > a:focus {
+   /text-decoration: none !important;
+   /background-color: #1b83c9 !important;
+   /color:#e6ecf4;
+       
     
 }
 
-.nav-tabs > li > a{
-   // color:black !important;
-}
-
-.nav-tabs > li > a:hover, .nav-tabs > li > a:focus{
-    text-decoration : none !important;
-    background-color: #ededed !important;
+.top-nav>li>a:hover,
+.top-nav>li>a:focus,
+.top-nav>.open>a,
+.top-nav>.open>a:hover,
+.top-nav>.open>a:focus {
+    /color: #e6ecf4 !important;
+   / background-color: #1b83c9 !important;
 }
 .navbar-brand{
-  //  color:white !important;
+  /color:white !important;
 }
+
 .navbar-brand:hover{
-  //  color: darkgrey !important;
+  /color:#e6ecf4 !important;
 }
-.panel-default > .panel-heading{
-   // color:white !important;
-   // background-image: linear-gradient(to bottom, #2ecc71 0%, #2ecc71 100%) !important;
+
+.side-nav{
+    /background-color:#3498db !important;
 }
+
+.side-nav > li > a{
+   / color : white !important;
+}
+
+.side-nav > li > a:hover, .nav-tabs > li > a:focus{
+    /text-decoration : none !important;
+    /background-color:#1b83c9 !important;
+    /color: #e6ecf4 !important;
+}
+
+.navbar-inverse .navbar-nav > .active > a {
+    background-image: linear-gradient(to bottom, #1b83c9 0%, #1b83c9 100%) !important;
+}
+.side-nav>li>ul>li>a{
+   / color:white !important;
+}
+
+.side-nav>li>ul>li>a:hover{
+    /color:  #e6ecf4 !important;
+    /background-color:#1b83c9;
+}
+
+.panel-green > .panel-heading{
+    /color:white !important;
+   / background-image: linear-gradient(to bottom, #2ecc71 0%, #2ecc71 100%) !important;
+}
+
 #page-wrapper{
-   // background-color:white !important;
+   / background-color:#e4f1ff !important;
 }
 
 .nav-tabs > li.active > a{
@@ -101,5 +136,21 @@ body{
     margin-bottom:5px;
     display:inline-block !important;
 }
+.calendar-list-group-heading{
+    display:inline-block;
+    margin-left:15px;
+}
+
+@media only screen and (max-width: 769px) {
+  .calendar-show-btn{
+    margin-left: 25px;
+}
+
+.calendar-form-group{
+          margin-bottom: 8px !important;
+}
+}
+
+
 
 /********** end style for calendar *************/
