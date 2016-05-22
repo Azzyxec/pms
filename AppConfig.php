@@ -13,14 +13,14 @@ class AppConfig{
   public static $dbpass = 'pms';
 }
 
-
-/* NicolasXec Configurations
+    /*
+ NicolasXec Configurations
 
 class AppConfig{
   //slim config
   public static $templatePath = '../app/templates';
   public static $displayErrorDetails = true;
-  public static $basePath = '/public/';
+  public static $basePath = '/pms/public/';
   //Database config
   public static $dbhost = 'localhost';
   public static $dbname = 'pms';
@@ -28,6 +28,7 @@ class AppConfig{
   public static $dbuser = 'root';
   public static $dbpass = '';
 }
+
 
 */
 ?>
