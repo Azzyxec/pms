@@ -1,5 +1,5 @@
 <?php
-
+  
 class AppConfig{
   //slim config
   public static $templatePath = '../app/templates';
@@ -13,9 +13,9 @@ class AppConfig{
   public static $dbpass = 'pms';
 }
 
-    /*
- NicolasXec Configurations
-
+  
+ /*NicolasXec Configurations*/
+/*
 class AppConfig{
   //slim config
   public static $templatePath = '../app/templates';
@@ -28,7 +28,7 @@ class AppConfig{
   public static $dbuser = 'root';
   public static $dbpass = '';
 }
-
-
 */
+
+
 ?>
