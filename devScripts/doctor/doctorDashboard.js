@@ -173,6 +173,12 @@ $(document).ready(function(){
                window.location.href = controller.ScheduleCalendarUrl;
            });
             
+            
+              $("#view-schedule-dashboard-section-btn").click(function(e){
+               e.preventDefault();
+               window.location.href = controller.ScheduleCalendarUrl;
+           });
+            
              $("#appointment-section-link-btn").click(function(e){
                e.preventDefault();
            });
