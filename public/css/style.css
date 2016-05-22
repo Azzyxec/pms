@@ -14,14 +14,13 @@
  */
 
 html,#wrapper{
-    background-color:white;
+    background-color:white;       /* to change the background color of the html and wrapper ***OPTIONAL******/
 }
-.navbar-inverse{
-    
-   /background-image: linear-gradient(to bottom, #3498db 0%, #1b83c9 100%) !important;
-}
- 
 
+/*navbar top color themes*/
+.navbar-inverse{ 
+   /background-image: linear-gradient(to bottom, #3498db 0%, #1b83c9 100%) !important;    /* To change the color of the top navigation bar ** IMPORTANT **/
+}
 
 .navbar-inverse > ul > li > a{
 /color:white !important;
@@ -52,6 +51,11 @@ html,#wrapper{
   /color:#e6ecf4 !important;
 }
 
+
+
+
+/* side navigatino bar color theme ************/
+
 .side-nav{
     /background-color:#3498db !important;
 }
@@ -67,8 +71,10 @@ html,#wrapper{
 }
 
 .navbar-inverse .navbar-nav > .active > a {
-    background-image: linear-gradient(to bottom, #1b83c9 0%, #1b83c9 100%) !important;
+   /background-image: linear-gradient(to bottom, #1b83c9 0%, #1b83c9 100%) !important;
 }
+
+
 .side-nav>li>ul>li>a{
    / color:white !important;
 }
@@ -78,15 +84,32 @@ html,#wrapper{
     /background-color:#1b83c9;
 }
 
+
+
+
+
+
+
+
+
+/**** the color themes of the forms **************/
 .panel-green > .panel-heading{
     /color:white !important;
    / background-image: linear-gradient(to bottom, #2ecc71 0%, #2ecc71 100%) !important;
 }
-
-#page-wrapper{
-   / background-color:#e4f1ff !important;
+.panel-footer{
+    
+     //   background-color: #2ecc71 !important;
 }
 
+#page-wrapper{
+   / background-color:#e4f1ff !important; /********* the background color of the forms wiz is currently white **********/
+}
+
+
+
+
+/*** others not required ******/
 .nav-tabs > li.active > a{
     
   //  background-color:#3498db!important; 
@@ -96,10 +119,7 @@ html,#wrapper{
     
      //background-color:#3498db !important;
 }
-.panel-footer{
-    
-     //   background-color: #2ecc71 !important;
-}
+
 /********** end styles to change the admin theme *************/
 
 
