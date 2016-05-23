@@ -152,17 +152,31 @@
                 </ul>
                 <!-- /.nav-second-level -->
               </li>
-
-                      <li {% if active == "others" %}class="active"{%endif%}>
-                <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" ><i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
+                    
+            <li {% if active == "analytics" %}class="active"{%endif%}>
+              <a  id="analytics-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-stats"></i> Analytics</a>
+            </li>
+                    
+                              
+            <li {% if active == "accounting" %}class="active"{%endif%}>
+              <a  id="Accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Accounting</a>
+            </li>
+                    <li {% if active == "medicine" %}class="active"{%endif%}>
+              <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i>Medicine Search</a>
+            </li>
+                    
+        {% if showOtherPages == true %}
+        <li class="active">
+            <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" >
+            <i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
                 <ul id="demo6" class="collapse">
-                  <li>
-                    <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
-                  </li>
+                    <li>
+                      <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
+                    </li>
                 </ul>
-                <!-- /.nav-second-level -->
-              </li>
-
+            <!-- /.nav-second-level -->
+        </li>
+        {%endif%}
 
 
                 </ul>

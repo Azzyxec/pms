@@ -2,9 +2,20 @@ $(document).ready(function(){
 
     $(function(){
         console.log('new appointment js loaded');
+         $("#book-appointment-before-submit-warning-error").hide();
+        $("#book-appointment-before-submit-success").hide();
+        $("#book-appointment-before-submit-other-error").hide();
+       
     }());
 
-
+    $("#book-Appointment-Form-submit-button").on("click", function(){
+        console.log("form submited");
+        $('#book-Appointment-Form').submit();
+    });
+$('#book-Appointment-Form').validator().on('submit', function (e) {
+  if (e.isDefaultPrevented()) {
+   $("#book-appointment-before-submit-warning-error").show();
+  } else {
     
      function getBookAppointmentFormDetails(){
                 var name = $("#book-appointment-patientsName-form-input").val();
@@ -33,11 +44,18 @@ $(document).ready(function(){
                 cache:false,
                 success:function(response){
                     console.log(response);
+                    
+                    
                 },
                 
                 
             });
         
     });
+  }
+})
+
+
+    
 
 });

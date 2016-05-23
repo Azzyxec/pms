@@ -5,12 +5,24 @@
   <div class="row">
    
         <hr class="invisible">
-        <div class="alert alert-warning alert-dismissible" role="alert">
+    
+      <div class="col-lg-8 col-md-10">
+          
+              <div id="book-appointment-before-submit-warning-error" class="alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong>Warning!</strong> Better check yourself, you're not looking too good.
+  <strong>Warning!</strong> Please fill up the form details correctly.
+</div>
+          
+            <div id="book-appointment-before-submit-success" class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Success!</strong> Patients Appointment Booked successfully
+</div>
+          
+            <div id="book-appointment-before-submit-other-error" class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Sorry!</strong>Somethings not right.
 </div>
       
-      <div class="col-lg-8 col-md-10">
         <div class="panel panel-green">
           <div class="panel-heading">
           Book appointment
@@ -27,17 +39,18 @@
               <div class="content_bottom">
 
               <div class="">
-                     <form id="addCompanyForm"  class="form-horizontal">
+                     <form id="book-Appointment-Form"  role="form" data-toggle="validator" class="form-horizontal">
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Appointment Date</label>
               <div class='col-md-8'>
 
 
               <div class='input-group date' id='datetimepicker2'>
-              <input type='date' id="book-appointment-date-form-input" class="form-control" />
+              <input type='date' id="book-appointment-date-form-input" class="form-control" required/>
               <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
               </span>
+                  
               </div>
 
               </div>
@@ -48,7 +61,7 @@
               <div class='col-md-8'>
 
               <div class='input-group date' id='datetimepicker3'>
-              <input type='time'id="book-appointment-patientsTime-form-input" class="form-control" />
+              <input type='time'id="book-appointment-patientsTime-form-input" class="form-control" required />
               <span class="input-group-addon">
               <span class="glyphicon glyphicon-time"></span>
               </span>
@@ -64,22 +77,25 @@
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
               <div class="col-md-8">
-              <input type="text" class="form-control" name="username" id="book-appointment-patientsName-form-input" placeholder="Patients Name">
+              <input type="text" class="form-control" pattern="[a-zA-Z ]{3,30}" data-error="please enter patients name" name="username" id="book-appointment-patientsName-form-input" placeholder="Patients Name" required>
+                  <div class="help-block with-errors"></div>
               </div>
 
               </div>
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
               <div class="col-md-8">
-              <input type="text" class="form-control" name="username" id="book-appointment-contact-form-input" placeholder="Your telephone contact no">
+              <input type="text" class="form-control" name="username" id="book-appointment-contact-form-input" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-error="please enter your 10 digit mobile No" required> <span class="glyphicon form-control-feedback" aria-hidden="true"></span> <div class="help-block with-errors"></div>
               </div>
+              
 
               </div>
 
               <div class="form-group">
               <label for="focusedinput" class="col-md-2 control-label">Description</label>
               <div class="col-md-8">
-              <textarea class="form-control"  rows ="5" name="address" id="book-appointment-description-form-input" ></textarea>
+              <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description-form-input" required></textarea >
+                   <div class="help-block with-errors"></div>
               <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
               </div> 
@@ -97,7 +113,8 @@
           <div class="panel-footer">
           <div class="row">
           <div class="text-center">
-          <input type="submit" class="btn-success btn" name="submit" value="Book An Appointment"/>
+         
+              <button id="book-Appointment-Form-submit-button" class="btn-success btn" name="submit" >Book An Appointment</button>
           </div>
 
           </div>
@@ -112,4 +129,5 @@
 
 {% block addScripts %}
 <script src="js/new.appointment.js"></script>
+<script src="js/validator.js"></script>
 {% endblock %}

@@ -14,25 +14,42 @@
  */
 
 html,#wrapper{
-    background-color:white;       /* to change the background color of the html and wrapper ***OPTIONAL******/
+    background-color:white;       /* to change the background color of the html and wrapper ***DONT CHANGE******/
 }
 
+/* start changing from here */
+
+/* Note: if you want to do this step by step, just uncomment the atributes below and refresh to see the changes one by one */
+
 /*navbar top color themes*/
+
 .navbar-inverse{ 
-   /background-image: linear-gradient(to bottom, #3498db 0%, #1b83c9 100%) !important;    /* To change the color of the top navigation bar ** IMPORTANT **/
+   background-image: linear-gradient(to bottom, #3498db 0%, #1b83c9 100%) !important;  
+    /* To change the background color where pms and jhon smith on top ** IMPORTANT **/
 }
 
 .navbar-inverse > ul > li > a{
-/color:white !important;
-
+ color:white !important;
+ /* john Smith font color */
 }
 
 .navbar-inverse > ul > li > a:hover, .navbar-inverse > ul > li > a:focus {
-   /text-decoration: none !important;
-   /background-color: #1b83c9 !important;
-   /color:#e6ecf4;
+   text-decoration: none !important;
+   background-color: #1b83c9 !important;
+   color:#e6ecf4;
        
+    /* john Smith background color when mouse is over it */
+}
+
+.navbar-brand{
+  color:white !important;
     
+    /* pms font color on the top left conner */
+}
+
+.navbar-brand:hover{
+  color:#e6ecf4 !important;
+     /* pms font color on the top left conner when mouse is over it */
 }
 
 .top-nav>li>a:hover,
@@ -40,15 +57,9 @@ html,#wrapper{
 .top-nav>.open>a,
 .top-nav>.open>a:hover,
 .top-nav>.open>a:focus {
-    /color: #e6ecf4 !important;
-   / background-color: #1b83c9 !important;
-}
-.navbar-brand{
-  /color:white !important;
-}
-
-.navbar-brand:hover{
-  /color:#e6ecf4 !important;
+    color: #e6ecf4 !important;
+   background-color: #1b83c9 !important;
+    /* jhon smith background when clicked */
 }
 
 
@@ -57,35 +68,56 @@ html,#wrapper{
 /* side navigatino bar color theme ************/
 
 .side-nav{
-    /background-color:#3498db !important;
+    background-color:#3498db !important;
+    
+    /* to change the background color of the left navigation Panel (appointment, schedule manager, etc background) */
 }
 
 .side-nav > li > a{
-   / color : white !important;
+    color : white !important;
+    
+    /* to change the font color of the left navigation items (appointment, schedule manager, etc )*/
 }
 
 .side-nav > li > a:hover, .nav-tabs > li > a:focus{
-    /text-decoration : none !important;
-    /background-color:#1b83c9 !important;
-    /color: #e6ecf4 !important;
+    text-decoration : none !important;
+    background-color:#1b83c9 !important;
+    color: #e6ecf4 !important;
+    /* to change the background color of items in the left navigation when mouse is over it (appointment, schedule manager, etc )*/
 }
 
 .navbar-inverse .navbar-nav > .active > a {
-   /background-image: linear-gradient(to bottom, #1b83c9 0%, #1b83c9 100%) !important;
+   background-image: linear-gradient(to bottom, #1b83c9 0%, #1b83c9 100%) !important;
+    
+    /* background color of active left navigation item example : color when appointments is clicked */
 }
 
 
 .side-nav>li>ul>li>a{
-   / color:white !important;
+    color:white !important;
+    
+    /* font color of sub menu items in the left navigation example (book appointmetns under appointments) */
 }
 
 .side-nav>li>ul>li>a:hover{
-    /color:  #e6ecf4 !important;
-    /background-color:#1b83c9;
+    color:  #e6ecf4 !important;
+    background-color:#1b83c9;
+    
+    /* background color of sub menu items in the left navigation when mouse is over it. example (book appointmetns under appointments) */
+}
+
+
+#page-wrapper{
+    /background-color:#e4f1ff !important; 
+    /********* the background color of the forms which was white **********/
 }
 
 
 
+
+
+
+/* uptill here ********/
 
 
 
@@ -102,9 +134,7 @@ html,#wrapper{
      //   background-color: #2ecc71 !important;
 }
 
-#page-wrapper{
-   / background-color:#e4f1ff !important; /********* the background color of the forms wiz is currently white **********/
-}
+
 
 
 
