@@ -21,7 +21,8 @@ $(document).ready(function(){
       attachedProgrammeId: 0,
       programmeNameList: [],  //contains name value pair for the drop down
       programmeCount: 0,
-      programmeLists: []
+      programmeLists: [],
+      deliveryMethods: []
     };
 
     var controller = {
@@ -32,12 +33,13 @@ $(document).ready(function(){
         this.getProgrammeList = links.getProgrammeList;
         this.programmeListDetailsUrl = links.programmeListDetailsUrl;
         this.patientsProgrammesUrl = links.patientsProgrammesUrl;
+        this.deliveryMethodsUrl = links.deliveryMethodsUrl;
 
         patientDetailsView.init();
         patientGuardianDetailsView.init();
         patientBirthDetailsView.init();
         patientProgrammeView.init();
-        patientProgrammesDetailsView.init(); 
+        patientProgrammesDetailsView.init();
 
         $.post( controller.loginCheckUrl , {})
         .done(function( response ) {
@@ -90,6 +92,17 @@ $(document).ready(function(){
           //if this is a new patients entry
           patientDetailsView.render();
         }
+
+
+        //birth details
+        $.get( controller.deliveryMethodsUrl , {})
+        .done(function( response ) {
+          console.log("delivery method: " + JSON.stringify(response));
+
+          model.deliveryMethods = response.data;
+          patientBirthDetailsView.render();
+
+        });
 
         patientDetailsView.tab.trigger('click');
 
@@ -163,6 +176,9 @@ $(document).ready(function(){
       },
       getProgrammeModel: function(){
         return model.programmeLists;
+      },
+      getDeliveryMethods: function(){
+        return model.deliveryMethods;
       }
     };
 
@@ -237,10 +253,32 @@ $(document).ready(function(){
     var patientBirthDetailsView = {
       init: function(){
         this.tab = $('#birth-entry-link');
+        this.selectDeliveryMethods = $('#delivery-method');
 
 
       },
       render: function(){
+
+        //adding the select option to the list
+        var option = $('<option/>',{
+                        value: 0,
+                        text: 'Select...',
+                        selected: 'selected'
+                      }
+                      );
+        this.selectDeliveryMethods.append(option);
+
+        var deliveryMethods = controller.getDeliveryMethods();
+
+        for(var i = 0; i < deliveryMethods.length; i++){
+          var option = $('<option/>',{
+                          value: deliveryMethods[i].id,
+                          text: deliveryMethods[i].name
+                        }
+                        );
+         this.selectDeliveryMethods.append(option);
+
+       }//
 
       }
     }

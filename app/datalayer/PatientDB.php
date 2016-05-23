@@ -7,6 +7,28 @@ use Pms\Entities\Patient;
 
 class PatientDB{
 
+  public function getDeliveryMethods(){
+    try {
+
+      $paramArray = array();
+      $statement = DBHelper::generateStatement('get_delivery_methods',  $paramArray);
+      $statement->execute();
+
+      $allDeliveryMethods = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+          $deliveryMethod = array();
+          $deliveryMethod['id'] =  $result['id'];
+          $deliveryMethod['name'] = $result['name'];
+          $allDeliveryMethods[] = $deliveryMethod;
+      }
+
+      return array('status' => 1, 'data' => $allDeliveryMethods, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+  }
+
   public function getPatienList($doctorId){
     try {
 

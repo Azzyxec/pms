@@ -8,7 +8,7 @@ var links = {
 
    //admin related
    doctorListingUrl: "index.php/adminDashboard/doctorListing",
- 
+
    logoutUrl : "index.php/authenticate/logout",
 
    //doctor dashboard links
@@ -28,8 +28,8 @@ var links = {
    programmeListingsUrl : "index.php/doctorDashboard/programmeList",
    ManageLocationsUrl : "index.php/doctorDashboard/workLocationManagement",
    getCalenderUrl : "index.php/doctorDashboard/calendarTemplate",
-     
-       
+
+
    //schedule
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
@@ -53,6 +53,7 @@ var links = {
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
    locationListUrl:"index.php/locations/getDoctorLocations",
+   deliveryMethodsUrl:"index.php/patient/getDeliveryMethods", 
 
 
    //registartion
