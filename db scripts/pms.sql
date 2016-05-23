@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2016 at 07:03 PM
+-- Generation Time: May 23, 2016 at 07:57 PM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.4
 
@@ -173,153 +173,6 @@ begin
 	end if;
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` DATE, IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pmedical_programme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_xml` VARCHAR(65535))  begin
-
-declare lmaxPatientId int;
-declare lprogrammeName varchar(100);
-
-DECLARE lprogrammeListCount int DEFAULT 0;
-declare lcounter int;
-declare lprogrammeId  int;
-declare ldueDate varchar(20);
-declare lgivenOn varchar(20);
-declare lbatchNo varchar(100);
-
-if pid <= 0 then
-
-INSERT INTO `patient`
-					(fk_doctor_id
-					,`name`
-					, `date_of_birth`
-					, `weight`
-					, `height`
-					, `gender`
-					, `contact1`
-					, `contact2`
-					, `email`
-					, `address`
-					, `picture_path`
-					, `is_guardian`
-					, `patient_id`
-					, `created_date`
-					, `is_active`
-					) VALUES (
-					pdoctor_id
-					,pname
-					,pdate_of_birth
-					,pweight
-					,pheight
-					,pgender
-					,pcontact1
-					,pcontact2
-					,pemail
-					,paddress
-					,ppicture_path
-					,pis_guardain
-					,ppatient_id
-					,now()
-					,1
-					);
-					
-	select max(id)
-	into @lmaxPatientId
-	from patient;
-	
-	select name
-	into @lprogrammeName
-	from medication_programme
-	where id = pmedical_programme_id;
-	
-	
-					
-	INSERT INTO `patient_medication_programme`
-										(`fk_patient_id`
-										, `fk_doctor_id`
-										, `fk_medication_pogramme_id`
-										, `name`
-										, `created_date`
-										) VALUES (
-										@lmaxPatientId
-										,pdoctor_id
-										,pmedical_programme_id
-										,@lprogrammeName
-										,now()
-										);
-										
-	INSERT INTO `patient_medication_programme_list`(
-													`fk_patient_id`
-													, `fk_doctor_id`
-													, `fk_medication_programme_id`
-													, `fk_medication_programme_list_id`
-													, `duration_days`
-													, `medicine`
-													, `dose_no`
-													, due_on
-													, give_on
-													, batch_no
-													)
-											SELECT 	@lmaxPatientId
-													,pdoctor_id
-													,mpl.`fk_medication_programme_id`
-													,mpl.id
-													,mpl.`duration_days`
-													,mpl.`medicine`
-													,mpl.`dose_no`
-													,null
-													,null
-													,null
-											FROM `medication_programme_list` mpl 
-											WHERE mpl.fk_medication_programme_id = pmedical_programme_id;
-							
-else
-
-	UPDATE `patient` SET `name`= pname
-						  ,`date_of_birth`= pdate_of_birth
-						  ,`weight`= pweight
-						  ,`height`= pheight
-						  ,`gender`= pgender
-						  ,`contact1`= pcontact1
-						  ,`contact2`= pcontact2
-						  ,`email`= pemail
-						  ,`address`= paddress
-						  ,`picture_path`= ppicture_path
-						  ,`is_guardian`= pis_guardain
-						  ,`patient_id`= ppatient_id
-					WHERE id = pid;
-					
-	SELECT ExtractValue(pprogramme_xml, 'programe/programmeListCount')
-	into @lprogrammeListCount;
-	
-	set @lcounter = 1;
-	
-	while @lcounter <= @lprogrammeListCount do
-	
-		SELECT ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/id')
-			   ,ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/dueOn')
-			   ,ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/givenOn')
-			   ,ExtractValue(pprogramme_xml, 'programe/programmeList/item[$@lcounter]/batchNo')
-		into @lprogrammeId
-			 ,@ldueDate
-			 ,@lgivenOn
-			 ,@lbatchNo;
-		
-		UPDATE `patient_medication_programme_list` pmpl  
-		SET `due_on` = STR_TO_DATE(@ldueDate, '%m-%d-%Y')
-			,`give_on`= STR_TO_DATE(@lgivenOn, '%m-%d-%Y') 
-			,`batch_no`= @lbatchNo 
-		WHERE pmpl.id = @lprogrammeId;
-	
-		SET @lcounter = @lcounter + 1;
-	END WHILE;
-
-end if;
-
-commit;
-
-select @lprogrammeListCount as status;
-
-end$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details` (IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pis_active` INT, IN `premarks` VARCHAR(4000))  MODIFIES SQL DATA
 begin
 
@@ -389,6 +242,8 @@ UPDATE `patient_birth_details` SET
 									,`is_active`= pis_active 
 						WHERE fk_patient_id = ppatient_id;
 end if;
+
+select 1 as status;	
 
 
 end$$
@@ -1511,14 +1366,7 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (6, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
 (7, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
 (8, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
-(43, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(44, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(45, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(46, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(47, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(48, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-12', 1),
-(49, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-18', 1),
-(50, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-18', 1);
+(66, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-23', 1);
 
 -- --------------------------------------------------------
 
@@ -1528,20 +1376,32 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 
 CREATE TABLE `patient_birth_details` (
   `fk_patient_id` int(11) NOT NULL,
-  `fk_delivery_method_id` int(11) NOT NULL,
-  `birth_weight` varchar(20) NOT NULL,
-  `length` varchar(20) NOT NULL,
-  `head` varchar(20) NOT NULL,
-  `blood_group` varchar(10) NOT NULL,
-  `mother_name` varchar(1000) NOT NULL,
-  `mother_blood_group` varchar(10) NOT NULL,
-  `father_name` varchar(100) NOT NULL,
-  `father_blood_group` varchar(10) NOT NULL,
-  `siblings` varchar(1000) NOT NULL,
-  `remarks` int(11) NOT NULL,
-  `created_date` date NOT NULL,
-  `modified_date` date NOT NULL
+  `fk_delivery_method_id` int(11) DEFAULT NULL,
+  `birth_weight` varchar(20) DEFAULT NULL,
+  `length` varchar(20) DEFAULT NULL,
+  `head` varchar(20) DEFAULT NULL,
+  `blood_group` varchar(10) DEFAULT NULL,
+  `mother_name` varchar(100) DEFAULT NULL,
+  `mother_blood_group` varchar(10) DEFAULT NULL,
+  `father_name` varchar(100) DEFAULT NULL,
+  `father_blood_group` varchar(10) DEFAULT NULL,
+  `siblings` varchar(100) DEFAULT NULL,
+  `remarks` varchar(4000) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `fk_created_by_id` int(11) DEFAULT NULL,
+  `created_by_type` varchar(5) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `fk_modified_by_id` int(11) DEFAULT NULL,
+  `modified_by_type` varchar(5) DEFAULT NULL,
+  `is_active` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `patient_birth_details`
+--
+
+INSERT INTO `patient_birth_details` (`fk_patient_id`, `fk_delivery_method_id`, `birth_weight`, `length`, `head`, `blood_group`, `mother_name`, `mother_blood_group`, `father_name`, `father_blood_group`, `siblings`, `remarks`, `created_date`, `fk_created_by_id`, `created_by_type`, `modified_date`, `fk_modified_by_id`, `modified_by_type`, `is_active`) VALUES
+(66, 1, '2 kg', '25 cms', ' 10 cms', 'AB+', 'Jenny', 'B+', 'Edward', 'AB+', '1', 'Test Data', '2016-05-23 23:21:44', 18, 'D', '2016-05-23 23:24:48', 18, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -1922,7 +1782,7 @@ ALTER TABLE `medication_programme_list`
 -- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 --
 -- AUTO_INCREMENT for table `patient_medication_programme`
 --
