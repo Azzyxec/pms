@@ -2,20 +2,37 @@ $(document).ready(function(){
 
     $(function(){
         console.log('new appointment js loaded');
-         $("#book-appointment-before-submit-warning-error").hide();
-        $("#book-appointment-before-submit-success").hide();
-        $("#book-appointment-before-submit-other-error").hide();
+         //$("#book-appointment-before-submit-warning-error").addClass("hidden");
+       // $("#book-appointment-before-submit-success").hide();
+       // $("#book-appointment-before-submit-other-error").hide();
+        $("#datetimepicker1").datetimepicker({
+            
+        });
+        $('#datetimepicker1').click(function(){
+   $('#datetimepicker1').data('DateTimePicker').toggle();
+});
+        $("#datetimepicker2").datetimepicker({
+            format : "LT"
+        });
+        $('#datetimepicker2').click(function(){
+   $('#datetimepicker2').data('DateTimePicker').toggle();
+});
        
     }());
-
+  
     $("#book-Appointment-Form-submit-button").on("click", function(){
         console.log("form submited");
         $('#book-Appointment-Form').submit();
     });
 $('#book-Appointment-Form').validator().on('submit', function (e) {
   if (e.isDefaultPrevented()) {
-   $("#book-appointment-before-submit-warning-error").show();
+      /* do something if invalid */
+      
+   $("#book-appointment-before-submit-warning-error").clone().appendTo("#book-Appointments-Section > div > div > .rw").removeClass("hidden");
   } else {
+      
+      /* do somthing if valid */
+      
     
      function getBookAppointmentFormDetails(){
                 var name = $("#book-appointment-patientsName-form-input").val();
@@ -46,14 +63,14 @@ $('#book-Appointment-Form').validator().on('submit', function (e) {
                     console.log(response);
                     
                     
-                },
+                },  
                 
                 
             });
         
     });
   }
-})
+});
 
 
     

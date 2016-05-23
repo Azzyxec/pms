@@ -37,12 +37,13 @@ var filesList = [
   {build:true, files: [
                       objConfig.scriptsBasePath +"utility.js",
                       objConfig.scriptsBasePath +"links.js",
+                      objConfig.scriptsBasePath +"moment.js",
                       objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                       objConfig.scriptsBasePath +"appointment/new.appointment.js"
                      ], buildName: "new.appointment.js"},
   {build:true, files: [
                      objConfig.scriptsBasePath +"utility.js",
-                     objConfig.scriptsBasePath +"links.js",
+                     objConfig.scriptsBasePath +"links.js", 
                      objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                      objConfig.scriptsBasePath +"appointment/close.appointment.js"
                    ], buildName: "close.appointment.js"},

@@ -7,18 +7,20 @@
         <hr class="invisible">
     
       <div class="col-lg-8 col-md-10">
-          
-              <div id="book-appointment-before-submit-warning-error" class="alert alert-warning alert-dismissible" role="alert">
+          <div class="rw">
+        
+          </div>
+              <div id="book-appointment-before-submit-warning-error" class="hidden alert alert-warning alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Warning!</strong> Please fill up the form details correctly.
 </div>
           
-            <div id="book-appointment-before-submit-success" class="alert alert-success alert-dismissible" role="alert">
+            <div id="book-appointment-before-submit-success" class="hidden alert alert-success alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Success!</strong> Patients Appointment Booked successfully
 </div>
           
-            <div id="book-appointment-before-submit-other-error" class="alert alert-info alert-dismissible" role="alert">
+            <div id="book-appointment-before-submit-other-error" class="hidden Salert alert-info alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <strong>Sorry!</strong>Somethings not right.
 </div>
@@ -40,13 +42,13 @@
 
               <div class="">
                      <form id="book-Appointment-Form"  role="form" data-toggle="validator" class="form-horizontal">
-              <div class="form-group">
+              <div class="form-group has-feedback">
               <label for="focusedinput" class="col-md-2 control-label">Appointment Date</label>
               <div class='col-md-8'>
 
 
-              <div class='input-group date' id='datetimepicker2'>
-              <input type='date' id="book-appointment-date-form-input" class="form-control" required/>
+              <div class='input-group date' id='datetimepicker1'>
+              <input type='text' id="book-appointment-date-form-input" class="form-control" required/>
               <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
               </span>
@@ -54,44 +56,55 @@
               </div>
 
               </div>
-
+                <div class="col-md-1">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                </div>
               </div>
-              <div class="form-group">
+              <div class="form-group has-feedback">
               <label for="focusedinput" class="col-md-2 control-label">Appointment Time</label>
               <div class='col-md-8'>
 
-              <div class='input-group date' id='datetimepicker3'>
-              <input type='time'id="book-appointment-patientsTime-form-input" class="form-control" required />
+              <div class='input-group date' id='datetimepicker2'>
+              <input type='text'id="book-appointment-patientsTime-form-input" data-error="Please enter Time" class="form-control" required />
               <span class="input-group-addon">
+          
               <span class="glyphicon glyphicon-time"></span>
               </span>
               </div>
-
+                <div class="help-block with-errors"></div>
               </div>
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+                
               </div>
 
 
 
 
 
-              <div class="form-group">
+              <div class="form-group has-feedback">
               <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
               <div class="col-md-8">
               <input type="text" class="form-control" pattern="[a-zA-Z ]{3,30}" data-error="please enter patients name" name="username" id="book-appointment-patientsName-form-input" placeholder="Patients Name" required>
                   <div class="help-block with-errors"></div>
               </div>
-
+<div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
               </div>
-              <div class="form-group">
+              <div class="form-group has-feedback">
               <label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
               <div class="col-md-8">
-              <input type="text" class="form-control" name="username" id="book-appointment-contact-form-input" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-error="please enter your 10 digit mobile No" required> <span class="glyphicon form-control-feedback" aria-hidden="true"></span> <div class="help-block with-errors"></div>
+              <input type="text" class="form-control" name="username" id="book-appointment-contact-form-input" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-error="please enter your 10 digit mobile No" required> <div class="help-block with-errors"></div>
               </div>
               
-
+<div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group has-feedback">
               <label for="focusedinput" class="col-md-2 control-label">Description</label>
               <div class="col-md-8">
               <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description-form-input" required></textarea >
@@ -99,6 +112,9 @@
               <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
               </div> 
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
               </div>
 
 
@@ -129,5 +145,6 @@
 
 {% block addScripts %}
 <script src="js/new.appointment.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
 <script src="js/validator.js"></script>
 {% endblock %}
