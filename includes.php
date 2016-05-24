@@ -17,6 +17,7 @@ require_once '../app/entities/UserSessionManager.php';
 require_once '../app/entities/Patient.php';
 require_once '../app/entities/bookAppointment.php';
 require_once '../app/entities/Staff.php';
+require_once '../app/entities/BirthDetails.php';
 
 //Datalayer
 require_once '../app/datalayer/DBHelper.php';

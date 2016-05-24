@@ -2,6 +2,7 @@
 
 use Pms\Entities\User;
 use Pms\Entities\Patient;
+use Pms\Entities\BirthDetails;
 use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\PatientDB;
 use Pms\Datalayer\ProgrammeDB;
@@ -58,7 +59,7 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
     });
 
 
-    $this->post('/addUpdatePatient', function ($request, $response) {
+    $this->get('/addUpdatePatient', function ($request, $response) {
       try {
 
         /*
@@ -76,8 +77,10 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           $postedData = $request->getParsedBody();
           //$patient = Patient::getInsanceFromArray($postedData['patient']);
 
+
+          //save patient section
           $patient = new Patient();
-          $patient->id = 0;
+          $patient->id = 66;
           $patient->name = "Travolda";
           $patient->dateOfBirth = "01-04-2016";
           $patient->bloodGroup = "AB+";
@@ -95,6 +98,34 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           //settign the gurdain details
           $guardian =  new Patient();
 
+
+          $patientDB = new PatientDB();
+          $savePatientResponse = $patientDB->saveUpdatePatientInfo($patient, $guardian, $user->id);
+          $savedPatientId =   $savePatientResponse['data']['patientId'];
+
+          //save birth info section
+
+          $birthDetails = new BirthDetails();
+          $birthDetails->patientId = $savedPatientId;
+          $birthDetails->deliveryMethodId = 1;
+          $birthDetails->birthWeight = "2 kg";
+          $birthDetails->length = "25 cms";
+          $birthDetails->head = " 10 cms";
+          $birthDetails->bloodGroup = "AB+";
+          $birthDetails->mothersName = "Jenny";
+          $birthDetails->mothersBloodGroup = "B+";
+          $birthDetails->fathersName = "Edward";
+          $birthDetails->fathersBloodGroup = "AB+";
+          $birthDetails->siblings = "1";
+          $birthDetails->isActive = 1;
+          $birthDetails->remarks = "Test Data";
+
+          $saveBirthInfoResponse = $patientDB->saveUpdateBirthDetails($birthDetails, $user->id, $user->type);
+
+          $data = array('patient info' => $patient, 'birth info' => $birthDetails );
+          return $response->withJson($data);
+
+
           /*
           $moreInfoXMLArray = array();
           $moreInfoXMLArray['doctorId'] = $user->id;
@@ -107,17 +138,18 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           $moreInfoXMLArray['programmeList'] []  = array('id' => 2, 'dueOn' => '09-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4523452' );
           $moreInfoXMLArray['programmeList'] []  = array('id' => 3, 'dueOn' => '10-05-2016', 'givenOn' => '04-05-2016', 'batchNo' => '4134536532' );
     */
-          $patientDB = new PatientDB();
-          $callResponse = $patientDB->saveUpdatePatientInfo($patient, $guardian, $user->id);
 
+
+          /*
           $programmeList =  $postedData['programmeLists'];
           $programmeList['doctorId'] = $user->id;
-          $programmeList['patientId'] =  $callResponse['data']['patientId'];
+          $programmeList['patientId'] =$savedPatientId;
           $programmeList['programmeCount'] = $postedData['programmeCount'];
           $programmeDB = new ProgrammeDB();
           $programmeResponse = $programmeDB->createUpdatePatientsProgramme($programmeList);
 
           return $response->withJson($programmeResponse);
+          */
 
       } else {
         $data = array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this oeration' );

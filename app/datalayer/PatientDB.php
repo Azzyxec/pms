@@ -141,6 +141,42 @@ class PatientDB{
     }
   }
 
+
+  public function saveUpdateBirthDetails($birthDetails, $userId, $userType){
+    try {
+
+      $paramArray = array(
+                          'ppatient_id' => $birthDetails->patientId,
+                          'pdelivery_method_id' => $birthDetails->deliveryMethodId,
+                          'pbirth_weight' => $birthDetails->birthWeight,
+                          'plength' => $birthDetails->length,
+                          'phead' => $birthDetails->head,
+                          'pblood_group' => $birthDetails->bloodGroup,
+                          'pmothers_name' => $birthDetails->mothersName,
+                          'pmothers_blood_group' => $birthDetails->mothersBloodGroup,
+                          'pfathers_name' => $birthDetails->fathersName,
+                          'pfathers_blood_group' => $birthDetails->fathersBloodGroup,
+                          'psiblings' => $birthDetails->siblings,
+                          'puser_id' => $userId,
+                          'puser_type' => $userType,
+                          'pis_active' => $birthDetails->isActive,
+                          'premarks' => $birthDetails->remarks
+                        );
+
+      $statement = DBHelper::generateStatement('add_update_patient_birth_details',  $paramArray);
+
+      $statement->execute();
+
+      $row = $statement->fetch();
+
+      $status = $row['status'];
+
+      return array('status' => $status, 'data' => $status , 'message' => 'success');
+    } catch (Exception $e) {
+      return array('status' => -1, 'data' => "", 'message' => 'exception in DB' . $e->getMessage());
+    }
+  }
+
   //shift this to a utility class
   function array_to_xml( $data, $xml_data ) {
 
@@ -157,5 +193,6 @@ class PatientDB{
        }
 
   }
+
 
 }

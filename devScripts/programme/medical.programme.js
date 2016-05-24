@@ -7,13 +7,17 @@ $(document).ready(function(){
     var model = {
       programId: 0,
       programmeName: "",
-      programeList:[]
+      programeList:[],
+      ProgrammeDetails: null
     };
 
     var controller = {
       init: function(){
         this.createModifyProgrammeUrl = links.createModifyProgrammeUrl;
         this.getProgrammeUrl = links.getProgrammeUrl;
+
+
+        this.setNewProgrammeDetailsModel();
 
         programmeView.init();
 
@@ -43,6 +47,19 @@ $(document).ready(function(){
       getProgrammeName: function(){
         return model.programmeName;
       },
+      getCurrentProgrammeDetail: function(){
+        return model.ProgrammeDetails;
+      },
+      setNewProgrammeDetailsModel: function(){
+        model.ProgrammeDetails = {
+                                 id:0,
+                                 duration: "",
+                                 text: "",
+                                 vaccine: "",
+                                 doseNo: "",
+                                 index: 0
+                               };
+      },
       removeProgramme: function(program){
         model.programeList.splice(program.index, 1);
         //re assigning the index
@@ -52,16 +69,31 @@ $(document).ready(function(){
       },
       addProgramme:  function(pduration, ptext, pvaccine, pdoseNo){
         var posn = model.programeList.length;
-        var programme = {
-                         id:0,
-                         duration: pduration,
-                         text: ptext,
-                         vaccine: pvaccine,
-                         doseNo: pdoseNo,
-                         index: posn
-                        };
-        model.programeList.push(programme);
+
+
+          if(model.ProgrammeDetails) {
+
+            model.ProgrammeDetails.duration = pduration;
+            model.ProgrammeDetails.text = ptext;
+            model.ProgrammeDetails.vaccine = pvaccine;
+            model.ProgrammeDetails.doseNo = pdoseNo;
+
+          }else{
+
+            model.ProgrammeDetails = {
+                                       id:0,
+                                       duration: pduration,
+                                       text: ptext,
+                                       vaccine: pvaccine,
+                                       doseNo: pdoseNo,
+                                       index: posn
+                                     };
+            model.programeList.push(model.ProgrammeDetails);
+          }
+
+        model.ProgrammeDetails = null;
         programmeView.clearForm();
+
       },
       persistProgramme: function(){
 
@@ -118,6 +150,18 @@ $(document).ready(function(){
 
         this.programmeName.val(controller.getProgrammeName());
 
+
+        var currentprogrammeDetail = controller.getCurrentProgrammeDetail();
+
+        if(currentprogrammeDetail){
+          this.duration.val(currentprogrammeDetail.duration);
+          this.durationText.val(currentprogrammeDetail.text);
+          this.vaccine.val(currentprogrammeDetail.vaccine);
+          this.doseNo.val(currentprogrammeDetail.doseNo);
+       }
+
+
+
         var programmeList = controller.getProgrammeList();
 
         //remove the added rows
@@ -148,9 +192,10 @@ $(document).ready(function(){
           tr.append(td);
 
           var td = $('<a/>',{
-            text: '-',
+            text: 'Remove',
             class: "btn btn-default btn-sm"
           });
+
           td.click((function(programme){
             return function(){
 
@@ -164,7 +209,33 @@ $(document).ready(function(){
             }
 
           })(programmeList[i]));
+
           tr.append(td);
+
+
+          var editLink = $('<a/>',{
+            text: 'Edit',
+            class: ""
+          });
+
+          editLink.click((function(programme){
+            return function(){
+
+              console.log(JSON.stringify(programme));
+              //  programmeList[position -1] = null
+
+              model.ProgrammeDetails = programme;
+              console.log('edit button: ' + JSON.stringify(programme));
+              programmeView.render();
+
+            }
+
+          })(programmeList[i]));
+
+          var td = $('<td/>');
+          td.append(editLink);
+          tr.append(td);
+
 
           this.tableBody.append(tr);
         }
