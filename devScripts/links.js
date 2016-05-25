@@ -27,6 +27,7 @@ var links = {
    createProgramForPatientUrl : "index.php/doctorDashboard/createMedicalProgram",
    programmeListingsUrl : "index.php/doctorDashboard/programmeList",
    ManageLocationsUrl : "index.php/doctorDashboard/workLocationManagement",
+   getAnalyticsUrl : "index.php/doctorDashboard/AnalyticsReport",
    getCalenderUrl : "index.php/doctorDashboard/calendarTemplate",
 
 

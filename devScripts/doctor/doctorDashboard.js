@@ -33,6 +33,7 @@ $(document).ready(function(){
           this.ManageLocationsUrl = links.ManageLocationsUrl;
           this.CalendarTemplateUrl = links.getCalenderUrl;
 
+          this.analyticsReportUrl = links.getAnalyticsUrl;
           //do somethng about doctors info and registration
 
           //The url from the browser  can be compared to set the active navigation
@@ -195,6 +196,13 @@ $(document).ready(function(){
              $("#calendar-template-section-link-btn").click(function(e){
                e.preventDefault();
            });
+           
+              
+             $("#analytics-side-navigation-link-btn").click(function(e){
+               e.preventDefault();
+               window.location.href = controller.analyticsReportUrl;
+           }); 
+            
             
             
             
