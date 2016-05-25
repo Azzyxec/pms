@@ -8,16 +8,13 @@ $(document).ready(function(){
       programId: 0,
       programmeName: "",
       programeList:[],
-      ProgrammeDetails: null
+      ProgrammeDetails:null
     };
 
     var controller = {
       init: function(){
         this.createModifyProgrammeUrl = links.createModifyProgrammeUrl;
         this.getProgrammeUrl = links.getProgrammeUrl;
-
-
-        this.setNewProgrammeDetailsModel();
 
         programmeView.init();
 
@@ -40,6 +37,13 @@ $(document).ready(function(){
         }
 
 
+      },
+      clearModel: function(){
+          model.programId = 0;
+          model.programmeName = "";
+          model.programeList = [];
+          model.ProgrammeDetails = null;
+          console.log('clear model');
       },
       getProgrammeList: function(){
         return model.programeList;
@@ -67,11 +71,16 @@ $(document).ready(function(){
             model.programeList[i].index = i;
         }
       },
+      updateProgrammeName: function(name){
+        model.programmeName = name;
+      },
       addProgramme:  function(pduration, ptext, pvaccine, pdoseNo){
         var posn = model.programeList.length;
 
 
           if(model.ProgrammeDetails) {
+
+            console.log('update programme details ' + pduration + ptext +   JSON.stringify(model.ProgrammeDetails) );
 
             model.ProgrammeDetails.duration = pduration;
             model.ProgrammeDetails.text = ptext;
@@ -79,6 +88,8 @@ $(document).ready(function(){
             model.ProgrammeDetails.doseNo = pdoseNo;
 
           }else{
+
+            console.log('new programme details');
 
             model.ProgrammeDetails = {
                                        id:0,
@@ -100,14 +111,20 @@ $(document).ready(function(){
         //update the programme name
         model.programmeName =  programmeView.programmeName.val();
 
+
+
         $.post(controller.createModifyProgrammeUrl , model)
          .done(function( response ) {
+
            console.log('save response ' + JSON.stringify(response));
+           controller.clearModel();
+           programmeView.refreshForm();
          });
       }
     };
 
     var programmeView = {
+      isFormValid:false,
       init: function(){
         this.programmeName = $('#programme-name');
         this.tableBody  = $('#programme-list-table-body');
@@ -117,6 +134,19 @@ $(document).ready(function(){
         this.vaccine = $('#txt-vaccine');
         this.doseNo = $('#txt-dose-no');
 
+
+        this.groupProgrammeName = $('#group-programme-name');
+        this.programmeNamehelpLabel = $('#help-programme-name');
+        this.commonHelpLabel = $('#help-common-message');
+
+
+        this.programmeName.on('change keyup paste ', function(){
+          console.log();
+          controller.updateProgrammeName(programmeView.programmeName.val())
+        })
+
+
+        //wiring events
         $('#btn-add-row').click((function(view){
 
           return function(){
@@ -125,19 +155,90 @@ $(document).ready(function(){
             var vaccineVal = $('#txt-vaccine').val();
             var doseNoVal = $('#txt-dose-no').val();
 
-            controller.addProgramme(durationVal, durationTextVal, vaccineVal, doseNoVal);
-            programmeView.render();
-            console.log('model ' + JSON.stringify(model));
+            if(!durationVal ||
+               !durationTextVal||
+               !vaccineVal||
+               !doseNoVal
+             ){
+               console.log('one of the filed is empty');
+               programmeView.commonHelpLabel.removeClass('hidden');
+               programmeView.commonHelpLabel.text('Please enter all details');
+             }else{
+               console.log('data entered ');
+               controller.addProgramme(durationVal, durationTextVal, vaccineVal, doseNoVal);
+               programmeView.commonHelpLabel.addClass('hidden');
+               programmeView.render();
+               console.log('model ' + JSON.stringify(model));
+             }
          }
 
         })(programmeView));
 
-
-
         $('#btn-submit-programme').click(function(){
           console.log('save click');
-          controller.persistProgramme();
+          programmeView.validateForm();
+          console.log('form is valid:' +  programmeView.isFormValid);
+          if(programmeView.isFormValid){
+            controller.persistProgramme();
+          }
         });
+
+        this.wireValidations();
+
+      },
+      refreshForm(){
+        programmeView.groupProgrammeName.removeClass('has-error');
+        programmeView.programmeNamehelpLabel.addClass('hidden');
+        programmeView.commonHelpLabel.addClass('hidden');
+        this.render();
+        //resetting all validation errors
+      },
+      wireValidations: function(){
+
+        this.programmeName.on('blur', function(){
+
+          var programmeName = programmeView.programmeName.val();
+          var isEmpty = validator.isEmptyString(programmeName);
+
+          if(isEmpty){
+            programmeView.groupProgrammeName.addClass('has-error');
+            programmeView.programmeNamehelpLabel.removeClass('hidden');
+          }else{
+            programmeView.groupProgrammeName.removeClass('has-error');
+            programmeView.programmeNamehelpLabel.addClass('hidden');
+          }
+
+        });
+
+      },
+      validateForm: function(){
+
+        programmeView.isFormValid = true;
+
+        var programmeName = programmeView.programmeName.val();
+        var programmeList = controller.getProgrammeList();
+
+        var isEmpty = validator.isEmptyString(programmeName);
+
+        if(isEmpty){
+          console.log('validae programme name' );
+          programmeView.isFormValid = false;
+          programmeView.groupProgrammeName.addClass('has-error');
+          programmeView.programmeNamehelpLabel.removeClass('hidden');
+        }else{
+          programmeView.groupProgrammeName.removeClass('has-error');
+          programmeView.programmeNamehelpLabel.addClass('hidden');
+        }
+
+        if(programmeList.length <= 0){
+          console.log('programme list validation');
+          programmeView.isFormValid = false;
+          programmeView.commonHelpLabel.removeClass('hidden');
+          programmeView.commonHelpLabel.text('Please enter atleast one programme entry');
+        }else{
+          programmeView.commonHelpLabel.addClass('hidden');
+        }
+
 
       },
       clearForm: function(){
@@ -148,10 +249,13 @@ $(document).ready(function(){
       },
       render: function(){
 
-        this.programmeName.val(controller.getProgrammeName());
-
-
+        var programmeName = controller.getProgrammeName();
         var currentprogrammeDetail = controller.getCurrentProgrammeDetail();
+        var programmeList = controller.getProgrammeList();
+
+        //updating the values in the view
+
+        this.programmeName.val(programmeName);
 
         if(currentprogrammeDetail){
           this.duration.val(currentprogrammeDetail.duration);
@@ -159,10 +263,6 @@ $(document).ready(function(){
           this.vaccine.val(currentprogrammeDetail.vaccine);
           this.doseNo.val(currentprogrammeDetail.doseNo);
        }
-
-
-
-        var programmeList = controller.getProgrammeList();
 
         //remove the added rows
         $('.prog-added-rows').remove();

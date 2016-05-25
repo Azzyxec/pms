@@ -43,11 +43,11 @@ var filesList = [
                      ], buildName: "new.appointment.js"},
   {build:true, files: [
                      objConfig.scriptsBasePath +"utility.js",
-                     objConfig.scriptsBasePath +"links.js", 
+                     objConfig.scriptsBasePath +"links.js",
                      objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                      objConfig.scriptsBasePath +"appointment/close.appointment.js"
                    ], buildName: "close.appointment.js"},
-    
+
     {build:true, files: [
                      objConfig.scriptsBasePath +"utility.js",
                      objConfig.scriptsBasePath +"links.js",
@@ -55,7 +55,7 @@ var filesList = [
                      objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                      objConfig.scriptsBasePath +"schedule/manageClinicSchedule.js"
                    ], buildName: "schedule.manageClinicSchedule.js"},
-     
+
  {build:true, files: [
                     objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"links.js",
@@ -70,7 +70,7 @@ var filesList = [
                     objConfig.scriptsBasePath +"schedule/new.schedule.js"
                   ], buildName: "new.schedule.js"},
 {build:true, files: [
-                   objConfig.scriptsBasePath +"utility.js", 
+                   objConfig.scriptsBasePath +"utility.js",
                    objConfig.scriptsBasePath +"links.js",
                    objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                    objConfig.scriptsBasePath +"schedule/list.schedule.js"
@@ -112,6 +112,7 @@ var filesList = [
 {build:true, files: [
                   objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath +"validator.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "programme/medical.programme.js"
                 ], buildName: "medical.programme.js"},
