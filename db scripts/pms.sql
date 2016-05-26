@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2016 at 07:57 PM
+-- Generation Time: May 26, 2016 at 02:00 PM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.4
 
@@ -1289,7 +1289,20 @@ INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date
 (6, 18, 'Yo self b4 others', '2016-05-12', 1),
 (7, 18, 'Yo self b4 others', '2016-05-12', 1),
 (8, 18, 'Yo self b4 others', '2016-05-12', 1),
-(9, 18, 'Get Will Soon edited', '2016-05-12', 1);
+(9, 18, 'Get Will Soon edited', '2016-05-12', 1),
+(10, 18, '', '2016-05-24', 1),
+(11, 18, 'TEst', '2016-05-24', 1),
+(12, 18, '', '2016-05-24', 1),
+(13, 18, '', '2016-05-25', 1),
+(14, 18, '', '2016-05-25', 1),
+(15, 18, '', '2016-05-25', 1),
+(16, 18, '', '2016-05-25', 1),
+(17, 18, '', '2016-05-25', 1),
+(18, 18, '', '2016-05-25', 1),
+(19, 18, '', '2016-05-25', 1),
+(20, 18, 'dsfasdf', '2016-05-25', 1),
+(21, 18, 'overfly', '2016-05-25', 1),
+(22, 18, 'new Prog', '2016-05-25', 1);
 
 -- --------------------------------------------------------
 
@@ -1325,7 +1338,17 @@ INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `du
 (7, 9, 1, 'One Week', 'XYZ', 0, '2016-05-12', 0, 18, '2016-05-12 23:19:30', 0),
 (8, 9, 1, 'One Week', 'XYZ1', 1, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
 (9, 9, 2, 'two errk', 'humumculus', 2, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
-(10, 9, 3, 'green', 'Cartao', 3, '2016-05-12', 1, 18, NULL, 0);
+(10, 9, 3, 'green', 'Cartao', 3, '2016-05-12', 1, 18, NULL, 0),
+(11, 11, 0, 'sdf', 'xyz', 34534, '2016-05-24', 0, 18, '2016-05-24 13:12:46', 0),
+(12, 11, 0, '2 weeks', 'sdf', 4232334, '2016-05-24', 1, 18, '2016-05-24 13:12:55', 0),
+(13, 14, 0, 'sdf', 'sdf', 0, '2016-05-25', 1, 18, NULL, 0),
+(14, 15, 0, 'sdf', 'sdf', 0, '2016-05-25', 1, 18, NULL, 0),
+(15, 16, 0, 'sdf', 'sdf', 0, '2016-05-25', 1, 18, NULL, 0),
+(16, 17, 0, 'sdf', 'sdf', 0, '2016-05-25', 1, 18, NULL, 0),
+(17, 18, 0, 'sdf', 'sdf', 0, '2016-05-25', 1, 18, NULL, 0),
+(18, 21, 0, 'text', 'some vaccine', 1, '2016-05-25', 1, 18, '2016-05-25 12:49:11', 0),
+(19, 22, 0, 'text', 'sdf', 0, '2016-05-25', 0, 18, NULL, 0),
+(20, 22, 0, 'sdf', 'sdf', 0, '2016-05-25', 1, 18, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1772,12 +1795,12 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `medication_programme`
 --
 ALTER TABLE `medication_programme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `medication_programme_list`
 --
 ALTER TABLE `medication_programme_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `patient`
 --

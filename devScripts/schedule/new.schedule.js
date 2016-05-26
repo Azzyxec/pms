@@ -5,17 +5,13 @@ $(document).ready(function(){
         //http://momentjs.com/ good help for date formatting and stuff
 
 
-        var schedulemodel = {
-          scheduleId: 0,
+        var scheduleModel = {
           startDate: "",
           endDate: "",
           scheduleDaysCount: 0,
-          locationCount: 2,
           workLocations: [],
-          locationList:[
-                        {name:"Margao", id:1, schedule:[]},
-                        {name:"Vasco", id:2, schedule:[]}
-          ]
+          selectedLocation:{id:0, name:""},
+          scheduleList:[]
         };
 
         var controller = {
@@ -26,35 +22,55 @@ $(document).ready(function(){
             stepOneView.init();
             createScheduleView.init();
 
+            //getting work locations for the doctor
             $.get( controller.getLocationUrl , {})
              .done(function( response ) {
-               console.log('response ' + JSON.stringify(response));
-               schedulemodel.workLocations = response.data;
+               //console.log('response ' + JSON.stringify(response));
+               scheduleModel.workLocations = response.data;
                stepOneView.render();
              });
 
+          },
+          updateSelectedLocation: function(id, name){
+            scheduleModel.selectedLocation.id = id;
+            scheduleModel.selectedLocation.name = name;
 
-
+            console.log(JSON.stringify(scheduleModel.selectedLocation));
+          },
+          getLocationModel: function(){
+            return scheduleModel.selectedLocation;
           },
           getLocationList:function(){
-            return schedulemodel.workLocations;
+            return scheduleModel.workLocations;
           },
-          getDateRange: function(){
+          generateModel: function(){
             var fromDateStr = stepOneView.fromDateControl.val(); //2016-05-19
             var toDateStr = stepOneView.toDateControl.val(); //2016-05-19
 
-            var mfromDate = moment(fromDateStr, "YYYY-MM-DD");
 
+            var startTimeVal = stepOneView.fromTimeControl.val();
+            var endTimeVal =  stepOneView.toTimeControl.val();
+
+            //date validations, cannot put previoous dates
+            //cannot dates in revrese order
+            //cannot make schedule for more than 60 days
+
+            var mfromDate = moment(fromDateStr, "YYYY-MM-DD");
             var mtoDate = moment(toDateStr, "YYYY-MM-DD");
 
+            //setting the models start and end date
+            scheduleModel.startDate = mfromDate.format('DD-MM-YYYY');
+            scheduleModel.endDate = mtoDate.format('DD-MM-YYYY');
 
-            console.log('date range from ' +  mfromDate.format('DD-MM-YYYY') + ' to ' + mtoDate.format('DD-MM-YYYY'));
-
+            //console.log('date range from ' +  mfromDate.format('DD-MM-YYYY') + ' to ' + mtoDate.format('DD-MM-YYYY'));
 
             //getting the difference is dates in terms of dates
             var daysDuration =  moment.duration(mtoDate.diff(mfromDate)).asDays();
+            //console.log('duration ' + daysDuration);
 
-            console.log('duration :' + daysDuration);
+            scheduleModel.scheduleDaysCount = daysDuration;
+
+            //console.log('duration :' + daysDuration);
 
             var weekArray = [];
             if(stepOneView.chkMon.prop('checked')){
@@ -87,81 +103,33 @@ $(document).ready(function(){
 
             console.log('week array ' + weekArray);
 
-            var startCloneDate =  moment(mfromDate);
+            for(var j = 0; j <= daysDuration; j++){
 
-            for(var j = 1; j < daysDuration; j++){
+              var schedule = {
+                date: mfromDate.format('DD-MM-YYYY'),
+                startTime:startTimeVal,
+                endTime: endTimeVal,
+                active: false
+              };
+              scheduleModel.scheduleList.push(schedule);
 
-                  var mdate = moment( startCloneDate.add(1, 'days'));
+              var weekDay = mfromDate.format('ddd');
 
-                  var weekDay = mdate.format('ddd');
+              if(weekArray.indexOf(weekDay)  >= 0 ){
+                    schedule.active = true;
+                }
 
-                  if(weekArray.indexOf(weekDay)  >= 0 ){
-                    console.log('contains week ' + mdate.format('ddd DD MMM YYYY'));
-                  }
-
+                mfromDate.add(1, 'days')
 
             }; //date loop
-
-            console.log();
 
           },
-          generateScheduleModel: function(){
-
-            var fromDateStr = stepOneView.fromDateControl.val(); //2016-05-19
-            var toDateStr = stepOneView.toDateControl.val(); //2016-05-19
-
-            var mfromDate = moment(fromDateStr, "YYYY-MM-DD");
-
-            var mtoDate = moment(toDateStr, "YYYY-MM-DD");
-
-            schedulemodel.startDate = mfromDate.format('MM-DD-YYYY');
-            schedulemodel.endDate = mtoDate.format('MM-DD-YYYY');
-
-            //getting the difference is dates in terms of dates
-            var daysDuration =  moment.duration(mtoDate.diff(mfromDate)).asDays();
-
-            console.log('duration :' + daysDuration);
-
-            schedulemodel.scheduleDaysCount = daysDuration;
-
-            for(var i in  schedulemodel.locationList){
-
-                console.log(schedulemodel.locationList[i].name);
-
-                var startCloneDate =  moment(mfromDate);
-
-                //pushing the start date
-                var schdl = {date: startCloneDate.format('DD-MM-YYYY'),
-                             momentDate: startCloneDate.format('Do MMM YY'), //moment(startCloneDate)
-                             timeSlots:{startTime: 0, endTime: 0}
-                            };
-                schedulemodel.locationList[i].schedule.push(schdl);
-
-                //initilizig rest of the objects
-                for(var j = 1; j < daysDuration; j++){
-
-                  console.log('date loop');
-
-                  var mdate = moment( startCloneDate.add(1, 'days'));
-
-                  var scheduleObj = {date: startCloneDate.format('DD-MM-YYYY'),
-                                 momentDate: startCloneDate.format('Do MMM YY'), //moment(startCloneDate)
-                                 timeSlots:{ startTime:0, endTime:0}
-                                };
-
-                  schedulemodel.locationList[i].schedule.push(scheduleObj);
-            }; //date loop
-
-          }; //location loop
-
-          //  stepOneView.fromDateControl.val();
-        },
         getSchedule: function() {
-          return schedulemodel;
+          return scheduleModel;
         },
         saveUpdateModelRedirect: function(){
 
-          $.post( controller.createUpdateScheduleUrl , schedulemodel)
+          $.post( controller.createUpdateScheduleUrl , scheduleModel)
            .done(function( response ) {
              console.log('response ' + JSON.stringify(response));
 
@@ -181,7 +149,6 @@ $(document).ready(function(){
         }
         };
 
-
         var stepOneView = {
 
           init: function(){
@@ -189,6 +156,10 @@ $(document).ready(function(){
             this.selectLocations = $('#sel-work-locations');
             this.fromDateControl = $('#from-date');
             this.toDateControl = $('#to-date');
+            this.fromTimeControl = $('#from-time');
+            this.toTimeControl = $('#to-time');
+
+            this.fromTimeControl.datetimepicker({});
 
             //http://bootstrap-datepicker.readthedocs.io/en/latest/
 
@@ -204,18 +175,21 @@ $(document).ready(function(){
             //TODO testing code to be removed
             var currDate = moment();
             this.fromDateControl.val(currDate.format('YYYY-MM-DD'));
-            currDate.add(5, 'days')
+            currDate.add(15, 'days')
             this.toDateControl.val(currDate.format('YYYY-MM-DD'));
 
             $('#btn-schedule-next').on('click', (function(self){
               return function(){
                 console.log('schedule next nclick');
 
-                controller.getDateRange();
+                //updating location text in the second step
+                var locationId = self.selectLocations.find(":selected").attr('value');
+                var locationName = self.selectLocations.find(":selected").text();
+                controller.updateSelectedLocation(locationId, locationName);
 
+                controller.generateModel();
                 self.panel.hide();
                 createScheduleView.render();
-
 
               };
             })(this));
@@ -263,144 +237,156 @@ $(document).ready(function(){
         var createScheduleView = {
           init: function(){
             this.panel = $('#schedule-step-two');
-            this.tableHeaderRow = $('#table-header-row-schedule-calander');
-            this.tableBody = document.getElementById('table-body-schedule-calander'); // $('#table-body-schedule-calander');
-            //this.scheduleCreateButton = $('#btn-schedule-create');
+            this.locationName = $('#calendar-location-name');
+            this.dateHeader = $('#calander-date');
 
+            this.tableBody = $('#table-body-schedule-calander');
+
+            this.tableDataTemplate = $('#table-data-template');
 
             $('#btn-schedule-create').on('click', (function(self){
               return function(){
                 console.log('schedule create click');
-
                 controller.saveUpdateModelRedirect();
-
               };
             })(this));
 
 
-            this.panel.hide();
           },
           render: function() {
-            this.panel.show();
+            this.panel.removeClass('hidden');
 
-            //setting table headers
-            this.tableHeaderRow.empty();
-            this.tableHeaderRow.append('<td>Locations</td>');
-            this.tableHeaderRow.append('<td>Timings</td>');
+            var schedule = controller.getSchedule();
+            console.log('render calendar' + JSON.stringify(schedule.scheduleList));
 
-            controller.generateScheduleModel();
-            var scheduleModel = controller.getSchedule();
+            //setting the location text
+            var location = schedule.selectedLocation;
+            this.locationName.text(location.name);
 
-            for(var i = 0; i < scheduleModel.scheduleDaysCount; i++){
+            var mfromDate = moment(schedule.startDate, "DD-MM-YYYY");
+            var mtoDate = moment(schedule.endDate, "DD-MM-YYYY");
 
-              this.tableHeaderRow.append('<td>' + scheduleModel.locationList[0].schedule[i].momentDate  + '</td>');
-              console.log(JSON.stringify( scheduleModel.locationList[0].schedule[i]));
-            }
-            //done setting table headers
-
-            //setting table data
-
-            //this.tableBody.empty();
-
-            for(var i in  schedulemodel.locationList){
-
-              var tr = document.createElement('tr');
-
-              var td = document.createElement('td');
-              td.innerHTML =  schedulemodel.locationList[i].name;
-              tr.appendChild(td);
-
-              td = document.createElement('td');
-              td.innerHTML =  "Start and end times";
-              tr.appendChild(td);
-
-              /*
-              column template
-              <td>
-                <div class="form-group col-md-3">
-                  <label class="control-label">Start Time</label>
-                  <input type="time" class="form-control col-md-3" name="name" value="">
-                  <label class="control-label">End Time</label>
-                  <input type="time" class="form-control col-md-3" name="name" value="">
-                </div>
-              </td>
-
-              */
-
-              console.log('schedule: ' + JSON.stringify(schedulemodel.locationList[i].schedule));
-
-              for(j in schedulemodel.locationList[i].schedule){
+            this.dateHeader.text(mfromDate.format('Do MMM YYYY') + ' to '  + mtoDate.format('Do MMM YYYY'));
 
 
-                var td = document.createElement('td');
-
-                var fromTime = document.createElement('input');
-                fromTime.setAttribute('type', 'time');
-                fromTime.setAttribute('class', 'form-control col-md-12');
-                var minutes  = schedulemodel.locationList[i].schedule[j].timeSlots.startTime;
-                minutes = parseInt(minutes, 10);
-
-                var hr = Math.floor( minutes/60 );
-                var mins = minutes  - 60*hr;
-                var dat = moment({hours:hr,  minute:mins });
-                console.log('hours ' + hr + ' mins ' + mins);
-                fromTime.setAttribute('value', dat.format('HH:mm'));
-                console.log(dat.format('HH:mm'));
+            var indexCounter = 0;
 
 
-                fromTime.addEventListener('change', (function(schedule){
-                  return function(){
+            //when first day is not monday, setting the first row
+            var startDay = mfromDate.format('ddd');
 
-                    self = this;
-                    var time = self.value;
-                    var duration = moment.duration(time);
+            if(startDay != 'Mon'){
 
-                    schedule.timeSlots.startTime = duration.asMinutes();
-                    console.log("change: " + JSON.stringify(schedule));
+              var blocksToAdd = mfromDate.day() - 1;
 
+              var calanderStartDate = moment(mfromDate).subtract(blocksToAdd, 'days');
 
-                  }
-                })(schedulemodel.locationList[i].schedule[j]));
+              var tr = $('<tr/>',{class: 'text-center'});
 
+                for(var i = 0; i < blocksToAdd ; i++){
 
-                var toTimet = document.createElement('input');
-                toTimet.setAttribute('type', 'time');
-                toTimet.setAttribute('class', 'form-control col-md-12');
+                  var span =  $('<span/>',{class: 'pull-right font-16 calendar-date', text:calanderStartDate.format('Do')});
+                  var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
 
-                minutes = schedulemodel.locationList[i].schedule[j].timeSlots.endTime;
-                minutes = parseInt(minutes, 10);
+                  var td = $('<td/>').append(span)
+                                     .append($('<br><br>'))
+                                     .append(span1);
+                  tr.append(td);
 
-                var hr = Math.floor( minutes/60 );
-                var mins = minutes  - 60*hr;
-                var dat = moment({hours:hr,  minute:mins });
-                console.log('hours ' + hr + ' mins ' + mins);
-                toTimet.setAttribute('value', dat.format('HH:mm'));
-                console.log(dat.format('HH:mm'));
+                  calanderStartDate.add(1, 'd');
 
-                //console.log('value format ' + moment.utc(duration.asSeconds()).format("HH:mm"));
+                }
 
-                toTimet.addEventListener('change', (function(schedule){
-                  return function(){
+              var remainingCoukmnCount = 7 - blocksToAdd;
 
-                    self = this;
-                    self = this;
-                    var time = self.value;
-                    var duration = moment.duration(time);
-                    schedule.timeSlots.endTime = duration.asMinutes();
-                    console.log("change: " + JSON.stringify(schedule));
+              for(var i = 0; i < remainingCoukmnCount ; i++){
 
-                  }
-                })(schedulemodel.locationList[i].schedule[j]));
+                var scheduleItem = schedule.scheduleList[indexCounter];
 
-                td.appendChild(fromTime);
-                td.appendChild(toTimet);
-                tr.appendChild(td);
+                var date = moment(scheduleItem.date, "DD-MM-YYYY");
+
+                var span =  $('<span/>',{class: 'pull-right font-16 calendar-date', text:date.format('Do')});
+
+                var td = $('<td/>').append(span)
+                                   .append($('<br><br>'));
+
+                var isActive = scheduleItem.active;
+                if(isActive){
+                  var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
+                  var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time, href:'#collapseExample1'});
+                  span1.attr('data-toggle', 'collapse');
+                  td.append(span1);
+                } else{
+                  var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
+                  td.append(span1);
+                }
+
+                tr.append(td);
+
+                mfromDate.add(1, 'd');
+                ++indexCounter;
+
               }
 
-              this.tableBody.appendChild(tr)
+              this.tableBody.append(tr);
+              /*
+                 <td>
+                    <span class="pull-right font-16 calendar-date">4</span>
+                    <br> <br>
+                    <span class="label font-16 label-info"  data-toggle="collapse" href="#collapseExample1">No Schedule</span>
+                 </td>
 
-            };// location  loop
+                 <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>
+              */
 
+            }
+            //done setting  the first row
+
+
+            //addin the rest of the dates
+            var daysCount = schedule.scheduleList.length;
+            var loopCount = Math.ceil(daysCount / 7);
+
+            //console.log('loopcpunt' + loopCount);
+            for(var i = 0; i < loopCount ; i++){
+
+              var tr = $('<tr/>',{class: 'text-center'});
+
+              for(var j = 0; j < 7 && indexCounter < daysCount; j++){
+
+                var date = moment(schedule.scheduleList[indexCounter].date, "DD-MM-YYYY");
+                var span =  $('<span/>',{class: 'pull-right font-16 calendar-date', text:date.format('Do')});
+                var td = $('<td/>').append(span)
+                                   .append($('<br><br>'));
+
+               var isActive = schedule.scheduleList[indexCounter].active;
+               if(isActive){
+                 var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
+                 var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time, href:'#collapseExample1'});
+                 span1.attr('data-toggle', 'collapse');
+                 td.append(span1);
+               } else{
+                 var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
+                 td.append(span1);
+               }
+
+                tr.append(td);
+
+                ++indexCounter;
+              } //days of week loop
+
+              //tr.append(td);
+              this.tableBody.append(tr);
+
+            }//week loop ends
+
+            /*
+            <td id="table-data-template" height="100">
+              <span class="pull-right font-16 calendar-date">2</span>
+              <br><br>
+              <span class="label font-16 label-danger" data-toggle="collapse" href="#collapseExample1">14:04:Am To 14:04:Am</span>
+            </td>
+            */
 
           }
         }

@@ -156,26 +156,20 @@ $(document).ready(function(){
                 e.preventDefault();
                 window.location.href = controller.doctorsStaffListingUr;
            });
-             
+
             $("#calendar-Template-Btn-Link").click(function(e){
                 e.preventDefault();
                 window.location.href = controller.CalendarTemplateUrl;
-               console.log("hello hid"); 
-            }); 
+               console.log("hello hid");
+            });
 
            $("#patients-History-Section-Link-Btn").click(function(e){
                e.preventDefault();
                window.location.href = controller.patientsHistoryUrl;
            });
-            
-            
+
+
             $("#manage-schedule-list-section-link-Btn").click(function(e){
-               e.preventDefault();
-               window.location.href = controller.ScheduleCalendarUrl;
-           });
-            
-            
-              $("#view-schedule-dashboard-section-btn").click(function(e){
                e.preventDefault();
                window.location.href = controller.ScheduleCalendarUrl;
            });
@@ -186,7 +180,7 @@ $(document).ready(function(){
             $("#patients-Entry-Section-Link-Btn").click(function(e){
                e.preventDefault();
            });
-            
+
              $("#staff-managment-section-link-btn").click(function(e){
                e.preventDefault();
            });
@@ -196,19 +190,19 @@ $(document).ready(function(){
              $("#calendar-template-section-link-btn").click(function(e){
                e.preventDefault();
            });
-           
-              
+
+
              $("#analytics-side-navigation-link-btn").click(function(e){
                e.preventDefault();
                window.location.href = controller.analyticsReportUrl;
-           }); 
-            
-            
-            
-            
-            
-            
-           
+           });
+
+
+
+
+
+
+
 
         },
         render: function(){
