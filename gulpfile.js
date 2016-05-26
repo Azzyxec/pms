@@ -137,7 +137,17 @@ var filesList = [
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "doctor/manage.locations.js"
-                ], buildName: "manage.locations.js"}
+                ], buildName: "manage.locations.js"},
+{build:true, files: [
+              objConfig.scriptsBasePath +"links.js",
+              objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
+              objConfig.scriptsBasePath + "doctor/accounting.js"
+            ], buildName: "accounting.js"},
+{build:true, files: [
+                  objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath + "doctor/medicineSearch.js"
+                ], buildName: "medicineSearch.js"}
 ];
 
 gulp.task('build-scripts', function(){

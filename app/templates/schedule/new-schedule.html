@@ -136,40 +136,40 @@
               <tr  class="collapse collapse-style"  id="collapseExample1">
                 <td colspan="7" >
                   <form class="form-inline">
+
                     <div class="form-group">
+                      <label  class="col-sm-2 control-label">From</label>
+                      <input type="text" class="form-control"  id="datetimepicker5">
+                    </div>
+                    <div class="form-group">
+                      <label  class="col-sm-2 control-label">To</label>
+                      <input type="text" class="form-control"  id="datetimepicker6">
+                    </div>
+                  </form>
 
-                      <div id="datetimepicker5">
-                        <label class=" font-18">From</label></div>
-                      </div>
-                      <div class="form-group">
-                        <div id="datetimepicker6">
-                          <label class=" font-18">To</label></div>
-                        </div>
-                      </form>
-
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <button type="button" class="btn col-md-offset-6 btn-info " id="btn-schedule-create">Create Schedule</button>
-            </div>
-
-            <!-- /.table-responsive -->
-          </div>
-
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" class="btn col-md-offset-6 btn-info " id="btn-schedule-create">Create Schedule</button>
         </div>
 
+        <!-- /.table-responsive -->
       </div>
-
-      <!-- Appointment step two  -->
 
     </div>
 
-  </body>
-  {% endblock %}
-  {% block addScripts %}
+  </div>
 
-  <script src="js/schedule.manageClinicSchedule.js"></script>
-  <script src="js/bootstrap-datetimepicker.min.js"></script>
-  <script src="js/new.schedule.js"></script>
-  {% endblock %}
+  <!-- Appointment step two  -->
+
+</div>
+
+</body>
+{% endblock %}
+{% block addScripts %}
+
+<script src="js/schedule.manageClinicSchedule.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script src="js/new.schedule.js"></script>
+{% endblock %}

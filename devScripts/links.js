@@ -29,6 +29,8 @@ var links = {
    ManageLocationsUrl : "index.php/doctorDashboard/workLocationManagement",
    getAnalyticsUrl : "index.php/doctorDashboard/AnalyticsReport",
    getCalenderUrl : "index.php/doctorDashboard/calendarTemplate",
+   accountingUrl : "index.php/doctorDashboard/accounting",
+   medicineSearchUrl : "index.php/doctorDashboard/medicineSearch",
 
 
    //schedule
@@ -54,7 +56,7 @@ var links = {
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
    locationListUrl:"index.php/locations/getDoctorLocations",
-   deliveryMethodsUrl:"index.php/patient/getDeliveryMethods", 
+   deliveryMethodsUrl:"index.php/patient/getDeliveryMethods",
 
 
    //registartion

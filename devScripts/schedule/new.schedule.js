@@ -159,15 +159,27 @@ $(document).ready(function(){
             this.fromTimeControl = $('#from-time');
             this.toTimeControl = $('#to-time');
 
+            this.fromTimeControl.val("09:00:AM");
             this.fromTimeControl.datetimepicker({
               inline: false,
               format:'LT'
             });
 
+            /*
+            this.fromTimeControl.on('dp.change', (function(self){
+              return function(){
+                console.log(' value' + self.val());
+              }
+            })(this.fromTimeControl))
+            */
+
+            this.toTimeControl.val("12:00:PM");
             this.toTimeControl.datetimepicker({
               inline: false,
               format:'LT'
             });
+
+
 
             //http://bootstrap-datepicker.readthedocs.io/en/latest/
 
@@ -269,7 +281,63 @@ $(document).ready(function(){
 
 
           },
+          makeTimePickersRow: function(){
+
+            var tr =  $('<tr/>',{class: 'collapse collapse-style',
+                                 id: 'collapsed-time-pickers'});
+
+            var td = $('<tr/>',{colspan: "7"});
+            tr.append(td);
+
+            var form = $('<form/>',{class: "form-inline"});
+            td.append(form);
+
+            var div = $('<div/>',{class: "form-group"});
+            form.append(div);
+
+            var fromLabel = $('<label/>',{class: "col-sm-2 control-label", text: 'From'});
+            div.append(fromLabel);
+            var fromInput = $('<input/>',{type: "text", class: 'form-control', value:'12:00 PM'});
+            div.append(fromInput);
+
+            return tr; 
+
+            /*
+            <tr  class="collapse collapse-style"  id="collapseExample1">
+              <td colspan="7" >
+                <form class="form-inline">
+
+                  <div class="form-group">
+                    <div id="datetimepicker5">
+                      <label class="font-18">From</label></div>
+                    </div>
+                    <div class="form-group">
+                      <label  class="col-sm-2 control-label">To</label>
+                      <input type="text" class="form-control"  id="datetimepicker6">
+                    </div>
+
+
+                  </form>
+
+                  </td>
+                </tr>
+            */
+
+          },
           render: function() {
+
+            $('#datetimepicker5').datetimepicker({
+              inline: false,
+              format:'LT'
+            });
+
+            $('#datetimepicker6').datetimepicker({
+              inline: false,
+              format:'LT'
+            });
+
+            //collapsed-time-pickers
+
             this.panel.removeClass('hidden');
 
             var schedule = controller.getSchedule();
@@ -307,6 +375,7 @@ $(document).ready(function(){
                   var td = $('<td/>').append(span)
                                      .append($('<br><br>'))
                                      .append(span1);
+
                   tr.append(td);
 
                   calanderStartDate.add(1, 'd');
@@ -329,9 +398,16 @@ $(document).ready(function(){
                 var isActive = scheduleItem.active;
                 if(isActive){
                   var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
-                  var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time, href:'#collapseExample1'});
-                  span1.attr('data-toggle', 'collapse');
+                  var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
+
+                  span1.on('click', function(){
+                    console.log('span click');
+                    $('#collapseExample1').collapse('toggle');
+                  });
+
                   td.append(span1);
+
+
                 } else{
                   var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
                   td.append(span1);
@@ -378,8 +454,13 @@ $(document).ready(function(){
                var isActive = schedule.scheduleList[indexCounter].active;
                if(isActive){
                  var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
-                 var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time, href:'#collapseExample1'});
-                 span1.attr('data-toggle', 'collapse');
+                 var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
+
+                 span1.on('click', function(){
+                   console.log('span click');
+                   $('#collapseExample1').collapse('toggle');
+                 });
+
                  td.append(span1);
                } else{
                  var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
@@ -395,6 +476,11 @@ $(document).ready(function(){
               this.tableBody.append(tr);
 
             }//week loop ends
+
+
+            var timePickerTableRow = this.makeTimePickersRow();
+            this.tableBody.append(timePickerTableRow);
+
 
             /*
             <td id="table-data-template" height="100">

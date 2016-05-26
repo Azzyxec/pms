@@ -34,6 +34,8 @@ $(document).ready(function(){
           this.CalendarTemplateUrl = links.getCalenderUrl;
 
           this.analyticsReportUrl = links.getAnalyticsUrl;
+          this.accountingUrl = links.accountingUrl;
+          this.medicineSearchUrl = links.medicineSearchUrl;
           //do somethng about doctors info and registration
 
           //The url from the browser  can be compared to set the active navigation
@@ -197,6 +199,15 @@ $(document).ready(function(){
                window.location.href = controller.analyticsReportUrl;
            });
 
+           $("#accounting-side-navigation-link-btn").click(function(e){
+               e.preventDefault();
+               window.location.href = controller.accountingUrl;
+           });
+
+           $("#medicine-side-navigation-link-btn").click(function(e){
+               e.preventDefault();
+               window.location.href = controller.medicineSearchUrl;
+           });
 
         },
         render: function(){

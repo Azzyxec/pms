@@ -22,185 +22,185 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <div id="wrapper">
+  <div id="wrapper">
 
 
-     <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">PMS</a>
-            </div>
-            <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
-               <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
-                        </li>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">PMS</a>
+      </div>
+      <!-- Top Menu Items -->
+      <ul class="nav navbar-right top-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+            </li>
 
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
-                        </li>
-                    </ul>
-                </li>
+            <li>
+              <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav side-nav">
+          <li {% if active == "dashboard" %}class="active"{%endif%}>
+            <a href="#" id="dashboard-Section-Btn"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+          </li>
+
+          <li  {% if active == "appointment" %}class="active"{%endif%}>
+
+
+
+            <a href="#" data-toggle="collapse" data-target="#demo" id="appointment-section-link-btn"><i class="fa fa-edit fa-fw"></i>Appointments<span class="fa arrow"></span></a>
+            <ul id="demo" class="collapse">
+              <li>
+                <a href="#" id="book-Appointments-Section-Btn">Book Appointments</a>
+              </li>
+              <li>
+                <a href="#" id="close-Book-Appointment-Section-Link-Btn">Close Appointments</a>
+              </li>
+              <li>
+                <a href="#" id="view-Appointment-Section-Link-Btn">View Appointments</a>
+              </li>
+
             </ul>
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li {% if active == "dashboard" %}class="active"{%endif%}>
-              <a href="#" id="dashboard-Section-Btn"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-            </li>
 
-                    <li  {% if active == "appointment" %}class="active"{%endif%}>
+          </li>
 
 
 
-              <a href="#" data-toggle="collapse" data-target="#demo" id="appointment-section-link-btn"><i class="fa fa-edit fa-fw"></i>Appointments<span class="fa arrow"></span></a>
-              <ul id="demo" class="collapse">
+          <li {% if active == "schedule" %}class="active"{%endif%}>
+            <a href="#" data-toggle="collapse" data-target="#demo1" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Schedule Management <span class="fa arrow"></span></a>
+            <ul id="demo1" class="collapse">
+              <li>
+                <a href="#" id="manage-schedule-create-section-link-Btn">New Schedule</a>
+              </li>
+              <li>
+                <a href="#" id="manage-schedule-list-section-link-Btn">Schedule-Calendar</a>
+              </li>
+
+            </ul>
+
+          </li>
+
+
+          <li {% if active == "programme" %}class="active"{%endif%}>
+            <a  href="#" data-toggle="collapse" data-target="#demo2" id="btn-programme-section-link" ><i class="fa fa-table fa-fw"></i>Program Management<span class="fa arrow"></a>
+              <ul id="demo2" class="collapse">
                 <li>
-                  <a href="#" id="book-Appointments-Section-Btn">Book Appointments</a>
+                  <a href="#" id="create-program-for-patient-section">New  Programme</a>
                 </li>
                 <li>
-                  <a href="#" id="close-Book-Appointment-Section-Link-Btn">Close Appointments</a>
-                </li>
-                <li>
-                  <a href="#" id="view-Appointment-Section-Link-Btn">View Appointments</a>
+                  <a href="#" id="btn-list-program-section">Programme Listing</a>
                 </li>
 
               </ul>
+            </li>
 
-                    </li>
-
-
-
-                     <li {% if active == "schedule" %}class="active"{%endif%}>
-              <a href="#" data-toggle="collapse" data-target="#demo1" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Schedule Management <span class="fa arrow"></span></a>
-              <ul id="demo1" class="collapse">
+            <li {% if active == "patient" %}class="active"{%endif%}>
+              <a href="#" data-toggle="collapse" data-target="#demo3"  id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patient Management<span class="fa arrow"></span></a>
+              <ul id="demo3" class="collapse">
                 <li>
-                  <a href="#" id="manage-schedule-create-section-link-Btn">New Schedule</a>
+                  <a href="#" id="patients-entry-create-section-link-Btn">New Patient</a>
                 </li>
                 <li>
-                  <a href="#" id="manage-schedule-list-section-link-Btn">Schedule-Calendar</a>
+                  <a href="#" id="patients-entry-list-section-link-Btn">patient Listing</a>
                 </li>
-
+                <li>
+                  <a href="#" id="patients-History-Section-Link-Btn">patient appointment History</a>
+                </li>
               </ul>
 
             </li>
 
 
-            <li {% if active == "programme" %}class="active"{%endif%}>
-              <a  href="#" data-toggle="collapse" data-target="#demo2" id="btn-programme-section-link" ><i class="fa fa-table fa-fw"></i>Program Management<span class="fa arrow"></a>
-                <ul id="demo2" class="collapse">
-                  <li>
-                    <a href="#" id="create-program-for-patient-section">New  Programme</a>
-                  </li>
-                  <li>
-                    <a href="#" id="btn-list-program-section">Programme Listing</a>
-                  </li>
+            <li {% if active == "staff" %}class="active"{%endif%}>
+              <a href="#" id="staff-managment-section-link-btn" data-toggle="collapse" data-target="#demo4"  ><i class="fa fa-edit fa-fw"></i>Staff Management<span class="fa arrow"></span></a>
+              <ul id="demo4" class="collapse">
+                <li>
+                  <a href="#" id="add-Staff-Section-Link-Btn">New Staff</a>
+                </li>
+                <li>
+                  <a href="#" id="btn-staff-listing">Staff Listing</a>
+                </li>
+              </ul>
+              <!-- /.nav-second-level -->
+            </li>
 
-                </ul>
-              </li>
-
-                 <li {% if active == "patient" %}class="active"{%endif%}>
-                <a href="#" data-toggle="collapse" data-target="#demo3"  id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patient Management<span class="fa arrow"></span></a>
-                <ul id="demo3" class="collapse">
-                  <li>
-                    <a href="#" id="patients-entry-create-section-link-Btn">New Patient</a>
-                  </li>
-                  <li>
-                    <a href="#" id="patients-entry-list-section-link-Btn">patient Listing</a>
-                  </li>
-                  <li>
-                    <a href="#" id="patients-History-Section-Link-Btn">patient appointment History</a>
-                  </li>
-                </ul>
-
-              </li>
+            <li {% if active == "others" %}class="active"{%endif%}>
+              <a href="#" id="other-settings-section-link-btn" data-toggle="collapse" data-target="#demo5" ><i class="fa fa-edit fa-fw"></i>Other Settings<span class="fa arrow"></span></a>
+              <ul id="demo5" class="collapse">
+                <li>
+                  <a href="#" id="btn-manage-locations">Work Locations</a>
+                </li>
+              </ul>
+              <!-- /.nav-second-level -->
+            </li>
 
 
-              <li {% if active == "staff" %}class="active"{%endif%}>
-                <a href="#" id="staff-managment-section-link-btn" data-toggle="collapse" data-target="#demo4"  ><i class="fa fa-edit fa-fw"></i>Staff Management<span class="fa arrow"></span></a>
-                <ul id="demo4" class="collapse">
-                  <li>
-                    <a href="#" id="add-Staff-Section-Link-Btn">New Staff</a>
-                  </li>
-                  <li>
-                    <a href="#" id="btn-staff-listing">Staff Listing</a>
-                  </li>
-                </ul>
-                <!-- /.nav-second-level -->
-              </li>
-
-                      <li {% if active == "others" %}class="active"{%endif%}>
-                <a href="#" id="other-settings-section-link-btn" data-toggle="collapse" data-target="#demo5" ><i class="fa fa-edit fa-fw"></i>Other Settings<span class="fa arrow"></span></a>
-                <ul id="demo5" class="collapse">
-                  <li>
-                    <a href="#" id="btn-manage-locations">Work Locations</a>
-                  </li>
-                </ul>
-                <!-- /.nav-second-level -->
-              </li>
-                    
-                     
             <li {% if active == "analytics" %}class="active"{%endif%}>
               <a  href="#" id="analytics-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-stats"></i> Analytics</a>
             </li>
-                    
-                              
+
+
             <li {% if active == "accounting" %}class="active"{%endif%}>
-              <a  id="Accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Accounting</a>
+              <a  id="accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Accounting</a>
             </li>
-                    <li {% if active == "medicine" %}class="active"{%endif%}>
+            <li {% if active == "medicine" %}class="active"{%endif%}>
               <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i>Medicine Search</a>
             </li>
-                    
-        {% if showOtherPages == true %}
-        <li class="active">
-            <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" >
-            <i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
+
+            {% if showOtherPages == true %}
+            <li class="active">
+              <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" >
+                <i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
                 <ul id="demo6" class="collapse">
-                    <li>
-                      <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
-                    </li>
+                  <li>
+                    <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
+                  </li>
                 </ul>
-            <!-- /.nav-second-level -->
-        </li>
-        {%endif%}
+                <!-- /.nav-second-level -->
+              </li>
+              {%endif%}
 
 
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
         </nav>
 
 
 
 
-      <div id="page-wrapper">
-        <div class="container-fluid">
+        <div id="page-wrapper">
+          <div class="container-fluid">
             {% block content %}
             {% endblock %}
+          </div>
         </div>
       </div>
- </div>
       <script src="js/jquery-2.1.4.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
       <script src="js/dash.home.js"></script>
-     
-      
-    
+
+
+
       {% block addScripts %}{% endblock %}
 
     </body>
