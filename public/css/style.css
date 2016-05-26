@@ -2,6 +2,9 @@
     width:100% !important
 }
 
+.dashboard-appointment-table-btn{
+    margin-top: 10px;
+}
 
 
 /*
@@ -163,7 +166,8 @@ html,#wrapper{
  */
 
 .calendar-date{
-    
+    margin-bottom: 2px;
+    display: inline-block;
     color: #C1C1C1;
 }
 .collapse-style{
@@ -183,12 +187,23 @@ html,#wrapper{
 }
 
 .location-label{
-    margin-bottom:5px;
-    display:inline-block !important;
+    display: inline-block !important;
+    border-radius: 20px !important;
+    margin: 4px auto 4px auto;
+    height: 17px;
+    width: 17px;
+    
+}
+td,th{
+    width: 60px !important;
 }
 .calendar-list-group-heading{
     display:inline-block;
     margin-left:15px;
+}
+
+.calender-list-group-btn{
+   padding:3px !important;
 }
 
 @media only screen and (max-width: 769px) {

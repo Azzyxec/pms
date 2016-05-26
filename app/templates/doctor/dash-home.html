@@ -27,8 +27,8 @@
               <i class="fa fa-tasks fa-5x"></i>
             </div>
             <div class="col-xs-9 text-right">
-              <div class="huge">0</div>
-              <div>new Appointments!</div>
+              <div class="huge">50</div>
+              <div>Sales!</div>
             </div>
           </div>
         </div>
@@ -67,137 +67,536 @@
   </div>
   <!-- /.row -->
   <div class="row">
-    <div class="col-lg-8">
+    <div class="col-lg-12">
       <div class="panel panel-green">
         <div class="panel-heading">
-          <h3 class="panel-title">Todays Appointment</h3>
+          <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;<span class="badge">12</span></h3>
         </div>
         <div class="panel-body">
+            <form class="form-inline">
+           <label>Search:</label>
+<input type="text" class="form-control">
+                 <span class="invisible">..</span><label>Location:</label>
+                <select class="form-control">
+                <option>All</option>
+                <option>Margao</option>
+                <option>Panjim</option>
+                <option>Cuncolim</option>
+                <option>Curtorim</option>
+                </select>
+            </form>
+            
+            
+       <div class="table-responsive">
+           
+                     <table class="table">
+                                    <thead>
+                                        <tr>
+                                           
+                                            <th>Patient</th>
+                                            <th>Time</th>
+                                            <th>location</th>
+                                            <th>details</th>
+                                            <th></th>
 
-          <div class="table-responsive">
-            <table class="calendarTable table   ">
-              <thead >
-                <tr>
-                  <th class="text-center">Timing</th>
-                  <th class="text-center"></th>
-                  <th class="text-center">Location</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                     <tr >
+                                        
+                                         <td>
+                                         Agnelo D'souza
+                                         </td>
+                                           <td>
+                                       14:00 Pm
+                                         </td>
+                                           <td>
+                                         Curtorim
+                                         </td>
+                                         <td>
+                                         Back Ache
+                                         </td>
+                                       
+<td >
+      
+    <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample1">more Details</span>
+</td>
+                                         
+                          
+                       
 
+                                        </tr>
+                                        
+                                          
+                                           <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExample1">
+                                          
+                                        <td colspan="7" ><div class="well">
+                            <label>Ailment:</label><p>Back Ache with little spine Irritation</p>
+                                           
+                                            
+                                            </div>
+                                            <a class='btn btn-sm btn-danger dashboard-appointment-table-btn' >Cancel Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-warning dashboard-appointment-table-btn">Re-Schedule Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-info dashboard-appointment-table-btn">patient History</a>
+                                        </td> 
+                                        </tr>
+                                        
+                                            <tr >
+                                        
+                                         <td>
+                                         Ignetious Fernandes
+                                         </td>
+                                           <td>
+                                       15:00 Pm
+                                         </td>
+                                           <td>
+                                         Panjim
+                                         </td>
+                                         <td>
+                                         leg Wound Sticthing
+                                         </td>
+                                       
+<td >
+      
+    <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample2">more Details</span>
+</td>
+                                         
+                          
+                       
 
+                                        </tr>
+                                        
+                                          
+                                           <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExample2">
+                                          
+                                        <td colspan="7" >
+                            <label>Ailment:</label><div class="well">
+                                            <p>Stiching to be done for leg</p>
+                                            </div>
+                                            <!-- Size Classes: [tiny small large] -->
+                                            <!-- Radius Classes: [radius round] -->
+                                            <!-- Color Classes: [secondary success alert] -->
+                                            <!-- Disabled Class: disabled -->
+                                           <a class='btn btn-sm btn-danger dashboard-appointment-table-btn' >Cancel Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-warning dashboard-appointment-table-btn">Re-Schedule Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-info dashboard-appointment-table-btn">patient History</a>
+                                            
+                                        </td> 
+                                        </tr>
+                                        
+                                         
+                                        
+                                            <tr >
+                                        
+                                         <td>
+                                         Joston Fernandes
+                                         </td>
+                                           <td>
+                                       17:00 Pm
+                                         </td>
+                                           <td>
+                                         Curtorim
+                                         </td>
+                                         <td>
+                                         Soar Throat
+                                         </td>
+                                       
+<td >
+      
+    <span class="label font-16 label-danger"  data-toggle="collapse" href="#collapseExample3">more Details</span>
+</td>
+                                         
+                          
+                       
 
-                </tr>
-              </thead>
-              <tbody>
-                <tr  class="text-center">
-                  <td >
-
-                    <span >14:00 PM</span>
-                  </td><td>
-                    <button data-toggle="collapse" href="#collapseExample1" data class=" btn btn-primary">+</button>
-                  </td>
-
-                  <td >
-
-                    <span class="invisible">.......</span><span >Margao</span>
-                  </td>
-
-                </tr>
-
-
-                <!---------- collapse section----------->
-
-                <tr  class="collapse "  id="collapseExample1">
-                  <td colspan="4" >
-                    <ul class="list-group">
-                      <li class="list-group-item"> <h4 class="list-group-item-heading">Location : Margao</h4>
-                        <span class="badge">in 0 minutes</span>
-                        <p >   to have to meet in Margao regarding clinic schedule</p><br>
-                        <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
-
-
-                      </ul>
-                    </td>
-                  </tr>
-
-                  <tr  class="text-center">
-                    <td >
-
-                      <span >18:00 PM</span>
-                    </td><td><button data-toggle="collapse" href="#collapseExample2" data class=" btn btn-primary">+</button></td>
-
-                    <td >
-
-                      <span class="invisible">.......</span><span >Appointment at Cuncolim</span>
-                    </td>
-
-
-                  </tr>
-
-
-                  <!---------- collapse section----------->
-
-                  <tr  class="collapse "  id="collapseExample2">
-
-                    <td colspan="4" >
-                      <ul class="list-group">
-                        <li class="list-group-item"> <h4 class="list-group-item-heading">Location : Cuncolim</h4>
-                          <span class="badge">in 1 Hour</span>
-                          <p >    Back Diagnosis of Joseph Pinto</p><br>
-                          <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
-
-
-                        </ul>
-                      </td>
-                    </tr>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  </tbody>
-                </table>
-              </div>
-
+                                        </tr>
+                                        
+                                          
+                                           <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExample3">
+                                          
+                                        <td colspan="7" >
+                            <label>Ailment:</label><div class="well">
+                                            <p>cold with little bit Soar throat</p>
+                                            </div>
+                                            <!-- Size Classes: [tiny small large] -->
+                                            <!-- Radius Classes: [radius round] -->
+                                            <!-- Color Classes: [secondary success alert] -->
+                                            <!-- Disabled Class: disabled -->
+                                            <a class='btn btn-sm btn-danger dashboard-appointment-table-btn' >Cancel Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-warning dashboard-appointment-table-btn">Re-Schedule Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-info dashboard-appointment-table-btn">patient History</a>
+                                            
+                                        </td> 
+                                        </tr>
+    
+                                    </tbody>
+                                </table>
+                           
+                      
+                           
             </div>
           </div>
         </div>
 
-        <!-- /.col-lg-8 -->
-
-        <div class="col-lg-4">
-          <div class="panel panel-green">
-            <div class="panel-heading">
-              <h3 class="panel-title"><i class="fa"></i>Appointment Tokens </h3>
-            </div>
-            <div class="panel-body">
-
-              <div class="form-control">
-                <div class="">
-                  <label class="col-md-3" for="token-no">Token No.</label>
-                  <input type="text" id="txt-token-no" class="form-control col-md-3" >
-                </div>
-              </div>
-              <div class="form-control">
-                <input type="button" class="btn btn-info" value="Show Info">
-              </div>
-            </div>
-          </div>
-        </div>
+      
 
 
       </div>
-      <!-- /.row -->
+      
+      <div class="col-md-12">
+          
+                  <div class="table-responsive">
+                                    
+                                 <h1>This Month</h1>
+                            <hr class="invisible" >
+                              
+  
+  
 
+                                    <hr >
+                                <table class="calendarTable table table-bordered  ">
+                                    <thead >
+                                        <tr>
+                                            <th class="text-center">Mon</th>
+                                            <th class="text-center" >Tue</th>
+                                            <th class="text-center">Wen</th>
+                                            <th class="text-center">Thu</th>
+                                            <th class="text-center">Fri</th>
+                                            <th class="text-center">Sat</th>
+                                            <th class="text-center">Sun</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr >
+<td height="100">
+           
+          <span class=" font-16 calendar-date">1</span><br>
+    
+   <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExamp1"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExamp1"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExamp1"></span>
+   
+  
+</td>
+                                         
+                                         
+                              <td>                    
+         <span class=" font-16 calendar-date">2</span><br>
+   <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExamp1"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExamp1"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExamp1"></span><br>
+   
+  
+                                                  </td>
+                                                <td>   <span class=" font-16 calendar-date">3</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">4</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span> <span class="label label-success location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-default" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">5</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">6</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">7</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+
+                                        </tr>
+                                        
+                                             <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExamp1">
+                                          
+                                        <td colspan="7" >
+                               <ul class="list-group">
+  <li class="list-group-item">
+      <label><small>Time:&nbsp;&nbsp;</small></label><small>14:00 Pm To 15:00 Pm</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><small>Patient:&nbsp;&nbsp;</small></label><small>Joseph Dsouza</small>
+     
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=" pull-right btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails1">more</button>
+          <div class="collapse" id="collapseAppointmentDetails1">
+       <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
+                                <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+              
+      </div>
+      
+                         </li>
+                                   
+                                   <li class="list-group-item">
+     <label><small>Time:&nbsp;&nbsp;</small></label><small>15:00 Pm To 16:00 Pm</small>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><small>Patient:&nbsp;&nbsp;</small></label><small>Tom Cruz</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class=" pull-right btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails11">more</button>
+          <div class="collapse" id="collapseAppointmentDetails11">
+       <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
+                                <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+              
+      </div>
+      
+                         </li>
+                                    <li class="list-group-item">
+     <label><small>Time:&nbsp;&nbsp;</small></label><small>16:00 Pm To 17:00 Pm</small>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><small>Patient:&nbsp;&nbsp;</small></label><small>Barreto Fernandes</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="pull-right btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails11">more</button>
+          <div class="collapse" id="collapseAppointmentDetails11">
+       <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
+                                <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+              
+      </div>
+      
+                         </li>
+                              
+  
+</ul>
+                                        </td> 
+                                        </tr>
+                                        
+                                        
+                                        <td height="100">
+           
+          <span class=" font-16 calendar-date">8</span><br>
+    
+   <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExamp2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExamp2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExamp2"></span>
+   
+  
+</td>
+                                         
+                                         
+                              <td>                    
+         <span class=" font-16 calendar-date">9</span><br>
+   <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExamp2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExamp2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExamp2"></span><br>
+   
+  
+                                                  </td>
+                                                <td>   <span class=" font-16 calendar-date">10</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">11</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span> <span class="label label-success location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-default" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">12</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">13</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">14</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+
+                                        </tr>
+                                                <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExamp2">
+                                          
+                                        <td colspan="7" >
+                               <ul class="list-group">
+  <li class="list-group-item">
+     <label><small>Time:&nbsp;&nbsp;</small></label><small>15:00 Pm To 16:00 Pm</small>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><small>Patient:&nbsp;&nbsp;</small></label><small>Ignetious Dsouza</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails2">more</button>
+          <div class="collapse" id="collapseAppointmentDetails2">
+       <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
+                                <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+              
+      </div>
+      
+                         </li>
+                              
+  
+</ul>
+                                        </td> 
+                                        </tr>
+                                    
+                                    
+                                    
+                                    
+                                                                <td height="100">
+           
+          <span class=" font-16 calendar-date">15</span><br>
+    
+   <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
+   
+  
+</td>
+                                         
+                                         
+                              <td>                    
+         <span class=" font-16 calendar-date">16</span><br>
+   <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
+   
+  
+                                                  </td>
+                                                <td>   <span class=" font-16 calendar-date">17</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">18</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span> <span class="label label-success location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-default" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">19</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">20</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">21</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+
+                                        </tr>
+                                        
+                                              <tr  class="collapse"  id="collapseExample3">
+                                          
+                                        <td colspan="7" >
+                               <ul class="list-group">
+  <li class="list-group-item">
+     <label><small>Time:&nbsp;&nbsp;</small></label><small>15:00 Pm To 16:00 Pm</small>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><small>Patient:&nbsp;&nbsp;</small></label><small>Joseph Dsouza</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails3">more</button>
+          <div class="collapse" id="collapseAppointmentDetails3">
+       <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
+                                <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+              
+      </div>
+      
+                         </li>
+                              
+  
+</ul>
+                                        </td> 
+                                        </tr>
+                        
+                        
+                        
+                                                                          <td height="100">
+           
+          <span class=" font-16 calendar-date">22</span><br>
+    
+   <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
+   
+  
+</td>
+                                         
+                                         
+                              <td>                    
+         <span class=" font-16 calendar-date">23</span><br>
+   <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
+   
+  
+                                                  </td>
+                                                <td>   <span class=" font-16 calendar-date">24</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">25</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span> <span class="label label-success location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-default" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+                                                <td>   <span class=" font-16 calendar-date">26</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">27</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+   
+  </td>
+                                                <td>   <span class=" font-16 calendar-date">28</span><br>
+    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+
+                                        </tr>
+                                        
+                                             <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExample2">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
+     
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
+                                        </td> 
+                                        </tr>
+                        
+                        
+                      
+                            
+                                                                          <td height="100">
+           
+          <span class=" font-16 calendar-date">29</span><br>
+    
+   <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
+   
+  
+</td>
+                                         
+                                         
+                              <td>                    
+         <span class=" font-16 calendar-date">30</span><br>
+   <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
+   
+  
+                                                  </td>
+                                                <td>   <span class=" font-16 calendar-date">31</span><br>
+   <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+  
+   </td>
+
+                                        </tr>
+                                        
+                                             <!---------- collapse section----------->
+                                        
+                                        <tr  class="collapse"  id="collapseExample2">
+                                          
+                                        <td colspan="6" >
+                               <ul class="list-group">
+  <li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
+     
+      <p >    Back Diagnosis of Joseph Pinto</p><br>
+                                <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
+                              
+  
+</ul>
+                                        </td> 
+                                        </tr>
+                                        
+                                        
+                                        
+                          
+                           
+                                    </tbody>
+                                </table>
+                            </div>
+                     
+                            <!-- /.table-responsive -->
+                         
+      </div>
+      <!-- /.row -->
+    </div>
 
 
     </section>
