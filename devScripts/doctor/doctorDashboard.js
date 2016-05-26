@@ -173,7 +173,7 @@ $(document).ready(function(){
                e.preventDefault();
                window.location.href = controller.ScheduleCalendarUrl;
            });
-            
+
              $("#appointment-section-link-btn").click(function(e){
                e.preventDefault();
            });
@@ -192,16 +192,10 @@ $(document).ready(function(){
            });
 
 
-             $("#analytics-side-navigation-link-btn").click(function(e){
+           $("#analytics-side-navigation-link-btn").click(function(e){
                e.preventDefault();
                window.location.href = controller.analyticsReportUrl;
            });
-
-
-
-
-
-
 
 
         },

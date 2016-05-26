@@ -159,7 +159,15 @@ $(document).ready(function(){
             this.fromTimeControl = $('#from-time');
             this.toTimeControl = $('#to-time');
 
-            this.fromTimeControl.datetimepicker({});
+            this.fromTimeControl.datetimepicker({
+              inline: false,
+              format:'LT'
+            });
+
+            this.toTimeControl.datetimepicker({
+              inline: false,
+              format:'LT'
+            });
 
             //http://bootstrap-datepicker.readthedocs.io/en/latest/
 
@@ -171,6 +179,14 @@ $(document).ready(function(){
             this.chkFri = $('#chk-fri');
             this.chkSat = $('#chk-sat');
             this.chkSun = $('#chk-sun');
+
+            this.chkMon.prop('checked', true);
+            this.chkTue.prop('checked', true);
+            this.chkWed.prop('checked', true);
+            this.chkThu.prop('checked', true);
+            this.chkFri.prop('checked', true);
+            this.chkSat.prop('checked', true);
+            this.chkSun.prop('checked', true);
 
             //TODO testing code to be removed
             var currDate = moment();
