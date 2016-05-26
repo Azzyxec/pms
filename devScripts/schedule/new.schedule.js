@@ -47,7 +47,6 @@ $(document).ready(function(){
             var fromDateStr = stepOneView.fromDateControl.val(); //2016-05-19
             var toDateStr = stepOneView.toDateControl.val(); //2016-05-19
 
-
             var startTimeVal = stepOneView.fromTimeControl.val();
             var endTimeVal =  stepOneView.toTimeControl.val();
 
@@ -165,14 +164,6 @@ $(document).ready(function(){
               format:'LT'
             });
 
-            /*
-            this.fromTimeControl.on('dp.change', (function(self){
-              return function(){
-                console.log(' value' + self.val());
-              }
-            })(this.fromTimeControl))
-            */
-
             this.toTimeControl.val("12:00:PM");
             this.toTimeControl.datetimepicker({
               inline: false,
@@ -192,6 +183,7 @@ $(document).ready(function(){
             this.chkSat = $('#chk-sat');
             this.chkSun = $('#chk-sun');
 
+            //setting all check boxes as checked
             this.chkMon.prop('checked', true);
             this.chkTue.prop('checked', true);
             this.chkWed.prop('checked', true);
@@ -281,10 +273,10 @@ $(document).ready(function(){
 
 
           },
-          makeTimePickersRow: function(){
+          makeTimePickersRow: function(idVal, fromInput, toInput){
 
             var tr =  $('<tr/>',{class: 'collapse collapse-style',
-                                 id: 'collapsed-time-pickers'});
+                                 id: idVal});
 
             var td = $('<tr/>',{colspan: "7"});
             tr.append(td);
@@ -297,10 +289,16 @@ $(document).ready(function(){
 
             var fromLabel = $('<label/>',{class: "col-sm-2 control-label", text: 'From'});
             div.append(fromLabel);
-            var fromInput = $('<input/>',{type: "text", class: 'form-control', value:'12:00 PM'});
             div.append(fromInput);
 
-            return tr; 
+
+            div = $('<div/>',{class: "form-group"});
+            form.append(div);
+            var toLabel = $('<label/>',{class: "col-sm-2 control-label", text: 'To'});
+            div.append(toLabel);
+            div.append(toInput);
+
+            return tr;
 
             /*
             <tr  class="collapse collapse-style"  id="collapseExample1">
@@ -315,7 +313,6 @@ $(document).ready(function(){
                       <label  class="col-sm-2 control-label">To</label>
                       <input type="text" class="form-control"  id="datetimepicker6">
                     </div>
-
 
                   </form>
 
@@ -400,10 +397,55 @@ $(document).ready(function(){
                   var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
                   var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
 
-                  span1.on('click', function(){
-                    console.log('span click');
-                    $('#collapseExample1').collapse('toggle');
-                  });
+                  span1.on('click', (function(passedOn){
+                    return function(){
+                      console.log('span click');
+                      //$('#collapseExample1').collapse('toggle');
+
+                      //adding timepicker dynamically
+                      var fromInput = $('<input/>',{type: "text", class: 'form-control', value:passedOn.startTime});
+                      var toInput = $('<input/>',{type: "text", class: 'form-control', value:passedOn.endTime});
+                      var id = 'collapsed-time-pickers';
+                      var tr = $('#collapsed-time-pickers');
+                      tr.remove();  //remove the previously added time pickers
+                      var timePickerTableRow = createScheduleView.makeTimePickersRow(id, fromInput, toInput);
+                      timePickerTableRow.insertAfter(passedOn.tableRow);
+                      timePickerTableRow.collapse('toggle');
+
+                      fromInput.datetimepicker({
+                        inline: true,
+                        format:'LT'
+                      });
+
+                      fromInput.on('dp.change', (function(passesOn){
+                        return function(){
+                          console.log(' value' + passesOn.self.val());
+                          passesOn.scheduleObj.startTime = passesOn.self.val();
+                          //update label text
+                          passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+
+                        }
+                      })({self:fromInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
+
+
+                      toInput.datetimepicker({
+                        inline: true,
+                        format:'LT'
+                      });
+
+                      toInput.on('dp.change', (function(passesOn){
+                        return function(){
+                          console.log(' value' + passesOn.self.val());
+                          passesOn.scheduleObj.endTime = passesOn.self.val();
+                          //update label text
+                          passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+                        }
+                      })({self:toInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
+
+
+                    }
+
+                  })({tableRow: tr, item: scheduleItem, timeLabel: span1}));
 
                   td.append(span1);
 
@@ -456,10 +498,55 @@ $(document).ready(function(){
                  var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
                  var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
 
-                 span1.on('click', function(){
-                   console.log('span click');
-                   $('#collapseExample1').collapse('toggle');
-                 });
+                 span1.on('click', (function(passedOn){
+                   return function(){
+                     console.log('span click');
+                     //$('#collapseExample1').collapse('toggle');
+
+                     //adding timepicker dynamically
+                     var fromInput = $('<input/>',{type: "text", class: 'form-control', value:passedOn.startTime});
+                     var toInput = $('<input/>',{type: "text", class: 'form-control', value:passedOn.endTime});
+                     var id = 'collapsed-time-pickers';
+                     var tr = $('#collapsed-time-pickers');
+                     tr.remove();  //remove the previously added time pickers
+                     var timePickerTableRow = createScheduleView.makeTimePickersRow(id, fromInput, toInput);
+                     timePickerTableRow.insertAfter(passedOn.tableRow);
+                     timePickerTableRow.collapse('toggle');
+
+                     fromInput.datetimepicker({
+                       inline: true,
+                       format:'LT'
+                     });
+
+                     fromInput.on('dp.change', (function(passesOn){
+                       return function(){
+                         console.log(' value' + passesOn.self.val());
+                         passesOn.scheduleObj.startTime = passesOn.self.val();
+                         //update label text
+                         passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+
+                       }
+                     })({self:fromInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
+
+
+                     toInput.datetimepicker({
+                       inline: true,
+                       format:'LT'
+                     });
+
+                     toInput.on('dp.change', (function(passesOn){
+                       return function(){
+                         console.log(' value' + passesOn.self.val());
+                         passesOn.scheduleObj.endTime = passesOn.self.val();
+                         //update label text
+                         passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+                       }
+                     })({self:toInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
+
+
+                   }
+
+                 })({tableRow: tr, item: scheduleItem, timeLabel: span1}));
 
                  td.append(span1);
                } else{
@@ -478,8 +565,36 @@ $(document).ready(function(){
             }//week loop ends
 
 
-            var timePickerTableRow = this.makeTimePickersRow();
+            /*
+            var fromInput = $('<input/>',{type: "text", class: 'form-control', value:'12:00 PM'});
+            var toInput = $('<input/>',{type: "text", class: 'form-control', value:'12:00 PM'});
+            var timePickerTableRow = this.makeTimePickersRow('collapsed-time-pickers', fromInput, toInput);
             this.tableBody.append(timePickerTableRow);
+            timePickerTableRow.collapse('toggle');
+            fromInput.datetimepicker({
+              inline: true,
+              format:'LT'
+            });
+
+            fromInput.on('dp.change', (function(self){
+              return function(){
+                console.log(' value' + self.val());
+              }
+            })(fromInput))
+
+
+            toInput.datetimepicker({
+              inline: true,
+              format:'LT'
+            });
+
+            toInput.on('dp.change', (function(self){
+              return function(){
+                console.log(' value' + self.val());
+              }
+            })(toInput))
+
+            */
 
 
             /*
