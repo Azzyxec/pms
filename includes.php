@@ -9,6 +9,10 @@ require '../vendor/autoload.php';
 require_once '../AppConfig.php';
 
 
+//helper classes
+require_once '../app/utilities/Utilities.php';
+
+
 //can put a loop to include all the files from the folder
 //require once for entites
 require_once '../app/entities/User.php';

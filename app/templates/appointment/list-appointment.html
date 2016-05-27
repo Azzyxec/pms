@@ -1,106 +1,216 @@
 {% extends "/doctor/doctor-dash-base.html" %}
 {% block content %}
 <section id="doctors-Apointments-Section">
-    <!-- /.panel -->
-    <div class="row">
-        <hr class="invisible"> 
-             <div class="panel panel-green">
-              
-              <div class="panel-heading">
-                  <i class="fa fa-clock-o fa-fw"></i> Appointments
-                  <div class="pull-right">
 
-                  </div>
-              </div>
-              <!-- /.panel-heading -->
-              <div class="panel-body">
-                  <div class="row">
-                      <div class="col-lg-12">
-                          <div class="table-responsive">
-                              <table class="table table-bordered table-hover table-striped">
-                                  <thead>
-                                      <tr>
-                                          <th>No</th>
-                                          <th>Patient's Name</th>
-                                           <th>Ailment</th>
-                                          <th>Clinic</th>
-                                          <th>Date</th>
-                                          <th>Time</th>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row pull-left">
+        <button type="button" class="btn col-md-offset-1 col-sm-offset-1 btn-info" id="btn-new-appointment">New Appointment</button>
+      </div>
+      <hr class="invisible"/>
+      <hr class="invisible"/>
+      <hr class="invisible"/>
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Appointment</h3>
+        </div>
+        <div class="panel-body">
+            <form class="form-inline">
+           <label>Search:</label>
 
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td>1</td>
-                                          <td>Agnelo</td>
-                                          <td>Back Pain</td>
-                                           <td>Panjim</td>
-                                          <td>4/5/2016</td>
-                                          <td>8:29 AM</td>
+<input type="text" class="form-control">
+                <span class="invisible">..</span><label>Location:</label>
+                <select class="form-control">
+                <option>All</option>
+                <option>Margao</option>
+                <option>Panjim</option>
+                <option>Cuncolim</option>
+                <option>Curtorim</option>
+                </select>
+            </form>
 
-                                      </tr>
-                                      <tr>
-                                          <td>2</td>
-                                          <td>Ignetious</td>
-                                          <td>sore Throath</td>
-                                          <td>Panjim</td>
-                                          <td>4/5/2016</td>
-                                          <td>9:29 AM</td>
+<hr class="invisible">
 
-                                      </tr>
-                                      <tr>
-                                          <td>3</td>
-                                          <td>Ignetious</td>
-                                          <td>sore Throath</td>
-                                          <td>Panjim</td>
-                                          <td>4/5/2016</td>
-                                          <td>10:29 AM</td>
+       <div class="table-responsive">
 
-                                      </tr>
-                                      <tr>
-                                        <td>4</td>
-                                          <td>Joel</td>
-                                          <td>Stomach Ache</td>
-                                          <td>Margao</td>
-                                          <td>4/5/2016</td>
-                                          <td>4:10 PM</td>
-                                      </tr>
-                                      <tr>
-                                          <td>5</td>
-                                           <td>Ryan</td>
-                                          <td>Bronchitis</td>
-                                          <td>Margao</td>
-                                          <td>4/5/2016</td>
-                                          <td>5:10 PM</td>
-                                      </tr>
-                                      <tr>
-                                          <td>6</td>
-                                          <td>Ruban</td>
-                                          <td>Stomach Ache</td>
-                                          <td>Margao</td>
-                                          <td>4/5/2016</td>
-                                          <td>5:50 PM</td>
-                                      </tr>
+                     <table class="table">
+                                    <thead>
+                                        <tr>
 
-                                  </tbody>
-                              </table>
-                          </div>
-                          <!-- /.table-responsive -->
-                      </div>
-                      <!-- /.col-lg-4 (nested) -->
-                      <div class="col-lg-8">
-                          <div id="morris-bar-chart"></div>
-                      </div>
-                      <!-- /.col-lg-8 (nested) -->
-                  </div>
-                  <!-- /.row -->
-              </div>
-              <!-- /.panel-body -->
+                                            <th>Patient</th>
+                                            <th>Date</th>
+                                            <th>Time</th>
+                                            <th>location</th>
+                                            <th>details</th>
+                                            <th></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                     <tr >
+
+                                         <td>
+                                         Agnelo D'souza
+                                         </td>
+                                         <td>
+                                         1-May-16
+                                         </td>
+                                           <td>
+                                       14:00 Pm
+                                         </td>
+                                           <td>
+                                         Curtorim
+                                         </td>
+                                         <td>
+                                         Back Ache
+                                         </td>
+
+                                      <td >
+                                        <a data-toggle="tooltip" title="Reschedule appointment"><span style="font-size: 1.3em;" class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                                        <span class="invisible">..</span>
+                                        <a data-toggle="tooltip" title="Close appointment"><span style="font-size: 1.3em;" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
+                                        <span class="invisible">..</span>
+                                        <a data-toggle="tooltip" title="Patients history"><span  style="font-size: 1.3em;" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                                      </td>
+
+
+
+
+                                        </tr>
+
+
+                                           <!---------- collapse section----------->
+
+                                        <tr  class="collapse"  id="collapseExample1">
+
+                                        <td colspan="7" ><div class="well">
+                            <label>Ailment:</label><p>Back Ache with little spine Irritation</p>
+
+
+                                            </div>
+                                            <a class='btn btn-sm btn-danger dashboard-appointment-table-btn' >Cancel Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-warning dashboard-appointment-table-btn">Re-Schedule Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-info dashboard-appointment-table-btn">patient History</a>
+                                        </td>
+                                        </tr>
+
+                                            <tr >
+
+                                         <td>
+                                         Ignetious Fernandes
+                                         </td>
+                                         <td>
+                                         5-May-16
+                                         </td>
+                                           <td>
+                                       15:00 Pm
+                                         </td>
+                                           <td>
+                                         Panjim
+                                         </td>
+                                         <td>
+                                         leg pain
+                                         </td>
+                                         <td >
+                                           <a data-toggle="tooltip" title="Reschedule appointment"><span style="font-size: 1.3em;" class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                                           <span class="invisible">..</span>
+                                           <a data-toggle="tooltip" title="Close appointment"><span style="font-size: 1.3em;" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
+                                           <span class="invisible">..</span>
+                                           <a data-toggle="tooltip" title="Patients history"><span  style="font-size: 1.3em;" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                                         </td>
+
+
+
+
+                                        </tr>
+
+
+                                           <!---------- collapse section----------->
+
+                                        <tr  class="collapse"  id="collapseExample2">
+
+                                        <td colspan="7" >
+                            <label>Ailment:</label><div class="well">
+                                            <p>leg pain</p>
+                                            </div>
+                                            <!-- Size Classes: [tiny small large] -->
+                                            <!-- Radius Classes: [radius round] -->
+                                            <!-- Color Classes: [secondary success alert] -->
+                                            <!-- Disabled Class: disabled -->
+                                           <a class='btn btn-sm btn-danger dashboard-appointment-table-btn' >Cancel Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-warning dashboard-appointment-table-btn">Re-Schedule Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-info dashboard-appointment-table-btn">patient History</a>
+
+                                        </td>
+                                        </tr>
+
+
+
+                                            <tr >
+
+                                         <td>
+                                         Joston Fernandes
+                                         </td>
+                                         <td>
+                                         3-May-16
+                                         </td>
+                                           <td>
+                                       17:00 Pm
+                                         </td>
+                                           <td>
+                                         Curtorim
+                                         </td>
+                                         <td>
+                                         Soar Throat
+                                         </td>
+                                         <td >
+                                           <a data-toggle="tooltip" title="Reschedule appointment"><span style="font-size: 1.3em;" class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                                           <span class="invisible">..</span>
+                                           <a data-toggle="tooltip" title="Close appointment"><span style="font-size: 1.3em;" class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></a>
+                                           <span class="invisible">..</span>
+                                           <a data-toggle="tooltip" title="Patients history"><span  style="font-size: 1.3em;" class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+                                         </td>
+
+
+
+
+                                        </tr>
+
+
+                                           <!---------- collapse section----------->
+
+                                        <tr  class="collapse"  id="collapseExample3">
+
+                                        <td colspan="7" >
+                            <label>Ailment:</label><div class="well">
+                                            <p>cold with little bit Soar throat</p>
+                                            </div>
+                                            <!-- Size Classes: [tiny small large] -->
+                                            <!-- Radius Classes: [radius round] -->
+                                            <!-- Color Classes: [secondary success alert] -->
+                                            <!-- Disabled Class: disabled -->
+                                            <a class='btn btn-sm btn-danger dashboard-appointment-table-btn' >Cancel Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-warning dashboard-appointment-table-btn">Re-Schedule Appointment</a>&nbsp;&nbsp;
+                                            <a class="btn btn-sm btn-info dashboard-appointment-table-btn">patient History</a>
+
+                                        </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+
+
+            </div>
           </div>
-          <!-- /.panel -->
+        </div>
 
-    </div>
- 
+
+
+
+      </div>
+
+
   </section>
 {% endblock %}
 {% block addScripts %}

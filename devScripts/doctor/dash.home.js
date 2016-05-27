@@ -9,6 +9,13 @@ $(document).ready(function(){
            window.location.href = links.patientsListingUrl;
        });
 
+       $("#view-sales-dash-btn").click(function(e){
+          e.preventDefault();
+          window.location.href = links.getAnalyticsUrl;
+      });
+
+
+
 
     }());
 

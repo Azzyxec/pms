@@ -24,6 +24,7 @@ $app->group('/authenticate', function(){
 
     try{
 
+
        $postedData = $request->getParsedBody();
        if( isset($postedData['loginId']) && isset($postedData['password']) ){
 
@@ -33,12 +34,12 @@ $app->group('/authenticate', function(){
          UserSessionManager::setUser($user);
        }
 
-       $data = array('data' => $user);
+       $data = array('status' => "1", 'data' => $user, 'message' => 'success' );
        return $response->withJson($data);
 
    }catch(Exception $e){
 
-     $data = array('data' => $user);
+     $data = array('status' => "-1", 'data' => $user, 'message' => 'something is not right in controller' . $e->getMessage() );
      return $response->withJson($data);
    }
   });

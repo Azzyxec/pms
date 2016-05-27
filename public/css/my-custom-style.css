@@ -1,5 +1,5 @@
 .highlight{
-    
+
     box-shadow: 0px 0px 5px red !important;
 }
 .red{
@@ -18,16 +18,16 @@
 
 .brown{
     color: brown;
-    
+
 }
 .crimson{
     color: crimson;
-    
+
 }
 
 .aliceblue{
     color: aliceblue;
-   
+
 }
 
 .darkolivegreen{
@@ -35,12 +35,12 @@
 }
 .yellow{
     color:yellow;
-    
-    
+
+
 }
 .lightgrey{
     color:lightgrey;
-   
+
 }
 
 .gold{
@@ -62,7 +62,7 @@
     color:black;
 }
 .grey{
-    
+
     color:grey;
 }
 
@@ -168,134 +168,137 @@
 .font-40{
     font-size:40px;
 }
+.font-10{
+    font-size:10px;
+}
 
 
 .remove-underline{
     text-decoration:none !important;
 }
 .inline{
-    
- display:inline ;   
-    
+
+ display:inline ;
+
 }
 
 .inline-block
 {
-    
+
     display:inline-block ;
-    
+
 }
 
 .no-float{
-    
+
 float:none ;
-    
+
 }
 
 .margin-auto-center{
     margin: 0 auto;
 }
 .margin-autocenter-imp{
- margin:0 auto !important;   
-    
+ margin:0 auto !important;
+
 }
 
 
 .inline-imp{
-    
- display:inline !important;   
-    
+
+ display:inline !important;
+
 }
 
 .inline-block-imp
 {
-    
+
     display:inline-block !important;
-    
+
 }
 
 .no-float-imp{
-    
+
 float:none !important;
-    
+
 }
 
 .height-auto{
     height:auto;
-    
+
 }
 
 .width-auto{
-    
+
     width:auto;
 }
 
 
 .height-auto-imp{
     height:auto !important;
-    
+
 }
 
 .width-auto-imp{
-    
+
     width:auto !important;
 }
 .no-underline{
-    
- text-decoration: none !important;   
+
+ text-decoration: none !important;
 }
 
 .no-margin-bottom{
- margin-bottom:0px;   
+ margin-bottom:0px;
 }
 
 .no-margin{
-margin:0px;    
-    
+margin:0px;
+
 }
 
 .no-margin-imp{
-margin:0px !important;    
-    
+margin:0px !important;
+
 }
 
 .position-fixed{
- position:fixed;   
-    
+ position:fixed;
+
 }
 
 .position-fixed-imp{
- position:fixed !important;   
-    
+ position:fixed !important;
+
 }
 .position-static{
     position:static;
 }
 .space{
-    
+
    display:inline-block;
     visibility: hidden;
-    
+
 }
 
 .position-absolute{
  position:absolute;
-    
+
 }
 
 .position-absolute-imp{
  position:absolute !important;
-    
+
 }
 
 .position-relative{
-    
- position:relative;   
+
+ position:relative;
 }
 
 .position-relative-imp{
-    
- position:relative !important;   
+
+ position:relative !important;
 }
 
 
@@ -323,17 +326,17 @@ margin:0px !important;
 .vcenter{
    display: inline-block !important;
    vertical-align: middle !important;
-   float: none !important;   
-   
+   float: none !important;
+
 }
 @media all and (max-width:768px){
     .vcenter-xs{
      display: inline-block;
    vertical-align: middle !important;
-   float: none !important;   
-    
+   float: none !important;
+
 }
-    
+
 }
 
 

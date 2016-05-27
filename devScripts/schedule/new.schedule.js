@@ -50,6 +50,11 @@ $(document).ready(function(){
         var startTimeVal = stepOneView.fromTimeControl.val();
         var endTimeVal =  stepOneView.toTimeControl.val();
 
+
+
+        var mStartTime = moment(startTimeVal, "hh:mm A");
+        //console.log('start time: ' + startTimeVal + ' in minutes ' + mStartTime.duration());
+
         //date validations, cannot put previoous dates
         //cannot dates in revrese order
         //cannot make schedule for more than 60 days
@@ -108,14 +113,15 @@ $(document).ready(function(){
             date: mfromDate.format('DD-MM-YYYY'),
             startTime:startTimeVal,
             endTime: endTimeVal,
-            active: false
+            isBlocked: 0,
+            active: 0
           };
           scheduleModel.scheduleList.push(schedule);
 
           var weekDay = mfromDate.format('ddd');
 
           if(weekArray.indexOf(weekDay)  >= 0 ){
-            schedule.active = true;
+            schedule.active = 1;
           }
 
           mfromDate.add(1, 'days')
@@ -347,9 +353,7 @@ var createScheduleView = {
 
     this.dateHeader.text(mfromDate.format('Do MMM YYYY') + ' to '  + mtoDate.format('Do MMM YYYY'));
 
-
     var indexCounter = 0;
-
 
     //when first day is not monday, setting the first row
     var startDay = mfromDate.format('ddd');
@@ -391,9 +395,9 @@ var createScheduleView = {
         .append($('<br><br>'));
 
         var isActive = scheduleItem.active;
-        if(isActive){
-          var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
-          var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
+        if(isActive == 1){
+          var time = scheduleItem.startTime + ' - ' + scheduleItem.endTime;
+          var span1 =  $('<span/>',{class: 'black font-10', text:time});
 
           span1.on('click', (function(passedOn){
             return function(){
@@ -420,7 +424,7 @@ var createScheduleView = {
                   console.log(' value' + passesOn.self.val());
                   passesOn.scheduleObj.startTime = passesOn.self.val();
                   //update label text
-                  passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+                  passesOn.label.text(passesOn.scheduleObj.startTime + ' - ' + passesOn.scheduleObj.endTime);
 
                 }
               })({self:fromInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
@@ -436,7 +440,7 @@ var createScheduleView = {
                   console.log(' value' + passesOn.self.val());
                   passesOn.scheduleObj.endTime = passesOn.self.val();
                   //update label text
-                  passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+                  passesOn.label.text(passesOn.scheduleObj.startTime + ' - ' + passesOn.scheduleObj.endTime);
                 }
               })({self:toInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
 
@@ -490,7 +494,7 @@ var createScheduleView = {
         .append($('<br><br>'));
 
         var isActive = schedule.scheduleList[indexCounter].active;
-        if(isActive){
+        if(isActive == 1){
           var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
           var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
 

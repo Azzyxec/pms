@@ -182,6 +182,7 @@ $(document).ready(function(){
 
              $("#appointment-section-link-btn").click(function(e){
                e.preventDefault();
+               window.location.href = controller.doctorsAppointmentsListUrl;
            });
             $("#patients-Entry-Section-Link-Btn").click(function(e){
                e.preventDefault();
