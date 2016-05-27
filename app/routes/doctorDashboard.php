@@ -16,12 +16,16 @@ $app->group('/doctorDashboard', function(){
 
   //schedule
   $this->get('/scheduleManagement', function ($request, $response) {
-    return $this->view->render($response, '/doctor/schedule.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/doctor/schedule.html', array('basePath' => AppConfig::$basePath, 'active' => "schedule"));
   });
 
   $this->get('/newSchedule', function ($request, $response) {
     return $this->view->render($response, '/schedule/new-schedule.html',
     array('basePath' => AppConfig::$basePath, 'active' => "schedule"));
+  });
+
+  $this->get('/ScheduleCalenderView', function ($request, $response) {
+    return $this->view->render($response, '/schedule/schedule-calendar.html', array('basePath' => AppConfig::$basePath, 'active' => "schedule"));
   });
 
   $this->get('/scheduleList', function ($request, $response) {

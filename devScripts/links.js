@@ -11,7 +11,7 @@ var links = {
 
    logoutUrl : "index.php/authenticate/logout",
 
-   //doctor dashboard links
+   //doctor dashboard links 
    doctorProfile : "index.php/doctorDashboard/doctorProfile",
    dashboardHomeUrl : "index.php/doctorDashboard/",
    newAppointmentUrl : "index.php/doctorDashboard/bookAppointment",
@@ -21,6 +21,7 @@ var links = {
    doctorsAppointmentsListUrl : "index.php/doctorDashboard/listAppointment",
    newScheduleUrl : "index.php/doctorDashboard/newSchedule",
    listScheduleUrl : "index.php/doctorDashboard/scheduleList",
+   getScheduleCalendarUrl: "index.php/doctorDashboard/ScheduleCalenderView",
    addStaffUrl : "index.php/doctorDashboard/staffEntry",
    doctorsStaffListingUr : "index.php/doctorDashboard/staffListing",
    patientsHistoryUrl : "index.php/doctorDashboard/patientHistory",
@@ -36,7 +37,6 @@ var links = {
    //schedule
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
-   getScheduleCalendarUrl: "index.php/schedule/ScheduleCalenderView",
 
    //programme
    programmeListUrl:"index.php/programme/getMedicationProgrammeList",

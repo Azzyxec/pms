@@ -128,13 +128,17 @@ $(document).ready(function(){
           $("#view-Appointment-Section-Link-Btn").click(function(e){
                 e.preventDefault();
                 window.location.href = controller.doctorsAppointmentsListUrl;
-          });
+          })
+
+
+        //$("#manage-Doctors-Schedule-Section-Link-Btn").attr('href', controller.listScheduleUrl);
 
 
           $("#manage-Doctors-Schedule-Section-Link-Btn").click(function(e){
               e.preventDefault();
-              console.log('schedule click');
-          });
+              console.log('schedule manage click');
+              window.location.href = controller.ScheduleCalendarUrl;
+         });
 
           $("#manage-schedule-create-section-link-Btn").click(function(e){
               e.preventDefault();
@@ -142,11 +146,11 @@ $(document).ready(function(){
               window.location.href = controller.newScheduleUrl;
           });
 
-          $("#manage-schedule-list-section-link-Btn").click(function(e){
-              e.preventDefault();
-              console.log('schedule list click');
-              window.location.href = controller.listScheduleUrl;
-          });
+        //  $("#manage-schedule-list-section-link-Btn").click(function(e){
+              //e.preventDefault();
+              //console.log('schedule list click');
+            //  window.location.href = controller.listScheduleUrl;
+          //});
 
 
            $("#add-Staff-Section-Link-Btn").click(function(e){

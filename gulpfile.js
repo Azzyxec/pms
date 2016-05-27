@@ -64,6 +64,7 @@ var filesList = [
                   ], buildName: "list.appointment.js"},
  {build:true, files: [
                     objConfig.scriptsBasePath +"moment.js",
+                    objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                     objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"links.js",
                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
@@ -147,8 +148,15 @@ var filesList = [
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "doctor/medicineSearch.js"
-                ], buildName: "medicineSearch.js"}
-];
+                ], buildName: "medicineSearch.js"},
+{build:true, files: [
+                  objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath +"moment.js",
+                  objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
+                  objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath + "schedule/schedule.calendar.js"
+                ], buildName: "schedule.calendar.js"}
+];  //
 
 gulp.task('build-scripts', function(){
 
