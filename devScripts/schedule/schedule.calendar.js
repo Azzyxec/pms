@@ -9,6 +9,23 @@ $(document).ready(function(){
            window.location.href = links.newScheduleUrl;
        });
 
+       /*
+       $(document).on("click", ".calendar-time-Btn", function (ev) {
+
+           $(".calendar-time-Btn").parent().parent().css("background-color","white");
+       $(this).parent().parent().css("background-color","#e6ecf4");
+       */
+
+       $('#from-date').datetimepicker({
+         inline: false,
+         format:'LT'
+       });
+
+       $('#to-date').datetimepicker({
+         inline: false,
+         format:'LT'
+       });
+
 
     }());
 

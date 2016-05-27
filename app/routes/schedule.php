@@ -9,6 +9,8 @@ $app->group('/schedule', function(){
   // schedule functions
   $this->post('/createUpdateSchedule', function ($request, $response) {
 
+    $postedData = $request->getParsedBody();
+    return $response->withJson($postedData);
 
     $user = UserSessionManager::getUser();
 
