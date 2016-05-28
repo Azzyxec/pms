@@ -17,8 +17,10 @@ $(document).ready(function(){
     var controller = {
       init: function(){
         this.createUpdateScheduleUrl = links.createUpdateScheduleUrl;
-        this.scheduleListingUrl =   links.listScheduleUrl;
         this.getLocationUrl = links.getLocationUrl;
+        //this.scheduleListingUrl =   links.listScheduleUrl;
+        this.getScheduleCalendarUrl = links.getScheduleCalendarUrl;
+
         stepOneView.init();
         createScheduleView.init();
 
@@ -50,9 +52,9 @@ $(document).ready(function(){
         var startTimeVal = stepOneView.fromTimeControl.val();
         var endTimeVal =  stepOneView.toTimeControl.val();
 
-
-
-        var mStartTime = moment(startTimeVal, "hh:mm A");
+        //var mStartTime = moment(startTimeVal, "hh:mm A");
+        //var mStartDate = moment({hours:0, minutes: 0});
+        //mStartDate.minutes(scheduleItem.startTime);
         //console.log('start time: ' + startTimeVal + ' in minutes ' + mStartTime.duration());
 
         //date validations, cannot put previoous dates
@@ -107,12 +109,17 @@ $(document).ready(function(){
 
         console.log('week array ' + weekArray);
 
+        var mStartTime = moment(startTimeVal, "hh:mm A");
+        var mEndTime = moment(endTimeVal, "hh:mm A");
+
         for(var j = 0; j <= daysDuration; j++){
 
           var schedule = {
             date: mfromDate.format('DD-MM-YYYY'),
             startTime:startTimeVal,
             endTime: endTimeVal,
+            startTimeMinutes: mStartTime.hours()*60 + mStartTime.minutes(),
+            endTimeMinutes: mEndTime.hours()*60 + mEndTime.minutes(),
             isBlocked: 0,
             active: 0
           };
@@ -134,9 +141,35 @@ $(document).ready(function(){
       },
       saveUpdateModelRedirect: function(){
 
+
+        // remove schedues which are not active
+
+
+        var activeSchedulesArray = [];
+        for(var i = 0; i < scheduleModel.scheduleList.length; i++){
+
+            if(scheduleModel.scheduleList[i].active == 1){
+              activeSchedulesArray.push(scheduleModel.scheduleList[i]);
+            }
+        }
+
+        scheduleModel.scheduleDaysCount = activeSchedulesArray.length;
+        scheduleModel.scheduleList = activeSchedulesArray;
+
+
+        //console.log(JSON.stringify(scheduleModel.scheduleList));
+
+
+
         $.post( controller.createUpdateScheduleUrl , scheduleModel)
         .done(function( response ) {
           console.log('response ' + JSON.stringify(response));
+
+          if(response.status == 1){
+            window.location.href = controller.getScheduleCalendarUrl;
+          }else{
+            console.log('something is not right');
+          }
 
           //on success redirect
           // window.location.href = controller.scheduleListingUrl;
@@ -150,6 +183,8 @@ $(document).ready(function(){
     }*/
 
   });
+
+
 
 }
 };
@@ -423,6 +458,8 @@ var createScheduleView = {
                 return function(){
                   console.log(' value' + passesOn.self.val());
                   passesOn.scheduleObj.startTime = passesOn.self.val();
+                  var mStartTime = moment(passesOn.self.val(), "hh:mm A");
+                  passesOn.scheduleObj.startTimeMinutes = mStartTime.hours()*60 + mStartTime.minutes();
                   //update label text
                   passesOn.label.text(passesOn.scheduleObj.startTime + ' - ' + passesOn.scheduleObj.endTime);
 
@@ -439,6 +476,8 @@ var createScheduleView = {
                 return function(){
                   console.log(' value' + passesOn.self.val());
                   passesOn.scheduleObj.endTime = passesOn.self.val();
+                  var mEndTime = moment(passesOn.self.val(), "hh:mm A");
+                  passesOn.scheduleObj.endTimeMinutes = mEndTime.hours()*60 + mEndTime.minutes();
                   //update label text
                   passesOn.label.text(passesOn.scheduleObj.startTime + ' - ' + passesOn.scheduleObj.endTime);
                 }
@@ -520,10 +559,14 @@ var createScheduleView = {
 
               fromInput.on('dp.change', (function(passesOn){
                 return function(){
-                  console.log(' value' + passesOn.self.val());
+
                   passesOn.scheduleObj.startTime = passesOn.self.val();
+                  var mStartTime = moment(passesOn.self.val(), "hh:mm A");
+                  passesOn.scheduleObj.startTimeMinutes = mStartTime.hours()*60 + mStartTime.minutes();
                   //update label text
                   passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
+
+                  console.log(' value' + JSON.stringify(passesOn.scheduleObj));
 
                 }
               })({self:fromInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
@@ -538,6 +581,8 @@ var createScheduleView = {
                 return function(){
                   console.log(' value' + passesOn.self.val());
                   passesOn.scheduleObj.endTime = passesOn.self.val();
+                  var mEndTime = moment(passesOn.self.val(), "hh:mm A");
+                  passesOn.scheduleObj.endTimeMinutes = mEndTime.hours()*60 + mEndTime.minutes();
                   //update label text
                   passesOn.label.text(passesOn.scheduleObj.startTime + ' to ' + passesOn.scheduleObj.endTime);
                 }
