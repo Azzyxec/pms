@@ -30,7 +30,11 @@ $(document).ready(function(){
         var listView = {
           init: function(){
             this.tablebody = $('#patient-list-table-body');
+            this.newPatientButton = $('#btn-new-patient');
 
+            this.newPatientButton.on('click', function(){
+              window.location.href = links.patientsEntryUrl;
+            });
 
           },
           render:  function(){

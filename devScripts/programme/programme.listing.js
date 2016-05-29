@@ -30,6 +30,13 @@ $(document).ready(function(){
     var ProgrammeListView = {
       init: function(){
         this.tableBody = $('#programme-list-table-body');
+        this.newProgrammeButton = $('#btn-new-programme');
+
+        this.newProgrammeButton.on('click', function(){
+          window.location.href =  links.createProgramForPatientUrl
+        });
+
+
 
       },
       render: function(){

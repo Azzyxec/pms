@@ -30,6 +30,12 @@ $(document).ready(function(){
         var listView = {
           init: function(){
             this.tablebody = $('#staff-list-table-body');
+            this.newStaffButton = $('#btn-new-staff');
+
+
+            this.newStaffButton.on('click', function(){
+              window.location.href = controller.addStaffUrl;
+            });
 
 
           },
