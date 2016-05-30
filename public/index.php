@@ -1,21 +1,25 @@
 <?php
 
-require_once '../includes.php';
+require '../vendor/autoload.php';
+
+
+//Core require needed for other to work
+require_once '../AppConfig.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 //importing entites
-use Pms\Entities\UserSessionManager;
-use Pms\Entities\Patient;
-use Pms\Entities\bookAppointmentObject;
+//use Pms\Entities\UserSessionManager;
+//use Pms\Entities\Patient;
+//use Pms\Entities\bookAppointmentObject;
 
-use Pms\Datalayer\UserDB;
-use Pms\Datalayer\DoctorDB;
-use Pms\Datalayer\ScheduleDB;
-use Pms\Datalayer\PatientDB;
-use Pms\Datalayer\ProgrammeDB;
-use Pms\Datalayer\bookAppointmentEntryDB;
+//use Pms\Datalayer\UserDB;
+//use Pms\Datalayer\DoctorDB;
+//use Pms\Datalayer\ScheduleDB;
+//use Pms\Datalayer\PatientDB;
+//use Pms\Datalayer\ProgrammeDB;
+//use Pms\Datalayer\bookAppointmentEntryDB;
 
 
 $configuration = [
@@ -83,52 +87,6 @@ require '../app/routes/programme.php';
 require '../app/routes/doctor.php';
 
 require '../app/routes/staff.php';
-
-/*
-$app->post('/saveBookPatientEntry', function ($request, $response) {
- try {
- $bookAppointmentFormData = json_decode($_POST['data']);
-
-
-
-if (isset($bookAppointmentFormData))
-    {
-
-
-
-    //2016-01-22 -- Y-m-d  -- Asia/Calcutta
-    $bookAppointmentDate = date_create_from_format('Y-m-d', $bookAppointmentFormData->bookAppointmentDate, new DateTimeZone('Asia/Calcutta'));
-
-
-
-    $bookAppointmentObj = new bookAppointmentObject(
-                            $bookAppointmentFormData->patientsName,
-                            $bookAppointmentFormData->bookAppointmentTime,
-                            $bookAppointmentDate->format('d-m-Y'),
-                            $bookAppointmentFormData->contact,
-                            $bookAppointmentFormData->description
-                         );
-
-    $bookAppoinmentDl = new bookAppointmentEntryDB();
-    $res =  $bookAppoinmentDl->Persist($bookAppointmentObj);
-
-    echo json_encode($bookAppointmentObj);
-}
-else{
-    echo json_encode("form not posted");
-}
-
-
-  }  catch(PDOException $e){
-                        die('Could not connect to the database:<br/>' . $e);
-                        $dberror = "could not connect to database";
-                        return "there was an error";
-             }
-
-
-
-});
-*/
 
 // Run app
 $app->run();

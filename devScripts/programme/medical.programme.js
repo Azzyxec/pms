@@ -1,8 +1,7 @@
 $(document).ready(function(){
 
-    $(function(){
-        console.log('medical programme js loaded ');
-    }());
+  $(function(){
+    console.log('medical programme js loaded ');
 
     var model = {
       programId: 0,
@@ -39,11 +38,11 @@ $(document).ready(function(){
 
       },
       clearModel: function(){
-          model.programId = 0;
-          model.programmeName = "";
-          model.programeList = [];
-          model.ProgrammeDetails = null;
-          console.log('clear model');
+        model.programId = 0;
+        model.programmeName = "";
+        model.programeList = [];
+        model.ProgrammeDetails = null;
+        console.log('clear model');
       },
       getProgrammeList: function(){
         return model.programeList;
@@ -56,19 +55,19 @@ $(document).ready(function(){
       },
       setNewProgrammeDetailsModel: function(){
         model.ProgrammeDetails = {
-                                 id:0,
-                                 duration: "",
-                                 text: "",
-                                 vaccine: "",
-                                 doseNo: "",
-                                 index: 0
-                               };
+          id:0,
+          duration: "",
+          text: "",
+          vaccine: "",
+          doseNo: "",
+          index: 0
+        };
       },
       removeProgramme: function(program){
         model.programeList.splice(program.index, 1);
         //re assigning the index
         for(var i = 0; i < model.programeList.length; i++){
-            model.programeList[i].index = i;
+          model.programeList[i].index = i;
         }
       },
       updateProgrammeName: function(name){
@@ -78,29 +77,29 @@ $(document).ready(function(){
         var posn = model.programeList.length;
 
 
-          if(model.ProgrammeDetails) {
+        if(model.ProgrammeDetails) {
 
-            console.log('update programme details ' + pduration + ptext +   JSON.stringify(model.ProgrammeDetails) );
+          console.log('update programme details ' + pduration + ptext +   JSON.stringify(model.ProgrammeDetails) );
 
-            model.ProgrammeDetails.duration = pduration;
-            model.ProgrammeDetails.text = ptext;
-            model.ProgrammeDetails.vaccine = pvaccine;
-            model.ProgrammeDetails.doseNo = pdoseNo;
+          model.ProgrammeDetails.duration = pduration;
+          model.ProgrammeDetails.text = ptext;
+          model.ProgrammeDetails.vaccine = pvaccine;
+          model.ProgrammeDetails.doseNo = pdoseNo;
 
-          }else{
+        }else{
 
-            console.log('new programme details');
+          console.log('new programme details');
 
-            model.ProgrammeDetails = {
-                                       id:0,
-                                       duration: pduration,
-                                       text: ptext,
-                                       vaccine: pvaccine,
-                                       doseNo: pdoseNo,
-                                       index: posn
-                                     };
-            model.programeList.push(model.ProgrammeDetails);
-          }
+          model.ProgrammeDetails = {
+            id:0,
+            duration: pduration,
+            text: ptext,
+            vaccine: pvaccine,
+            doseNo: pdoseNo,
+            index: posn
+          };
+          model.programeList.push(model.ProgrammeDetails);
+        }
 
         model.ProgrammeDetails = null;
         programmeView.clearForm();
@@ -114,12 +113,12 @@ $(document).ready(function(){
 
 
         $.post(controller.createModifyProgrammeUrl , model)
-         .done(function( response ) {
+        .done(function( response ) {
 
-           console.log('save response ' + JSON.stringify(response));
-           controller.clearModel();
-           programmeView.refreshForm();
-         });
+          console.log('save response ' + JSON.stringify(response));
+          controller.clearModel();
+          programmeView.refreshForm();
+        });
       }
     };
 
@@ -156,21 +155,21 @@ $(document).ready(function(){
             var doseNoVal = $('#txt-dose-no').val();
 
             if(!durationVal ||
-               !durationTextVal||
-               !vaccineVal||
-               !doseNoVal
-             ){
-               console.log('one of the filed is empty');
-               programmeView.commonHelpLabel.removeClass('hidden');
-               programmeView.commonHelpLabel.text('Please enter all details');
-             }else{
-               console.log('data entered ');
-               controller.addProgramme(durationVal, durationTextVal, vaccineVal, doseNoVal);
-               programmeView.commonHelpLabel.addClass('hidden');
-               programmeView.render();
-               console.log('model ' + JSON.stringify(model));
-             }
-         }
+              !durationTextVal||
+              !vaccineVal||
+              !doseNoVal
+            ){
+              console.log('one of the filed is empty');
+              programmeView.commonHelpLabel.removeClass('hidden');
+              programmeView.commonHelpLabel.text('Please enter all details');
+            }else{
+              console.log('data entered ');
+              controller.addProgramme(durationVal, durationTextVal, vaccineVal, doseNoVal);
+              programmeView.commonHelpLabel.addClass('hidden');
+              programmeView.render();
+              console.log('model ' + JSON.stringify(model));
+            }
+          }
 
         })(programmeView));
 
@@ -262,7 +261,7 @@ $(document).ready(function(){
           this.durationText.val(currentprogrammeDetail.text);
           this.vaccine.val(currentprogrammeDetail.vaccine);
           this.doseNo.val(currentprogrammeDetail.doseNo);
-       }
+        }
 
         //remove the added rows
         $('.prog-added-rows').remove();
@@ -344,5 +343,7 @@ $(document).ready(function(){
     };
 
     controller.init();
+
+  }());
 
 });

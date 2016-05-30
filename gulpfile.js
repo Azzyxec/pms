@@ -1,7 +1,11 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+
+var uglify = require('gulp-uglify');
+var stripDebug = require('gulp-strip-debug');
+var cssNano = require('gulp-cssnano');
+
 
 
 var watchify = require('watchify');
@@ -10,7 +14,10 @@ var watchify = require('watchify');
 var objConfig = {
   scriptsBasePath: "./devScripts/",
   scriptDestinationFolder: "./public/js",
-  watchPath: ['./devScripts/*.js', './devScripts/**/*.js']
+  watchPath: ['./devScripts/*.js', './devScripts/**/*.js'],
+  cssPath: './css/',
+  cssDest: './public/css',
+  cssBuildName: 'bundle.css'
 };
 
 var filesList = [
@@ -150,9 +157,9 @@ var filesList = [
                   objConfig.scriptsBasePath + "doctor/medicineSearch.js"
                 ], buildName: "medicineSearch.js"},
 {build:true, files: [
-                  objConfig.scriptsBasePath +"links.js",
-                  objConfig.scriptsBasePath +"moment.js",
-                  objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
+                  objConfig.scriptsBasePath + "links.js",
+                  objConfig.scriptsBasePath + "moment.js",
+                  objConfig.scriptsBasePath + "bootstrap-datetimepicker.min.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "schedule/schedule.calendar.js"
                 ], buildName: "schedule.calendar.js"}
@@ -168,7 +175,6 @@ gulp.task('build-scripts', function(){
       if(filesList[i].build == true){
         gulp.src(filesList[i].files)
             .pipe(sourcemaps.init())
-            //.pipe(uglify())
             .pipe(concat(filesList[i].buildName))
             .pipe(sourcemaps.write())
             .pipe(gulp.dest(objConfig.scriptDestinationFolder));
@@ -181,4 +187,75 @@ gulp.task('build-scripts', function(){
 
 gulp.task('watch-scripts', function() {
   gulp.watch(objConfig.watchPath, ['build-scripts']);
+});
+
+
+gulp.task('publish-build-js', function(){
+
+  for(var i = 0; i < filesList.length; i++){
+      //console.log(JSON.stringify(filesList[i]));
+      //console.log('lenght' + filesList.length);
+      //console.log('error at ' + JSON.stringify(filesList[16]));
+
+      //var i = 15;
+      //error at 16, 24
+      if(i != 16 && filesList[i].build == true){
+        gulp.src(filesList[i].files)
+            .pipe(concat(filesList[i].buildName))
+            .pipe(uglify())
+            .pipe(stripDebug())
+            .pipe(gulp.dest(objConfig.scriptDestinationFolder));
+      }
+  }
+
+  return;
+
+});
+
+gulp.task('vendor-build-js', function(){
+
+  //combining the jquery files first
+  var vendorFiles = [objConfig.scriptsBasePath + 'vendor/jquery-2.1.4.min.js', objConfig.scriptsBasePath + 'vendor/bootstrap.min.js'];
+  var fileName = 'jquery.bundle.js';
+
+  gulp.src(vendorFiles)
+      //.pipe(sourcemaps.init())
+      .pipe(uglify())
+      .pipe(concat(fileName))
+      //.pipe(sourcemaps.write())
+      .pipe(gulp.dest(objConfig.scriptDestinationFolder));
+  return;
+
+});
+
+var cssBundleFileList = [
+  objConfig.cssPath + 'style.css',
+  objConfig.cssPath + 'my-custom-style.css',
+  objConfig.cssPath + 'bootstrap.css',
+  objConfig.cssPath + 'bootstrap-theme.css',
+  objConfig.cssPath + 'metisMenu.min.css',
+  objConfig.cssPath + 'sb-admin.css',
+  objConfig.cssPath + 'font-awesome.min.css'
+];
+
+gulp.task('concat-css-dev', function(){
+
+  return gulp.src(cssBundleFileList)
+      .pipe(sourcemaps.init())
+      .pipe(concat(objConfig.cssBuildName))
+      .pipe(sourcemaps.write())
+      //.pipe(cssNano())
+      .pipe(gulp.dest(objConfig.cssDest));
+
+});
+
+gulp.task('concat-css-publish', function(){
+
+  return gulp.src(cssBundleFileList)
+      //.pipe(sourcemaps.init())
+      .pipe(concat(objConfig.cssBuildName))
+      //.pipe(sourcemaps.write())
+      .pipe(cssNano())
+      .pipe(gulp.dest(objConfig.cssDest));
+
 });
