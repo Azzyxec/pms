@@ -7,6 +7,18 @@
 }
 
 
+
+/* Login Style*/
+.panel-login
+{
+  box-shadow:5px 1px 20px black !important;
+  border-color:rgba(255, 255, 255, 0)  !important;
+}
+
+
+
+
+
 /*
  *
  *
@@ -27,7 +39,7 @@ html,#wrapper{
 /*navbar top color themes*/
 
 .navbar-inverse{
-   background-image: linear-gradient(to bottom, #3498db 0%, #1b83c9 100%) !important;
+   background-image: linear-gradient(to bottom, #6E90B5 0%, #1C558A 100%) !important;
     /* To change the background color where pms and jhon smith on top ** IMPORTANT **/
 }
 
@@ -71,7 +83,7 @@ html,#wrapper{
 /* side navigatino bar color theme ************/
 
 .side-nav{
-    background-color:#3498db !important;
+    background-color:#22598D !important;
 
     /* to change the background color of the left navigation Panel (appointment, schedule manager, etc background) */
 }
@@ -90,7 +102,7 @@ html,#wrapper{
 }
 
 .navbar-inverse .navbar-nav > .active > a {
-   background-image: linear-gradient(to bottom, #1b83c9 0%, #1b83c9 100%) !important;
+   background-image: linear-gradient(to bottom, #22598D 0%, #1b83c9 100%) !important;
 
     /* background color of active left navigation item example : color when appointments is clicked */
 }
@@ -164,7 +176,9 @@ html,#wrapper{
  *
  *
  */
-
+.schedule-timing-span{
+      color: #C1C1C1;
+}
 .calendar-date{
     margin-bottom: 2px;
     display: inline-block;
