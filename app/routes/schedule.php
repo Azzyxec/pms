@@ -110,4 +110,31 @@ $app->group('/schedule', function(){
 
   });
 
+  $this->get('/getCalanderDetails', function ($request, $response) {
+    try {
+
+      $user = UserSessionManager::getUser();
+
+      if($user->id != "-1"){
+
+        $doctorId = $user->doctorId;
+        $locaionId = 12;
+        $startDate = '01-05-2016';
+        $endDate = '31-06-2016';
+
+        $scheduleDB = new ScheduleDB();
+        $scheduleResponse = $scheduleDB->getCalanderDetails($doctorId, $locaionId, $startDate, $endDate);
+
+        return $response->withJson($scheduleResponse['data']);
+
+      }
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'something is not right in controller' );
+      return $response->withJson($data);
+    }
+
+  });
+
+
 });
