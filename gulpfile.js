@@ -33,6 +33,9 @@ var filesList = [
                        objConfig.scriptsBasePath +"utility.js",
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                       objConfig.scriptsBasePath + "vendor/raphael.min.js",
+                       objConfig.scriptsBasePath + "vendor/morris.min.js",
+                       objConfig.scriptsBasePath + "vendor/morris-data.js",
                        objConfig.scriptsBasePath +"doctor/dash.home.js"
                        ], buildName: "dash.home.js"},
  {build:true, files: [
@@ -156,6 +159,15 @@ var filesList = [
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "doctor/medicineSearch.js"
                 ], buildName: "medicineSearch.js"},
+         
+{build:true, files: [
+                  objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath + "vendor/raphael.min.js",
+                  objConfig.scriptsBasePath + "vendor/morris.min.js",
+                  objConfig.scriptsBasePath + "vendor/morris-data.js",
+                  objConfig.scriptsBasePath + "doctor/analytics.js"
+                ], buildName: "analytics.js"},
 {build:true, files: [
                   objConfig.scriptsBasePath + "links.js",
                   objConfig.scriptsBasePath + "moment.js",
