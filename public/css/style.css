@@ -176,7 +176,9 @@ html,#wrapper{
  *
  *
  */
-
+.schedule-timing-span{
+      color: #C1C1C1;
+}
 .calendar-date{
     margin-bottom: 2px;
     display: inline-block;

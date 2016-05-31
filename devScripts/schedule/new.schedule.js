@@ -319,7 +319,7 @@ var createScheduleView = {
     var tr =  $('<tr/>',{class: 'collapse collapse-style',
     id: idVal});
 
-    var td = $('<tr/>',{colspan: "7"});
+    var td = $('<td/>',{colspan: "7"});
     tr.append(td);
 
     var form = $('<form/>',{class: "form-inline"});
@@ -432,7 +432,7 @@ var createScheduleView = {
         var isActive = scheduleItem.active;
         if(isActive == 1){
           var time = scheduleItem.startTime + ' - ' + scheduleItem.endTime;
-          var span1 =  $('<span/>',{class: 'black font-10', text:time});
+          var span1 =  $('<span/>',{class: 'schedule-timing-span font-10', text:time});
 
           span1.on('click', (function(passedOn){
             return function(){
@@ -450,7 +450,7 @@ var createScheduleView = {
               timePickerTableRow.collapse('toggle');
 
               fromInput.datetimepicker({
-                inline: true,
+                inline:true,
                 format:'LT'
               });
 
@@ -468,7 +468,7 @@ var createScheduleView = {
 
 
               toInput.datetimepicker({
-                inline: true,
+                inline:true,
                 format:'LT'
               });
 
