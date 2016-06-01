@@ -13,6 +13,21 @@ $(document).ready(function(){
           e.preventDefault();
           window.location.href = links.getAnalyticsUrl;
       });
+ 
+var DashScheduleModel = {
+    
+    
+    
+} 
+
+var controller = {
+    
+    
+}
+        
+var view = {
+    
+}
 
 
 

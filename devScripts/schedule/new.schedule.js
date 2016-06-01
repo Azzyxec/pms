@@ -448,7 +448,7 @@ var createScheduleView = {
               var timePickerTableRow = createScheduleView.makeTimePickersRow(id, fromInput, toInput);
               timePickerTableRow.insertAfter(passedOn.tableRow);
               timePickerTableRow.collapse('toggle');
-
+ 
               fromInput.datetimepicker({
                 inline:true,
                 format:'LT'
