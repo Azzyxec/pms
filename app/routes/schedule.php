@@ -117,15 +117,17 @@ $app->group('/schedule', function(){
 
       if($user->id != "-1"){
 
+        $allGetVars = $request->getQueryParams();
+
         $doctorId = $user->doctorId;
-        $locaionId = 12;
-        $startDate = '01-05-2016';
-        $endDate = '31-06-2016';
+        $startDate = $allGetVars['startDate']; //'01-05-2016';
+        $endDate = $allGetVars['endDate']; //'30-06-2016';
 
         $scheduleDB = new ScheduleDB();
-        $scheduleResponse = $scheduleDB->getCalanderDetails($doctorId, $locaionId, $startDate, $endDate);
+        $scheduleResponse = $scheduleDB->getCalanderDetails($doctorId, $startDate, $endDate);
 
-        return $response->withJson($scheduleResponse['data']);
+        $data = array('status' => "1", 'data' => $scheduleResponse['data'], 'message' => 'success' );
+        return $response->withJson($data);
 
       }
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2016 at 03:55 PM
+-- Generation Time: Jun 01, 2016 at 06:25 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -860,7 +860,9 @@ begin
 								`recovery_email`,
 								`fk_location_id`,
 								`fk_doctor_id`,
-								`fk_user_id`,
+								 fk_user_id,
+								`fk_created_by_id`,
+								created_by_type,
 								`created_date`,
 								`is_active`) 
 					   VALUES (pfirst_name,
@@ -874,6 +876,8 @@ begin
 							   pfk_location_id,
 							   pfk_doctor_id,
 							   @llogin_id,
+							   pfk_logged_in_user_id,
+							   plogged_in_user_type,
 							   now(),
 							   pis_active
 							   );
@@ -908,6 +912,9 @@ begin
 								,`recovery_email`= precovery_email
 								,`fk_location_id`= pfk_location_id
 								,`fk_doctor_id`= pfk_doctor_id
+								,fk_modified_by_id = pfk_logged_in_user_id
+								,modified_by_type = plogged_in_user_type
+								,modified_date = now()
 								,`is_active`= pis_active 
 							WHERE id = pid;
 				
@@ -1156,6 +1163,25 @@ from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
 	  and is_active = 1$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+    READS SQL DATA
+begin
+
+
+SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
+	   ,start_time_mins 
+	   ,end_time_mins 
+	   ,fk_schedule_id
+  FROM schedule_day 
+  WHERE fk_doctor_id = pdoctor_id 
+		and location_id = plocation_id
+		and `date` >= STR_TO_DATE(pstart_date, '%d-%m-%Y')
+		and `date` <= STR_TO_DATE(pend_date, '%d-%m-%Y')
+  group by `date`, start_time_mins, end_time_mins 
+  order by `date` asc, start_time_mins asc;
+  
+ end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
 begin
@@ -1199,9 +1225,6 @@ SELECT `first_name`
 		, `recovery_contact`
 		, `recovery_email`
 		, `fk_location_id`
-		, `fk_doctor_id`
-		, `fk_user_id`
-		, `created_date`
 		, `is_active`
 		,@luser_name as user_name
 		,@lpassword as password
@@ -1316,7 +1339,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=57 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
 
 --
 -- Dumping data for table `login`
@@ -1347,7 +1370,8 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (53, 'D', 'kkkk', 'kkkk', '2016-05-04 00:04:30', NULL, 1),
 (54, 'D', 'frank', 'frank', '2016-05-04 00:16:08', NULL, 1),
 (55, 'D', 'frank2', 'frank2', '2016-05-04 00:17:25', '2016-05-04 00:33:15', 1),
-(56, 'D', 'saviopereira88', 'cipla@123', '2016-05-13 21:46:23', '2016-05-14 01:31:31', 1);
+(56, 'D', 'saviopereira88', 'cipla@123', '2016-05-13 21:46:23', '2016-05-14 01:31:31', 1),
+(57, 'S', 'usie', 'usie', '2016-05-28 22:35:17', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1566,15 +1590,16 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=70 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=73 ;
 
 --
 -- Dumping data for table `schedule`
 --
 
 INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created_date`, `created_by`, `created_by_type`, `is_active`) VALUES
-(68, 18, '2016-05-28', '2016-06-12', '2016-05-28 00:00:00', 18, 'D', 1),
-(69, 18, '2016-05-28', '2016-06-12', '2016-05-28 00:00:00', 18, 'D', 1);
+(70, 18, '2016-06-01', '2016-06-30', '2016-05-29 00:00:00', 18, 'D', 1),
+(71, 18, '2016-05-31', '2016-06-15', '2016-05-31 00:00:00', 18, 'D', 1),
+(72, 18, '2016-05-31', '2016-06-15', '2016-05-31 00:00:00', 18, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -1593,30 +1618,90 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `is_blocked` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229385 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229426 ;
 
 --
 -- Dumping data for table `schedule_day`
 --
 
 INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id`, `date`, `start_time_mins`, `end_time_mins`, `is_blocked`, `is_active`) VALUES
-(229368, 18, 68, 12, 20160530, 540, 720, 0, 1),
-(229369, 18, 68, 12, 20160606, 540, 720, 0, 1),
-(229370, 18, 68, 12, 0, 0, 0, 0, 0),
-(229371, 18, 68, 12, 0, 0, 0, 0, 0),
-(229372, 18, 68, 12, 0, 0, 0, 0, 0),
-(229373, 18, 68, 12, 0, 0, 0, 0, 0),
-(229374, 18, 68, 12, 0, 0, 0, 0, 0),
-(229375, 18, 68, 12, 0, 0, 0, 0, 0),
-(229376, 18, 68, 12, 0, 0, 0, 0, 0),
-(229377, 18, 68, 12, 0, 0, 0, 0, 0),
-(229378, 18, 68, 12, 0, 0, 0, 0, 0),
-(229379, 18, 68, 12, 0, 0, 0, 0, 0),
-(229380, 18, 68, 12, 0, 0, 0, 0, 0),
-(229381, 18, 68, 12, 0, 0, 0, 0, 0),
-(229382, 18, 68, 12, 0, 0, 0, 0, 0),
-(229383, 18, 69, 12, 20160530, 540, 720, 0, 1),
-(229384, 18, 69, 12, 20160606, 540, 720, 0, 1);
+(229385, 18, 70, 12, 20160601, 540, 720, 0, 1),
+(229386, 18, 70, 12, 20160602, 540, 720, 0, 1),
+(229387, 18, 70, 12, 20160603, 540, 720, 0, 1),
+(229388, 18, 70, 12, 20160606, 540, 720, 0, 1),
+(229389, 18, 70, 12, 20160607, 540, 720, 0, 1),
+(229390, 18, 70, 12, 20160608, 540, 720, 0, 1),
+(229391, 18, 70, 12, 20160609, 540, 720, 0, 1),
+(229392, 18, 70, 12, 20160610, 540, 720, 0, 1),
+(229393, 18, 70, 12, 20160613, 540, 720, 0, 1),
+(229394, 18, 70, 12, 20160614, 540, 720, 0, 1),
+(229395, 18, 70, 12, 20160615, 540, 720, 0, 1),
+(229396, 18, 70, 12, 20160616, 540, 720, 0, 1),
+(229397, 18, 70, 12, 20160617, 540, 720, 0, 1),
+(229398, 18, 70, 12, 20160620, 540, 720, 0, 1),
+(229399, 18, 70, 12, 20160621, 540, 720, 0, 1),
+(229400, 18, 70, 12, 20160622, 540, 720, 0, 1),
+(229401, 18, 70, 12, 20160623, 540, 720, 0, 1),
+(229402, 18, 70, 12, 20160624, 540, 720, 0, 1),
+(229403, 18, 70, 12, 20160627, 540, 720, 0, 1),
+(229404, 18, 70, 12, 20160628, 540, 720, 0, 1),
+(229405, 18, 70, 12, 20160629, 540, 720, 0, 1),
+(229406, 18, 70, 12, 20160630, 540, 720, 0, 1),
+(229407, 18, 71, 12, 20160531, 900, 1080, 0, 1),
+(229408, 18, 71, 12, 20160601, 900, 1080, 0, 1),
+(229409, 18, 71, 12, 20160602, 900, 1080, 0, 1),
+(229410, 18, 71, 12, 20160603, 900, 1080, 0, 1),
+(229411, 18, 71, 12, 20160606, 900, 1080, 0, 1),
+(229412, 18, 71, 12, 20160607, 900, 1080, 0, 1),
+(229413, 18, 71, 12, 20160608, 900, 1080, 0, 1),
+(229414, 18, 71, 12, 20160609, 900, 1080, 0, 1),
+(229415, 18, 71, 12, 20160610, 900, 1080, 0, 1),
+(229416, 18, 71, 12, 20160613, 900, 1080, 0, 1),
+(229417, 18, 71, 12, 20160614, 900, 1080, 0, 1),
+(229418, 18, 71, 12, 20160615, 900, 1080, 0, 1),
+(229419, 18, 72, 13, 20160601, 540, 720, 0, 1),
+(229420, 18, 72, 13, 20160603, 540, 720, 0, 1),
+(229421, 18, 72, 13, 20160606, 540, 720, 0, 1),
+(229422, 18, 72, 13, 20160608, 540, 720, 0, 1),
+(229423, 18, 72, 13, 20160610, 540, 720, 0, 1),
+(229424, 18, 72, 13, 20160613, 540, 720, 0, 1),
+(229425, 18, 72, 13, 20160615, 540, 720, 0, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff`
+--
+
+CREATE TABLE IF NOT EXISTS `staff` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `contact1` varchar(50) NOT NULL,
+  `contact2` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `address` varchar(2000) NOT NULL,
+  `recovery_contact` varchar(50) NOT NULL,
+  `recovery_email` varchar(100) NOT NULL,
+  `fk_location_id` int(11) NOT NULL,
+  `fk_doctor_id` int(11) NOT NULL,
+  `fk_user_id` int(11) NOT NULL,
+  `fk_created_by_id` int(11) NOT NULL,
+  `created_by_type` varchar(5) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `fk_modified_by_id` int(11) NOT NULL,
+  `modified_by_type` int(11) NOT NULL,
+  `modified_date` datetime NOT NULL,
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `email`, `address`, `recovery_contact`, `recovery_email`, `fk_location_id`, `fk_doctor_id`, `fk_user_id`, `fk_created_by_id`, `created_by_type`, `created_date`, `fk_modified_by_id`, `modified_by_type`, `modified_date`, `is_active`) VALUES
+(1, 'Ama zone', 'asdf', 'sdf', 'sdf', 'sdf', 'sdf', 'asdf', 'sdaf', 13, 18, 0, 18, 'D', '2016-05-28 22:35:17', 0, 0, '0000-00-00 00:00:00', 1);
 
 -- --------------------------------------------------------
 

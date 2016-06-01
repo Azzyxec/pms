@@ -6,7 +6,7 @@
 <section id="schedule-Table">
   <!-- /.row -->
   <div class="row">
-       <h1 class="text-center">May 2016</h1>
+    <h1 class="text-center">May 2016</h1>
     <hr class="invisible">
     <div class="col-lg-12">
 
@@ -21,14 +21,10 @@
         <div class="col-lg-12">
 
           <div class="row">
-           
+
             <div class="col-md-12 col-sm-12">
               <div class="">
-                <ul class="list-unstyled list-inline">
-                  <li><label class="label  label-primary">&nbsp;&nbsp;</label><span class="invisible">.....</span><label>Margao </label></li>
-                  <li><label class="label label-info">&nbsp;&nbsp;</label><span class="invisible">.....</span><label>Cuncolim </label></li>
-                  <li><label class="label  label-warning">&nbsp;&nbsp;</label><span class="invisible">.....</span><label>Panjim </label> </li>
-
+                <ul id="location-list-top" class="list-unstyled list-inline">
                   <!-- #337ab7 blue  #F44336 red green #4CAF50 -->
                 </ul>
 
@@ -62,7 +58,7 @@
                   <tr>
                     <th class="text-center">Mon</th>
                     <th class="text-center" >Tue</th>
-                    <th class="text-center">Wen</th>
+                    <th class="text-center">Wed</th>
                     <th class="text-center">Thu</th>
                     <th class="text-center">Fri</th>
                     <th class="text-center">Sat</th>
@@ -70,7 +66,9 @@
 
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="calendar-body">
+
+<!--
                   <tr >
 
                     <td height="100">
@@ -127,332 +125,225 @@
                       <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
 
                     </td>
-                    
+
                   </tr>
 
-                  <!---------- collapse section---------
+                  <tr>
 
-                  <tr  class="collapse"  id="collapseExample1">
+                  <td height="100">
 
-                  <td colspan="7" >
-                  <ul class="list-group">
-                  <li class="list-group-item">
-                  <label><small>Patient:&nbsp;&nbsp;</small></label><small>Joseph Dsouza</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <label><small>Time:&nbsp;&nbsp;</small></label><small>14:00 Pm To 15:00 Pm</small>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=" pull-right btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails1">more</button>
-                  <div class="collapse" id="collapseAppointmentDetails1">
-                  <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
-                  <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
-
-                </div>
+                    <span class=" font-16 calendar-date">8</span><br>
+                    <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
+                    <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+                    <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
 
-              </li>
 
-              <li class="list-group-item">
-              <label><small>Patient:&nbsp;&nbsp;</small></label><small>Tom Cruz</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <label><small>Time:&nbsp;&nbsp;</small></label><small>15:00 Pm To 16:00 Pm</small>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class=" pull-right btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails11">more</button>
-              <div class="collapse" id="collapseAppointmentDetails11">
-              <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
-              <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+                  </td>
 
-            </div>
 
-          </li>
-          <li class="list-group-item">
-          <label><small>Patient:&nbsp;&nbsp;</small></label><small>Barreto Fernandes</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <label><small>Time:&nbsp;&nbsp;</small></label><small>16:00 Pm To 17:00 Pm</small>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="pull-right btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails11">more</button>
-          <div class="collapse" id="collapseAppointmentDetails11">
-          <label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
-          <button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+                  <td>
+                    <span class=" font-16 calendar-date">9</span><br>
+                    <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
+                    <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+                    <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
 
-        </div>
 
-      </li>
+                  </td>
+                  <td>   <span class=" font-16 calendar-date">10</span><br>
+                    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                    <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                    <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
+                  </td>
+                  <td>   <span class=" font-16 calendar-date">11</span><br>
+                    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                    <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                    <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
 
-    </ul>
-  </td>
-</tr>
--->
+                  </td>
+                  <td>   <span class=" font-16 calendar-date">12</span><br>
+                    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                    <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                    <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-<td height="100">
+                  </td>
+                  <td>   <span class=" font-16 calendar-date">13</span><br>
+                    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                    <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                    <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-  <span class=" font-16 calendar-date">8</span><br>
-  <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
+                  </td>
+                  <td>   <span class=" font-16 calendar-date">14</span><br>
+                    <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                    <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                    <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
+                  </td>
 
-</td>
+                </tr>
 
 
-<td>
-  <span class=" font-16 calendar-date">9</span><br>
-  <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
+                <tr>
+                <td height="100">
 
+                  <span class=" font-16 calendar-date">15</span><br>
+                  <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
+                  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+                  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
 
-</td>
-<td>   <span class=" font-16 calendar-date">10</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-<td>   <span class=" font-16 calendar-date">11</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
+                </td>
 
-</td>
-<td>   <span class=" font-16 calendar-date">12</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-<td>   <span class=" font-16 calendar-date">13</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+                <td>
+                  <span class=" font-16 calendar-date">16</span><br>
+                  <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
+                  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+                  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
 
-</td>
-<td>   <span class=" font-16 calendar-date">14</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
+                </td>
+                <td>
+                  <span class=" font-16 calendar-date">17</span><br>
+                  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</tr>
-<!---------- collapse section---------
+                </td>
+                <td>
+                  <span class=" font-16 calendar-date">18</span><br>
+                  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
 
-<tr  class="collapse"  id="collapseExample2">
+                </td>
+                <td>   <span class=" font-16 calendar-date">19</span><br>
+                  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-<td colspan="7" >
-<ul class="list-group">
-<li class="list-group-item">
-<label><small>Patient:&nbsp;&nbsp;</small></label><small>Ignetious Dsouza</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<label><small>Time:&nbsp;&nbsp;</small></label><small>15:00 Pm To 16:00 Pm</small>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails2">more</button>
-<div class="collapse" id="collapseAppointmentDetails2">
-<label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
-<button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+                </td>
+                <td>   <span class=" font-16 calendar-date">20</span><br>
+                  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</div>
+                </td>
+                <td>   <span class=" font-16 calendar-date">21</span><br>
+                  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</li>
+                </td>
 
+              </tr>
 
-</ul>
-</td>
-</tr>
--->
+              <tr>
+              <td height="100">
 
+                <span class=" font-16 calendar-date">22</span><br>
 
+                <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
+                <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+                <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
 
-<td height="100">
 
-  <span class=" font-16 calendar-date">15</span><br>
-  <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
+              </td>
 
 
-</td>
+              <td>
+                <span class=" font-16 calendar-date">23</span><br>
+                <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
+                <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+                <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
 
 
-<td>
-  <span class=" font-16 calendar-date">16</span><br>
-  <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
+              </td>
+              <td>   <span class=" font-16 calendar-date">24</span><br>
+                <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
+              </td>
+              <td>   <span class=" font-16 calendar-date">25</span><br>
+                <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
 
-</td>
-<td>
-  <span class=" font-16 calendar-date">17</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+              </td>
+              <td>   <span class=" font-16 calendar-date">26</span><br>
+                <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-<td>
-  <span class=" font-16 calendar-date">18</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
+              </td>
+              <td>   <span class=" font-16 calendar-date">27</span><br>
+                <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-<td>   <span class=" font-16 calendar-date">19</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+              </td>
+              <td>   <span class=" font-16 calendar-date">28</span><br>
+                <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+                <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+                <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-<td>   <span class=" font-16 calendar-date">20</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+              </td>
 
-</td>
-<td>   <span class=" font-16 calendar-date">21</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+            </tr>
 
-</td>
 
-</tr>
-<!--
-<tr  class="collapse"  id="collapseExample3">
+            <tr>
+            <td height="100">
 
-<td colspan="7" >
-<ul class="list-group">
-<li class="list-group-item">
-<label><small>Patient:&nbsp;&nbsp;</small></label><small>Joseph Dsouza</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<label><small>Time:&nbsp;&nbsp;</small></label><small>15:00 Pm To 16:00 Pm</small>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn-sm btn btn-primary calender-list-group-btn"  data-toggle="collapse" href="#collapseAppointmentDetails3">more</button>
-<div class="collapse" id="collapseAppointmentDetails3">
-<label>Diagnosis:</label><p >   Bronchitis /Lung infection</p>
-<button class="btn btn-sm btn-danger">Cancel Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-warning">Re-Schedule Appointment</button><span class="invisible">..</span><button class="btn btn-sm btn-info">Patient history</button>
+              <span class=" font-16 calendar-date">29</span><br>
 
-</div>
+              <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
+              <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+              <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
 
-</li>
 
+            </td>
 
-</ul>
-</td>
-</tr>
--->
 
+            <td>
+              <span class=" font-16 calendar-date">30</span><br>
+              <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
+              <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
+              <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
 
-<td height="100">
 
-  <span class=" font-16 calendar-date">22</span><br>
+            </td>
+            <td>   <span class=" font-16 calendar-date">31</span><br>
+              <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
+              <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
+              <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-  <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
+            </td>
 
+          </tr>
 
-</td>
+          ---------- collapse section--------
+          <tr  class="collapse"  id="collapseExample2">
 
+          <td colspan="6" >
+          <ul class="list-group">
+          <li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
 
-<td>
-  <span class=" font-16 calendar-date">23</span><br>
-  <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
+          <p >    Back Diagnosis of Joseph Pinto</p><br>
+          <button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
 
 
-</td>
-<td>   <span class=" font-16 calendar-date">24</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+        </ul>
+      </td>
+    </tr>
 
-</td>
-<td>   <span class=" font-16 calendar-date">25</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span>
 
-</td>
-<td>   <span class=" font-16 calendar-date">26</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
+    --->
 
-</td>
-<td>   <span class=" font-16 calendar-date">27</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-<td>   <span class=" font-16 calendar-date">28</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
 
-</td>
-
-</tr>
-
-<!---------- collapse section---------
-
-<tr  class="collapse"  id="collapseExample2">
-
-<td colspan="6" >
-<ul class="list-group">
-<li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
-
-<p >    Back Diagnosis of Joseph Pinto</p><br>
-<button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
-
-
-</ul>
-</td>
-</tr>
-
--->
-
-
-<td height="100">
-
-  <span class=" font-16 calendar-date">29</span><br>
-
-  <span class="label label-primary location-label " data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span>
-
-
-</td>
-
-
-<td>
-  <span class=" font-16 calendar-date">30</span><br>
-  <span class="label label-primary location-label" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-info" data-toggle="collapse" href="#collapseExample2"></span>
-  <span class="location-label label label-warning" data-toggle="collapse" href="#collapseExample2"></span><br>
-
-
-</td>
-<td>   <span class=" font-16 calendar-date">31</span><br>
-  <span class="label label-primary location-label" href="#Margao" data-toggle="tab"></span>
-  <span class="location-label label label-info" href="#Cuncolim" data-toggle="tab"></span>
-  <span class="location-label label label-warning" href="#Panjim" data-toggle="tab"></span><br>
-
-</td>
-
-</tr>
-
-<!---------- collapse section--------
-<tr  class="collapse"  id="collapseExample2">
-
-<td colspan="6" >
-<ul class="list-group">
-<li class="list-group-item"> <h4 class="list-group-item-heading">Location :Margao</h4>
-
-<p >    Back Diagnosis of Joseph Pinto</p><br>
-<button class="btn  btn-primary">Cancel Appointment</button><span class="invisible">....</span><button class="btn  btn-warning">Re-Schedule Appointment</button></li>
-
-
-</ul>
-</td>
-</tr>
-
-
---->
-
-
-
-</tbody>
+  </tbody>
 </table>
 </div>
 

@@ -87,75 +87,94 @@ class ScheduleDB
     }
   }
 
-  public function getCalanderDetails($doctorId, $locationId, $startDate, $endDate){
+  public function getCalanderDetails($doctorId, $startDate, $endDate){
     try {
 
       // get locaion list for the doctor
 
       $doctorDB = new DoctorDB();
-      $locationArray = $doctorDB->getAllLocations($doctorId);
+      $locationsResult = $doctorDB->getAllLocations($doctorId);
+
+      $locationList = $locationsResult['data'];
+
+      $scheduleList = array();
+      $scheduleList['locationList'] = $locationList;
+
+      foreach ($locationList as $key => $value) {
+
+        $locationId = $value['id'];
+        $locationName = $value['name'];
+
+        $paramArray = array(
+          'pdoctor_id' => $doctorId,
+          'plocation_id' => $locationId,
+          'pstart_date' => $startDate,
+          'pend_date' => $endDate
+        );
+
+        $statement = DBHelper::generateStatement('get_schedule_calander_details',  $paramArray);
+
+        $statement->execute();
+
+
+        $scheduleCalendar = array();
+        $scheduleCalendar['locationId'] = $locationId;
+        $scheduleCalendar['LocationName'] = $locationName;
+
+        while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+          $item = array();
+          $item['startTimeMinutes'] = $result['start_time_mins'];
+          $item['endTimeMinutes'] = $result['end_time_mins'];
+          $item['scheduleId'] = $result['fk_schedule_id'];
+
+          //making a schedule
+          $schedule = array();
+          $schedule['date'] = $result['schedule_date'];
+          $schedule['timings'][] = $item;
+
+          $scheduleCalendar['scheduleList'][] = $schedule;
+
+        }
+
+        if(isset($scheduleCalendar['scheduleList'])){
+          //putting timings for the same date together
+          $scheduleLists = $scheduleCalendar['scheduleList'];
+          $newList = array();
+          foreach ($scheduleLists as $key => $value) {
+            $date = $value['date'];
+
+            $valueExists = false;
+            foreach ($newList as $key1 => $value1) {
+              //$newList[] = $date;
+              if(isset($value1)){
+                if(strcmp($date, $value1['date']) == 0){
+                  $newList[$key1]['timings'][] = $value['timings'][0];
+                  $valueExists = true;
+                }
+              }
+            }//inner for loop ends
+
+            if(!$valueExists){
+              $newList[] = $value;
+            }
+
+          }
+
+          $scheduleCalendar['scheduleList'] = $newList;
+
+
+          $scheduleList['calendarList'][] = $scheduleCalendar;
+        }//if
+      }
+
+      $scheduleList['startDate'] = $startDate;
+      $scheduleList['endDate'] = $endDate;
 
       //loop for each location array
 
-      $paramArray = array(
-        'pdoctor_id' => $doctorId,
-        'plocation_id' => $locationId,
-        'pstart_date' => $startDate,
-        'pend_date' => $endDate
-      );
 
-      $statement = DBHelper::generateStatement('get_schedule_calander_details',  $paramArray);
-
-      $statement->execute();
-
-      $scheduleCalendar = array();
-      $scheduleCalendar['locatationId'] = $locationId;
-      $scheduleCalendar['LocationName'] = 'Marg';
-
-
-      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-
-        $item = array();
-        $item['startDateMinutes'] = $result['start_time_mins'];
-        $item['endDateMinutes'] = $result['end_time_mins'];
-        $item['scheduleId'] = $result['fk_schedule_id'];
-
-        //making a schedule
-        $schedule = array();
-        $schedule['date'] = $result['schedule_date'];
-        $schedule['schedule'][] = $item;
-
-        $scheduleCalendar['scheduleList'][] = $schedule;
-
-      }
-
-      $scheduleLists = $scheduleCalendar['scheduleList'];
-      $newList = array();
-      foreach ($scheduleLists as $key => $value) {
-        $date = $value['date'];
-
-        $valueExists = false;
-        foreach ($newList as $key1 => $value1) {
-          //$newList[] = $date;
-          if(isset($value1)){
-            if(strcmp($date, $value1['date']) == 0){
-              $newList[$key1]['schedule'][] = $value['schedule'];
-              $valueExists = true;
-            }
-          }
-        }//inner for loop ends
-
-        if(!$valueExists){
-          //$newList[] = $date;
-          $newList[] = $value;
-        }
-
-      }
-
-      $scheduleCalendar['twoList'] = $newList;
-
-
-      return array('status' => "1", 'data' => $newList, 'message' => 'success' );
+      return array('status' => "1", 'data' => $scheduleList, 'message' => 'success' );
 
     } catch (Exception $e) {
       return array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
