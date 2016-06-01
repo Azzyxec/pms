@@ -159,7 +159,7 @@ var filesList = [
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "doctor/medicineSearch.js"
                 ], buildName: "medicineSearch.js"},
-         
+
 {build:true, files: [
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
@@ -205,13 +205,14 @@ gulp.task('watch-scripts', function() {
 gulp.task('publish-build-js', function(){
 
   for(var i = 0; i < filesList.length; i++){
-      //console.log(JSON.stringify(filesList[i]));
+    //console.log(JSON.stringify(filesList[i]));
+      console.log('at ' + i);
       //console.log('lenght' + filesList.length);
       //console.log('error at ' + JSON.stringify(filesList[16]));
 
       //var i = 15;
       //error at 16, 24
-      if(i != 16 && filesList[i].build == true){
+      if(i != 16 && i != 24 && filesList[i].build == true){
         gulp.src(filesList[i].files)
             .pipe(concat(filesList[i].buildName))
             .pipe(uglify())
