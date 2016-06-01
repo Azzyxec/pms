@@ -29,14 +29,21 @@ $(document).ready(function(){
         calendarView.init();
 
         var mTodaysDate = moment();
+        var day = mTodaysDate.day();
+        mTodaysDate.subtract(day); //go to the first of the month
+
+        //month
         var lstartDate = mTodaysDate.format('DD-MM-YYYY');
-        mTodaysDate.add(30, 'd');
+        mTodaysDate.add(1, 'M');
         var lendDate = mTodaysDate.format('DD-MM-YYYY');
         this.getDetailsFromServer(lstartDate, lendDate);
 
       },
       getLocationList: function(){
         return  model.locationList;
+      },
+      getStartDate: function(){
+        return model.startDate;
       },
       searchSchedule: function(scheduleList, date){
         console.log('length' + scheduleList.length);
@@ -144,6 +151,7 @@ $(document).ready(function(){
         //console.log('constructed Model ' + JSON.stringify(constructedScheduleListModel));
 
         //looping through the schedules for each location
+        if(model.calendarList){
         for(var locCounter = 0; locCounter < model.calendarList.length; locCounter++){
 
           var lscheduleList = model.calendarList[locCounter].scheduleList;
@@ -172,6 +180,7 @@ $(document).ready(function(){
 
 
         }//outer loop for locations
+      }
 
         //console.log('constructed Model after' + JSON.stringify(constructedScheduleListModel));
 
@@ -192,19 +201,65 @@ $(document).ready(function(){
     var calendarView = {
       init: function(){
         this.newScheduleButton = $("#btn-new-schedule");
+        this.txtMonthHeader = $('#txt-month-header');
         this.locationListTop = $('#location-list-top');
         this.calendarTableBody = $('#calendar-body');
+
+        this.btnPreviousSchedule = $('#btn-previous-schedule');
+        this.btnNextSchedule = $('#btn-next-schedule');
 
         this.newScheduleButton.click(function(e){
           e.preventDefault();
           window.location.href = links.newScheduleUrl;
         });
 
+        this.btnPreviousSchedule.click(function(e){
+          e.preventDefault();
+
+          var strDate = controller.getStartDate();
+          mStartDate = moment(strDate, "DD-MM-YYYY");
+          mStartDate.subtract(1, 'M');
+
+          var day = mStartDate.day();
+          mStartDate.subtract(day); //go to the first of the month
+
+          var newStartDate =mStartDate.format('DD-MM-YYYY');
+          mStartDate.add(1, 'M');
+          var newEndDate = mStartDate.format('DD-MM-YYYY');
+
+          console.log('start ' + newStartDate + ' end ' + newEndDate);
+          controller.getDetailsFromServer(newStartDate, newEndDate);
+
+        });
+
+        this.btnNextSchedule.click(function(e){
+          e.preventDefault();
+          var strDate = controller.getStartDate();
+          mStartDate = moment(strDate, "DD-MM-YYYY");
+          mStartDate.add(1, 'M');
+
+          var day = mStartDate.day();
+          mStartDate.subtract(day); //go to the first of the month
+
+          var newStartDate =mStartDate.format('DD-MM-YYYY');
+          mStartDate.add(1, 'M');
+          var newEndDate = mStartDate.format('DD-MM-YYYY');
+
+          console.log('start ' + newStartDate + ' end ' + newEndDate);
+          controller.getDetailsFromServer(newStartDate, newEndDate);
+        })
+
       },
       render: function(){
 
+        var strDate = controller.getStartDate();
+        mStartDate = moment(strDate, "DD-MM-YYYY");
+        this.txtMonthHeader.text(mStartDate.format('MMM YY'));
+
+
         //adding the locaiton list on top
         var locationList = controller.getLocationList();
+        this.locationListTop.empty();
 
         //<li><label class="label  label-primary">&nbsp;&nbsp;</label><span class="invisible">.....</span><label>Margao </label></li>
         for(var i = 0; i < locationList.length; i++){
@@ -245,7 +300,7 @@ $(document).ready(function(){
         var daysCount = scheduleList.length;
         var loopCount = Math.ceil(daysCount / 7);  //divide by seven days of week
 
-
+        this.calendarTableBody.empty();
         for(var i = 0; i < loopCount ; i++){
 
           var tr = $('<tr/>',{class: 'text-center'});
