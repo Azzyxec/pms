@@ -1,6 +1,5 @@
 <?php
-
-namespace Pms\DataLayer;
+namespace Pms\Datalayer;
 
 use \PDO;
 use Pms\Datalayer\DBHelper;

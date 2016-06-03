@@ -9,7 +9,7 @@ use Pms\Datalayer\AuthenticateDB;
 $app->group('/authenticate', function(){
 
   $this->get('/login', function ($request, $response) {
-      return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
   });
 
   $this->get('/passwordReset', function ($request, $response) {
@@ -20,7 +20,7 @@ $app->group('/authenticate', function(){
 
     //$isValid = $authenticateDB->isPaswordResetCodeValid();
 
-      return $this->view->render($response, '/authenticate/password-reset.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/authenticate/password-reset.html', array('basePath' => AppConfig::$basePath));
   });
 
   $this->post('/passwordReset', function ($request, $response) {
@@ -34,7 +34,7 @@ $app->group('/authenticate', function(){
       $resetCode = $postedData['resetCode'];
       $newPassword = $postedData['password'];
 
-      $authenticateDB = new authenticateDB();
+      $authenticateDB = new AuthenticateDB();
 
       $result = $authenticateDB->resetPassword($resetCode, $newPassword);
 
@@ -59,46 +59,68 @@ $app->group('/authenticate', function(){
   });
 
   $this->get('/forgotPassword', function ($request, $response) {
-      return $this->view->render($response, '/authenticate/forgot-password.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/authenticate/forgot-password.html', array('basePath' => AppConfig::$basePath));
   });
 
   $this->post('/resetPasswordRequest', function ($request, $response) {
-      try {
+    try {
 
-        $postedData = $request->getParsedBody();
+      $postedData = $request->getParsedBody();
 
-        $loginId = $postedData['loginId'];
+      $loginId = $postedData['loginId'];
 
-        $authenticateDB = new authenticateDB();
+      $authenticateDB = new AuthenticateDB();
 
-        $result = $authenticateDB->resetPasswordRequest($loginId);
+      $result = $authenticateDB->resetPasswordRequest($loginId);
 
-        $sendData = array();
-        $sendData['status'] = $result['status'];
-        $sendData['email'] = $result['email'];
+      $sendData = array();
+      $sendData['status'] = $result['status'];
+      $sendData['email'] = $result['email'];
 
-        if($result['status'] == 0){
-          $email = $result['email'];
+      $mailResult = "";
 
-          //$resetCode = $result['resetCode'];
-          //send mail
-        }
+      if($result['status'] == 0){
+        $email = $result['email'];
 
-        $data = array('status' => "1", 'data' => $sendData, 'message' => 'success');
-        return $response->withJson($data);
+        $resetCode =  $result['resetCode'];
 
-      } catch (Exception $e) {
-        $data = array('status' => "-1", 'data' => '', 'message' => 'something is not right in controller' . $e->getMessage() );
-        return $response->withJson($data);
+        $resetLink = "http://dreamlogic.in/demo/public/index.php/authenticate/passwordReset?code=" . $resetCode;
+
+        // Create the Transport
+        $transport = Swift_SmtpTransport::newInstance('md-in-52.webhostbox.net', 465, 'ssl')
+        ->setUsername('noreply@dreamlogic.in')
+        ->setPassword('Dreaml0g1c@mail');
+
+
+        $message = Swift_Message::newInstance('Password reset link')
+        ->setFrom(array('noreply@dreamlogic.in' => 'Admin'))
+        ->setTo(array($email))
+        ->setBody('please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink, 'text/html');
+
+        $mailer = Swift_Mailer::newInstance($transport);
+
+        // Send the message
+        $mailResult = $mailer->send($message);
+
+        //$resetCode = $result['resetCode'];
+        //send mail
       }
+
+      $data = array('status' => "1", 'data' => $sendData, 'message' => 'success', 'mailResult' => $mailResult);
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => '', 'message' => 'something is not right in controller' . $e->getMessage() );
+      return $response->withJson($data);
+    }
 
   });
 
   $this->post('/isLoggedIn', function ($request, $response) {
 
-     $user = UserSessionManager::getUser();
-     $data = array('data' => $user);
-     return $response->withJson($data);
+    $user = UserSessionManager::getUser();
+    $data = array('data' => $user);
+    return $response->withJson($data);
   });
 
   $this->post('/authenitcateUser', function ($request, $response) {
@@ -108,35 +130,35 @@ $app->group('/authenticate', function(){
     try{
 
 
-       $postedData = $request->getParsedBody();
-       if( isset($postedData['loginId']) && isset($postedData['password']) ){
+      $postedData = $request->getParsedBody();
+      if( isset($postedData['loginId']) && isset($postedData['password']) ){
 
-         $userDb = new UserDB();
-         $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
+        $userDb = new UserDB();
+        $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
 
-         UserSessionManager::setUser($user);
-       }
+        UserSessionManager::setUser($user);
+      }
 
-       $data = array('status' => "1", 'data' => $user, 'message' => 'success' );
-       return $response->withJson($data);
+      $data = array('status' => "1", 'data' => $user, 'message' => 'success' );
+      return $response->withJson($data);
 
-   }catch(Exception $e){
+    }catch(Exception $e){
 
-     $data = array('status' => "-1", 'data' => $user, 'message' => 'something is not right in controller' . $e->getMessage() );
-     return $response->withJson($data);
-   }
+      $data = array('status' => "-1", 'data' => $user, 'message' => 'something is not right in controller' . $e->getMessage() );
+      return $response->withJson($data);
+    }
   });
 
 
   $this->post('/logout', function($request, $response){
-      UserSessionManager::destroySession();
-      $data = array('data' => "1");
-      return $response->withJson($data);
+    UserSessionManager::destroySession();
+    $data = array('data' => "1");
+    return $response->withJson($data);
   });
 
   $this->get('/logout', function($request, $response){
-      UserSessionManager::destroySession();
-      return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+    UserSessionManager::destroySession();
+    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
   });
 
 }); //authenticate group

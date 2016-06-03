@@ -1,5 +1,5 @@
 <?php
-namespace Pms\DataLayer;
+namespace Pms\Datalayer;
 
 use \PDO;
 use \AppConfig;

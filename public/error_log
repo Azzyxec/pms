@@ -1,2 +1,5 @@
 [20-May-2016 15:36:34 Etc/GMT] PHP Warning:  require_once(../app/datalayer/ScheduleDB.php): failed to open stream: No such file or directory in /home/arsenxhn/public_html/dreamlogic.in/demo/pms/includes.php on line 25
 [20-May-2016 15:36:34 Etc/GMT] PHP Fatal error:  require_once(): Failed opening required '../app/datalayer/ScheduleDB.php' (include_path='.:/opt/alt/php54/usr/share/pear:/opt/alt/php54/usr/share/php') in /home/arsenxhn/public_html/dreamlogic.in/demo/pms/includes.php on line 25
+[03-Jun-2016 16:44:10 Etc/GMT] PHP Fatal error:  Class 'Pms\Datalayer\AuthenticateDB' not found in /home/dreamdkp/public_html/demo/pms/app/routes/authenticate.php on line 72
+[03-Jun-2016 16:45:02 Etc/GMT] PHP Fatal error:  Class 'Pms\Datalayer\AuthenticateDB' not found in /home/dreamdkp/public_html/demo/pms/app/routes/authenticate.php on line 72
+[03-Jun-2016 16:52:13 Etc/GMT] PHP Fatal error:  Class 'Pms\Datalayer\AuthenticateDB' not found in /home/dreamdkp/public_html/demo/pms/app/routes/authenticate.php on line 72
