@@ -1,17 +1,17 @@
 <html>
-  <head>
-    <base href="{{basePath}}" />
-    <title>Online Appointment System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/my-custom-style.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" >
-    <link rel="stylesheet" type="text/css" href="css/style.css" >
-  </head>
+<head>
+  <base href="{{basePath}}" />
+  <title>Online Appointment System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/my-custom-style.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" >
+  <link rel="stylesheet" type="text/css" href="css/style.css" >
+</head>
 
-  <!-- 3. Display the application -->
-  <body style="background-image:url(http://dreamlogic.in/demo/pms/public/images/background2.jpg)">
+<!-- 3. Display the application -->
+<body style="background-image:url(public/images/background2.jpg)">
   <div id="login-wrapper">
     <div class="container">
       <div class="row">
@@ -23,46 +23,57 @@
         <hr class="invisible">
         <hr class="invisible">
         <hr class="invisible">
+        <div id="alert-user-id-needed" class="alert alert-warning hidden">
+          <strong>Please enter user login id</strong>
+        </div>
+        <div id="alert-password-needed" class="alert alert-warning hidden">
+          <strong>Please enter password</strong>
+        </div>
+        <div id="alert-creds-invalid" class="alert alert-warning hidden">
+          <strong>User id or password are invalid</strong>
+        </div>
         <div class="panel panel-default panel-login col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4" style="
-    background-color: rgba(255, 255, 255, 0);
-" >
+        background-color: rgba(255, 255, 255, 0);
+        " >
         <div class="panel-body">
-        <h2 class="text-center" style="color:#FFFFFF;">Login</h2>
-        <!--<hr>--><br>
-        <form class="form-horizontal">
 
-          <div class="form-group">
-            <div class="col-md-12">
-              <input type="text" id="login-id" placeholder="Your Login Id"  class="form-control input-lg">
-            </div>
-          </div>
+          <!--<hr>--><br>
+          <form class="form-horizontal">
 
-          <div class="form-group">
-            <div class="col-md-12 ">
-              <input type="password" id="login-password" placeholder="Your Password"  class="form-control input-lg">
+            <div class="form-group">
+              <div class="col-md-12">
+                <input type="text" id="login-id" placeholder="Your Login Id"  class="form-control input-lg">
+              </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <div class=" col-md-12">
-              <a id="login-submit" class="btn btn-info login-btn btn-lg ">Login</a>
+            <div class="form-group">
+              <div class="col-md-12 ">
+                <input type="password" id="login-password" placeholder="Your Password"  class="form-control input-lg">
+              </div>
             </div>
-            <div class="col-md-12">
-              <br>
-              <span style="color:#FFFFFF;">Not registered?  <a id="btn-register-doctor" class="red remove-underline">Register Now</a>   </span>
-            </div>
-          </div>
 
+            <div class="form-group">
+              <div class=" col-md-12">
+                <a id="login-submit" class="btn btn-info login-btn btn-lg ">Login</a>
+              </div>
+              <div class="col-md-12">
+                <br>
+                <span style="color:#FFFFFF;"><a href="#"  id="btn-register-doctor" class="red remove-underline">Register Now</a></span>
+                <span class="invisible">....</span>
+                <span style="color:#FFFFFF;"><a href="#" id="btn-forgot-password" class="red remove-underline">Forgot password</a></span>
+              </div>
+            </div>
+
+          </form>
         </form>
-        </form>
 
-        </div>
-        </div>
       </div>
-
     </div>
   </div>
-  </body>
-  <script src="js/jquery-2.1.4.min.js"></script>
-  <script src="js/login.all.js"></script>
+
+</div>
+</div>
+</body>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/login.all.js"></script>
 </html>

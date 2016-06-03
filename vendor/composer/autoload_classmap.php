@@ -36,6 +36,7 @@ return array(
     'Pimple\\Tests\\Fixtures\\Service' => $vendorDir . '/pimple/pimple/src/Pimple/Tests/Fixtures/Service.php',
     'Pimple\\Tests\\PimpleServiceProviderInterfaceTest' => $vendorDir . '/pimple/pimple/src/Pimple/Tests/PimpleServiceProviderInterfaceTest.php',
     'Pimple\\Tests\\PimpleTest' => $vendorDir . '/pimple/pimple/src/Pimple/Tests/PimpleTest.php',
+    'Pms\\DataLayer\\AuthenticateDB' => $baseDir . '/app/datalayer/AuthenticateDB.php',
     'Pms\\DataLayer\\DBHelper' => $baseDir . '/app/datalayer/DBHelper.php',
     'Pms\\DataLayer\\UserDb' => $baseDir . '/app/datalayer/UserDB.php',
     'Pms\\Datalayer\\DoctorDB' => $baseDir . '/app/datalayer/DoctorDB.php',

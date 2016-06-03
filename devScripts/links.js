@@ -6,6 +6,12 @@ var links = {
    registerDoctorUrl : "index.php/doctor/doctorInfo",
    adminUrl:"index.php/adminDashboard/admin",
 
+   //password reset
+   passwordRestRequestUrl: "index.php/authenticate/resetPasswordRequest",
+   loginUrl: "index.php/authenticate/login",
+   passwordResetUrl: "index.php/authenticate/passwordReset",
+   forgotPasswordUrl: "index.php/authenticate/forgotPassword",
+
    //admin related
    doctorListingUrl: "index.php/adminDashboard/doctorListing",
 

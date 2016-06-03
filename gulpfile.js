@@ -174,7 +174,16 @@ var filesList = [
                   objConfig.scriptsBasePath + "bootstrap-datetimepicker.min.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "schedule/schedule.calendar.js"
-                ], buildName: "schedule.calendar.js"}
+                ], buildName: "schedule.calendar.js"},
+{build:true, files: [
+                  objConfig.scriptsBasePath + "links.js",
+                  objConfig.scriptsBasePath + "authenticate/forgot.password.js"
+                ], buildName: "forgot.password.js"},
+{build:true, files: [
+                objConfig.scriptsBasePath +"utility.js",
+                objConfig.scriptsBasePath + "links.js",
+                objConfig.scriptsBasePath + "authenticate/password.reset.js"
+              ], buildName: "password.reset.js"}
 ];  //
 
 gulp.task('build-scripts', function(){

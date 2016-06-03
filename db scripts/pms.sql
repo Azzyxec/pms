@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 01, 2016 at 06:25 AM
+-- Generation Time: Jun 03, 2016 at 08:54 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -1252,6 +1252,267 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
+    READS SQL DATA
+begin
+
+	declare lLoginId int;
+	declare lUserType varchar(5);
+	declare ldoctorId int;
+	
+	set @ldoctorId = -1;
+
+	select id
+		   ,`type`
+	into @lLoginId
+		,@lUserType
+	from login
+	where id = plogin_id_pk;
+	
+	
+if @lUserType is null then
+
+    select '-1' as id
+    	   ,'-1' as `type`
+           ,'-1' as name
+		   ,@ldoctorId as doctor_id;
+              
+              
+elseif @lUserType = 'A' then
+
+	select 1 as id
+    	   ,@lUserType as `type`
+           ,'admin' as name
+		   ,@ldoctorId as doctor_id;
+           
+elseif @lUserType = 'D' then
+
+	select name
+    	   ,id
+    into @lname
+    	 ,@luserId
+    from doctor
+    where fk_login_id = @lLoginId;
+
+	select @luserId as id
+    	   ,@lUserType as `type`
+           ,@lname as name
+		   ,@luserId as doctor_id;
+		   
+elseif @lUserType = 'S' then
+
+	select first_name
+    	   ,id
+		   ,fk_doctor_id
+    into @lname
+    	 ,@luserId
+		 ,ldoctorId
+    from staff
+    where fk_user_id = @lLoginId;
+
+	select @luserId as id
+    	   ,@lUserType as `type`
+           ,@lname as name
+		   ,@ldoctorId as doctor_id;
+
+end if;
+
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
+    MODIFIES SQL DATA
+begin
+	/*
+	description: generates a reset code, which will be used to reset the password
+	Ques: what should happen when the user logs in with the old password after, making a password reset request
+		   should the request be made invalid, or just leave it, right now, the request will remain valid for some time
+		   like two days or so, assuming that user found his password or he dosnt need the account ne more
+	status codes
+		0;  # every things is alright
+		2;  # either the user is inactive, cannot generate password rest for this user
+	*/
+
+	DECLARE lstatus INT;
+	DECLARE llogin_id_pk INT;
+	DECLARE lpreviousRequestCount INT;	
+	DECLARE lresetRequestId INT;	
+	DECLARE lpassword varchar(100);
+	DECLARE luserType varchar(5);	
+	DECLARE lrecoveryEmail varchar(100);	
+	DECLARE lresetCode varchar(100);	
+	declare lexitLoop int;
+	declare lmaxNo int;
+	declare lminNo int;
+	
+	
+    set @lstatus = 0; # every things is alright
+	set @lresetCode  = '';
+	set @lrecoveryEmail = '';
+	set @lmaxNo = 11350;
+	set @lminNo = 1350;
+	
+	#get the old password, if the use is acitve
+	SELECT `password`
+		   ,`type`
+		   ,id
+	into  @lpassword
+		  ,@luserType
+		  ,@llogin_id_pk
+	FROM `login` 
+	WHERE login_id = plogin_id
+		  and is_active = 1;
+		  
+	if @lpassword is null then
+		set @lstatus = 2;  # either the user is inactive, cannot generate password rest for this user
+		
+	else 
+	# user is active and proceed with makeing a password reset request
+	
+	# check if a password reset request has already been sent for the existing user on the same email
+	# if a request has been made invalidate the last one and make a new one
+	# a new request is made because the user can change the recovery
+	
+    select count(*)
+	into @lpreviousRequestCount
+	from password_reset_request
+	where fk_login_id = @llogin_id_pk
+		  and is_valid = 1;
+		  
+	if COALESCE(@lpreviousRequestCount, 0) > 0 then
+		#invalidate the previous requests
+			  
+		update password_reset_request
+		set is_valid = 0
+		where fk_login_id = @llogin_id_pk
+			  and is_valid = 1;
+		
+	end if;
+	
+	# make a fresh request
+	
+	#generate unique random reset code
+	
+	
+	#set @lresetCode  = 'daddfa2321';
+	#generating a unique rest code,
+	
+	
+	set @lexitLoop = 1;
+	while COALESCE(@lexitLoop, 0) = 1 do
+	
+		SELECT concat(
+					CAST(CONCAT( CHAR(FLOOR(RAND()*26)+65),FLOOR(100+RAND()*(500-100))) AS CHAR(50))
+					, FLOOR(@lminNo +RAND() *(@lmaxNo - @lminNo))
+				)AS random_num
+		into @lresetCode;
+		
+		SELECT count(*)
+		into @lexitLoop  #  count should be zero
+		FROM password_reset_request 
+		where reset_code = @lresetCode
+			  and is_valid =  1;
+	
+		SET @lcounter = @lcounter + 1;
+	END WHILE;
+	
+	
+	#getting the recovery email
+	
+	if @luserType = 'D' then
+	
+		select recovery_email
+		into @lrecoveryEmail
+		from doctor
+		where fk_login_id = @llogin_id_pk;
+	
+	elseif @luserType = 'S' then
+	
+		select recovery_email
+		into @lrecoveryEmail
+		from staff
+		where fk_user_id = @llogin_id_pk;
+	
+	end if;	
+	
+	INSERT INTO `password_reset_request`(`fk_login_id`
+										 , `old_password`
+										 , `reset_code`
+										 , `recovery_email`
+										 , `recovery_mobile`
+										 , `created_date_time`
+										 , `is_valid`
+										 ) 
+										VALUES 
+										(@llogin_id_pk
+										,@lpassword
+										,@lresetCode
+										,@lrecoveryEmail
+										,null
+										,now()
+										,1
+										);
+	
+	end if;
+	
+	commit;
+	
+	select @lstatus as status
+		   ,@lresetCode as reset_code
+		   ,@lrecoveryEmail as recovery_email;
+	
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
+    NO SQL
+begin
+	
+	DECLARE lstatus INT;
+	declare llogin_id_pk int;
+	declare lreset_request_id int;
+	DECLARE ldiff int;
+	DECLARE lmaxValidHours int;
+	
+	set @lstatus = 0;
+	set @lmaxValidHours = 48;
+
+	select fk_login_id
+		   ,id
+		   ,cast( hour(timediff(created_date_time, now())) as SIGNED )
+	into  @llogin_id_pk
+		  ,@lreset_request_id
+		  ,@ldiff
+	from password_reset_request
+	where reset_code = preset_code
+		  and created_date_time < now()
+		  and is_valid = 1;
+	
+	
+	if @llogin_id_pk is not null and @ldiff < @lmaxValidHours then
+		#if valid entry exists and the request was made less then two days or 48 hours
+		  
+		update login
+		set password = pnew_password
+			,last_modified = now()
+		where id = @llogin_id_pk
+			  and is_active = 1;
+			  
+		update password_reset_request
+		set is_valid = 0
+			,modified_date = now()
+		where id = @lreset_request_id;
+	
+	else
+		set @lstatus = 2;
+	end if;
+	
+	commit;
+	
+	select @lstatus as status
+		   ,@llogin_id_pk as login_id_pk;
+	
+end$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -1347,7 +1608,7 @@ CREATE TABLE IF NOT EXISTS `login` (
 
 INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`, `is_active`) VALUES
 (1, 'A', 'admin', 'admin', '1899-11-30 00:00:00', '0000-00-00 00:00:00', 1),
-(33, 'D', 'gogo', 'gogo', '2016-05-01 18:26:09', '2016-05-01 18:54:07', 1),
+(33, 'D', 'gogo', 'gogi', '2016-05-01 18:26:09', '2016-06-03 08:35:22', 1),
 (34, 'D', 'gog', 'gogo', '2016-05-01 18:54:35', NULL, 1),
 (35, 'D', 'ggg', 'gogo', '2016-05-01 18:56:40', NULL, 1),
 (36, 'D', 'ginna', 'ginna', '2016-05-02 10:44:51', NULL, 1),
@@ -1364,7 +1625,7 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (47, 'D', 'ginna12', 'ginna', '2016-05-02 11:22:50', NULL, 1),
 (48, 'D', 'ginna13', 'ginna', '2016-05-02 11:23:31', NULL, 1),
 (49, 'D', 'ginna14', 'ginna', '2016-05-02 11:23:47', NULL, 1),
-(50, 'D', 'greg', 'greg', '2016-05-02 13:44:21', '2016-05-14 01:25:54', 1),
+(50, 'D', 'greg', 'greg', '2016-05-02 13:44:21', '2016-06-02 23:14:18', 1),
 (51, 'D', 'dino', 'dino', '2016-05-04 00:02:56', '2016-05-14 01:38:07', 1),
 (52, 'D', 'dino1', 'dino1', '2016-05-04 00:03:22', NULL, 1),
 (53, 'D', 'kkkk', 'kkkk', '2016-05-04 00:04:30', NULL, 1),
@@ -1436,6 +1697,48 @@ INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `du
 (8, 9, 1, 'One Week', 'XYZ1', 1, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
 (9, 9, 2, 'two errk', 'humumculus', 2, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
 (10, 9, 3, 'green', 'Cartao', 3, '2016-05-12', 1, 18, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_request`
+--
+
+CREATE TABLE IF NOT EXISTS `password_reset_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_login_id` int(11) NOT NULL,
+  `old_password` varchar(100) NOT NULL,
+  `reset_code` varchar(100) NOT NULL,
+  `recovery_email` varchar(100) NOT NULL,
+  `recovery_mobile` varchar(20) DEFAULT NULL,
+  `created_date_time` datetime NOT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_valid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+
+--
+-- Dumping data for table `password_reset_request`
+--
+
+INSERT INTO `password_reset_request` (`id`, `fk_login_id`, `old_password`, `reset_code`, `recovery_email`, `recovery_mobile`, `created_date_time`, `modified_date`, `is_valid`) VALUES
+(10, 33, 'gogo', 'D1827518', 'qwer', NULL, '2016-06-02 18:41:06', NULL, 0),
+(11, 33, 'gogo', 'K4289892', 'qwer', NULL, '2016-06-02 18:42:38', NULL, 0),
+(12, 33, 'gogo', 'C35310237', 'qwer', NULL, '2016-06-02 18:49:13', NULL, 0),
+(13, 33, 'gogo', 'O2371538', 'qwer', NULL, '2016-06-02 18:49:41', NULL, 0),
+(14, 33, 'gogo', 'C35711114', 'qwer', NULL, '2016-06-02 18:50:05', NULL, 0),
+(15, 33, 'gogo', 'N4945269', 'qwer', NULL, '2016-06-02 18:50:40', NULL, 0),
+(16, 33, 'gogo', 'A1456724', 'qwer', NULL, '2016-06-02 18:50:53', NULL, 0),
+(17, 33, 'gogo', 'L4461436', 'qwer', NULL, '2016-06-02 19:04:28', NULL, 0),
+(18, 50, 'greg', 'K11511085', 'recova', NULL, '2016-06-02 19:07:50', NULL, 0),
+(19, 50, 'greg', 'X4467364', 'recova', NULL, '2016-06-02 19:07:57', NULL, 0),
+(20, 50, 'greg', 'L1605925', 'recova', NULL, '2016-06-02 19:08:05', NULL, 0),
+(21, 50, 'greg', 'B3308619', 'recova', NULL, '2016-06-02 19:08:34', NULL, 0),
+(22, 50, 'greg', 'X3576865', 'recova', NULL, '2016-06-02 19:10:18', NULL, 0),
+(23, 50, 'greg', 'W4813618', 'recova', NULL, '2016-06-02 19:12:00', NULL, 0),
+(24, 50, 'greg', 'U2172581', 'recova', NULL, '2016-06-02 19:21:54', '2016-06-02 23:14:18', 0),
+(25, 50, 'greg', 'R4504974', 'recova', NULL, '2016-06-02 23:28:56', NULL, 1),
+(26, 33, 'gogo', 'L4957008', 'qwer', NULL, '2016-06-03 08:34:22', '2016-06-03 08:35:22', 0);
 
 -- --------------------------------------------------------
 
