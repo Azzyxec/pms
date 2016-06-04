@@ -6,7 +6,7 @@ use \PDO;
 use Pms\Datalayer\DBHelper;
 use Pms\Entities\User;
 
-class UserDb{
+class UserDB{
 
   public function getUser($loginId, $password){
 

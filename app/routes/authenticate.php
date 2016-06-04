@@ -80,30 +80,71 @@ $app->group('/authenticate', function(){
       $mailResult = "";
 
       if($result['status'] == 0){
-        $email = $result['email'];
+        try {
 
-        $resetCode =  $result['resetCode'];
+          $email = $result['email'];
 
-        $resetLink = "http://dreamlogic.in/demo/public/index.php/authenticate/passwordReset?code=" . $resetCode;
+          $resetCode =  $result['resetCode'];
 
-        // Create the Transport
-        $transport = Swift_SmtpTransport::newInstance('md-in-52.webhostbox.net', 465, 'ssl')
-        ->setUsername('noreply@dreamlogic.in')
-        ->setPassword('Dreaml0g1c@mail');
+          $resetLink = "http://dreamlogic.in/demo/pms/public/index.php/authenticate/passwordReset?code=" . $resetCode;
 
 
-        $message = Swift_Message::newInstance('Password reset link')
-        ->setFrom(array('noreply@dreamlogic.in' => 'Admin'))
-        ->setTo(array($email))
-        ->setBody('please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink, 'text/html');
+          /*
+          $mail = new PHPMailer(); // create a new object
 
-        $mailer = Swift_Mailer::newInstance($transport);
+          $mail->IsSMTP(); // enable SMTP
 
-        // Send the message
-        $mailResult = $mailer->send($message);
+          $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
 
-        //$resetCode = $result['resetCode'];
-        //send mail
+          $mail->SMTPAuth = true; // authentication enabled
+
+          $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
+
+          $mail->Host = "md-in-52.webhostbox.net";
+
+          $mail->Port = 465; // or 587
+
+          $mail->IsHTML(true);
+
+          $mail->Username = "noreply@dreamlogic.in";
+
+          $mail->Password = "Dreaml0g1c@mail";
+
+          $mail->SetFrom("noreply@dreamlogic.in");
+
+          $mail->Subject = "Password reset link";
+
+          $mail->Body = 'please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink;
+
+          $mail->AddAddress("azzyxe@gmail.com");
+
+          $mailResult = $mail->Send();
+          */
+
+
+          // Create the Transport
+          //$transport = Swift_SmtpTransport::newInstance('md-in-52.webhostbox.net', 465, 'ssl')
+          $transport = Swift_MailTransport::newInstance();
+          //->setUsername('noreply@dreamlogic.in')
+          //->setPassword('Dreaml0g1c@mail');
+
+
+          $message = Swift_Message::newInstance('Password reset link')
+          ->setFrom(array('dreamdkp@dreamlogic.in' => 'Admin'))
+          ->setTo(array($email))
+          ->setBody('please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink, 'text/html');
+
+          $mailer = Swift_Mailer::newInstance($transport);
+
+          // Send the message
+          $mailResult = $mailer->send($message);
+
+
+          //$resetCode = $result['resetCode'];
+          //send mail
+        } catch (Exception $e) {
+          $mailResult = "mail could not be sent";
+        }
       }
 
       $data = array('status' => "1", 'data' => $sendData, 'message' => 'success', 'mailResult' => $mailResult);
