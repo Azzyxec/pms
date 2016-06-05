@@ -9,7 +9,7 @@ $app->group('/doctor', function(){
 
   //used for doctor registration
   $this->get('/doctorInfo', function ($request, $response) {
-      return $this->view->render($response, '/doctor/doctor-registration.html', array('basePath' => AppConfig::$basePath));
+    return $this->view->render($response, '/doctor/doctor-registration.html', array('basePath' => AppConfig::$basePath));
   });
 
   // BOC Doctor management
@@ -49,25 +49,40 @@ $app->group('/doctor', function(){
       $postedData = $request->getParsedBody();
       $doctor = Doctor::getInsanceFromArray($postedData);
 
-      $doctorDB = new DoctorDB();
-      $resultArray = $doctorDB->persistDoctor($doctor);
+      //hash password
 
-      $status = $resultArray['status'];
+      $passwordHash = password_hash(
+        $doctor->password,
+        AppConfig::$passwordHashSettings['algorithm'],
+        AppConfig::$passwordHashSettings['settings']
+      );
 
-      //log the user in on succesful insert or update
-      //if(strcmp($status, "1") == 0){
-        //$user = $resultArray['data'];
-        //UserSessionManager::setUser($user);
-      //}
-
-      $data = array('data' => array('status' => $status, "user"=> $user));
-      return $response->withJson($data);
-
-    } catch (Exception $e) {
-      $data = array('data' => array('status' => $status, "user"=> $user));
-      return $response->withJson($data);
+    if($passwordHash === false){
+      throw new Exception("Password hash failed");
     }
 
-  });
+    $doctor->password = $passwordHash;
+
+    $doctorDB = new DoctorDB();
+
+    $resultArray = $doctorDB->persistDoctor($doctor);
+
+    $status = $resultArray['status'];
+
+    //log the user in on succesful insert or update
+    //if(strcmp($status, "1") == 0){
+    //$user = $resultArray['data'];
+    //UserSessionManager::setUser($user);
+    //}
+
+    $data = array('data' => array('status' => $status, "user"=> $user));
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('data' => array('status' => $status, "user"=> $user));
+    return $response->withJson($data);
+  }
+
+});
 
 });

@@ -6,6 +6,8 @@ use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\UserDB;
 use Pms\Datalayer\AuthenticateDB;
 
+use \AppConfig;
+
 $app->group('/authenticate', function(){
 
   $this->get('/login', function ($request, $response) {
@@ -34,172 +36,153 @@ $app->group('/authenticate', function(){
       $resetCode = $postedData['resetCode'];
       $newPassword = $postedData['password'];
 
-      $authenticateDB = new AuthenticateDB();
+      $passwordHash = password_hash(
+        $newPassword,
+        AppConfig::$passwordHashSettings['algorithm'],
+        AppConfig::$passwordHashSettings['settings']
+      );
 
-      $result = $authenticateDB->resetPassword($resetCode, $newPassword);
-
-      if($result['status'] == 0){
-        //log the user in and redirect from the page to dashboard
-        $LoginTableId = $result['LoginTableId'];
-
-        $user = $authenticateDB->getUserInfoForLogin($LoginTableId);
-
-        UserSessionManager::setUser($user);
-
-      }
-
-      //data to send to client
-
-      $data = array('status' => $result['status'], 'data' => $user, 'message' => 'success');
-      return $response->withJson($data);
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => '', 'message' => 'something is not right in controller' . $e->getMessage() );
-      return $response->withJson($data);
-    }
-  });
-
-  $this->get('/forgotPassword', function ($request, $response) {
-    return $this->view->render($response, '/authenticate/forgot-password.html', array('basePath' => AppConfig::$basePath));
-  });
-
-  $this->post('/resetPasswordRequest', function ($request, $response) {
-    try {
-
-      $postedData = $request->getParsedBody();
-
-      $loginId = $postedData['loginId'];
-
-      $authenticateDB = new AuthenticateDB();
-
-      $result = $authenticateDB->resetPasswordRequest($loginId);
-
-      $sendData = array();
-      $sendData['status'] = $result['status'];
-      $sendData['email'] = $result['email'];
-
-      $mailResult = "";
-
-      if($result['status'] == 0){
-        try {
-
-          $email = $result['email'];
-
-          $resetCode =  $result['resetCode'];
-
-          $resetLink = "http://dreamlogic.in/demo/pms/public/index.php/authenticate/passwordReset?code=" . $resetCode;
-
-
-          /*
-          $mail = new PHPMailer(); // create a new object
-
-          $mail->IsSMTP(); // enable SMTP
-
-          $mail->SMTPDebug = 1; // debugging: 1 = errors and messages, 2 = messages only
-
-          $mail->SMTPAuth = true; // authentication enabled
-
-          $mail->SMTPSecure = 'ssl'; // secure transfer enabled REQUIRED for GMail
-
-          $mail->Host = "md-in-52.webhostbox.net";
-
-          $mail->Port = 465; // or 587
-
-          $mail->IsHTML(true);
-
-          $mail->Username = "noreply@dreamlogic.in";
-
-          $mail->Password = "Dreaml0g1c@mail";
-
-          $mail->SetFrom("noreply@dreamlogic.in");
-
-          $mail->Subject = "Password reset link";
-
-          $mail->Body = 'please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink;
-
-          $mail->AddAddress("azzyxe@gmail.com");
-
-          $mailResult = $mail->Send();
-          */
-
-
-          // Create the Transport
-          //$transport = Swift_SmtpTransport::newInstance('md-in-52.webhostbox.net', 465, 'ssl')
-          $transport = Swift_MailTransport::newInstance();
-          //->setUsername('noreply@dreamlogic.in')
-          //->setPassword('Dreaml0g1c@mail');
-
-
-          $message = Swift_Message::newInstance('Password reset link')
-          ->setFrom(array('dreamdkp@dreamlogic.in' => 'Admin'))
-          ->setTo(array($email))
-          ->setBody('please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink, 'text/html');
-
-          $mailer = Swift_Mailer::newInstance($transport);
-
-          // Send the message
-          $mailResult = $mailer->send($message);
-
-
-          //$resetCode = $result['resetCode'];
-          //send mail
-        } catch (Exception $e) {
-          $mailResult = "mail could not be sent";
-        }
-      }
-
-      $data = array('status' => "1", 'data' => $sendData, 'message' => 'success', 'mailResult' => $mailResult);
-      return $response->withJson($data);
-
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => '', 'message' => 'something is not right in controller' . $e->getMessage() );
-      return $response->withJson($data);
+    if($passwordHash === false){
+      throw new Exception("Password hash failed");
     }
 
-  });
+    $authenticateDB = new AuthenticateDB();
 
-  $this->post('/isLoggedIn', function ($request, $response) {
+    $result = $authenticateDB->resetPassword($resetCode, $passwordHash);
 
-    $user = UserSessionManager::getUser();
-    $data = array('data' => $user);
+    if($result['status'] == 0){
+      //log the user in and redirect from the page to dashboard
+      $LoginTableId = $result['LoginTableId'];
+
+      $user = $authenticateDB->getUserInfoForLogin($LoginTableId);
+
+      UserSessionManager::setUser($user);
+
+    }
+
+    //data to send to client
+
+    $data = array('status' => $result['status'], 'data' => $user, 'message' => 'success');
     return $response->withJson($data);
-  });
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => '', 'message' => 'something is not right in controller' . $e->getMessage() );
+    return $response->withJson($data);
+  }
+});
 
-  $this->post('/authenitcateUser', function ($request, $response) {
+$this->get('/forgotPassword', function ($request, $response) {
+  return $this->view->render($response, '/authenticate/forgot-password.html', array('basePath' => AppConfig::$basePath));
+});
 
-    $user = new User();
+$this->post('/resetPasswordRequest', function ($request, $response) {
+  try {
 
-    try{
+    $postedData = $request->getParsedBody();
+
+    $loginId = $postedData['loginId'];
+
+    $authenticateDB = new AuthenticateDB();
+
+    $result = $authenticateDB->resetPasswordRequest($loginId);
+
+    $sendData = array();
+    $sendData['status'] = $result['status'];
+    $sendData['email'] = $result['email'];
+
+    $mailResult = "";
+
+    if($result['status'] == 0){
+      try {
+
+        $email = $result['email'];
+        $resetCode =  $result['resetCode'];
+
+        $resetLink = AppConfig::$passwordResetConfig['resetLink']. $resetCode;
+
+        // Create the Transport
+        //$transport = Swift_SmtpTransport::newInstance('md-in-52.webhostbox.net', 465, 'ssl')
+        $transport = Swift_MailTransport::newInstance();
+        //->setUsername('noreply@dreamlogic.in')
+        //->setPassword('Dreaml0g1c@mail');
+
+        $message = Swift_Message::newInstance('Password reset link')
+        ->setFrom(array(AppConfig::$passwordResetConfig['fromEmail'] => AppConfig::$passwordResetConfig['sendAs']))
+        ->setTo(array($email))
+        ->setBody('please click this <a href="' . $resetLink .'">link</a>  to reset your password or copy the following link in your browser ' . $resetLink, 'text/html');
+
+        $mailer = Swift_Mailer::newInstance($transport);
+
+        // Send the message
+        //TODO uncomment in production
+        $mailResult = $mailer->send($message);
 
 
-      $postedData = $request->getParsedBody();
-      if( isset($postedData['loginId']) && isset($postedData['password']) ){
+        //$resetCode = $result['resetCode'];
+        //send mail
+      } catch (Exception $e) {
+        $mailResult = "mail could not be sent";
+      }
+    }
 
-        $userDb = new UserDB();
-        $user = $userDb->getUser($postedData['loginId'],  $postedData['password']);
+    $data = array('status' => "1", 'data' => $sendData, 'message' => 'success');
+    return $response->withJson($data);
 
-        UserSessionManager::setUser($user);
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => '', 'message' => 'something is not right in controller:' . $e->getMessage() );
+    return $response->withJson($data);
+  }
+
+});
+
+$this->post('/isLoggedIn', function ($request, $response) {
+
+  $user = UserSessionManager::getUser();
+  $data = array('data' => $user);
+  return $response->withJson($data);
+});
+
+$this->post('/authenitcateUser', function ($request, $response) {
+
+  $user = new User();
+
+  try{
+
+
+    $postedData = $request->getParsedBody();
+    if( isset($postedData['loginId']) && isset($postedData['password']) ){
+
+      $userDb = new UserDB();
+      $user = $userDb->getUser($postedData['loginId']);
+
+      $password = $postedData['password'];
+      if(password_verify($password, $user->password) === false){
+        $user = new User();
+        throw new Exception("password does not match");
       }
 
-      $data = array('status' => "1", 'data' => $user, 'message' => 'success' );
-      return $response->withJson($data);
-
-    }catch(Exception $e){
-
-      $data = array('status' => "-1", 'data' => $user, 'message' => 'something is not right in controller' . $e->getMessage() );
-      return $response->withJson($data);
+      UserSessionManager::setUser($user);
     }
-  });
 
-
-  $this->post('/logout', function($request, $response){
-    UserSessionManager::destroySession();
-    $data = array('data' => "1");
+    $data = array('status' => "1", 'data' => $user, 'message' => 'success' );
     return $response->withJson($data);
-  });
 
-  $this->get('/logout', function($request, $response){
-    UserSessionManager::destroySession();
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-  });
+  }catch(Exception $e){
+
+    $data = array('status' => "-1", 'data' => $user, 'message' => 'something is not right in controller' . $e->getMessage() );
+    return $response->withJson($data);
+  }
+});
+
+
+$this->post('/logout', function($request, $response){
+  UserSessionManager::destroySession();
+  $data = array('data' => "1");
+  return $response->withJson($data);
+});
+
+$this->get('/logout', function($request, $response){
+  UserSessionManager::destroySession();
+  return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+});
 
 }); //authenticate group

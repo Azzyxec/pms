@@ -6,6 +6,7 @@ namespace Pms\Entities;
   public $id;
   public $type;
   public $name;
+  public $password;
   public $doctorId;
 
   function __construct(){
@@ -13,6 +14,7 @@ namespace Pms\Entities;
     $this->type = "-1";
     $this->name = "-1";
     $this->doctorId = "-1";
+    $this->password = "";
   }
 
 }

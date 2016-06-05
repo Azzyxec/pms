@@ -83,6 +83,15 @@ $app->group('/staff', function(){
 
       $staff = Staff::getInsanceFromArray($postedData);
 
+      $passwordHash = password_hash(
+        $staff->pasword,
+        AppConfig::$passwordHashSettings['algorithm'],
+        AppConfig::$passwordHashSettings['settings']
+      );
+
+      $staff->pasword = $passwordHash;
+
+
       $staffDB = new StaffDB();
       $result = $staffDB->creatUpdateStaff($staff, $doctorId, $loggedInUserId, $loggedInUserType);
 

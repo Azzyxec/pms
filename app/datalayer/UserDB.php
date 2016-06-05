@@ -8,17 +8,16 @@ use Pms\Entities\User;
 
 class UserDB{
 
-  public function getUser($loginId, $password){
+  public function getUser($loginId){
 
     $user = new User();
     try {
 
       $paramArray = array(
-                           'plogin_id' => $loginId,
-                           'password' => $password
+                           'puser_id' => $loginId
                          );
 
-      $statement = DBHelper::generateStatement('authenticate',  $paramArray);
+      $statement = DBHelper::generateStatement('get_user_info',  $paramArray);
 
       $statement->execute();
 
@@ -26,6 +25,7 @@ class UserDB{
         $user->id = $result['id'];
         $user->type = $result['type'];
         $user->name = $result['name'];
+        $user->password = $result['password'];
         $user->doctorId = $result['doctor_id'];
       }
 
