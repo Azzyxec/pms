@@ -1,4 +1,12 @@
 $(document).ready(function(){
+    
+     $(".responsive-calendar").responsiveCalendar({
+          time: '2013-05',
+          events: {
+           
+            "2013-05-03":{}, 
+            "2013-06-12": {}}
+        });
 
     $(function(){
         console.log('Doctor Dashboard home js loaded');
@@ -13,6 +21,10 @@ $(document).ready(function(){
           e.preventDefault();
           window.location.href = links.getAnalyticsUrl;
       });
+         
+        
+        
+        
  
 var DashScheduleModel = {
     

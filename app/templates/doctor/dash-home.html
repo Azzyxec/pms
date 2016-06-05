@@ -1,4 +1,10 @@
 {% extends "/doctor/doctor-dash-base.html" %}
+ {% block addCss %}
+    <link href="css/responsive-calendar.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/timeline.css">
+    {% endblock %}
+    
+
 {% block content %}
 <!-----------
 -
@@ -259,16 +265,64 @@
 <div class="col-md-4">
     <div class="panel panel-green">
                         <div class="panel-heading">
-                            Donut Chart Example
+                            Appointments Calender
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div id="morris-donut-chart"></div>
+                         	<div class="responsive-calendar">
+        <div class="controls">
+            <a class="pull-left" data-go="prev"><div class="btn btn-primary">Prev</div></a>
+            <h4><span data-head-year></span> <span data-head-month></span></h4>
+            <a class="pull-right" data-go="next"><div class="btn btn-primary">Next</div></a>
+        </div><hr/>
+        <div class="day-headers">
+          <div class="day header">Mon</div>
+          <div class="day header">Tue</div>
+          <div class="day header">Wed</div>
+          <div class="day header">Thu</div>
+          <div class="day header">Fri</div>
+          <div class="day header">Sat</div>
+          <div class="day header">Sun</div>
+        </div>
+        <div class="days" data-group="days">
+          
+        </div>
+      </div>
+      <!-- Responsive calendar - END -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
 </div>
+      
+          <div class="col-md-12">
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;<span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span>Canceled <span class='badge'>4</span></span> <span>rescheduled <span class='badge'>4</span></span></h3>
+        </div>
+        <div class="panel-body">
+          <ul class="cbp_tmtimeline">
+                    <li class="all-day">
+                        <time class="cbp_tmtime" datetime="all-day"><span>all-day</span></time>
+                        <div class="cbp_tmlabel "  >.sdfsfsdfs..</div>
+                   </li>
+                    <li>
+                        <time class="cbp_tmtime" datetime="2016-06-04T18:30:00.000Z"><span>00:00<h6>AM</h6></span></time>
+                    <div class="cbp_tmlabel alert alert-default"  >.sdfsfsdfs..</div></li>
+                   
+                  
+                    <li>
+                        <time class="cbp_tmtime" datetime="2016-06-05T17:30:00.000Z"><span>11:00<h6>PM</h6></span></time>
+                  <div class=" cbp_tmlabel alert alert-success text-center " ><strong>New !</strong> Appointment can be taken here</div></li>
+                </ul>
+  </div>
+        </div>
+
+
+
+
+      </div>
+
       <div class="col-md-12">
 
                   <div class="table-responsive">

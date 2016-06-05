@@ -1,4 +1,9 @@
 $(document).ready(function(){
+    
+    
+    $(function () {
+  $('[data-toggle="popover"]').popover()
+});
 
   $(function(){
     console.log('patient entry js loaded');
