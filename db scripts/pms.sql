@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 03, 2016 at 08:54 AM
+-- Generation Time: Jun 05, 2016 at 01:07 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -149,7 +149,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
     MODIFIES SQL DATA
 begin
 
@@ -175,7 +175,7 @@ begin
 	end if;
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pis_active` INT, IN `premarks` VARCHAR(4000))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pis_active` INT, IN `premarks` VARCHAR(4000))
     MODIFIES SQL DATA
 begin
 
@@ -251,13 +251,14 @@ select 1 as status;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
     READS SQL DATA
 begin
 
 declare lLoginId int;
 declare lUserType varchar(5);
 declare lname varchar(100);
+declare lhashPassword varchar(255);
 declare luserId int;
 declare ldoctorId int;
 
@@ -265,11 +266,12 @@ set @ldoctorId = -1;
 
 select id
 	   ,`type`
+	   ,`password`
        into @lLoginId
        		,@lUserType
+			,@lhashPassword
        from login
        where login_id = plogin_id
-       		  and `password` = ppassword
               and is_active = 1;
               
 if @lUserType is null then
@@ -277,6 +279,7 @@ if @lUserType is null then
     select '-1' as id
     	   ,'-1' as `type`
            ,'-1' as name
+		   , "" as `password`
 		   ,@ldoctorId as doctor_id;
               
               
@@ -285,6 +288,7 @@ elseif @lUserType = 'A' then
 	select 1 as id
     	   ,@lUserType as `type`
            ,'admin' as name
+		   ,@lhashPassword as `password`
 		   ,@ldoctorId as doctor_id;
            
 elseif @lUserType = 'D' then
@@ -299,6 +303,7 @@ elseif @lUserType = 'D' then
 	select @luserId as id
     	   ,@lUserType as `type`
            ,@lname as name
+		   ,@lhashPassword as `password`
 		   ,@luserId as doctor_id;
 		   
 elseif @lUserType = 'S' then
@@ -315,13 +320,14 @@ elseif @lUserType = 'S' then
 	select @luserId as id
     	   ,@lUserType as `type`
            ,@lname as name
+		   ,@lhashPassword as `password`
 		   ,@ldoctorId as doctor_id;
 
 end if;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `book_appointment`(IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `book_appointment`(IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))
     NO SQL
 begin
 
@@ -351,7 +357,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 
@@ -510,7 +516,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pdoctor_id` INT)
 begin
 
 declare lmaxPatientId int;
@@ -582,7 +588,7 @@ commit;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 	declare lprogrammeExists int;
@@ -715,7 +721,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
     NO SQL
 begin
 
@@ -802,7 +808,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -937,7 +943,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
     MODIFIES SQL DATA
     DETERMINISTIC
 begin
@@ -1019,7 +1025,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
     READS SQL DATA
 SELECT
    d.name ,
@@ -1037,7 +1043,7 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_doctors`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
     NO SQL
 begin
 
@@ -1053,7 +1059,7 @@ SELECT `id`
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1065,14 +1071,14 @@ where fk_doctor_id = fk_doctor_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_delivery_methods`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods`()
     READS SQL DATA
 select id
 	   ,name
 from delivery_methods
 where is_active = 1$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1081,7 +1087,7 @@ from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_medication_programme_list`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme_list`(IN `pdoctor_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1089,7 +1095,7 @@ select id
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT)
     READS SQL DATA
 SELECT `id`
 		,`name`
@@ -1105,7 +1111,7 @@ FROM `patient`
 WHERE fk_doctor_id = pdoctor_id
 	  and is_guardian = 0$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
     NO SQL
 SELECT 	 id
 		,fk_medication_pogramme_id
@@ -1113,7 +1119,7 @@ SELECT 	 id
 FROM patient_medication_programme
 WHERE fk_patient_id = ppatient_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
     NO SQL
 SELECT 	id
 		, fk_medication_programme_id
@@ -1128,7 +1134,7 @@ FROM  patient_medication_programme_list
 WHERE fk_patient_id = ppatient_id
 	  and fk_medication_programme_id = pmedication_programme_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1152,7 +1158,7 @@ WHERE id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
     READS SQL DATA
 select `duration_days`
 	  , duration_text
@@ -1163,7 +1169,7 @@ from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
 	  and is_active = 1$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
     READS SQL DATA
 begin
 
@@ -1182,7 +1188,7 @@ SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
   
  end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1196,7 +1202,7 @@ where s.fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
     READS SQL DATA
 begin
 
@@ -1233,7 +1239,7 @@ WHERE id = pid;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1252,7 +1258,83 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
+    READS SQL DATA
+begin
+
+declare lLoginId int;
+declare lUserType varchar(5);
+declare lname varchar(100);
+declare lhashPassword varchar(255);
+declare luserId int;
+declare ldoctorId int;
+
+set @ldoctorId = -1;
+
+select id
+	   ,`type`
+	   ,`password`
+       into @lLoginId
+       		,@lUserType
+			,@lhashPassword
+       from login
+       where login_id = puser_id
+              and is_active = 1;
+              
+if @lUserType is null then
+
+    select '-1' as id
+    	   ,'-1' as `type`
+           ,'-1' as name
+		   , "" as `password`
+		   ,@ldoctorId as doctor_id;
+              
+              
+elseif @lUserType = 'A' then
+
+	select 1 as id
+    	   ,@lUserType as `type`
+           ,'admin' as name
+		   ,@lhashPassword as `password`
+		   ,@ldoctorId as doctor_id;
+           
+elseif @lUserType = 'D' then
+
+	select name
+    	   ,id
+    into @lname
+    	 ,@luserId
+    from doctor
+    where fk_login_id = @lLoginId;
+
+	select @luserId as id
+    	   ,@lUserType as `type`
+           ,@lname as name
+		   ,@lhashPassword as `password`
+		   ,@luserId as doctor_id;
+		   
+elseif @lUserType = 'S' then
+
+	select first_name
+    	   ,id
+		   ,fk_doctor_id
+    into @lname
+    	 ,@luserId
+		 ,ldoctorId
+    from staff
+    where fk_user_id = @lLoginId;
+
+	select @luserId as id
+    	   ,@lUserType as `type`
+           ,@lname as name
+		   ,@lhashPassword as `password`
+		   ,@ldoctorId as doctor_id;
+
+end if;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
     READS SQL DATA
 begin
 
@@ -1320,7 +1402,7 @@ end if;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
     MODIFIES SQL DATA
 begin
 	/*
@@ -1463,7 +1545,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
     NO SQL
 begin
 	
@@ -1560,7 +1642,7 @@ CREATE TABLE IF NOT EXISTS `doctor` (
 --
 
 INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `email`, `qualification`, `address`, `recovery_contact`, `recovery_email`, `is_active`) VALUES
-(1, 33, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 1),
+(1, 33, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'azzyxec@gmail.com', 1),
 (2, 34, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 1),
 (3, 35, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 'qwer', 'qwer', 1),
 (4, 36, 'Ginna Grannis', '3214234', '4234123', 'asdfad@gmail.com', 'MBBS Neurology', 'Cali', '', '', 1),
@@ -1595,7 +1677,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL,
   `login_id` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `created` datetime NOT NULL,
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
@@ -1608,7 +1690,7 @@ CREATE TABLE IF NOT EXISTS `login` (
 
 INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`, `is_active`) VALUES
 (1, 'A', 'admin', 'admin', '1899-11-30 00:00:00', '0000-00-00 00:00:00', 1),
-(33, 'D', 'gogo', 'gogi', '2016-05-01 18:26:09', '2016-06-03 08:35:22', 1),
+(33, 'D', 'gogo', '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', '2016-05-01 18:26:09', '2016-06-04 18:17:01', 1),
 (34, 'D', 'gog', 'gogo', '2016-05-01 18:54:35', NULL, 1),
 (35, 'D', 'ggg', 'gogo', '2016-05-01 18:56:40', NULL, 1),
 (36, 'D', 'ginna', 'ginna', '2016-05-02 10:44:51', NULL, 1),
@@ -1715,7 +1797,7 @@ CREATE TABLE IF NOT EXISTS `password_reset_request` (
   `modified_date` datetime DEFAULT NULL,
   `is_valid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=98 ;
 
 --
 -- Dumping data for table `password_reset_request`
@@ -1737,8 +1819,79 @@ INSERT INTO `password_reset_request` (`id`, `fk_login_id`, `old_password`, `rese
 (22, 50, 'greg', 'X3576865', 'recova', NULL, '2016-06-02 19:10:18', NULL, 0),
 (23, 50, 'greg', 'W4813618', 'recova', NULL, '2016-06-02 19:12:00', NULL, 0),
 (24, 50, 'greg', 'U2172581', 'recova', NULL, '2016-06-02 19:21:54', '2016-06-02 23:14:18', 0),
-(25, 50, 'greg', 'R4504974', 'recova', NULL, '2016-06-02 23:28:56', NULL, 1),
-(26, 33, 'gogo', 'L4957008', 'qwer', NULL, '2016-06-03 08:34:22', '2016-06-03 08:35:22', 0);
+(25, 50, 'greg', 'R4504974', 'recova', NULL, '2016-06-02 23:28:56', NULL, 0),
+(26, 33, 'gogo', 'L4957008', 'qwer', NULL, '2016-06-03 08:34:22', '2016-06-03 08:35:22', 0),
+(27, 33, 'gogi', 'A10611063', 'qwer', NULL, '2016-06-03 20:13:40', NULL, 0),
+(28, 33, 'gogi', 'F47411331', 'azzyxec@gmail.com', NULL, '2016-06-03 20:28:28', NULL, 0),
+(29, 33, 'gogi', 'D4876042', 'azzyxec@gmail.com', NULL, '2016-06-03 20:29:14', NULL, 0),
+(30, 33, 'gogi', 'G3869599', 'azzyxec@gmail.com', NULL, '2016-06-03 20:30:44', NULL, 0),
+(31, 33, 'gogi', 'E3193873', 'azzyxec@gmail.com', NULL, '2016-06-03 20:31:20', NULL, 0),
+(32, 33, 'gogi', 'R1517904', 'azzyxec@gmail.com', NULL, '2016-06-03 20:40:15', NULL, 0),
+(33, 33, 'gogi', 'H1094370', 'azzyxec@gmail.com', NULL, '2016-06-03 20:44:38', NULL, 0),
+(34, 50, 'greg', 'I48510306', 'recova', NULL, '2016-06-03 20:45:53', NULL, 1),
+(35, 33, 'gogi', 'E1076576', 'azzyxec@gmail.com', NULL, '2016-06-03 20:46:05', NULL, 0),
+(36, 33, 'gogi', 'Z3745818', 'azzyxec@gmail.com', NULL, '2016-06-03 20:47:35', NULL, 0),
+(37, 33, 'gogi', 'C1544723', 'azzyxec@gmail.com', NULL, '2016-06-03 22:26:39', NULL, 0),
+(38, 33, 'gogi', 'Y3545132', 'azzyxec@gmail.com', NULL, '2016-06-03 22:26:47', NULL, 0),
+(39, 33, 'gogi', 'T2365394', 'azzyxec@gmail.com', NULL, '2016-06-04 12:18:31', NULL, 0),
+(40, 33, 'gogi', 'Q2207751', 'azzyxec@gmail.com', NULL, '2016-06-04 12:21:39', NULL, 0),
+(41, 33, 'gogi', 'P39911307', 'azzyxec@gmail.com', NULL, '2016-06-04 12:23:35', NULL, 0),
+(42, 33, 'gogi', 'V2869328', 'azzyxec@gmail.com', NULL, '2016-06-04 12:24:41', NULL, 0),
+(43, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'P4639026', 'azzyxec@gmail.com', NULL, '2016-06-04 23:48:07', NULL, 0),
+(44, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'G4517932', 'azzyxec@gmail.com', NULL, '2016-06-04 23:48:27', NULL, 0),
+(45, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'G4669067', 'azzyxec@gmail.com', NULL, '2016-06-04 23:48:44', NULL, 0),
+(46, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'K3835060', 'azzyxec@gmail.com', NULL, '2016-06-04 23:48:49', NULL, 0),
+(47, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V45411025', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:05', NULL, 0),
+(48, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V3132771', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:07', NULL, 0),
+(49, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Z1144064', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:07', NULL, 0),
+(50, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'W2625747', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:07', NULL, 0),
+(51, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V1401536', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:08', NULL, 0),
+(52, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'G23610540', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:08', NULL, 0),
+(53, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'J2843940', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:08', NULL, 0),
+(54, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'D3832596', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:08', NULL, 0),
+(55, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'D4409522', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:09', NULL, 0),
+(56, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Y3403554', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:09', NULL, 0),
+(57, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'P4567964', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:09', NULL, 0),
+(58, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'H48810690', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:09', NULL, 0),
+(59, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V4398400', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:10', NULL, 0),
+(60, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Z2652103', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:10', NULL, 0),
+(61, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Z1406613', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:11', NULL, 0),
+(62, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'G1469562', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:12', NULL, 0),
+(63, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'F2514386', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:12', NULL, 0),
+(64, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'H1316704', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:12', NULL, 0),
+(65, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'F4904448', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:12', NULL, 0),
+(66, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'K1849410', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:13', NULL, 0),
+(67, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'A4666935', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:13', NULL, 0),
+(68, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'U1675820', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:13', NULL, 0),
+(69, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'J3551919', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:14', NULL, 0),
+(70, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V2354060', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:31', NULL, 0),
+(71, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Q2764553', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:31', NULL, 0),
+(72, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'W4438673', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:32', NULL, 0),
+(73, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'X3565874', 'azzyxec@gmail.com', NULL, '2016-06-04 23:49:38', NULL, 0),
+(74, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'T1282074', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:05', NULL, 0),
+(75, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'G1317175', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:07', NULL, 0),
+(76, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'G23711113', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:07', NULL, 0),
+(77, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Y2845955', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:08', NULL, 0),
+(78, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'O4873006', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:08', NULL, 0),
+(79, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'S4696295', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:09', NULL, 0),
+(80, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'I3502809', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:09', NULL, 0),
+(81, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'W3394925', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:09', NULL, 0),
+(82, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'N3527466', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:09', NULL, 0),
+(83, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'E4216102', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:10', NULL, 0),
+(84, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'P1418692', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:10', NULL, 0),
+(85, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'Y4496191', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:46', NULL, 0),
+(86, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'E1309519', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:51', NULL, 0),
+(87, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'U1786991', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:58', NULL, 0),
+(88, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'I3989299', 'azzyxec@gmail.com', NULL, '2016-06-04 23:50:59', NULL, 0),
+(89, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'P2512027', 'azzyxec@gmail.com', NULL, '2016-06-04 23:51:00', NULL, 0),
+(90, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'R2813676', 'azzyxec@gmail.com', NULL, '2016-06-04 23:51:00', NULL, 0),
+(91, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'M1411540', 'azzyxec@gmail.com', NULL, '2016-06-04 23:51:36', NULL, 0),
+(92, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'W4874273', 'azzyxec@gmail.com', NULL, '2016-06-04 23:51:54', NULL, 0),
+(93, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'H2106623', 'azzyxec@gmail.com', NULL, '2016-06-04 23:51:58', NULL, 0),
+(94, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'J3947206', 'azzyxec@gmail.com', NULL, '2016-06-04 23:52:32', NULL, 0),
+(95, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'P3737999', 'azzyxec@gmail.com', NULL, '2016-06-04 23:53:02', NULL, 0),
+(96, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'O4862497', 'azzyxec@gmail.com', NULL, '2016-06-04 23:54:09', NULL, 0),
+(97, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V1259638', 'azzyxec@gmail.com', NULL, '2016-06-05 00:03:48', NULL, 1);
 
 -- --------------------------------------------------------
 
