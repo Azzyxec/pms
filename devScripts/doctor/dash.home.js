@@ -66,12 +66,12 @@ var controller = {
     getPatientArrayCount: function(){
         
         var PatientArray  = this.getPatient;
-        var count = PatientArray.length();
+        var count = PatientArray.length;
         return count;
     },
     
     
-    getPatient:{
+    getPatient: function(){
         return TimelineModel.patient;
     }
     
@@ -95,7 +95,8 @@ var Timelineview = {
     },
     
     render:function(){
-
+        var patientCount = controller.getPatientArrayCount;
+        console.log(patientCount);
     }
     
 }
