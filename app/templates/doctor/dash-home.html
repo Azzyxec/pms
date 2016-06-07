@@ -25,55 +25,69 @@
   <!-- /.row -->
   <div class="row">
 
-    <div class="col-lg-3 col-md-6 ">
-      <div class="panel panel-danger">
+    <div class=" col-md-8 ">
+     <div class="panel panel-green">
         <div class="panel-heading">
-          <div class="row">
-            <div class="col-xs-3">
-              <i class="fa fa-tasks fa-5x"></i>
-            </div>
-            <div class="col-xs-9 text-right">
-              <div class="huge">50</div>
-              <div>Sales!</div>
-            </div>
-          </div>
+          <h3 class="panel-title">Search Query</h3>
         </div>
-        <a href="#" id="view-sales-dash-btn">
-          <div class="panel-footer">
-            <span class="pull-left">Todays Sales</span>
-            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-            <div class="clearfix"></div>
-          </div>
-        </a>
+        <div class="panel-body">
+            <form class="form-inline">
+           <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">
+        <span class="glyphicon glyphicon glyphicon-search"></span>
+        </button>
+                 <span class="invisible">..</span><label>Location:</label>
+                <select class="form-control">
+                <option>All</option>
+                <option>Margao</option>
+                <option>Panjim</option>
+                <option>Cuncolim</option>
+                <option>Curtorim</option>
+                </select>
+                <hr class="invisible">
+                <div class="form-group">
+                                                	<div class="responsive-calendar">
+        <div class="controls">
+            <a class="pull-left" data-go="prev"><div class="btn btn-sm btn-primary">Prev</div></a>
+            <h4><span data-head-year></span> <span data-head-month></span></h4>
+            <a class="pull-right" data-go="next"><div class="btn btn-sm btn-primary">Next</div></a>
+        </div><hr/>
+        <div class="day-headers">
+          <div class="day header">Mon</div>
+          <div class="day header">Tue</div>
+          <div class="day header">Wed</div>
+          <div class="day header">Thu</div>
+          <div class="day header">Fri</div>
+          <div class="day header">Sat</div>
+          <div class="day header">Sun</div>
+        </div>
+        <div class="days" data-group="days">
+          
+        </div>
       </div>
-    </div>
+      <!-- Responsive calendar - END -->
+      
+                
+                </div>
+               
+      
+            </form>
 
-    <div class="col-lg-3 col-md-6">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-xs-3">
-              <i class="fa fa-support fa-5x"></i>
-            </div>
-            <div class="col-xs-9 text-right">
-              <div class="huge invisible">13</div>
-              <div>Listings!</div>
-            </div>
+
           </div>
         </div>
-        <a href="#" id="view-patients-dashboard-section-btn">
-          <div class="panel-footer">
-            <span class="pull-left">View Patients</span>
-            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-            <div class="clearfix"></div>
-          </div>
-        </a>
-      </div>
+
+
     </div>
+      
+
+  
   </div>
   <!-- /.row -->
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 hidden">
       <div class="panel panel-green">
         <div class="panel-heading">
           <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;<span class="badge">12</span></h3>
@@ -262,59 +276,82 @@
 
 
       </div>
-<div class="col-md-4">
-    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            Appointments Calender
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                         	<div class="responsive-calendar">
-        <div class="controls">
-            <a class="pull-left" data-go="prev"><div class="btn btn-primary">Prev</div></a>
-            <h4><span data-head-year></span> <span data-head-month></span></h4>
-            <a class="pull-right" data-go="next"><div class="btn btn-primary">Next</div></a>
-        </div><hr/>
-        <div class="day-headers">
-          <div class="day header">Mon</div>
-          <div class="day header">Tue</div>
-          <div class="day header">Wed</div>
-          <div class="day header">Thu</div>
-          <div class="day header">Fri</div>
-          <div class="day header">Sat</div>
-          <div class="day header">Sun</div>
-        </div>
-        <div class="days" data-group="days">
-          
-        </div>
-      </div>
-      <!-- Responsive calendar - END -->
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-</div>
+
       
           <div class="col-md-12">
       <div class="panel panel-green">
         <div class="panel-heading">
-          <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;<span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span>Canceled <span class='badge'>4</span></span> <span>rescheduled <span class='badge'>4</span></span></h3>
+          <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;</h3>
         </div>
         <div class="panel-body">
-          <ul class="cbp_tmtimeline">
-                    <li class="all-day">
-                        <time class="cbp_tmtime" datetime="all-day"><span>all-day</span></time>
-                        <div class="cbp_tmlabel "  >.sdfsfsdfs..</div>
-                   </li>
-                    <li>
-                        <time class="cbp_tmtime" datetime="2016-06-04T18:30:00.000Z"><span>00:00<h6>AM</h6></span></time>
-                    <div class="cbp_tmlabel alert alert-default"  >.sdfsfsdfs..</div></li>
+            <span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span class=" btn-sm btn-danger ">Canceled <span class='badge'>4</span></span> <span class=" btn-sm btn-warning ">rescheduled <span class='badge'>4</span></span>
+            <hr class='invisible'>
+            <h3 class="timeline-h3">Margao all day</h3>
+            
+      
+                
+                <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 text-right ">
+                  
+                          <time class="timeline-time " ><span>00:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                        <div class="  list-group-item">
+     <strong id="timeline_item_name">Joshep Fernandes</strong><ul class="nav nav-pills pull-right">
+                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
+                            <span class="invisible">..</span>
+                              <button type="button" id="timeline_btn_re_schedule" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Re-schedule"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+                             <span class="invisible">..</span>
+                              <button type="button" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            
+    
+</ul> <br>
+                         
+ <span tabindex="0" class="timeline_lg_description" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="Dismissible popover" data-content="
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            <br> <br> <br>
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            And here's some amazing content. It's very engaging. Right?"><small>Back Ache...</small></span> 
+     
+          
+
+                         </div>
+                        </div>
+                      
+            </div>
+             
+                <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 text-right ">
+                  
+                          <time class="timeline-time " ><span>00:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                      <div id="timeline_book_new_panel" class="alert btn show alert-success text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Book! </strong>new appointment here...</div>
+                        </div>
+                      
+            </div>
+             <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 text-right ">
+                  
+                          <time class="timeline-time " ><span>00:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                      <div class="alert btn show alert-danger text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Appointment Cancelled! </strong>view Cancelled detail...</div>
+                        </div>
+                      
+            </div>
+            
+            
+           
+                      
+              
                    
                   
-                    <li>
-                        <time class="cbp_tmtime" datetime="2016-06-05T17:30:00.000Z"><span>11:00<h6>PM</h6></span></time>
-                  <div class=" cbp_tmlabel alert alert-success text-center " ><strong>New !</strong> Appointment can be taken here</div></li>
-                </ul>
+                    
+             
   </div>
         </div>
 
@@ -323,7 +360,7 @@
 
       </div>
 
-      <div class="col-md-12">
+      <div class="col-md-12 hidden">
 
                   <div class="table-responsive">
 

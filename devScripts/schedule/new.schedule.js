@@ -32,7 +32,7 @@ $(document).ready(function(){
           stepOneView.render();
         });
 
-      },
+      }, 
       updateSelectedLocation: function(id, name){
         scheduleModel.selectedLocation.id = id;
         scheduleModel.selectedLocation.name = name;
