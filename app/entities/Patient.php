@@ -13,12 +13,12 @@ class Patient{
   public $contact2;
   public $address;
   public $picturePath;
-  public $isGuardian;
-  public $guardianId;
+  public $isActive;
   //public $medicalProgrammeId;
 
   function __construct(){
     $this->id = "-1";
+    $this->isActive = 1;
   }
 
   public static function  getInsanceFromArray($dataAray){
@@ -35,8 +35,8 @@ class Patient{
     $patient->contact2 = $dataAray['contact2'];
     //$patient->email = $dataAray[''];
     $patient->address = $dataAray['address'];
-    $patient->isGuardian = $dataAray['isGuardian'];
-    $patient->guardianId = $dataAray['guardianId'];
+    //$patient->isGuardian = $dataAray['isGuardian'];
+    //$patient->guardianId = $dataAray['guardianId'];
     //$patient->medicalProgrammeId = $dataAray[''];
 
     return $patient;

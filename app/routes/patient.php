@@ -21,7 +21,7 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
     return $response->withJson($data);
 
   } catch (Exception $e) {
-    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller'  . $e->getMessage() );
     return $response->withJson($data);
   }
 
@@ -59,7 +59,7 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
     });
 
 
-    $this->get('/addUpdatePatient', function ($request, $response) {
+    $this->post('/addUpdatePatient', function ($request, $response) {
       try {
 
         /*
@@ -67,6 +67,26 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
 
           $data = array('status' => "1", 'data' => $postedData, 'message' => 'test' );
           return $response->withJson($data);
+
+
+       */
+
+       /*
+       //save patient section
+       $patient = new Patient();
+       $patient->id = 0;
+       $patient->name = "Travolda";
+       $patient->dateOfBirth = "01-04-2016";
+       $patient->bloodGroup = "AB+";
+       $patient->weight = "2 kgs";
+       $patient->height = "20 cms";
+       $patient->gender = 1;
+       $patient->contact1 = "14242341";
+       $patient->contact2 = "12412341";
+       //$patient->email = "revolution@singing.com";
+       $patient->address = "Kanas";
+       $patient->picturePath = "2.jpg";
+       $patient->isActive = 1;
        */
 
         $user = UserSessionManager::getUser();
@@ -75,38 +95,37 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           //need to check for the user type too
 
           $postedData = $request->getParsedBody();
-          //$patient = Patient::getInsanceFromArray($postedData['patient']);
 
+          //getting patients  info details
+         $patient = Patient::getInsanceFromArray($postedData['patientInfo']);
 
-          //save patient section
-          $patient = new Patient();
-          $patient->id = 66;
-          $patient->name = "Travolda";
-          $patient->dateOfBirth = "01-04-2016";
-          $patient->bloodGroup = "AB+";
-          $patient->weight = "2 kgs";
-          $patient->height = "20 cms";
-          $patient->gender = 1;
-          $patient->contact1 = "14242341";
-          $patient->contact2 = "12412341";
-          //$patient->email = "revolution@singing.com";
-          $patient->address = "Kanas";
-          $patient->picturePath = "2.jpg";
-          $patient->isGuardian = 0;
-          $patient->guardianId = null;
-
-          //settign the gurdain details
+          /*
+          //collecting guardian details
           $guardian =  new Patient();
+          $guardian->name = "Guardian";
+          $guardian->dateOfBirth = "01-04-2016";
+          $guardian->gender = 1;
+          $guardian->picturePath = "2.jpg";
+          $guardian->contact1 = "14242341";
+          $guardian->contact2 = "12412341";
+          $guardian->address = "Osaka";
+          $guardian->isActive = $patient->isActive;
+          */
 
 
-          $patientDB = new PatientDB();
-          $savePatientResponse = $patientDB->saveUpdatePatientInfo($patient, $guardian, $user->id);
-          $savedPatientId =   $savePatientResponse['data']['patientId'];
 
-          //save birth info section
+          $guardianArray = $postedData['guardianInfo'];
+          $guardian =  new Patient();
+          $guardian->name = $guardianArray['name'];
+          $guardian->dateOfBirth = $guardianArray['dateOfBirth'];
+          $guardian->gender = $guardianArray['gender'];
+          $guardian->contact1 = $guardianArray['contact1'];
+          $guardian->contact2 = $guardianArray['contact2'];
+          $guardian->address =  $guardianArray['address'];
+          $guardian->isActive = $patient->isActive;
 
+          /*
           $birthDetails = new BirthDetails();
-          $birthDetails->patientId = $savedPatientId;
           $birthDetails->deliveryMethodId = 1;
           $birthDetails->birthWeight = "2 kg";
           $birthDetails->length = "25 cms";
@@ -119,10 +138,55 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           $birthDetails->siblings = "1";
           $birthDetails->isActive = 1;
           $birthDetails->remarks = "Test Data";
+          */
 
-          $saveBirthInfoResponse = $patientDB->saveUpdateBirthDetails($birthDetails, $user->id, $user->type);
 
-          $data = array('patient info' => $patient, 'birth info' => $birthDetails );
+          $birthInfoArray = $postedData['birthInfo'];
+          $birthDetails = new BirthDetails();
+          $birthDetails->deliveryMethodId = $birthInfoArray['deliveryMethodId'];
+          $birthDetails->birthWeight = $birthInfoArray['birthWeight'];
+          $birthDetails->length = $birthInfoArray['length'];
+          $birthDetails->head = $birthInfoArray['head'];
+          $birthDetails->bloodGroup = $birthInfoArray['bloodGroup'];
+          $birthDetails->mothersName = $birthInfoArray['mothersName'];
+          $birthDetails->mothersBloodGroup = $birthInfoArray['mothersBloodGroup'];
+          $birthDetails->fathersName = $birthInfoArray['fathersName'];
+          $birthDetails->fathersBloodGroup = $birthInfoArray['fathersBloodGroup'];
+          $birthDetails->siblings = $birthInfoArray['siblings'];
+          $birthDetails->isActive = $patient->isActive;
+          $birthDetails->remarks = $birthInfoArray['remarks'];
+          
+
+          //saving all the patients data
+          $patientDB = new PatientDB();
+
+          //save patients info
+          $savePatientResponse = $patientDB->saveUpdatePatientInfo($patient, $user->doctorId, $user->id, $user->type);
+          $savedPatientId =   $savePatientResponse['data']['patientId'];
+
+          $saveGuardianResponse = $patientDB->saveUpdateGuardianInfo($guardian, $savedPatientId);
+
+          $saveBirthInfoResponse = $patientDB->saveUpdateBirthDetails($birthDetails, $savedPatientId);
+
+          //save update patients programme
+          $programList = array();
+
+          if(isset($postedData['patientsPrograms'])){
+            $programList = $postedData['patientsPrograms'];
+
+            $programList['doctorId'] = $user->doctorId;
+            $programList['patientId'] =$savedPatientId;
+            $programList['programmeCount'] = $postedData['patientsProgramCount'];
+            $programmeDB = new ProgrammeDB();
+            $programmeResponse = $programmeDB->createUpdatePatientsProgramme($programList);
+
+          }
+
+          $data = array('patientInfo' => $patient,
+                        'guardian' => $guardian,
+                        'birthDetails' => $birthDetails,
+                        'patientsPrograms' => $programList
+                       );
           return $response->withJson($data);
 
 
@@ -152,7 +216,7 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           */
 
       } else {
-        $data = array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this oeration' );
+        $data = array('status' => "2", 'data' => "", 'message' => 'need to be logged in for this operation' );
         return $response->withJson($data);
       }
 
@@ -173,9 +237,21 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
 
             $patientDB = new PatientDB();
 
-            $result = $patientDB->getPatientDetails($allGetVars['id']);
+            $patient = $patientDB->getPatientDetails($allGetVars['id']);
+            $guardian = $patientDB->getGuardianDetails($allGetVars['id']);
+            $birthDetails = $patientDB->getBirthDetails($allGetVars['id']);
+            $patientsPrograme = $patientDB->getPatientsProgramme($allGetVars['id']);
 
-            return $response->withJson($result);
+
+
+            $resultArray = array('patient' => $patient,
+                                 'guardian' => $guardian,
+                                 'birthDetails' => $birthDetails,
+                                 'programmeLists' => $patientsPrograme);
+
+            $data = array('status' => 1, 'data' => $resultArray, 'message' => 'success');
+
+            return $response->withJson($data);
 
           }
 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2016 at 01:07 PM
+-- Generation Time: Jun 07, 2016 at 12:44 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -175,7 +175,7 @@ begin
 	end if;
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pis_active` INT, IN `premarks` VARCHAR(4000))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -202,9 +202,6 @@ INSERT INTO `patient_birth_details`(
 									 , `father_blood_group`
 									 , `siblings`
 									 , `remarks`
-									 , `created_date`
-									 , `fk_created_by_id`
-									 , `created_by_type`
 									 , `is_active`
 									 ) 
 							VALUES (
@@ -220,9 +217,6 @@ INSERT INTO `patient_birth_details`(
 									,pfathers_blood_group
 									,psiblings
 									,premarks
-									,now()
-									,puser_id
-									,puser_type
 									,pis_active
 									);
 else
@@ -239,9 +233,6 @@ UPDATE `patient_birth_details` SET
 									,`father_blood_group`= pfathers_blood_group
 									,`siblings` = psiblings
 									,`remarks` = premarks
-									,`modified_date` = now()
-									,`fk_modified_by_id` = puser_id
-									,`modified_by_type` = puser_type
 									,`is_active`= pis_active 
 						WHERE fk_patient_id = ppatient_id;
 end if;
@@ -354,6 +345,65 @@ begin
 	
 	select 1 as state;
 
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
+    MODIFIES SQL DATA
+begin
+
+declare lguardianEntryExists int;
+
+select count(*)
+into   @lguardianEntryExists
+from   guardian
+where  fk_patient_id = pfk_patient_id;
+
+
+if @lguardianEntryExists = 0 then
+
+INSERT INTO `guardian`
+					(
+					  fk_patient_id
+					, `name`
+					, `date_of_birth`
+					, `gender`
+					, `picture_path`
+					, `phone1`
+					, `phone2`
+					, `address`
+					, `is_active`
+					) VALUES (
+					 pfk_patient_id
+					,pname
+					,STR_TO_DATE(pdate_of_birth, '%d-%m-%Y') 
+					,pgender
+					,ppicture_path
+					,pphone1
+					,pphone2
+					,paddress
+					,pis_active
+					);
+
+
+
+else
+
+	UPDATE `guardian` SET `name`= pname
+						  ,`date_of_birth`= STR_TO_DATE(pdate_of_birth, '%d-%m-%Y') 
+						  ,`gender`= pgender
+						  ,`phone1`= pphone1
+						  ,`phone2`= pphone2
+						  ,`address`= paddress
+						  ,`picture_path`= ppicture_path
+						  ,`is_active` =  pis_active
+					WHERE fk_patient_id = pfk_patient_id;
+					
+end if;
+
+select 1 as status;
+
+#commit
 
 end$$
 
@@ -516,7 +566,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pis_guardain` INT, IN `ppatient_id` INT, IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
 begin
 
 declare lmaxPatientId int;
@@ -535,9 +585,9 @@ INSERT INTO `patient`
 					, `contact2`
 					, `address`
 					, `picture_path`
-					, `is_guardian`
-					, `patient_id`
 					, `created_date`
+					, `fk_created_by_id`
+					, `created_by_type`
 					, `is_active`
 					) VALUES (
 					pdoctor_id
@@ -551,10 +601,10 @@ INSERT INTO `patient`
 					,pcontact2
 					,paddress
 					,ppicture_path
-					,pis_guardain
-					,ppatient_id
 					,now()
-					,1
+					,pfk_logged_in_user_id
+					,plogged_in_user_type
+					,pis_active
 					);
 	select max(id)
 	into @lmaxPatientId
@@ -575,6 +625,9 @@ else
 						  ,`contact2`= pcontact2
 						  ,`address`= paddress
 						  ,`picture_path`= ppicture_path
+						  ,`fk_modified_by_id`= pfk_logged_in_user_id
+						  ,`modified_by_type`= plogged_in_user_type
+						  ,`is_active` =  pis_active
 					WHERE id = pid;
 					
 	select 1 as status
@@ -1071,12 +1124,61 @@ where fk_doctor_id = fk_doctor_id;
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
+    READS SQL DATA
+begin
+
+
+SELECT `fk_delivery_method_id`
+		, `birth_weight`
+		, `length`
+		, `head`
+		, `blood_group`
+		, `mother_name`
+		, `mother_blood_group`
+		, `father_name`
+		, `father_blood_group`
+		, `siblings`
+		, `remarks`
+		, `is_active` 
+FROM `patient_birth_details` 
+WHERE fk_patient_id = ppatient_id;
+
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods`()
     READS SQL DATA
 select id
 	   ,name
-from delivery_methods
-where is_active = 1$$
+from delivery_methods$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
+    READS SQL DATA
+select id
+	   , name
+       , date_format(created_date, '%d %b %Y') as created_date
+from medication_programme
+where fk_doctors_id = pdoctor_id$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
+    NO SQL
+begin
+
+SELECT `name`
+		, DATE_FORMAT(`date_of_birth`, '%d-%m-%Y') as date_of_birth
+		, `gender`
+		, `picture_path`
+		, `phone1`
+		, `phone2`
+		, `address`
+		, `is_active` 
+FROM `guardian` 
+WHERE fk_patient_id = ppatient_id;
+
+#commit
+
+end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
@@ -1086,14 +1188,6 @@ select id
 from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme_list`(IN `pdoctor_id` INT)
-    READS SQL DATA
-select id
-	   , name
-       , date_format(created_date, '%d %b %Y') as created_date
-from medication_programme
-where fk_doctors_id = pdoctor_id$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT)
     READS SQL DATA
@@ -1149,8 +1243,7 @@ SELECT  `name`
 		, `email`
 		, `address`
 		, `picture_path`
-		, `is_guardian`
-		, `patient_id`
+        , is_active
 FROM `patient` 
 WHERE id = ppatient_id;
 
@@ -1619,6 +1712,26 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `delivery_methods`
+--
+
+CREATE TABLE IF NOT EXISTS `delivery_methods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `delivery_methods`
+--
+
+INSERT INTO `delivery_methods` (`id`, `name`) VALUES
+(1, 'Normal'),
+(2, 'Forceps');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `doctor`
 --
 
@@ -1666,6 +1779,35 @@ INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `emai
 (22, 54, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1),
 (23, 55, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1),
 (24, 56, 'Savio', '1234512345', '', 'savio@dreamlogic.in', 'MA', 'adjnasldn', '123', 'saviothecooliohotmail.com', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `guardian`
+--
+
+CREATE TABLE IF NOT EXISTS `guardian` (
+  `fk_patient_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `gender` int(11) NOT NULL,
+  `picture_path` varchar(100) DEFAULT NULL,
+  `phone1` varchar(20) NOT NULL,
+  `phone2` varchar(20) NOT NULL,
+  `address` varchar(3000) NOT NULL,
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`fk_patient_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `guardian`
+--
+
+INSERT INTO `guardian` (`fk_patient_id`, `name`, `date_of_birth`, `gender`, `picture_path`, `phone1`, `phone2`, `address`, `is_active`) VALUES
+(93, 'Guardian', '2016-04-01', 1, '2.jpg', '14242341', '12412341', 'Osaka', 1),
+(94, 'Guardian', '2016-04-01', 1, '2.jpg', '14242341', '12412341', 'Osaka', 1),
+(95, 'Guardian1', '2020-04-20', 1, NULL, '14242341', '12412341', 'Osaka', 1),
+(96, 'Guardian', '2016-04-01', 1, '2.jpg', '14242341', '12412341', 'Osaka', 1);
 
 -- --------------------------------------------------------
 
@@ -1729,7 +1871,7 @@ CREATE TABLE IF NOT EXISTS `medication_programme` (
   `created_date` date NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `medication_programme`
@@ -1741,7 +1883,8 @@ INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date
 (6, 18, 'Yo self b4 others', '2016-05-12', 1),
 (7, 18, 'Yo self b4 others', '2016-05-12', 1),
 (8, 18, 'Yo self b4 others', '2016-05-12', 1),
-(9, 18, 'Get Will Soon edited', '2016-05-12', 1);
+(9, 18, 'Get Will Soon edited', '2016-05-12', 1),
+(10, 1, 'Test', '2016-06-07', 1);
 
 -- --------------------------------------------------------
 
@@ -1762,7 +1905,7 @@ CREATE TABLE IF NOT EXISTS `medication_programme_list` (
   `modified_date` datetime DEFAULT NULL,
   `update_marker` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `medication_programme_list`
@@ -1778,7 +1921,8 @@ INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `du
 (7, 9, 1, 'One Week', 'XYZ', 0, '2016-05-12', 0, 18, '2016-05-12 23:19:30', 0),
 (8, 9, 1, 'One Week', 'XYZ1', 1, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
 (9, 9, 2, 'two errk', 'humumculus', 2, '2016-05-12', 1, 18, '2016-05-12 23:25:21', 0),
-(10, 9, 3, 'green', 'Cartao', 3, '2016-05-12', 1, 18, NULL, 0);
+(10, 9, 3, 'green', 'Cartao', 3, '2016-05-12', 1, 18, NULL, 0),
+(11, 10, 2, 'Two', 'zyx', 2, '2016-06-07', 1, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1913,32 +2057,25 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `email` varchar(100) DEFAULT NULL,
   `address` varchar(1000) NOT NULL,
   `picture_path` varchar(200) DEFAULT NULL,
-  `is_guardian` int(11) NOT NULL DEFAULT '0',
-  `patient_id` int(11) DEFAULT NULL,
-  `created_date` date NOT NULL,
+  `created_date` datetime NOT NULL,
+  `fk_created_by_id` int(11) NOT NULL,
+  `created_by_type` varchar(5) NOT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `fk_modified_by_id` int(11) DEFAULT NULL,
+  `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=97 ;
 
 --
 -- Dumping data for table `patient`
 --
 
-INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_group`, `weight`, `height`, `gender`, `contact1`, `contact2`, `email`, `address`, `picture_path`, `is_guardian`, `patient_id`, `created_date`, `is_active`) VALUES
-(1, 0, 'Donald', '2016-04-01', '', '', '25 Centimeters', 1, '04918093241', '345324523452', 'elgore@executive.com', 'White House, Washington DC', '1.jpg', 0, 0, '2016-05-07', 1),
-(2, 0, 'Hillary', '2016-04-01', '', '', '5.5 Feet', 0, '04918093241', '345324523452', 'elgore@executive.com', 'White House, Washington DC', '2.jpg', 1, 1, '2016-05-07', 1),
-(3, 0, 'Ted', '2016-04-01', '', '2.1 kgs', '25 cms', 1, '41243', '234123', 'ted@republican.gov', 'dfasdfasdf', '1.jpg', 0, 0, '2016-05-07', 1),
-(4, 0, 'Cruz', '2016-04-01', '', '2.1 kgs', '25 cms', 1, '41243', '234123', 'ted@republican.gov', 'dfasdfasdf', '1.jpg', 0, 0, '2016-05-07', 1),
-(5, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
-(6, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
-(7, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
-(8, 18, 'Kesizh', '2016-04-01', '', '2', '23 cms ', 1, '423', '1243', 'dsfa@starwarz@empire.com', 'asdfdf', '1.jpg', 0, 0, '2016-05-08', 1),
-(43, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(44, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(45, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(46, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(47, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-10', 1),
-(48, 18, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', 0, NULL, '2016-05-12', 1);
+INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_group`, `weight`, `height`, `gender`, `contact1`, `contact2`, `email`, `address`, `picture_path`, `created_date`, `fk_created_by_id`, `created_by_type`, `modified_date`, `fk_modified_by_id`, `modified_by_type`, `is_active`) VALUES
+(93, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 12:56:30', 1, 'D', NULL, NULL, NULL, 1),
+(94, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 12:58:46', 1, 'D', NULL, NULL, NULL, 1),
+(95, 1, 'Travolda1', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', NULL, '2016-06-07 13:06:23', 1, 'D', NULL, 1, 'D', 1),
+(96, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 15:59:56', 1, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1969,6 +2106,16 @@ CREATE TABLE IF NOT EXISTS `patient_birth_details` (
   PRIMARY KEY (`fk_patient_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `patient_birth_details`
+--
+
+INSERT INTO `patient_birth_details` (`fk_patient_id`, `fk_delivery_method_id`, `birth_weight`, `length`, `head`, `blood_group`, `mother_name`, `mother_blood_group`, `father_name`, `father_blood_group`, `siblings`, `remarks`, `created_date`, `modified_date`, `fk_created_by_id`, `created_by_type`, `fk_modified_by_id`, `modified_by_type`, `is_active`) VALUES
+(93, 1, '2 kg', '25 cms', ' 10 cms', 'AB+', 'Jenny', 'B+', 'Edward', 'AB+', '1', 'Test Data', '0000-00-00', '0000-00-00', 0, 0, 0, 0, 1),
+(94, 1, '2 kg', '25 cms', ' 10 cms', 'AB+', 'Jenny', 'B+', 'Edward', 'AB+', '1', 'Test Data', '0000-00-00', '0000-00-00', 0, 0, 0, 0, 1),
+(95, 2, '2.1 kg', '25 cms', ' 10 cms', 'AB+', 'Jenny', 'B+', 'Edward', 'AB+', '1', 'Test Data...', '0000-00-00', '0000-00-00', 0, 0, 0, 0, 1),
+(96, 1, '2 kg', '25 cms', ' 10 cms', 'AB+', 'Jenny', 'B+', 'Edward', 'AB+', '1', 'Test Data', '0000-00-00', '0000-00-00', 0, 0, 0, 0, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -1984,15 +2131,15 @@ CREATE TABLE IF NOT EXISTS `patient_medication_programme` (
   `created_date` date NOT NULL,
   `is_active` int(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `patient_medication_programme`
 --
 
 INSERT INTO `patient_medication_programme` (`id`, `fk_patient_id`, `fk_doctor_id`, `fk_medication_pogramme_id`, `name`, `created_date`, `is_active`) VALUES
-(6, 45, 18, 1, 'Newnatal', '2016-05-10', 1),
-(7, 45, 18, 2, 'Newnatal1', '2016-05-10', 1);
+(8, 93, 1, 0, '', '2016-06-07', 1),
+(9, 95, 1, 10, 'Test', '2016-06-07', 1);
 
 -- --------------------------------------------------------
 
@@ -2013,22 +2160,14 @@ CREATE TABLE IF NOT EXISTS `patient_medication_programme_list` (
   `give_on` date DEFAULT NULL,
   `batch_no` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
 
 --
 -- Dumping data for table `patient_medication_programme_list`
 --
 
 INSERT INTO `patient_medication_programme_list` (`id`, `fk_patient_id`, `fk_doctor_id`, `fk_medication_programme_id`, `fk_medication_programme_list_id`, `duration_days`, `medicine`, `dose_no`, `due_on`, `give_on`, `batch_no`) VALUES
-(40, 45, 18, 1, 1, 0, 'BCG', 0, '2016-05-12', '2016-05-05', 'rqwer'),
-(41, 45, 18, 1, 2, 0, 'OPV', 0, '2016-05-19', '2016-05-19', 'qwer'),
-(42, 45, 18, 1, 3, 0, 'Hepatatis B', 1, '2016-05-18', '2016-05-08', 'qwer'),
-(43, 45, 18, 2, 4, 14, 'Pnemococcal Conjugate vaccine', 1, '2016-05-04', '2016-05-18', 'wer'),
-(44, 45, 18, 2, 5, 14, 'DTaP-IPV/Hib', 1, '2016-05-19', '2016-05-12', 'sdfsd'),
-(45, 45, 18, 2, 6, 14, 'Rotavirus', 1, '2016-05-18', '2016-05-20', 'sssss'),
-(46, 48, 18, 1, 1, 0, 'BCG', 0, '2016-05-11', '2016-05-11', 'qwer'),
-(47, 48, 18, 1, 2, 0, 'OPV', 0, '2016-05-25', '2016-05-24', 'qwer'),
-(48, 48, 18, 1, 3, 0, 'Hepatatis B', 1, '2016-05-18', '2016-05-26', 'qwer');
+(49, 95, 1, 10, 11, 2, 'zyx', 2, '0000-00-00', '0000-00-00', 'daa');
 
 -- --------------------------------------------------------
 

@@ -4,6 +4,8 @@ namespace Pms\Datalayer;
 use \PDO;
 use Pms\Datalayer\DBHelper;
 use Pms\Entities\Patient;
+use Pms\Entities\BirthDetails;
+
 
 class PatientDB{
 
@@ -60,10 +62,79 @@ class PatientDB{
       return array('status' => 1, 'data' => $patientList, 'message' => 'success');
 
     } catch (Exception $e) {
+      return array('status' => -1, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
+  public function getBirthDetails($patientId){
+    try {
+
+      $paramArray = array(
+                          'ppatient_id' => $patientId
+                        );
+
+     $statement = DBHelper::generateStatement('get_birth_details',  $paramArray);
+
+     $statement->execute();
+
+     $row = $statement->fetch();
+
+     $birthDetails = new BirthDetails();
+
+     $birthDetails->deliveryMethodId = $row['fk_delivery_method_id'];
+     $birthDetails->birthWeight = $row['birth_weight'];
+     $birthDetails->length = $row['length'];
+     $birthDetails->head = $row['head'];
+     $birthDetails->bloodGroup = $row['blood_group'];
+     $birthDetails->mothersName = $row['mother_name'];
+     $birthDetails->mothersBloodGroup = $row['mother_blood_group'];
+     $birthDetails->fathersName = $row['father_name'];
+     $birthDetails->fathersBloodGroup = $row['father_blood_group'];
+     $birthDetails->siblings = $row['siblings'];
+     $birthDetails->remarks = $row['remarks'];
+     $birthDetails->isActive = $row['is_active'];
+
+       return $birthDetails;
+
+    } catch (Exception $e) {
       return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
     }
 
   }
+
+
+  public function getGuardianDetails($patientId){
+    try {
+
+      $paramArray = array(
+                          'ppatient_id' => $patientId
+                        );
+
+     $statement = DBHelper::generateStatement('get_guardian_info',  $paramArray);
+
+     $statement->execute();
+
+     $row = $statement->fetch();
+
+     $guardian = array();
+     $guardian['name'] = $row['name'];
+     $guardian['dateOfBirth'] = $row['date_of_birth'];
+     $guardian['gender'] = $row['gender'];
+     $guardian['contact1'] = $row['phone1'];
+     $guardian['contact2'] = $row['phone2'];
+     $guardian['address'] = $row['address'];
+     $guardian['picturePath'] = $row['picture_path'];
+
+    return $guardian;
+
+    } catch (Exception $e) {
+      return array('status' => -1, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
+
 
   public function getPatientDetails($patientId){
     try {
@@ -90,14 +161,9 @@ class PatientDB{
      $patient->contact2 = $row['contact2'];
      $patient->address = $row['address'];
      $patient->picturePath = $row['picture_path'];
-     $patient->isGuardian = $row['is_guardian'];
-     $patient->guardianId = $row['patient_id'];
+     $patient->isActive = $row['is_active'];
 
-     $resultArray = array();
-
-     $resultArray['patient'] = $patient;
-
-       return array('status' => 1, 'data' => $resultArray, 'message' => 'success');
+       return $patient;
 
     } catch (Exception $e) {
       return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
@@ -105,7 +171,7 @@ class PatientDB{
 
   }
 
-  public function saveUpdatePatientInfo($patient, $guardian, $doctorId){
+  public function saveUpdatePatientInfo($patient, $doctorId, $loggedInUserId, $loggedInUserType){
     try {
 
       $paramArray = array(
@@ -120,9 +186,10 @@ class PatientDB{
                           'pcontact2' =>  $patient->contact2,
                           'paddress' =>  $patient->address,
                           'ppicture_path' => $patient->picturePath,
-                          'pis_guardain' =>  $patient->isGuardian,
-                          'ppatient_id' =>  $patient->guardianId,
-                          'pdoctor_id' =>  $doctorId
+                          'pdoctor_id' =>  $doctorId,
+                          'pfk_logged_in_user_id' =>  $loggedInUserId,
+                          'logged_in_user_type' =>  $loggedInUserType,
+                          'pis_active' => $patient->isActive
                         );
 
       $statement = DBHelper::generateStatement('create_modify_patient',  $paramArray);
@@ -142,11 +209,41 @@ class PatientDB{
   }
 
 
-  public function saveUpdateBirthDetails($birthDetails, $userId, $userType){
+  public function saveUpdateGuardianInfo($guardian, $patientId){
     try {
 
       $paramArray = array(
-                          'ppatient_id' => $birthDetails->patientId,
+                          'pfk_patient_id' =>  $patientId,
+                          'pname' =>  $guardian->name,
+                          'pdate_of_birth' =>  $guardian->dateOfBirth,
+                          'pgender' =>  $guardian->gender,
+                          'pphone1' =>  $guardian->contact1,
+                          'pphone2' =>  $guardian->contact2,
+                          'ppicture_path' =>  $guardian->picturePath,
+                          'pis_active' =>  $guardian->isActive,
+                          'paddress' =>  $guardian->address
+                        );
+
+      $statement = DBHelper::generateStatement('create_modify_guardian',  $paramArray);
+
+      $statement->execute();
+
+      $row = $statement->fetch();
+
+      $status = $row['status'];
+
+      return array('status' => $status, 'data' => $status , 'message' => 'success');
+    } catch (Exception $e) {
+      return array('status' => -1, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+  }
+
+
+  public function saveUpdateBirthDetails($birthDetails, $patientId){
+    try {
+
+      $paramArray = array(
+                          'ppatient_id' => $patientId,
                           'pdelivery_method_id' => $birthDetails->deliveryMethodId,
                           'pbirth_weight' => $birthDetails->birthWeight,
                           'plength' => $birthDetails->length,
@@ -157,10 +254,8 @@ class PatientDB{
                           'pfathers_name' => $birthDetails->fathersName,
                           'pfathers_blood_group' => $birthDetails->fathersBloodGroup,
                           'psiblings' => $birthDetails->siblings,
-                          'puser_id' => $userId,
-                          'puser_type' => $userType,
-                          'pis_active' => $birthDetails->isActive,
-                          'premarks' => $birthDetails->remarks
+                          'premarks' => $birthDetails->remarks,
+                          'pis_active' => $birthDetails->isActive
                         );
 
       $statement = DBHelper::generateStatement('add_update_patient_birth_details',  $paramArray);
@@ -175,6 +270,85 @@ class PatientDB{
     } catch (Exception $e) {
       return array('status' => -1, 'data' => "", 'message' => 'exception in DB' . $e->getMessage());
     }
+  }
+
+  public function getPatientProgrammeDetails($patientId, $programmeId){
+    try {
+
+
+            $paramArray = array(
+                                'ppatient_id' => $patientId,
+                                'pmedication_programme_id' => $programmeId
+                              );
+
+            $statement = DBHelper::generateStatement('get_patients_programme_details',  $paramArray);
+
+            $statement->execute();
+
+            $programmes = array();
+            while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+              $programme = array();
+              $programme['id'] = $result['id'];
+              $programme['programmeListId'] = $result['fk_medication_programme_list_id'];
+              $programme['durationDays'] = $result['duration_days'];
+              $programme['medicine'] = $result['medicine'];
+              $programme['doseNo'] = $result['dose_no'];
+              $programme['dueOn'] = $result['due_on'];
+              $programme['givenOn'] = $result['give_on'];
+              $programme['batchNo'] = $result['batch_no'];
+
+              $programmes[] = $programme;
+
+            }
+
+            return array('status' => 1, 'data' => $programmes, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
+  public function getPatientsProgramme($patientId){
+    try {
+
+        $paramArray = array(
+                            'ppatient_id' => $patientId
+                          );
+
+        $statement = DBHelper::generateStatement('get_patients_programmes',  $paramArray);
+
+        $statement->execute();
+
+        $programmes = array();
+
+        while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+          $programme = array();
+
+          $programmeId = $result['fk_medication_pogramme_id'];
+
+          $programme['id'] = $programmeId;
+          $programme['name'] = $result['name'];
+
+          $resultArray = $this->getPatientProgrammeDetails($patientId, $programmeId);
+
+
+          $programme['count'] = count($resultArray['data']);
+          $programme['list'] = $resultArray['data'];
+
+
+          $programmes[] = $programme;
+
+        }
+
+        return $programmes;
+
+    } catch (Exception $e) {
+      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
   }
 
   //shift this to a utility class

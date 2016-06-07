@@ -30,7 +30,7 @@ $app->group('/programme', function(){
         $data = array('status' => "1", 'data' => $resultArray['data'], 'message' => 'success');
         return $response->withJson($resultArray);
 
-      } 
+      }
 
     } catch (Exception $e) {
       $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
@@ -65,7 +65,7 @@ $app->group('/programme', function(){
 
 
 
-  $this->get('/getMedicationProgrammeList', function ($request, $response) {
+  $this->get('/getDoctorsCheckupPrograms', function ($request, $response) {
     try {
 
 
@@ -74,9 +74,13 @@ $app->group('/programme', function(){
           if($user->id != "-1"){
 
           $programmeDB = new ProgrammeDB();
-          $result = $programmeDB->getMedicationProgrammeList($user->id);
-          return $response->withJson($result);
+          $doctorsPrograms = $programmeDB->getDoctorsCheckupPrograms($user->id);
+          $data = array('status' => 1, 'data' => $doctorsPrograms, 'message' => 'success');
+          return $response->withJson($data);
 
+        }else{
+          $data = array('status' => 2, 'data' => "", 'message' => 'User needs to be logged in');
+          return $response->withJson($data);
         }
 
     } catch (Exception $e) {
@@ -105,28 +109,5 @@ $app->group('/programme', function(){
     }
 
   });
-
-  $this->get('/getPatientProgrammes', function ($request, $response) {
-    try {
-
-      $allGetVars = $request->getQueryParams();
-
-
-      if(isset($allGetVars['id'])){
-
-        $patientId = $allGetVars['id'];
-        $programmeDB = new ProgrammeDB();
-        $result = $programmeDB->getPatientsProgramme($patientId);
-        return $response->withJson($result);
-
-      }
-
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
-      return $response->withJson($data);
-    }
-
-  });
-
 
 });

@@ -38,14 +38,14 @@ class ProgrammeDB{
   }
 
 
-  public function getMedicationProgrammeList($doctorId){
+  public function getDoctorsCheckupPrograms($doctorId){
     try {
 
       $paramArray = array(
                           'pdoctor_id' => $doctorId
                         );
 
-      $statement = DBHelper::generateStatement('get_medication_programme_list',  $paramArray);
+      $statement = DBHelper::generateStatement('get_doctors_checkup_programs',  $paramArray);
 
       $statement->execute();
 
@@ -55,7 +55,7 @@ class ProgrammeDB{
         $programmeList[] = array('id' => $result['id'], 'name' => $result['name'], 'created' =>  $result['created_date']);
       }
 
-      return array('status' => 1, 'data' => $programmeList, 'message' => 'success');
+      return $programmeList;
 
     } catch (Exception $e) {
       return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
@@ -63,6 +63,7 @@ class ProgrammeDB{
 
   }
 
+//used to get into to attach a program to a patient
   public function getProgrammeListDetails($programmeId){
     try {
 
@@ -81,6 +82,7 @@ class ProgrammeDB{
                                        'id' => "0",
                                        'programmeListId' => $result['id'],
                                        'durationDays' => $result['duration_days'],
+                                       'durationText' => $result['duration_text'],
                                        'medicine' => $result['medicine'],
                                        'doseNo' => $result['dose_no'],
                                        'dueOn' => "00-00-0000",
@@ -97,6 +99,7 @@ class ProgrammeDB{
     }
   }
 
+ //used in create edit programme
   public function getMedicationProgrammes($doctorId, $programmeId){
     try {
 
@@ -142,85 +145,6 @@ class ProgrammeDB{
 
     } catch (Exception $e) {
         return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
-    }
-
-  }
-
-  public function getPatientProgrammeDetails($patientId, $programmeId){
-    try {
-
-
-            $paramArray = array(
-                                'ppatient_id' => $patientId,
-                                'pmedication_programme_id' => $programmeId
-                              );
-
-            $statement = DBHelper::generateStatement('get_patients_programme_details',  $paramArray);
-
-            $statement->execute();
-
-            $programmes = array();
-            while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-
-              $programme = array();
-              $programme['id'] = $result['id'];
-              $programme['programmeListId'] = $result['fk_medication_programme_list_id'];
-              $programme['durationDays'] = $result['duration_days'];
-              $programme['medicine'] = $result['medicine'];
-              $programme['doseNo'] = $result['dose_no'];
-              $programme['dueOn'] = $result['due_on'];
-              $programme['givenOn'] = $result['give_on'];
-              $programme['batchNo'] = $result['batch_no'];
-
-              $programmes[] = $programme;
-
-            }
-
-            return array('status' => 1, 'data' => $programmes, 'message' => 'success');
-
-    } catch (Exception $e) {
-      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
-    }
-
-  }
-
-  public function getPatientsProgramme($patientId){
-    try {
-
-        $paramArray = array(
-                            'ppatient_id' => $patientId
-                          );
-
-        $statement = DBHelper::generateStatement('get_patients_programmes',  $paramArray);
-
-        $statement->execute();
-
-        $programmes = array();
-
-        while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-
-          $programme = array();
-
-          $programmeId = $result['fk_medication_pogramme_id'];
-
-          $programme['id'] = $programmeId;
-          $programme['name'] = $result['name'];
-
-          $resultArray = $this->getPatientProgrammeDetails($patientId, $programmeId);
-
-
-          $programme['count'] = count($resultArray['data']);
-          $programme['list'] = $resultArray['data'];
-
-
-          $programmes[] = $programme;
-
-        }
-
-        return array('status' => 1, 'data' => $programmes, 'message' => 'success');
-
-    } catch (Exception $e) {
-      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
     }
 
   }
