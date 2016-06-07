@@ -252,8 +252,8 @@ float:none !important;
  text-decoration: none !important;
 }
 
-.no-margin-bottom{
- margin-bottom:0px;
+.no-margin-bottom-imp{
+ margin-bottom:0px !important;
 }
 
 .no-margin{

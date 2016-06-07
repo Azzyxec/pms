@@ -17,8 +17,54 @@
 
 
 
+/* timeline style */
+.timeline_child_item{
+   border-left: 6px solid #62bdfa;
+  
+    padding: 5px;
+}
+
+.timeline_item{
+   ;
+     
+     border-bottom: 1px solid #62bdfa;
+}
+
+.timeline_item:nth-of-type(1){
+ 
+      border-top: 1px solid #62bdfa ;
+     
+}
+
+.timeline-time{
+    display:block;
+    margin-top:14px;
+    color: #2068ad;
+    font-size: 2em;
+}
+
+.timeline-time small{
+    font-size: 14px;
+}
+
+@media only screen and (max-width: 1112px) {
+    .timeline-time {
+        font-size: 1em;
+    }
+    .timeline-time small{
+   font-size: 8px;
+}
+}
+
+ .timeline-new-book-appoint{
+     height: 60px !important;
 
 
+ }
+
+.timeline-h3{
+ color: #2f8feb;
+}
 /*
  *
  *

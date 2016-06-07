@@ -17,8 +17,8 @@
 } 
 
 .cbp_tmtimeline > li {
-    height: 59px;
-    max-height: 59px
+    height: 180px;
+    max-height: 180px
 	position: relative;
 	border-bottom: 1px solid #afdcf8;
 }
