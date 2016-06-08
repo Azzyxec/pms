@@ -147,7 +147,6 @@ $this->post('/authenitcateUser', function ($request, $response) {
 
   try{
 
-
     $postedData = $request->getParsedBody();
     if( isset($postedData['loginId']) && isset($postedData['password']) ){
 
@@ -159,6 +158,8 @@ $this->post('/authenitcateUser', function ($request, $response) {
         $user = new User();
         throw new Exception("password does not match");
       }
+
+      $user->password = null;
 
       UserSessionManager::setUser($user);
     }

@@ -10,10 +10,10 @@
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
 
-        <li role="presentation"><a id="patients-entry-link" href="#patients-entry-section"  aria-controls="profile" role="tab" data-toggle="tab">Patients Details</a></li>
+        <li role="presentation"><a id="patients-entry-link" href="#patients-entry-section" aria-expanded="true" aria-controls="profile" role="tab" data-toggle="tab">Patients Details</a></li>
         <li role="presentation"><a id="guardian-entry-link" href="#guardian-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Guardian details</a></li>
         <li role="presentation"><a id="birth-entry-link" href="#birth-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Births details</a></li>
-        <li role="presentation"><a id="patients-programme-link" href="#patients-entry-more-details-section" aria-controls="messages" role="tab" data-toggle="tab">Vaccination Programme</a></li>
+        <li role="presentation"><a id="patients-programme-link" href="#patients-entry-more-details-section" aria-controls="messages" role="tab" data-toggle="tab">Checkup program</a></li>
         <li role="presentation"><a id="patients-history-link" href="#patients-history-section" aria-controls="messages" role="tab" data-toggle="tab">History</a></li>
 
       </ul>
@@ -23,7 +23,7 @@
         <hr class="invisible">
 
 
-        <div role="tabpanel" class="col-lg-10 col-md-12 tab-pane" id="patients-entry-section">
+        <div role="tabpanel" class="col-lg-10 col-md-12 tab-pane active" id="patients-entry-section">
 
           <div class="panel panel-green">
             <div class="panel-heading">
@@ -107,7 +107,7 @@
                       </div>
 
                     </div>
-              
+
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Height<span class="required">*</span></label>
                       <div class="col-md-9 col-lg-9">
@@ -141,7 +141,7 @@
                       </div>
                     </div>
 
-                 
+
 
                 </form>
 
@@ -171,8 +171,7 @@
 
           <div class="panel panel-green">
             <div class="panel-heading">
-              Guardians Entry
-
+              Guardians Information
             </div>
             <div class="panel-body">
               <div class="row">
@@ -204,15 +203,15 @@
                       <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Name</label>
                       <div class='col-md-9'>
 
-                        <input type="text" class="form-control" name="username" id="guardian-name" placeholder="Name">
+                        <input type="text" class="form-control" name="" id="txt-guardian-name" placeholder="Name">
                       </div>
 
                     </div>
-                    <div class="form-group">
-                      <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Age:</label>
-                      <div class='col-md-9'>
 
-                        <input type="text" class="form-control" name="username" id="guardian-age" placeholder="Age">
+                    <div class="form-group">
+                      <label for="from-date" class="col-sm-2 control-label">Birth date</label>
+                      <div class="col-md-9">
+                        <input type="text" class="form-control" id="guardian-dob" >
                       </div>
                     </div>
 
@@ -269,7 +268,7 @@
             <div class="panel-footer">
               <div class="row">
                 <div class="text-center">
-                  <input type="submit" class="btn-success btn" name="submit" value="Save"/>
+                  <input type="button" id="btn-guardian-save" class="btn-success btn" name="submit" value="Save"/>
                 </div>
 
               </div>

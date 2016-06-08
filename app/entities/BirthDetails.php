@@ -3,7 +3,6 @@ namespace Pms\Entities;
 
 class BirthDetails{
 
-public $patientId;
 public $deliveryMethodId;
 public $birthWeight;
 public $length;
@@ -19,14 +18,11 @@ public $isActive;
 
 
   function __construct(){
-    $this->patientId = "-1";
   }
 
   public static function  getInsanceFromArray($dataAray){
 
     $birthInfo = new self();
-
-    $birthInfo->patientId = $dataAray['patientId'];
     $birthInfo->deliveryMethodId = $dataAray['deliveryMethodId'];
     $birthInfo->birthWeight = $dataAray['birthWeight'];
     $birthInfo->length = $dataAray['length'];
@@ -38,7 +34,6 @@ public $isActive;
     $birthInfo->fathersBloodGroup = $dataAray['fathersBloodGroup'];
     $birthInfo->siblings = $dataAray['siblings'];
     $birthInfo->remarks = $dataAray['remarks'];
-    $birthInfo->isActive = $dataAray['isActive'];
 
     return $birthInfo;
 

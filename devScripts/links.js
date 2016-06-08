@@ -46,7 +46,7 @@ var links = {
    getSechduleCalendarDetailsUrl: "index.php/schedule/getCalanderDetails",
 
    //programme
-   programmeListUrl:"index.php/programme/getMedicationProgrammeList",
+   doctorsProgramsUrl:"index.php/programme/getDoctorsCheckupPrograms",
    programmeEditUrl:"index.php/doctorDashboard/createMedicalProgram",
    createModifyProgrammeUrl:"index.php/programme/createModifyProgramme",
    getProgrammeUrl:"index.php/programme/getProgrammes",
@@ -58,7 +58,7 @@ var links = {
    loginCheckUrl:"index.php/authenticate/isLoggedIn",
    getProgrammeList:"index.php/programme/getMedicationProgrammeList",
    programmeListDetailsUrl:"index.php/programme/getProgrammeListDetails",
-   patientsProgrammesUrl:"index.php/programme/getPatientProgrammes",
+   //patientsProgrammesUrl:"index.php/programme/getPatientProgrammes",
    patientListingUrl:"index.php/patient/getPatientList",
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
