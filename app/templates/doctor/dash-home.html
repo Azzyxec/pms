@@ -25,7 +25,7 @@
   <!-- /.row -->
   <div class="row">
 
-    <div class=" col-md-8 ">
+    <div class=" col-md-6">
      <div class="panel panel-green">
         <div class="panel-heading">
           <h3 class="panel-title">Search Query</h3>
@@ -33,44 +33,13 @@
         <div class="panel-body">
             <form class="form-inline">
            <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
+          <input type="text" class="form-control" placeholder="Token No">
         </div>
         <button type="submit" class="btn btn-default">
         <span class="glyphicon glyphicon glyphicon-search"></span>
         </button>
-                 <span class="invisible">..</span><label>Location:</label>
-                <select class="form-control">
-                <option>All</option>
-                <option>Margao</option>
-                <option>Panjim</option>
-                <option>Cuncolim</option>
-                <option>Curtorim</option>
-                </select>
-                <hr class="invisible">
-                <div class="form-group">
-                                                	<div class="responsive-calendar">
-        <div class="controls">
-            <a class="pull-left" data-go="prev"><div class="btn btn-sm btn-primary">Prev</div></a>
-            <h4><span data-head-year></span> <span data-head-month></span></h4>
-            <a class="pull-right" data-go="next"><div class="btn btn-sm btn-primary">Next</div></a>
-        </div><hr/>
-        <div class="day-headers">
-          <div class="day header">Mon</div>
-          <div class="day header">Tue</div>
-          <div class="day header">Wed</div>
-          <div class="day header">Thu</div>
-          <div class="day header">Fri</div>
-          <div class="day header">Sat</div>
-          <div class="day header">Sun</div>
-        </div>
-        <div class="days" data-group="days">
-          
-        </div>
-      </div>
-      <!-- Responsive calendar - END -->
-      
                 
-                </div>
+              
                
       
             </form>
@@ -284,20 +253,65 @@
           <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;</h3>
         </div>
         <div class="panel-body">
-            <span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span class=" btn-sm btn-danger ">Canceled <span class='badge'>4</span></span> <span class=" btn-sm btn-warning ">rescheduled <span class='badge'>4</span></span>
-            <hr class='invisible'>
-            <h3 class="timeline-h3">Margao all day</h3>
-            
+                      <form class="form-inline">
+           <div class='input-group date' id='datetimepicker1'>
+                      <input type='text'  class="form-control" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+
+                    </div>
+        
+                 <span class="invisible">..</span><label>Location:</label>
+                <select class="form-control">
+                <option>All</option>
+                <option>Margao</option>
+                <option>Panjim</option>
+                <option>Cuncolim</option>
+                <option>Curtorim</option>
+                </select>
+                          <button class="btn btn-default">Go</button>
+                          
+                         <hr>
+              
+              
       
+            </form>
+
+         
+            
+            
+            
+         
+            <h3 class="timeline-h3 inline-imp">Margao all day</h3>
+               <div class="timeline-stats">
+                   <span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span>Canceled <span class='badge'>4</span></span> <span>rescheduled <span class='badge'>4</span></span>       
+                          </div>
+         <div class="timeline-container">
+            
+           
+         <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 text-right ">
+                  
+                          <time class="timeline-time " ><span>11:00 <small>AM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                      <div class="alert btn show alert-info text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert">
+                           <ul class="nav nav-pills pull-right">
+                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
+</ul><strong>Appointment Closed! </strong>View detail</div>
+                        </div>
+                      
+            </div>
                 
                 <div class="timeline_item clearfix">
               <div class="col-md-2 col-sm-2 text-right ">
                   
-                          <time class="timeline-time " ><span>00:00 <small>PM</small></span></time>
+                          <time class="timeline-time " ><span>12:00 <small>PM</small></span></time>
                         </div>
                         <div class="col-md-10 col-sm-10 timeline_child_item">
                         <div class="  list-group-item">
-     <strong id="timeline_item_name">Joshep Fernandes</strong><ul class="nav nav-pills pull-right">
+                            <ul class="nav nav-pills pull-right">
                             <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
                             <span class="invisible">..</span>
                               <button type="button" id="timeline_btn_re_schedule" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Re-schedule"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
@@ -305,7 +319,8 @@
                               <button type="button" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
                             
     
-</ul> <br>
+</ul>
+     <strong id="timeline_item_name">Joshep Fernandes</strong> <br>
                          
  <span tabindex="0" class="timeline_lg_description" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="Dismissible popover" data-content="
                             Lorem ipsum dolor sit amet, consectetuer adipiscing
@@ -326,7 +341,7 @@
                 <div class="timeline_item clearfix">
               <div class="col-md-2 col-sm-2 text-right ">
                   
-                          <time class="timeline-time " ><span>00:00 <small>PM</small></span></time>
+                          <time class="timeline-time " ><span>13:00 <small>PM</small></span></time>
                         </div>
                         <div class="col-md-10 col-sm-10 timeline_child_item">
                       <div id="timeline_book_new_panel" class="alert btn show alert-success text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Book! </strong>new appointment here...</div>
@@ -336,15 +351,27 @@
              <div class="timeline_item clearfix">
               <div class="col-md-2 col-sm-2 text-right ">
                   
-                          <time class="timeline-time " ><span>00:00 <small>PM</small></span></time>
+                          <time class="timeline-time " ><span>14:00 <small>PM</small></span></time>
                         </div>
                         <div class="col-md-10 col-sm-10 timeline_child_item">
-                      <div class="alert btn show alert-danger text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Appointment Cancelled! </strong>view Cancelled detail...</div>
+                      <div class="alert btn show alert-danger text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Appointment Cancelled! </strong>view Cancelled detail...
+                            <ul class="nav nav-pills pull-right">
+                           
+                           
+            
+                             <span class="invisible">..</span>
+                              <button type="button" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            
+    
+</ul>
+                            
+                            </div>
                         </div>
                       
             </div>
+         
             
-            
+             </div>   
            
                       
               

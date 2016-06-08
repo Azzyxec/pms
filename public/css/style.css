@@ -30,16 +30,19 @@
      border-bottom: 1px solid #62bdfa;
 }
 
-.timeline_item:nth-of-type(1){
+.timeline-container .timeline_item:first-child{
  
       border-top: 1px solid #62bdfa ;
      
 }
+.timeline-container{
+    margin-top: 11px;
 
+}
 .timeline-time{
     display:block;
     margin-top:14px;
-    color: #2068ad;
+    color: #96D4E6;
     font-size: 2em;
 }
 
@@ -47,9 +50,24 @@
     font-size: 14px;
 }
 
+.timeline-stats{
+    position: absolute;
+    right: 47px; 
+    top: 9.4em; 
+}
+
+@media only screen and (max-width: 769px) {
+    .timeline-stats {
+        position:relative !important;
+        right: 0 !important; 
+        top: 0 !important; 
+       
+    }
+}
+
 @media only screen and (max-width: 1112px) {
     .timeline-time {
-        font-size: 1em;
+        font-size: 1.3em;
     }
     .timeline-time small{
    font-size: 8px;
