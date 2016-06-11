@@ -25,8 +25,15 @@ $this->get('/getAppointmentsForTheDay', function ($request, $response) {
 
     $timingList = $appointmentDB->getScheduleTimingsForTheDay($user->doctorId, $locationId, $date);
 
+    $appointments = array();
+    foreach ($timingList as $key => $value) {
+      //value is array with start and end time
+      $appointments[] = $value;
 
-    $data = array('status' => 1, 'data' => $timingList, 'message' => $message);
+    }
+
+
+    $data = array('status' => 1, 'data' => $appointments, 'message' => $message);
     return $response->withJson($data);
 
   } catch (Exception $e) {
@@ -54,6 +61,8 @@ $this->get('/getAppointmentsForTheDay', function ($request, $response) {
       $appointment->appointmentDate = $appointmentData['date'];
       $appointment->startMins = $appointmentData['startTimeMins'];
       $appointment->endMins = $appointmentData['endTimeMins'];
+      $appointment->description = $appointmentData['description'];
+
 
       //check if the appointment is available
       $appointmentDB = new AppointmentDB();

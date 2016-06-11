@@ -8,6 +8,15 @@ use Pms\Entities\Appointment;
 
 class AppointmentDB{
 
+  public function getAppointmentsForTheDay($doctorId, $locationId, $date){
+    try {
+
+    } catch (Exception $e) {
+      return -1;
+    }
+
+  }
+
   public function getScheduleTimingsForTheDay($doctorId, $locationId, $date){
     try {
 
@@ -79,7 +88,8 @@ class AppointmentDB{
         'pend_mins' => $appointment->endMins,
         'pcreated_by_id' => $loggedinUserId,
         'pcreated_by_type' => $loggedinUserType,
-        'pcontact' => $appointment->contact
+        'pcontact' => $appointment->contact,
+        'pdescription' => $appointment->description
       );
 
       $statement = DBHelper::generateStatement('insert_new_appointment',  $paramArray);

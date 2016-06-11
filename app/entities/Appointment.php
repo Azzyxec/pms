@@ -9,4 +9,5 @@ class Appointment{
   public $appointmentDate;
   public $startMins;
   public $endMins;
+  public $description;
 }
