@@ -51,34 +51,81 @@ $(document).ready(function(){
  
 var TimelineModel = {
  
-    patient:[{
+  
+    activePatients : [{
         id:0,
         name:"joseph",
         time:"14:00",
-        ailment:"back ache",
-        CancelappointentStatus: false,
-        bookNewappointmentStatus: false
+        ailment:"back ache"
+        
     },
-             {
+                      {
         id:0,
-        name:"Danny",
+        name:"Fernandes",
         time:"15:00",
-        ailment:"asthama",
-        CancelappointentStatus: false,
-        bookNewappointmentStatus: false
-    },
-             {
-        id:0,
-        name:"d",
-        time:"d",
-        ailment:"d",
-        CancelappointentStatus: false,
-        bookNewappointmentStatus: true
-    },
-       
+        ailment:"Sore throat"
+        
+    }
     
     ],
-    location:"margao"
+    closedPatients :[{
+          id:0,
+        name:"Clive",
+        time:"13:00",
+        ailment:"back ache",
+        remarks:''
+    },
+                     {
+          id:0,
+        name:"Brad",
+        time:"14:00",
+        ailment:"back ache",
+        remarks:''
+    }
+        
+        
+    ],
+    
+    
+    canceledPatients :[{
+          id:0,
+        name:"Rogue",
+        time:"13:00",
+        ailment:"back ache",
+        remarks:''
+    },
+    
+    {
+          id:0,
+        name:"Warren",
+        time:"13:00",
+        ailment:"back ache",
+        remarks:''
+    }
+    ],
+    
+    bookAppointments :[{time:'15:00'},{time:'14:00'}
+    ],
+       
+    timeLineArray : [{
+        type:'ActivePatients',
+        id:0,
+        name:"Rogue",
+        time:"13:00",
+        ailment:"back ache",
+        remarks:''
+    }, 
+                     { type:'closedPatients',
+        id:0,
+        name:"Brad",
+        time:"14:00",
+        ailment:"back ache",
+        remarks:''
+    }
+        
+    ],
+    
+    location:"Panjim"
     
 } 
 
@@ -97,32 +144,51 @@ var controller = {
         return count;
     },
     
-    
-    getPatient: function(){
-        return TimelineModel.patient;
+    getTimelineLoction : function(){
+        return TimelineModel.location;
+    },
+    getActivePatient: function(){
+        return TimelineModel.activePatients;
+    },
+     getCancelledPatient: function(){
+        return TimelineModel.canceledPatients;
+    },
+     getClosedPatient: function(){
+        return TimelineModel.closedPatients;
+    },
+    getbookAppointments: function(){
+        return TimelineModel.bookAppointments;
     },
     
+    createTimelineObjArray:function(){
+        var TimelineObjArray = [];
+        TimelineObjArray.push(controller.getActivePatient());
+        TimelineObjArray.push(controller.getCancelledPatient());
+        TimelineObjArray.push(controller.getClosedPatient());
+        TimelineObjArray.push(controller.getbookAppointments());
+        return TimelineObjArray;
+    },
     
-    createTimeline:function(obj){
-     var patientCount = this.getPatientArrayCount();
-     
-    }
+    getTimeArrayObj : function(){
+    return TimelineModal.timeLineArray();
+}
     
     
 }
         
 var Timelineview = {
     init:function(){
-        var time_line_container = $(".timeline_item");
-        var timeline_time = $(".timeline-time");
-        var timeline_child_items = $(".timeline_child_item");
-        var timeline_child_item_description = $(".timeline_lg_description");
-        var timeline_item_name = $('#timeline_item_name');
-        var timeline_btn_patientHistory = $('#timeline_btn_patient_history');
-        var timeline_btn_reschedule = $('#timeline_btn_re_schedule');
-        var timline_btn_cancel = $('#timeline_btn_cancel');
-        var timeline_book_new_panel = $('#timeline_book_new_panel');
-        var timline_cancel_panel = $('#timeline_cancel_panel');
+        this.time_line_container = $(".timeline_item");
+        this.timeline_time = $(".timeline-time");
+        this.timeline_child_items = $(".timeline_child_item");
+        this.timeline_child_item_description = $(".timeline_lg_description");
+        this.timeline_item_name = $('#timeline_item_name');
+        this.timeline_btn_patientHistory = $('#timeline_btn_patient_history');
+        this.timeline_btn_reschedule = $('#timeline_btn_re_schedule');
+        this.timline_btn_cancel = $('#timeline_btn_cancel');
+        this.timeline_book_new_panel = $('#timeline_book_new_panel');
+        this.timline_cancel_panel = $('#timeline_cancel_panel');
+        this.time_line_h3 = $(".timeline-h3");
         
       
         this.render();
@@ -130,13 +196,9 @@ var Timelineview = {
     
     render:function(){
         
-        
-        var patientCount = controller.getPatientArrayCount();
-        console.log(patientCount);
-        var patientArray = controller.getPatient();
-        for(i=0;i<patientCount;i++){
-            console.log(patientArray[i].name);
-        }
+    this.time_line_h3.text(controller.getTimelineLoction() +' Today');
+       
+       
         
     }
     
