@@ -48,6 +48,7 @@ var filesList = [
                       objConfig.scriptsBasePath +"utility.js",
                       objConfig.scriptsBasePath +"links.js",
                       objConfig.scriptsBasePath +"moment.js",
+                      objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                       objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                       objConfig.scriptsBasePath +"appointment/new.appointment.js"
                      ], buildName: "new.appointment.js"},

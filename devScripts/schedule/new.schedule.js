@@ -32,7 +32,7 @@ $(document).ready(function(){
           stepOneView.render();
         });
 
-      }, 
+      },
       updateSelectedLocation: function(id, name){
         scheduleModel.selectedLocation.id = id;
         scheduleModel.selectedLocation.name = name;
@@ -448,7 +448,7 @@ var createScheduleView = {
               var timePickerTableRow = createScheduleView.makeTimePickersRow(id, fromInput, toInput);
               timePickerTableRow.insertAfter(passedOn.tableRow);
               timePickerTableRow.collapse('toggle');
- 
+
               fromInput.datetimepicker({
                 inline:true,
                 format:'LT'

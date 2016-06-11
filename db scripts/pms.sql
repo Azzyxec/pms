@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 07, 2016 at 12:44 PM
+-- Generation Time: Jun 11, 2016 at 11:58 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -149,7 +149,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
     MODIFIES SQL DATA
 begin
 
@@ -175,7 +175,7 @@ begin
 	end if;
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -242,7 +242,7 @@ select 1 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
     READS SQL DATA
 begin
 
@@ -318,7 +318,7 @@ end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `book_appointment`(IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `book_appointment`(IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))
     NO SQL
 begin
 
@@ -348,7 +348,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
     MODIFIES SQL DATA
 begin
 
@@ -407,7 +407,7 @@ select 1 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 
@@ -566,7 +566,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
 begin
 
 declare lmaxPatientId int;
@@ -641,7 +641,7 @@ commit;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 	declare lprogrammeExists int;
@@ -774,7 +774,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
     NO SQL
 begin
 
@@ -861,7 +861,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -996,7 +996,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
     MODIFIES SQL DATA
     DETERMINISTIC
 begin
@@ -1078,7 +1078,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
     READS SQL DATA
 SELECT
    d.name ,
@@ -1096,7 +1096,7 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_doctors`()
     NO SQL
 begin
 
@@ -1112,19 +1112,19 @@ SELECT `id`
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
 select id
 	   ,name
 from work_locations
-where fk_doctor_id = fk_doctor_id;
+where fk_doctor_id = pdoctor_id;
 
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
     READS SQL DATA
 begin
 
@@ -1147,13 +1147,13 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods`()
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_delivery_methods`()
     READS SQL DATA
 select id
 	   ,name
 from delivery_methods$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1161,7 +1161,7 @@ select id
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1180,7 +1180,7 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1189,7 +1189,7 @@ from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT)
     READS SQL DATA
 SELECT `id`
 		,`name`
@@ -1205,7 +1205,7 @@ FROM `patient`
 WHERE fk_doctor_id = pdoctor_id
 	  and is_guardian = 0$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
     NO SQL
 SELECT 	 id
 		,fk_medication_pogramme_id
@@ -1213,7 +1213,7 @@ SELECT 	 id
 FROM patient_medication_programme
 WHERE fk_patient_id = ppatient_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
     NO SQL
 SELECT 	id
 		, fk_medication_programme_id
@@ -1228,7 +1228,7 @@ FROM  patient_medication_programme_list
 WHERE fk_patient_id = ppatient_id
 	  and fk_medication_programme_id = pmedication_programme_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1251,7 +1251,7 @@ WHERE id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
     READS SQL DATA
 select `duration_days`
 	  , duration_text
@@ -1262,7 +1262,22 @@ from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
 	  and is_active = 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedules_timings_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+    READS SQL DATA
+begin
+
+	select sd.start_time_mins
+		   ,sd.end_time_mins
+	from schedule_day sd
+	where sd.fk_doctor_id = pdoctor_id
+		  and sd.location_id = plocation_id
+		  and sd.date = STR_TO_DATE(pdate, '%d-%m-%Y')
+		  and sd.is_active = 1;
+
+
+end$$
+
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
     READS SQL DATA
 begin
 
@@ -1281,7 +1296,7 @@ SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
   
  end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1295,7 +1310,7 @@ where s.fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
     READS SQL DATA
 begin
 
@@ -1332,7 +1347,7 @@ WHERE id = pid;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1351,7 +1366,7 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
     READS SQL DATA
 begin
 
@@ -1427,7 +1442,7 @@ end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
     READS SQL DATA
 begin
 
@@ -1495,7 +1510,46 @@ end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `insert_new_appointment`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `ppatient_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `pcontact` VARCHAR(20))
+    MODIFIES SQL DATA
+begin
+
+
+INSERT INTO `appointment`(
+							`fk_doctor_id`
+							, `fk_location_id`
+							, `fk_patient_id`
+    						, contact
+							, `appointment_date`
+							, `start_mins`
+							, `end_mins`
+							, `state`
+							, `is_rescheduled`
+							, `created_date_time`
+							, `fk_created_by_pk`
+							, `created_by_type`
+							, `is_active`
+							) VALUES (
+							pdoctor_id
+							,plocation_id
+							,ppatient_id
+                            , pcontact
+							,STR_TO_DATE(pappointment_date, '%d-%m-%Y')
+							,pstart_mins
+							,pend_mins
+							, 0  # 0 active appointment, 1 closed, 2 cancelled
+							,1 # this is  a new appointment and is not rescheduled
+							,now()
+							,pcreated_by_id
+							,pcreated_by_type
+							,1 # is active
+							);
+			
+commit;				
+
+end$$
+
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
     MODIFIES SQL DATA
 begin
 	/*
@@ -1638,7 +1692,7 @@ begin
 	
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
+CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
     NO SQL
 begin
 	
@@ -1688,6 +1742,153 @@ begin
 	
 end$$
 
+--
+-- Functions
+--
+CREATE DEFINER=`dreamdkp`@`localhost` FUNCTION `check_appointment_avalibility`(`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS int(11)
+    NO SQL
+begin
+
+	
+	declare lnewAppointmentDate date;
+	declare lscheduleCount int;
+
+	declare lappointmentSum int;
+	
+	/*
+	inputs of this function to book a new appointment
+	pdoctor_id  
+	plocation_id
+	pappointment_date
+	pstart_time -- start time of the new appointment
+	pend_time   -- end time for the new appoitment
+	
+	Return codes
+	1 can book appointment
+	2 schedule not added or timimgs dont match
+	3 appointment timings overlap
+	*/
+	
+	/*
+	check if the doctor has added a schedule for this day 
+	and check if the timimngs are within this range
+	*/
+	set @lnewAppointmentDate = STR_TO_DATE(pappointment_date, '%d-%m-%Y');
+	
+	
+	select count(sc.id)
+	into   @lscheduleCount
+	from schedule_day sc
+	where sc.fk_doctor_id = pdoctor_id
+		  and sc.location_id = plocation_id
+		  and date(sc.`date`) = date(@lnewAppointmentDate)
+		  and sc.start_time_mins <= pstart_time
+		  and sc.end_time_mins >= pend_time
+		  and sc.is_blocked = 0
+		  and sc.is_active = 1;
+		  
+	if COALESCE(@lscheduleCount, 0) = 0 then
+		return 2;  #either the schedule is not added or the appointment timings dont match
+	end if;
+
+	 /*
+	 check if there are any appointments on that day, which are over lapping with the current appointment
+	 
+	 input for is_timing_overlapping(), this function return 1 if there is a timing overlap
+	 
+	 pnewStartTime - start time for the new appointment
+	 pnewEndTime - end time for the new appointment
+	 
+	 pAppointStartTime  --start time for an existing appointment
+	 pAppointEndTime	--end time for an exsiting appointment
+	 */
+
+	 
+	 select sum(is_timing_overlapping(pstart_time, pend_time, a.start_mins, a.end_mins))
+	 into  @lappointmentSum
+	 from appointment a
+	 where  a.fk_doctor_id = pdoctor_id
+			and a.fk_location_id  = plocation_id
+			and date(a.appointment_date) = date(@lnewAppointmentDate)
+			and a.state = 0
+			and a.is_active = 1;
+			
+	if COALESCE(@lappointmentSum, 0) > 0 then 
+		return 3; #appointment is not available on this day
+	else
+		return 1; #can book appointment 
+	end if;
+
+
+
+
+end$$
+
+CREATE DEFINER=`dreamdkp`@`localhost` FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
+    NO SQL
+begin
+
+#gives 0 if the point c on or in between a and b
+
+declare dotProduct int;
+declare lenghtSsuare int;
+
+# dot product (c.x - a.x)*(b.x - a.x) + (c.y - a.y)*(b.y - a.y)
+# here x = 0, so pointA = a.y, pointB = b.y and pointC = c.y
+# and a.x, b.x and c.x = 0
+
+set @dotProduct = (pointC - pointA) * (pointB -pointA);
+
+if @dotProduct < 0 then
+	return 0; 
+    #point c does not lie between a and b
+end if;
+
+#lengthSquare(ab) = (b.x - a.x)*(b.x - a.x) + (b.y - a.y)*(b.y - a.y)
+#here x = 0, so a.x and b.x = 0
+
+set @lenghtSsuare = (pointB - pointA)*(pointB - pointA);
+
+if @dotProduct > @lenghtSsuare then
+	return 0;
+    #point c does not lie between a and b
+end if;
+
+return 1; #return 1, point lies between a and b
+
+end$$
+
+CREATE DEFINER=`dreamdkp`@`localhost` FUNCTION `is_timing_overlapping`(`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS int(11)
+    NO SQL
+begin
+	
+	/*
+	 pnewStartTime - start time for the new appointment
+	 pnewEndTime - end time for the new appointment
+	 
+	 pAppointStartTime  --start time for an existing appointment
+	 pAppointEndTime	--end time for an exsiting appointment
+	 
+	*/
+	
+	#validations start time should net be greater or equal to end time
+	if  pnewStartTime >= pnewEndTime 
+		or  pAppointStartTime >= pAppointEndTime then
+		return 1;
+	end if;
+
+	if pnewStartTime >= pAppointEndTime or pnewEndTime <= pAppointStartTime then
+		#test to check of the appointments are outside the time range each other
+		# i.e it the existing appointment is from 9.15 to 9.30 then the new appointment ends before 
+		# or at 9.15 or starts on or after 9.30 
+		#can book new appointment
+		return 0;
+	else
+		return 1;
+	end if;
+	
+end$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -1699,15 +1900,28 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS `appointment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
+  `fk_location_id` int(11) NOT NULL,
   `fk_patient_id` int(11) NOT NULL,
+  `contact` varchar(20) NOT NULL,
   `appointment_date` date NOT NULL,
-  `appointment_time_minutes` int(11) NOT NULL,
-  `description` varchar(2000) NOT NULL,
-  `appointment_state` int(11) NOT NULL,
-  `created_date` datetime NOT NULL,
+  `start_mins` int(11) NOT NULL,
+  `end_mins` int(11) NOT NULL,
+  `state` int(11) NOT NULL,
+  `is_rescheduled` int(11) NOT NULL,
+  `created_date_time` datetime NOT NULL,
+  `fk_created_by_pk` int(11) NOT NULL,
+  `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `appointment`
+--
+
+INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `state`, `is_rescheduled`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`) VALUES
+(1, 1, 14, 96, '342314', '2016-06-09', 555, 570, 0, 1, '2016-06-09 15:23:49', 1, 'D', 1),
+(6, 1, 14, 104, '4444444', '2016-06-09', 540, 555, 0, 1, '2016-06-10 22:52:29', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2053,9 +2267,9 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `height` varchar(50) NOT NULL,
   `gender` int(11) NOT NULL DEFAULT '0',
   `contact1` varchar(50) NOT NULL,
-  `contact2` varchar(50) NOT NULL,
+  `contact2` varchar(50) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `address` varchar(1000) NOT NULL,
+  `address` varchar(1000) DEFAULT NULL,
   `picture_path` varchar(200) DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `fk_created_by_id` int(11) NOT NULL,
@@ -2065,7 +2279,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=97 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=105 ;
 
 --
 -- Dumping data for table `patient`
@@ -2075,7 +2289,12 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (93, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 12:56:30', 1, 'D', NULL, NULL, NULL, 1),
 (94, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 12:58:46', 1, 'D', NULL, NULL, NULL, 1),
 (95, 1, 'Travolda1', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', NULL, '2016-06-07 13:06:23', 1, 'D', NULL, 1, 'D', 1),
-(96, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 15:59:56', 1, 'D', NULL, NULL, NULL, 1);
+(96, 1, 'Travolda', '2016-04-01', 'AB+', '2 kgs', '20 cms', 1, '14242341', '12412341', NULL, 'Kanas', '2.jpg', '2016-06-07 15:59:56', 1, 'D', NULL, NULL, NULL, 1),
+(100, 1, 'Amanda Lee', '1995-04-01', 'AB+', '57 Kg', '5.8 ft', 0, '14242341', NULL, NULL, NULL, NULL, '2016-06-10 22:43:05', 1, 'D', NULL, NULL, NULL, 1),
+(101, 1, 'Amanda Lee', '1995-04-01', 'AB+', '57 Kg', '5.8 ft', 0, '14242341', NULL, NULL, NULL, NULL, '2016-06-10 22:46:27', 1, 'D', NULL, NULL, NULL, 1),
+(102, 1, 'Amanda Lee', '1995-04-01', 'AB+', '57 Kg', '5.8 ft', 0, '14242341', NULL, NULL, NULL, NULL, '2016-06-10 22:48:16', 1, 'D', NULL, NULL, NULL, 1),
+(103, 1, 'Amanda Lee', '1995-04-01', 'AB+', '57 Kg', '5.8 ft', 0, '14242341', NULL, NULL, NULL, NULL, '2016-06-10 22:48:58', 1, 'D', NULL, NULL, NULL, 1),
+(104, 1, 'Greg', '1995-03-21', 'AB+', '67', '5.9 ft', 1, '4444444', NULL, NULL, NULL, NULL, '2016-06-10 22:52:29', 1, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -2185,7 +2404,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=73 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=74 ;
 
 --
 -- Dumping data for table `schedule`
@@ -2194,7 +2413,8 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created_date`, `created_by`, `created_by_type`, `is_active`) VALUES
 (70, 18, '2016-06-01', '2016-06-30', '2016-05-29 00:00:00', 18, 'D', 1),
 (71, 18, '2016-05-31', '2016-06-15', '2016-05-31 00:00:00', 18, 'D', 1),
-(72, 18, '2016-05-31', '2016-06-15', '2016-05-31 00:00:00', 18, 'D', 1);
+(72, 18, '2016-05-31', '2016-06-15', '2016-05-31 00:00:00', 18, 'D', 1),
+(73, 1, '2016-06-09', '2016-06-24', '2016-06-09 00:00:00', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2213,7 +2433,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `is_blocked` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229426 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229438 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -2260,7 +2480,19 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229422, 18, 72, 13, 20160608, 540, 720, 0, 1),
 (229423, 18, 72, 13, 20160610, 540, 720, 0, 1),
 (229424, 18, 72, 13, 20160613, 540, 720, 0, 1),
-(229425, 18, 72, 13, 20160615, 540, 720, 0, 1);
+(229425, 18, 72, 13, 20160615, 540, 720, 0, 1),
+(229426, 1, 73, 14, 20160609, 540, 720, 0, 1),
+(229427, 1, 73, 14, 20160610, 540, 720, 0, 1),
+(229428, 1, 73, 14, 20160613, 540, 720, 0, 1),
+(229429, 1, 73, 14, 20160614, 540, 720, 0, 1),
+(229430, 1, 73, 14, 20160615, 540, 720, 0, 1),
+(229431, 1, 73, 14, 20160616, 540, 720, 0, 1),
+(229432, 1, 73, 14, 20160617, 540, 720, 0, 1),
+(229433, 1, 73, 14, 20160620, 540, 720, 0, 1),
+(229434, 1, 73, 14, 20160621, 540, 720, 0, 1),
+(229435, 1, 73, 14, 20160622, 540, 720, 0, 1),
+(229436, 1, 73, 14, 20160623, 540, 720, 0, 1),
+(229437, 1, 73, 14, 20160624, 540, 720, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -2319,8 +2551,8 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
 INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`) VALUES
 (12, 18, 'Panjim', ''),
 (13, 18, 'Margaon', ''),
-(14, 18, 'asdf', ''),
-(15, 18, 'Temp', ''),
+(14, 1, 'Margaon', ''),
+(15, 1, 'Panjim', ''),
 (16, 18, 'dsaf', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
