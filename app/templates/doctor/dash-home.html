@@ -25,7 +25,7 @@
   <!-- /.row -->
   <div class="row">
 
-    <div class=" col-md-6">
+    <div class=" col-md-6 hidden">
      <div class="panel panel-green">
         <div class="panel-heading">
           <h3 class="panel-title">Search Query</h3>
@@ -56,7 +56,743 @@
   </div>
   <!-- /.row -->
   <div class="row">
-    <div class="col-md-8 hidden">
+      <!-- all  Modal -->
+      
+      <!-- book appointment modal -->
+      
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Book Appointment</h4>
+      </div>
+      <div class="modal-body">
+          
+         
+                             <form id="book-Appointment-Form"  role="form" data-toggle="validator" class="form-horizontal">
+
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Location<span class="required">*</span></label>
+                  <div class="col-md-8">
+                    <select class="form-control">
+                      <option>...Select...</option>
+                    </select>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Appointment Date</label>
+                  <div class='col-md-8'>
+
+
+                    <div class='input-group date' id='datetimepicker11'>
+                      <input type='text' id="book-appointment-date-form-input" class="form-control" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+
+                    </div>
+
+                  </div>
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+                </div>
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Appointment Time</label>
+                  <div class='col-md-8'>
+
+                    <div class='input-group date' id='datetimepicker2'>
+                      <input type='text'id="book-appointment-patientsTime-form-input" data-error="Please enter Time" class="form-control" required />
+                      <span class="input-group-addon">
+
+                        <span class="glyphicon glyphicon-time"></span>
+                      </span>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+
+                </div>
+
+
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control" pattern="[a-zA-Z ]{3,30}" data-error="please enter patients name" name="username" id="book-appointment-patientsName-form-input" placeholder="Patients Name" required>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="focusedinput" class="col-md-2 control-label">DOB:</label>
+                  <div class='col-md-8'>
+
+
+                    <div class='input-group date' id='datetimepicker13'>
+                      <input type='text' id="book-appointment-date-form-input" class="form-control" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
+                  <div class="col-md-8">
+                    <div class="radio-inline">
+                      <label>
+                        <input id="rb-male" type="radio"> Male
+                      </label>
+                    </div>
+
+                    <div class="radio-inline">
+                      <label>
+                        <input id="rb-female" type="radio"> Female
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="focusedinput" class="col-md-2 control-label">Height<span class="required"></span></label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control"  id="patient-height" placeholder="Patients Height">
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label for="focusedinput" class="col-md-2 control-label">weight<span class="required"></span></label>
+                  <div class="col-md-8 ">
+                    <input type="text" class="form-control"  id="patient-weight-input" placeholder="Patients Weight">
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label for="" class="col-md-2 control-label">Blood Group<span class="required"></span></label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+                  </div>
+                </div>
+
+
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control" name="username" id="book-appointment-contact-form-input" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-error="please enter your 10 digit mobile No" required> <div class="help-block with-errors"></div>
+                  </div>
+
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Description</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description-form-input" required></textarea >
+                      <div class="help-block with-errors"></div>
+                      <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+                    </div>
+                    <div class="col-md-1">
+                      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                  </div>
+
+
+
+
+
+                </form>
+
+       
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="book-Appointment-Form-submit-button" class="btn-success btn" name="submit" >Book An Appointment</button>
+              </div>
+      </div>
+    </div>
+  </div>
+ 
+      
+      
+       <!-- re-schedule appointment modal -->
+      <div class="modal fade" id="reSchedule-appointment-modal-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Re-Schedule Appointment</h4>
+      </div>
+      <div class="modal-body">
+          
+        {% block bookFormAlerts  %}
+        {% endblock %}
+        {% block bookForm  %}
+        {% endblock %}
+       
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="book-Appointment-Form-submit-button" class="btn-success btn" name="submit" >Book An Appointment</button>
+              </div>
+      </div>
+    </div>
+  </div>
+  
+   <!-- cancel dialog modal -->
+      
+      <div class="modal fade" id="timeline-cancel-modal-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Cancel Reason</h4>
+      </div>
+      <div class="modal-body">
+          
+         
+                             <form id="timeline-cancel-form"  role="form" data-toggle="validator" class="form-horizontal">
+
+         
+
+           
+
+
+            
+
+          
+
+
+
+
+              
+                <div class="form-group has-feedback">
+                  <label for="focusedinput" class="col-md-2 control-label">Description</label>
+                  <div class="col-md-8">
+                    <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description-form-input" required></textarea >
+                      <div class="help-block with-errors"></div>
+                      <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+                    </div>
+                    <div class="col-md-1">
+                      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                  </div>
+
+
+
+
+
+                </form>
+
+       
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="book-Appointment-Form-submit-button" class="btn-success btn" name="submit" >Ok</button>
+              </div>
+      </div>
+    </div>
+  </div>
+   <!-- close appointment modal -->
+        <div class="modal fade" id="timeline-close-appointment-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Close Appointment</h4>
+      </div>
+      <div class="modal-body">
+          
+             <form id="addCompanyForm"  class="form-horizontal">
+
+         
+
+            <div class="form-group">
+      <label for="focusedinput" class="col-md-2 control-label">Closing date</label>
+<div class='col-md-8'>
+
+
+<div class='input-group date' id='datetimepicker2'>
+        <input type='date' class="form-control" />
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+
+</div>
+
+        </div>
+
+                  <div class="form-group">
+   <label for="focusedinput" class="col-md-2 control-label">Closing time</label>
+<div class='col-md-8'>
+
+    <div class='input-group date' id='datetimepicker3'>
+       <select class="form-control">
+        <option>1:00</option>
+
+        </select>
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-time"></span>
+        </span>
+    </div>
+
+</div>
+</div>
+
+           
+
+
+
+
+            
+                      <div class="form-group">
+      <label for="focusedinput" class="col-md-2 control-label">Next Appointment</label>
+<div class='col-md-8'>
+
+
+<div class='input-group date' id='datetimepicker2'>
+        <input type='date' class="form-control" />
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+
+</div>
+
+        </div>
+
+                  <div class="form-group">
+   <label for="focusedinput" class="col-md-2 control-label">Next Appt. Time:</label>
+<div class='col-md-8'>
+
+    <div class='input-group date' id='datetimepicker3'>
+
+        <select class="form-control">
+        <option>1:00</option>
+
+        </select>
+
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-time"></span>
+        </span>
+    </div>
+
+</div>
+</div>
+
+            
+
+
+
+
+
+<div class="form-group">
+<label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
+<div class="col-md-8">
+<input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+</div>
+
+</div>
+<div class="form-group">
+<label for="focusedinput" class="col-md-2 control-label">Prescription List<span class="required">*</span></label>
+<div class="col-md-8">
+<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+</div>
+
+</div>
+
+<div class="form-group">
+<label for="focusedinput" class="col-md-2 control-label">Remarks:</label>
+<div class="col-md-8">
+<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+</div>
+</div>
+
+
+
+
+
+
+   <div class="form-group">
+
+   <div class="btn-group  col-md-offset-4"><button class="btn btn-info">Upload file</button>
+       <button class="btn btn-info"> Remove Selected</button>
+     
+    </div>
+
+
+   </div>
+
+      <div class="form-group">
+<label for="focusedinput" class="col-md-2 control-label">Scanned Document List:</label>
+<div class="col-md-8">
+<textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+<p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+</div>
+</div>
+
+
+
+
+
+
+
+</form>
+
+      
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn-success btn" id="close-appointment-submit-btn" name="submit" value="Close Appointment"/>
+              </div>
+      </div>
+    </div>
+  </div>
+  
+</div> 
+         <div class="col-md-12" >
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Quick Book</h3>
+        </div>
+        <div class="panel-body">
+            <form class='form-inline '>
+            
+                     <div class="input-group form-group">
+     <input type='text'  class="form-control" placeholder="Patient or phone no" required/>   
+                          <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-search"></span>
+                      </span>
+ 
+  </div> <span class='invisible'>...</span>
+            
+    <div class='input-group form-group date ' id='datetimepicker24'>
+                      <input type='text' placeholder="Date"  class="form-control" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+
+                    </div>
+                 <span class='invisible'>...</span>
+                <div class='form-group input-group date timepicker' id='datetimepicker23'>
+                      <input type='text' placeholder="Time"  class="form-control" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                      </span>
+
+                    </div>
+                 <span class='invisible'>...</span>
+         <div class="form-group ">
+                  <button type="button" class="btn btn-success">Book Appointment</button>
+                </div>
+       
+    
+            </form>
+  
+          </div>
+          
+        </div>
+
+     
+    </div>   
+ 
+<div class="col-md-4">
+      <div>
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Calender view</h3>
+        </div>
+        <div class="panel-body">
+                	<div class="responsive-calendar">
+        <div class="controls">
+            <a class="pull-left" data-go="prev"><div class="btn btn-sm btn-primary">Prev</div></a>
+            <h4><span data-head-year></span> <span data-head-month></span></h4>
+            <a class="pull-right" data-go="next"><div class="btn btn-sm btn-primary">Next</div></a>
+        </div><hr/>
+        <div class="day-headers">
+          <div class="day header">Mon</div>
+          <div class="day header">Tue</div>
+          <div class="day header">Wed</div>
+          <div class="day header">Thu</div>
+          <div class="day header">Fri</div>
+          <div class="day header">Sat</div>
+          <div class="day header">Sun</div>
+        </div>
+        <div class="days" data-group="days">
+          
+        </div>
+      </div>
+      <!-- Responsive calendar - END -->
+    
+
+          </div>
+        </div>
+
+     
+    </div>   
+
+ 
+  
+    </div> 
+    <div class="col-md-8">
+           <div>
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;</h3>
+        </div>
+        <div class="panel-body">
+                      <form class="form-inline">
+                     <div class="form-group">
+  
+    <div class='input-group date ' id='datetimepicker1'>
+                      <input type='text'  class="form-control" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+
+                    </div>
+  </div>
+  <div class="form-group">
+   <select class="form-control">
+                <option>All</option>
+                <option>Margao</option>
+                <option>Panjim</option>
+                <option>Cuncolim</option>
+                <option>Curtorim</option>
+                </select>
+       <button type="button" class="btn btn-default">Go</button>
+  </div>
+                          
+                          <span class="invisible">...</span>
+ 
+                          
+                          
+              
+                        
+                         <hr>
+              
+              
+      
+            </form>
+
+       <label class="form-label cadetblue">Filters</label>
+         
+            <ul class="nav  nav-pills">
+                <li role="presentation" class="active"><a href="#">All </a></li>
+  <li role="presentation" ><a href="#">New </a></li>
+                <li role="presentation" ><a href="#">Active</a></li>
+  <li role="presentation"><a href="#">Canceled </a></li>
+  <li role="presentation"><a href="#">Closed </a></li>
+                <button class="btn hidden btn-success">Reload  <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate "></span></button>
+</ul>
+            <hr>
+           
+         <div class="row">
+            <div style="padding:0px 30px 0px 15px">
+                  <h3 class="timeline-h3 inline-imp">Margao all day</h3>
+             <div class="pull-right timeline-stats">
+                   <span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span>Canceled <span class='badge'>4</span></span> <span>rescheduled <span class='badge'>4</span></span>       
+                          </div>
+            <span class="invisible">...</span>
+             </div>
+         
+            </div>
+          
+          
+              
+         <div class="timeline-container">
+            
+           
+         <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 timeline-sideStyle text-right ">
+                  
+                          <time class="timeline-time " ><span>11:00 <small>AM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                      <div class="alert show alert-info  no-margin-bottom-imp timeline-closed-appoint" role="alert"><span>  <ul class="nav nav-pills pull-right">
+                               
+                                 <button tabindex="0" role="button" data-toggle="popover" data-html="true"   title="Ailment Description" data-content="
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            <br> <br> <br>
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            And here's some amazing content. It's very engaging. Right?" type="button" id="timeline_btn_patient_history" class="btn timeline_lg_description btn-sm btn-info" data-tooltip="tooltip" title="View Remark"><span  class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span></button><span class="invisible">...</span>
+                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-tooltip="tooltip"  title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
+                             
+</ul><strong class="text-left ">Joel Dias</strong> <br><small><strong> Appointment Closed! </strong></small></span>
+                         </div>
+                        </div>
+                      
+            </div>
+                
+                <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 timeline-sideStyle text-right ">
+                  
+                          <time class="timeline-time " ><span>12:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                        <div class="  list-group-item">
+                            <ul class="nav nav-pills pull-right">
+                                
+                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-tooltip="tooltip"  title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
+                            <span class="invisible">..</span>
+                              <button type="button"  data-toggle="modal" data-target="#reSchedule-appointment-modal-window" id="timeline_btn_re_schedule" class="btn btn-sm btn-default" data-tooltip="tooltip"  title="Re-schedule"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+                             <span class="invisible">..</span>
+                                   <button type="button" data-toggle="modal" data-target="#timeline-close-appointment-window" id="timeline_btn_re_schedule" class="btn btn-sm btn-warning" data-tooltip="tooltip"  title="Close Appointment"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
+                             <span class="invisible">..</span>
+                              <button type="button"  data-toggle="modal" data-target="#timeline-cancel-modal-window" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-tooltip="tooltip"  title="Cancel Appointment"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                            
+    
+</ul>
+     <strong id="timeline_item_name">Joshep Fernandes</strong> <br>
+                         
+ <span tabindex="0" class="timeline_lg_description" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="Ailment Description" data-content="
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            <br> <br> <br>
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            And here's some amazing content. It's very engaging. Right?"><small>Back Ache...</small></span> 
+     
+          
+
+                         </div>
+                        </div>
+                      
+            </div>
+                    <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 timeline-sideStyle  text-right ">
+                  
+                          <time class="timeline-time " ><span>12:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                        <div class="  list-group-item">
+                            <ul class="nav nav-pills pull-right">
+                                <a href="#">close</a>&nbsp;&nbsp;
+                                 <a href="#">Cancel</a>&nbsp;&nbsp;
+                                  <a href="#">Reschedule</a>&nbsp;&nbsp;
+                            <a href="#">History</a>&nbsp;&nbsp;
+                              
+                                 
+                                 
+                            
+    
+</ul>
+     <strong id="timeline_item_name">Agnelo Noronha</strong> <br>
+                         
+ <span tabindex="0" class="timeline_lg_description" role="button" data-toggle="popover" data-html="true" data-trigger="focus"  title="Ailment Full Description" data-content="
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            <br> <br> <br>
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            And here's some amazing content. It's very engaging. Right?"><small>Sore Throat..</small></span> 
+     
+          
+
+                         </div>
+                        </div>
+                      
+            </div>
+          
+                <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2  timeline-sideStyle text-right ">
+                  
+                          <time class="timeline-time " ><span>13:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                      <div id="timeline_book_new_panel"  data-toggle="modal" data-target="#myModal" class="alert btn show alert-success  no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Book! </strong>new appointment here...</div>
+                        </div>
+               
+
+
+   
+            </div>
+             <div class="timeline_item clearfix">
+              <div class="col-md-2 col-sm-2 timeline-sideStyle text-right ">
+                  
+                          <time class="timeline-time " ><span>14:00 <small>PM</small></span></time>
+                        </div>
+                        <div class="col-md-10 col-sm-10 timeline_child_item">
+                      <div class="alert  show alert-danger  no-margin-bottom-imp timeline-cancelled-appoint" role="alert"><span>
+                           <ul class="nav nav-pills pull-right">
+                           
+                           
+            
+                              <button tabindex="0" role="button" data-toggle="popover" data-html="true"   title="Ailment Description" data-content="
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            <br> <br> <br>
+                            Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                
+                                Lorem ipsum dolor sit amet, consectetuer adipiscing
+                            And here's some amazing content. It's very engaging. Right?" type="button" id="timeline_btn_patient_history" class="btn timeline_lg_description btn-sm btn-info" data-tooltip="tooltip" title="View Remark"><span  class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span></button><span class="invisible">...</span>
+                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-tooltip="tooltip"  title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
+                               
+                            
+    
+</ul><strong class="text-left ">Joshep Fernandes</strong><br> <small><strong> Appointment Cancelled! </strong></small></span>
+                           
+                      
+                            </div>
+                        </div>
+                      
+            </div>
+        
+             </div>   
+           
+                      
+              
+                   
+                  
+                    
+             
+  </div>
+        </div>
+
+
+
+
+      </div>
+   
+    </div>
+    
+    
+    
+   <div class="col-md-8 hidden">
       <div class="panel panel-green">
         <div class="panel-heading">
           <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;<span class="badge">12</span></h3>
@@ -239,147 +975,6 @@
 
             </div>
           </div>
-        </div>
-
-
-
-
-      </div>
-
-      
-          <div class="col-md-12">
-      <div class="panel panel-green">
-        <div class="panel-heading">
-          <h3 class="panel-title">Todays Appointment &nbsp;&nbsp;&nbsp;</h3>
-        </div>
-        <div class="panel-body">
-                      <form class="form-inline">
-           <div class='input-group date' id='datetimepicker1'>
-                      <input type='text'  class="form-control" required/>
-                      <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
-
-                    </div>
-        
-                 <span class="invisible">..</span><label>Location:</label>
-                <select class="form-control">
-                <option>All</option>
-                <option>Margao</option>
-                <option>Panjim</option>
-                <option>Cuncolim</option>
-                <option>Curtorim</option>
-                </select>
-                          <button class="btn btn-default">Go</button>
-                          
-                         <hr>
-              
-              
-      
-            </form>
-
-         
-            
-            
-            
-         
-            <h3 class="timeline-h3 inline-imp">Margao all day</h3>
-               <div class="timeline-stats">
-                   <span>Total  <span class='badge'>34</span></span>   <span>Completed <span class='badge'>4</span></span>  <span>Canceled <span class='badge'>4</span></span> <span>rescheduled <span class='badge'>4</span></span>       
-                          </div>
-         <div class="timeline-container">
-            
-           
-         <div class="timeline_item clearfix">
-              <div class="col-md-2 col-sm-2 text-right ">
-                  
-                          <time class="timeline-time " ><span>11:00 <small>AM</small></span></time>
-                        </div>
-                        <div class="col-md-10 col-sm-10 timeline_child_item">
-                      <div class="alert btn show alert-info text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert">
-                           <ul class="nav nav-pills pull-right">
-                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
-</ul><strong>Appointment Closed! </strong>View detail</div>
-                        </div>
-                      
-            </div>
-                
-                <div class="timeline_item clearfix">
-              <div class="col-md-2 col-sm-2 text-right ">
-                  
-                          <time class="timeline-time " ><span>12:00 <small>PM</small></span></time>
-                        </div>
-                        <div class="col-md-10 col-sm-10 timeline_child_item">
-                        <div class="  list-group-item">
-                            <ul class="nav nav-pills pull-right">
-                            <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
-                            <span class="invisible">..</span>
-                              <button type="button" id="timeline_btn_re_schedule" class="btn btn-sm btn-warning" data-toggle="tooltip" data-placement="top" title="Re-schedule"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
-                             <span class="invisible">..</span>
-                              <button type="button" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                            
-    
-</ul>
-     <strong id="timeline_item_name">Joshep Fernandes</strong> <br>
-                         
- <span tabindex="0" class="timeline_lg_description" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="Dismissible popover" data-content="
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing
-                            <br> <br> <br>
-                            Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                Lorem ipsum dolor sit amet, consectetuer adipiscing
-                                
-                                Lorem ipsum dolor sit amet, consectetuer adipiscing
-                            And here's some amazing content. It's very engaging. Right?"><small>Back Ache...</small></span> 
-     
-          
-
-                         </div>
-                        </div>
-                      
-            </div>
-             
-                <div class="timeline_item clearfix">
-              <div class="col-md-2 col-sm-2 text-right ">
-                  
-                          <time class="timeline-time " ><span>13:00 <small>PM</small></span></time>
-                        </div>
-                        <div class="col-md-10 col-sm-10 timeline_child_item">
-                      <div id="timeline_book_new_panel" class="alert btn show alert-success text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Book! </strong>new appointment here...</div>
-                        </div>
-                      
-            </div>
-             <div class="timeline_item clearfix">
-              <div class="col-md-2 col-sm-2 text-right ">
-                  
-                          <time class="timeline-time " ><span>14:00 <small>PM</small></span></time>
-                        </div>
-                        <div class="col-md-10 col-sm-10 timeline_child_item">
-                      <div class="alert btn show alert-danger text-center no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Appointment Cancelled! </strong>view Cancelled detail...
-                            <ul class="nav nav-pills pull-right">
-                           
-                           
-            
-                             <span class="invisible">..</span>
-                              <button type="button" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-toggle="tooltip" data-placement="top" title="Cancel"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                            
-    
-</ul>
-                            
-                            </div>
-                        </div>
-                      
-            </div>
-         
-            
-             </div>   
-           
-                      
-              
-                   
-                  
-                    
-             
-  </div>
         </div>
 
 

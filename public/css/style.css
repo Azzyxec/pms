@@ -6,6 +6,12 @@
     margin-top: 10px;
 }
 
+.form-group{
+    margin-bottom:15px !important;
+}
+.btn-default{
+    background-image:none !important;
+}
 
 
 /* Login Style*/
@@ -19,9 +25,23 @@
 
 /* timeline style */
 .timeline_child_item{
-   border-left: 6px solid #62bdfa;
+  
   
     padding: 5px;
+}
+
+@media only screen and (max-width: 1100px) {
+    .timeline_child_item {
+     border-left: 6px solid #62bdfa;
+    }
+    .timeline-sideStyle{
+       border-right: none !important;
+      
+}
+}
+
+.timeline-sideStyle{
+       border-right: 6px solid #62bdfa;
 }
 
 .timeline_item{
@@ -51,9 +71,7 @@
 }
 
 .timeline-stats{
-    position: absolute;
-    right: 47px; 
-    top: 9.4em; 
+  
 }
 
 @media only screen and (max-width: 769px) {
@@ -74,14 +92,20 @@
 }
 }
 
- .timeline-new-book-appoint{
+ .timeline-cancelled-appoint,.timeline-closed-appoint,.timeline-new-book-appoint{
      height: 60px !important;
-
-
  }
+.timeline-new-book-appoint,.timeline-cancelled-appoint,.timeline-closed-appoint{
+    text-align:left !important;
+       padding: 10px 15px !important;
+}
 
 .timeline-h3{
  color: #2f8feb;
+}
+
+.timeline-btn{
+    background-image: none !important;
 }
 /*
  *

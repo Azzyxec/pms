@@ -1,14 +1,31 @@
 $(document).ready(function(){
     
+     $(".responsive-calendar").responsiveCalendar({
+          time: '2013-05'
+     });  
+    
     $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
+      
+        
 });
        $(function () {
-  $('[data-toggle="popover"]').popover()
-});
-    
+  $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
+  
+       });
      $(function () {
-                $('#datetimepicker1').datetimepicker();
+                $('#datetimepicker1').datetimepicker({
+                 format: 'DD/MM/YYYY'
+                    
+                });
+            $('#datetimepicker24').datetimepicker({
+              format: 'DD/MM/YYYY'
+                     
+                });
+           $('#datetimepicker23').datetimepicker({
+              format: 'hh:mm a'
+                     
+                });
             });
 
     
