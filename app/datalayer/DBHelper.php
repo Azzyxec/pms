@@ -6,6 +6,7 @@ use \AppConfig;
 
 
 class DBHelper{
+
   public static function getConnection(){
 
        $dns = 'mysql:host='.AppConfig::$dbhost.';dbname='.AppConfig::$dbname.';port='. AppConfig::$port ;
@@ -14,8 +15,9 @@ class DBHelper{
        return $pdo;
   }
 
-  public static function generateStatement($procdureName, $paramAray){
-    $sql = 'call ' . $procdureName . '(';
+  public static function generateStatement($procdureName, $paramAray, $type = "call"){
+
+    $sql = $type . ' ' . $procdureName . '(';
     foreach ($paramAray as $key => $value) {
       $sql = $sql . ':' . $key . ',';
     }

@@ -140,7 +140,6 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           $birthDetails->remarks = "Test Data";
           */
 
-
           $birthInfoArray = $postedData['birthInfo'];
           $birthDetails = new BirthDetails();
           $birthDetails->deliveryMethodId = $birthInfoArray['deliveryMethodId'];
@@ -155,7 +154,7 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
           $birthDetails->siblings = $birthInfoArray['siblings'];
           $birthDetails->isActive = $patient->isActive;
           $birthDetails->remarks = $birthInfoArray['remarks'];
-          
+
 
           //saving all the patients data
           $patientDB = new PatientDB();
