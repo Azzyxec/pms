@@ -8,8 +8,9 @@
 
     <div class="col-lg-8 col-md-10">
       <div class="rw">
-
+ 
       </div>
+        {% block bookFormAlerts %}
       <div id="book-appointment-before-submit-warning-error" class="hidden alert alert-warning alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Warning!</strong> Please fill in the info.
@@ -24,7 +25,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <strong>Sorry!</strong>Somethings not right.
       </div>
-
+        {% endblock %}
       <div class="panel panel-green">
         <div class="panel-heading">
           Book appointment
@@ -39,7 +40,7 @@
 
 
           <div class="content_bottom">
-
+{% block bookForm %}
             <div class="">
               <form id="book-Appointment-Form"  role="form" data-toggle="validator" class="form-horizontal">
 
@@ -199,7 +200,7 @@
                   </div>
 
                 </form>
-
+{% endblock %}
               </div>
             </div>
           </div>

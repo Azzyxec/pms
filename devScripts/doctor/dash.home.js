@@ -1,20 +1,35 @@
 $(document).ready(function(){
     
+     $(".responsive-calendar").responsiveCalendar({
+          time: '2013-05'
+     });  
+    
     $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
+      
+        
 });
        $(function () {
-  $('[data-toggle="popover"]').popover()
-});
+  $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
+  
+       });
+     $(function () {
+                $('#datetimepicker1').datetimepicker({
+                 format: 'DD/MM/YYYY'
+                    
+                });
+            $('#datetimepicker24').datetimepicker({
+              format: 'DD/MM/YYYY'
+                     
+                });
+           $('#datetimepicker23').datetimepicker({
+              format: 'hh:mm a'
+                     
+                });
+            });
 
     
-     $(".responsive-calendar").responsiveCalendar({
-          time: '2013-05',
-          events: {
-           
-            "2013-05-03":{}, 
-            "2013-06-12": {}}
-        });
+    
 
     $(function(){
         console.log('Doctor Dashboard home js loaded');
@@ -40,18 +55,30 @@ var TimelineModel = {
         id:0,
         name:"joseph",
         time:"14:00",
-        ailment:"back ache"        
+        ailment:"back ache",
+        CancelappointentStatus: false,
+        bookNewappointmentStatus: false
     },
              {
         id:0,
         name:"Danny",
         time:"15:00",
-        ailment:"asthama"        
+        ailment:"asthama",
+        CancelappointentStatus: false,
+        bookNewappointmentStatus: false
     },
+             {
+        id:0,
+        name:"d",
+        time:"d",
+        ailment:"d",
+        CancelappointentStatus: false,
+        bookNewappointmentStatus: true
+    },
+       
     
-    ] 
-   
-  
+    ],
+    location:"margao"
     
 } 
 
@@ -65,7 +92,7 @@ var controller = {
 
     getPatientArrayCount: function(){
         
-        var PatientArray  = this.getPatient;
+        var PatientArray  = this.getPatient();
         var count = PatientArray.length;
         return count;
     },
@@ -73,7 +100,14 @@ var controller = {
     
     getPatient: function(){
         return TimelineModel.patient;
+    },
+    
+    
+    createTimeline:function(obj){
+     var patientCount = this.getPatientArrayCount();
+     
     }
+    
     
 }
         
@@ -95,14 +129,21 @@ var Timelineview = {
     },
     
     render:function(){
-        var patientCount = controller.getPatientArrayCount;
+        
+        
+        var patientCount = controller.getPatientArrayCount();
         console.log(patientCount);
+        var patientArray = controller.getPatient();
+        for(i=0;i<patientCount;i++){
+            console.log(patientArray[i].name);
+        }
+        
     }
     
 }
 
 
-
+controller.init();
 
     }());
 

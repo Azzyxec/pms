@@ -34,6 +34,7 @@ var filesList = [
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                        objConfig.scriptsBasePath +"moment.js",
+                       objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                        objConfig.scriptsBasePath +"vendor/responsive-calendar.min.js",
                        objConfig.scriptsBasePath +"doctor/dash.home.js"
                        ], buildName: "dash.home.js"},
