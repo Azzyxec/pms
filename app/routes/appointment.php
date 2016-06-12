@@ -10,38 +10,71 @@ use Pms\Datalayer\PatientDB;
 $app->group('/appointment', function(){
 
 
-$this->get('/getAppointmentsForTheDay', function ($request, $response) {
-  try {
+  $this->get('/getAppointmentsForTheDay', function ($request, $response) {
+    try {
 
-    $message = "success";
+      $minTimeMins = 5;
+      //if the free time is greater than 5 mins then slot is made available for booking an appointment
 
-    $allGetVars = $request->getQueryParams();
-    $locationId = $allGetVars['locId'];
-    $date = $allGetVars['date'];
+      $message = "success";
 
-    $user = UserSessionManager::getUser();
+      $allGetVars = $request->getQueryParams();
+      $locationId = $allGetVars['locId'];
+      $date = $allGetVars['date'];
 
-    $appointmentDB = new AppointmentDB();
+      $user = UserSessionManager::getUser();
 
-    $timingList = $appointmentDB->getScheduleTimingsForTheDay($user->doctorId, $locationId, $date);
+      $appointmentDB = new AppointmentDB();
 
-    $appointments = array();
-    foreach ($timingList as $key => $value) {
-      //value is array with start and end time
-      $appointments[] = $value;
+      $allApointments = $appointmentDB->getAppointmentsForTheDay($user->doctorId, $locationId, $date);
 
+      $timingList = $appointmentDB->getScheduleTimingsForTheDay($user->doctorId, $locationId, $date);
+
+      $todaysSchedule = array();
+      foreach ($timingList as $key => $schedule) {
+        //value is array with start and end time
+        $startMins = $schedule['startMins'];
+        foreach ($allApointments as $key1 => $appointment) {
+
+          if($schedule['startMins']  <= $appointment['startMins'] &&
+          $schedule['endMins'] >=  $appointment['endMins']){
+              $endMins = $appointment['startMins'];
+
+              $differenceMins = $endMins - $startMins;
+              //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+
+              if($differenceMins >= $minTimeMins){
+                  $freeTimeSlot = array('type' => 'f',  'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+                  $todaysSchedule[] = $freeTimeSlot;
+              }
+
+              $appointment['type'] = 'a';
+              $todaysSchedule[] = $appointment;
+
+              $startMins = $appointment['endMins'];
+
+          }
+        } //inner foreach
+
+        //checking if there is
+        $endMins = $schedule['endMins'];
+        $differenceMins = $endMins - $startMins;
+        if($differenceMins >= $minTimeMins){
+          $todaysSchedule[] = array('type' => 'f', 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+        }
+
+
+      }//outer foreach
+
+      $data = array('status' => 1, 'data' => $todaysSchedule, 'message' => $message);
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+      return $response->withJson($data);
     }
 
-
-    $data = array('status' => 1, 'data' => $appointments, 'message' => $message);
-    return $response->withJson($data);
-
-  } catch (Exception $e) {
-    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-    return $response->withJson($data);
-  }
-
-});
+  });
 
   $this->post('/bookAppointment', function ($request, $response) {
 

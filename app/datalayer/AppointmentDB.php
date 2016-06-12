@@ -11,6 +11,40 @@ class AppointmentDB{
   public function getAppointmentsForTheDay($doctorId, $locationId, $date){
     try {
 
+
+
+      $paramArray = array(
+        'pdoctor_id' => $doctorId,
+        'plocation_id' => $locationId,
+        'pdate' => $date
+      );
+
+      $statement = DBHelper::generateStatement('get_appointments_for_the_day',  $paramArray);
+
+      $statement->execute();
+
+      $appointments = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+        $appointment = array();
+        $appointment['id'] = $result['id'];
+        $appointment['contact'] = $result['contact'];
+        $appointment['patientId'] = $result['fk_patient_id'];
+        $appointment['name'] = $result['name'];
+        $appointment['startMins'] = $result['start_mins'];
+        $appointment['endMins'] = $result['end_mins'];
+        $appointment['description'] = $result['description'];
+        $appointment['state'] = $result['state'];
+        $appointment['isRescheduled'] = $result['is_rescheduled'];
+
+        $appointments[] = $appointment;
+      }
+
+      return $appointments;
+
+
+
+
     } catch (Exception $e) {
       return -1;
     }
@@ -34,8 +68,8 @@ class AppointmentDB{
       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 
         $timing = array();
-        $timing['startTime'] = $result['start_time_mins'];
-        $timing['endTime'] = $result['end_time_mins'];
+        $timing['startMins'] = $result['start_time_mins'];
+        $timing['endMins'] = $result['end_time_mins'];
 
         $timingList[] = $timing;
       }
