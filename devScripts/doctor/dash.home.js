@@ -1,5 +1,56 @@
 $(document).ready(function(){
     
+    
+    
+    
+     //initilizing the source typeahead
+        $('#quickbook-patient-search').typeahead({
+     
+        source: ['akhil','joseph','Agnelo','Ruban','Ronald','Sonia']
+        });
+    
+   $(function () {
+       
+        $('#fileupload').fileupload({
+      
+        dataType: 'json',
+        done: function (e, data) {
+            $.each(data.result.files, function (index, file) {
+                $('<p/>').text(file.name).appendTo('#files');
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#fileupload-progress-bar').css(
+                'width',
+                progress + '%'
+            );
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+       
+   });
+       
+  
+    
+    
+    
+    var engine = new Bloodhound({
+  local: [{value: 'red'}, {value: 'blue'}, {value: 'green'} , {value: 'yellow'}, {value: 'violet'}, {value: 'brown'}, {value: 'purple'}, {value: 'black'}, {value: 'white'}],
+  datumTokenizer: function(d) {
+    return Bloodhound.tokenizers.whitespace(d.value);
+  },
+  queryTokenizer: Bloodhound.tokenizers.whitespace
+});
+
+engine.initialize();
+    
+    
+    $('#tokenfield').tokenfield({
+ typeahead: [null, { source: engine.ttAdapter() }]
+});
+    
+    
      $(".responsive-calendar").responsiveCalendar({
           time: '2013-05'
      });  
