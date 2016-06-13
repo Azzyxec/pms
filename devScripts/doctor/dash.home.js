@@ -88,6 +88,8 @@ $(document).ready(function(){
         //templates
         this.bookNewppointmentTemplate = $('#book-new-appointment-template');
         this.bookedAppointmentTemplate = $('#booked-appointment-template');
+        this.cancelledAppointmentTemplate = $('#cancelled-appointment-template');
+        this.closedAppointmentTemplate = $('#closed-appointment-template');
 
 
         this.goButton.click(function(){
@@ -136,6 +138,8 @@ $(document).ready(function(){
             this.locationSelect.append(option);
         }
 
+
+
         //render appointment locationList
 
         this.appointmentListContainer.empty();
@@ -177,6 +181,13 @@ $(document).ready(function(){
 
                 template.find('.booked-appointment-popover').popover(popoverSettings);
 
+              }else if(item.state == 1){
+                //closed
+                var template = this.closedAppointmentTemplate.clone();
+
+              }else  if(item.state == 2){
+                var template = this.cancelledAppointmentTemplate.clone();
+                //cancelled
               }
 
 
@@ -184,6 +195,7 @@ $(document).ready(function(){
               template.find('.aa').text(mStartTime.format(" A"));
 
               template.find('.patient-name').text(item.name);
+
             }
 
             this.appointmentListContainer.append(template);
