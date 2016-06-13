@@ -11,8 +11,6 @@ class AppointmentDB{
   public function getAppointmentsForTheDay($doctorId, $locationId, $date){
     try {
 
-
-
       $paramArray = array(
         'pdoctor_id' => $doctorId,
         'plocation_id' => $locationId,
@@ -37,6 +35,7 @@ class AppointmentDB{
         $appointment['description'] = $result['description'];
         $appointment['state'] = $result['state'];
         $appointment['isRescheduled'] = $result['is_rescheduled'];
+        $appointment['locId'] = $result['loc'];
 
         $appointments[] = $appointment;
       }

@@ -5,8 +5,8 @@ $(document).ready(function(){
 
     var model = {
       appointmentList:[],
-      appointmentDate:'09-06-2016',
-      DefaultlocationId: 14,
+      appointmentDate: moment().format('DD-MM-YYYY'),
+      DefaultlocationId: 0,
       appointmenListViewModel:{
         locationList:[],
         totalAppointmenCount:0,
@@ -39,10 +39,23 @@ $(document).ready(function(){
       model.DefaultlocationId = locId;
     };
 
+
+    controller.prototype.getSelectedLocId = function () {
+      return model.DefaultlocationId;
+    };
+
+    controller.prototype.getSelectedeDate = function () {
+      return model.appointmentDate;
+    };
+
+    controller.prototype.setSelectedDate = function (pdate) {
+      model.appointmentDate = pdate;
+    };
+
     controller.prototype.init = function () {
       todayAppointmentListView.init();
       this.getLocations();
-      this.getappointmentListForDate();
+      this.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
 
     };
 
@@ -56,9 +69,9 @@ $(document).ready(function(){
       });
     };
 
-    controller.prototype.getappointmentListForDate = function () {
+    controller.prototype.getappointmentListForDate = function (pdate, locId) {
 
-      $.get( this.getAppointmentForTheDayUrl , {date:   model.appointmentDate, locId: model.DefaultlocationId})
+      $.get( this.getAppointmentForTheDayUrl , {date:   pdate, locId: locId})
       .done(function( response ) {
         console.log("today Appointment: " + JSON.stringify(response));
         model.appointmentList = response.data;
@@ -69,7 +82,7 @@ $(document).ready(function(){
 
     var todayAppointmentListView = {
       init:function(){
-        this.date = $('#appointment-list-date');
+        this.dateInput = $('#appointment-list-date');
         this.locationSelect = $('#appointment-list-locations-sel');
         this.goButton = $('#appointment-list-go-btn');
 
@@ -92,15 +105,23 @@ $(document).ready(function(){
         this.closedAppointmentTemplate = $('#closed-appointment-template');
 
 
+        this.dateInput.datetimepicker({
+          format: 'DD-MM-YYYY'
+        });
+
+
         this.goButton.click(function(){
+          var date = todayAppointmentListView.dateInput.val();
+
           var selectedOption = todayAppointmentListView.locationSelect.find(":selected");
 
           var selectedValue = selectedOption.attr('value');
           var name = selectedOption.text();
           if(selectedValue){
-              cont.setSelectedLocationId(selectedValue);
               todayAppointmentListView.listHeadertText.text('Location ' + name);
-              cont.getappointmentListForDate();
+              cont.setSelectedDate(date);
+              cont.setSelectedLocationId(selectedValue);
+              cont.getappointmentListForDate(date, selectedValue);
           }
 
         });
@@ -108,6 +129,8 @@ $(document).ready(function(){
       },
       render: function(){
         console.log('rendering appointment list');
+
+        this.dateInput.val(cont.getSelectedeDate());
 
         todayAppointmentListView.listHeadertText.text('Location');
 
@@ -137,6 +160,8 @@ $(document).ready(function(){
           });
             this.locationSelect.append(option);
         }
+
+          this.locationSelect.val(cont.getSelectedLocId());
 
 
 
@@ -237,14 +262,6 @@ $(document).ready(function(){
     $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
 
   });
-  $(function () {
-    $('#appointment-list-date').datetimepicker({
-      format: 'DD/MM/YYYY'
-
-    });
-
-  });
-
 
 
 
