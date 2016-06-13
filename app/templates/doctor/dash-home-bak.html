@@ -20,9 +20,40 @@
     <div class="col-lg-12">
       <h1 class="page-header">Dashboard</h1>
     </div>
+    <!-- /.col-lg-12 -->
   </div>
   <!-- /.row -->
+  <div class="row">
 
+    <div class=" col-md-6 hidden">
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Search Query</h3>
+        </div>
+        <div class="panel-body">
+          <form class="form-inline">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Token No">
+            </div>
+            <button type="submit" class="btn btn-default">
+              <span class="glyphicon glyphicon glyphicon-search"></span>
+            </button>
+
+
+
+
+          </form>
+
+
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+  </div>
   <!-- /.row -->
   <div class="row">
     <!-- all  Modal -->
@@ -73,12 +104,52 @@
             <h4 class="modal-title" id="myModalLabel">Cancel Reason</h4>
           </div>
           <div class="modal-body">
-            {% include '/appointment/cancel-appointment-form.html' %}
+
+
+            <form id="timeline-cancel-form"  role="form" data-toggle="validator" class="form-horizontal">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <div class="form-group has-feedback">
+                <label for="focusedinput" class="col-md-2 control-label">Description</label>
+                <div class="col-md-8">
+                  <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description-form-input" required></textarea >
+                    <div class="help-block with-errors"></div>
+                    <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+
+                  </div>
+                  <div class="col-md-1">
+                    <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                  </div>
+                </div>
+
+
+
+
+
+              </form>
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button id="book-Appointment-Form-submit-button" class="btn-success btn" name="submit" >Ok</button>
             </div>
           </div>
         </div>
       </div>
-
       <!-- close appointment modal -->
       <div class="modal fade" id="timeline-close-appointment-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -90,6 +161,8 @@
             <div class="modal-body">
 
               <form id="addCompanyForm"  class="form-horizontal">
+
+
 
                 <div class="form-group">
                   <label for="focusedinput" class="col-md-2 control-label">Closing date</label>
@@ -123,6 +196,12 @@
 
                   </div>
                 </div>
+
+
+
+
+
+
 
                 <div class="form-group">
                   <label for="focusedinput" class="col-md-2 control-label">Next Appointment</label>
@@ -159,6 +238,12 @@
                   </div>
                 </div>
 
+
+
+
+
+
+
                 <div class="form-group">
                   <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
                   <div class="col-md-8">
@@ -185,12 +270,18 @@
                   </div>
                 </div>
 
+
+
+
+
+
                 <div class="form-group text-center">
 
                   <div class="btn-group "><button class="btn btn-info">Upload file</button>
                     <button class="btn btn-info"> Remove Selected</button>
 
                   </div>
+
 
                 </div>
 
@@ -203,7 +294,15 @@
                   </div>
                 </div>
 
+
+
+
+
+
+
               </form>
+
+
 
             </div>
             <div class="modal-footer">
@@ -215,6 +314,52 @@
       </div>
 
     </div>
+    <div class="col-md-12" >
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          <h3 class="panel-title">Quick Book</h3>
+        </div>
+        <div class="panel-body">
+          <form class='form-inline '>
+
+            <div class="input-group form-group">
+              <input type='text'  class="form-control" placeholder="Patient or phone no" required/>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+              </span>
+
+            </div> <span class='invisible'>...</span>
+
+            <div class='input-group form-group date ' id='datetimepicker24'>
+              <input type='text' placeholder="Date"  class="form-control" required/>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+
+            </div>
+            <span class='invisible'>...</span>
+            <div class='form-group input-group date timepicker' id='datetimepicker23'>
+              <input type='text' placeholder="Time"  class="form-control" required/>
+              <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+              </span>
+
+            </div>
+            <span class='invisible'>...</span>
+            <div class="form-group ">
+              <button type="button" class="btn btn-success">Book Appointment</button>
+            </div>
+
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
     <div class="col-md-4">
       <div>
         <div class="panel panel-green">
@@ -243,10 +388,14 @@
             </div>
             <!-- Responsive calendar - END -->
 
+
           </div>
         </div>
 
+
       </div>
+
+
 
     </div>
     <div class="col-md-8">
@@ -280,7 +429,13 @@
 
               <span class="invisible">...</span>
 
+
+
+
+
               <hr>
+
+
 
             </form>
 
@@ -367,6 +522,7 @@
                   "><small>more info..</small></span>
 
 
+
                 </div>
               </div>
 
@@ -384,6 +540,10 @@
                     <a href="#">Reschedule</a>&nbsp;&nbsp;
                     <a href="#">History</a>&nbsp;&nbsp;
 
+
+
+
+
                   </ul>
                   <strong id="timeline_item_name">Agnelo Noronha</strong> <br>
 
@@ -394,6 +554,7 @@
                   <span>Continuous Back Ache for several weeks</span>
 
                   "><small>More info..</small></span>
+
 
 
                 </div>
@@ -409,6 +570,9 @@
               <div class="col-md-10 col-sm-10 timeline_child_item">
                 <div id="timeline_book_new_panel"  data-toggle="modal" data-target="#myModal" class="alert btn show alert-success  no-margin-bottom-imp timeline-new-book-appoint" role="alert"><strong>Book! </strong>new appointment here...</div>
               </div>
+
+
+
 
             </div>
             <div class="timeline_item clearfix">
@@ -444,12 +608,23 @@
 
           </div>
 
+
+
+
+
+
+
         </div>
       </div>
+
+
+
 
     </div>
 
   </div>
+
+
 
   <div class="col-md-8 hidden">
     <div class="panel panel-green">
@@ -637,6 +812,8 @@
   </div>
 
 
+
+
 </div>
 
 <div class="col-md-12 hidden">
@@ -708,6 +885,11 @@
         <tr id="collapseItemForCalender">
           <td colspan="7">
             <div  class="collapse "  id="collapseExamp1">
+
+
+
+
+
 
               <ul class="list-group">
                 <li class="list-group-item">
@@ -993,6 +1175,10 @@
           </ul>
         </td>
       </tr>
+
+
+
+
 
     </tbody>
   </table>
