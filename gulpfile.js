@@ -33,6 +33,7 @@ var filesList = [
                        objConfig.scriptsBasePath +"utility.js",
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                       objConfig.scriptsBasePath +"bootstrapValidator.min.js",     
                        objConfig.scriptsBasePath +"vendor/typeahead.bundle.min.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap3-typeahead.min.js",
                        objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
@@ -42,7 +43,9 @@ var filesList = [
                        objConfig.scriptsBasePath +"vendor/bootstrap-tokenfield.js",
                        objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                        objConfig.scriptsBasePath +"vendor/responsive-calendar.min.js",
-                       objConfig.scriptsBasePath +"doctor/dash.home.js"
+                       objConfig.scriptsBasePath +"doctor/dash.home.js",
+                       objConfig.scriptsBasePath +"appointment/new.appointment.js",
+                       objConfig.scriptsBasePath +"appointment/close.appointment.js"
                        ], buildName: "dash.home.js"},
  {build:true, files: [
                       objConfig.scriptsBasePath +"utility.js",

@@ -3,14 +3,13 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Location<span class="required">*</span></label>
     <div class="col-md-8">
-      <select id="sel-locations" class="form-control">
+      <select id="sel-locations" name="newBookSelLocations" class="form-control" required>
         <option>...Select...</option>
       </select>
-      <div class="help-block with-errors"></div>
+        
+   
     </div>
-    <div class="col-md-1">
-      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-    </div>
+   
   </div>
 
   <div class="form-group has-feedback">
@@ -18,8 +17,8 @@
     <div class='col-md-8'>
 
 
-      <div class='input-group date' id='datetimepicker1'>
-        <input type='text' id="new-appointment-date" class="form-control" required/>
+      <div class='input-group date' id='datetimepicker24'>
+        <input type='text' id="new-appointment-date" class="form-control" name="newAppointmentDate" required/>
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -27,26 +26,23 @@
       </div>
 
     </div>
-    <div class="col-md-1">
-      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-    </div>
+    
   </div>
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Appointment Time</label>
-    <div class='col-md-8'>
+    <div class='col-md-8 feedback-Custom'>
 
-      <div class='input-group date' id='datetimepicker2'>
-        <input type='text'id="new-appointment-time" data-error="Please enter Time" class="form-control" required />
+      <div class='input-group date' id='datetimepicker23'>
+        <input type='text' name="newAppointmentTime" id="new-appointment-time"  class="form-control" required />
         <span class="input-group-addon">
 
           <span class="glyphicon glyphicon-time"></span>
         </span>
       </div>
-      <div class="help-block with-errors"></div>
+     
+        
     </div>
-    <div class="col-md-1">
-      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-    </div>
+   
 
   </div>
 
@@ -56,23 +52,21 @@
     <div class="col-md-8">
       <select id="sel-appointment-duration" class="form-control">
       </select>
-      <div class="help-block with-errors"></div>
+   
+     
     </div>
-    <div class="col-md-1">
-      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-    </div>
+    
   </div>
 
 
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
     <div class="col-md-8">
-      <input type="text" id="new-appointment-patients-name"  class="form-control" pattern="[a-zA-Z ]{3,30}" data-error="please enter patients name" name="username" placeholder="Patients Name" required>
-      <div class="help-block with-errors"></div>
+      <input type="text" id="new-appointment-patients-name"  class="typeahead form-control" pattern="[a-zA-Z ]{3,30}" name="username" placeholder="Patients Name" required>
+    
+   
     </div>
-    <div class="col-md-1">
-      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-    </div>
+  
   </div>
 
   <div class="form-group">
@@ -125,9 +119,10 @@
   </div>
 
   <div class="form-group">
-    <label for="" class="col-md-2 control-label">Blood Group<span class="required"></span></label>
+    <label for="bloodgroup" class="col-md-2 control-label">Blood Group<span class="required"></span></label>
     <div class="col-md-8">
-      <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+      <input type="text" name="bloodgroup" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+    
     </div>
   </div>
 
@@ -135,24 +130,22 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
     <div class="col-md-8">
-      <input type="text" class="form-control" name="username" id="book-appointment-contact" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-error="please enter your 10 digit mobile No" required> <div class="help-block with-errors"></div>
+      <input type="text" class="form-control" name="username" id="book-appointment-contact" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-errors="{pattern:'sfdf'}" required> <div class="help-block with-errors"></div>
+       
     </div>
 
-    <div class="col-md-1">
-      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-    </div>
+    
   </div>
 
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Description</label>
     <div class="col-md-8">
       <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description" required></textarea>
-        <div class="help-block with-errors"></div>
-        <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+          
+      
+      
       </div>
-      <div class="col-md-1">
-        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-      </div>
+   
     </div>
       <div class="row">
         <div class="text-center">

@@ -1,5 +1,74 @@
 $(document).ready(function(){
+      
+    
+    $(function(){
+        
+        $('#datetimepicker24').datetimepicker({
+              format: 'DD/MM/YYYY'
+                     
+                });
+           $('#datetimepicker23').datetimepicker({
+              format: 'hh:mm a'
+                     
+                }); 
+    });
+    
+    //initilizing the source typeahead
+        $('#new-appointment-patients-name').typeahead({
+     
+        source: ['akhil','joseph','Agnelo','Ruban','Ronald','Sonia']
+        });
+           
 
+    $(".feedback-Custom > i").css("right","53px !important"); 
+    var validator = $("#book-Appointment-Form").bootstrapValidator({
+        trigger:" blur",
+        feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok ',
+        invalid: 'glyphicon glyphicon-remove ',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+        fields:{
+            newBookSelLocations : {
+                validators : {
+                    notEmpty : {
+                        message : 'Please select location!'
+                    }
+                }
+                
+            },
+            
+            bloodgroup : {
+              
+                validators : {
+                    notEmpty : {
+                        message : 'please blood group is required'
+                    },
+                    stringLength : {
+                        min : 6,
+                        max : 35,
+                        message : 'please dont put characters more than 6 or 35'
+                    }
+                    
+                }
+            },
+            newAppointmentDate : {
+                validators : {
+                    notEmpty :{
+                        message : 'please select date'
+                    }
+                }
+            }
+        }
+    });
+    
+    
+    
+    
+    
+    
+    
+     
 
   console.log('new appointment');
 
