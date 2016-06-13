@@ -226,18 +226,11 @@ $(document).ready(function(){
 
   });
   $(function () {
-    $('#datetimepicker1').datetimepicker({
+    $('#appointment-list-date').datetimepicker({
       format: 'DD/MM/YYYY'
 
     });
-    $('#datetimepicker24').datetimepicker({
-      format: 'DD/MM/YYYY'
 
-    });
-    $('#datetimepicker23').datetimepicker({
-      format: 'hh:mm a'
-
-    });
   });
 
 
