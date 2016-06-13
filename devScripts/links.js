@@ -62,6 +62,7 @@ var links = {
    patientListingUrl:"index.php/patient/getPatientList",
 
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
+   getAppointmentForTheDayUrl: "index.php/appointment/getAppointmentsForTheDay",
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
    locationListUrl:"index.php/locations/getDoctorLocations",
