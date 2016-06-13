@@ -33,7 +33,13 @@ var filesList = [
                        objConfig.scriptsBasePath +"utility.js",
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                       objConfig.scriptsBasePath +"vendor/typeahead.bundle.min.js",
+                       objConfig.scriptsBasePath +"vendor/bootstrap3-typeahead.min.js",
+                       objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
+                       objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
+                       objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
                        objConfig.scriptsBasePath +"moment.js",
+                       objConfig.scriptsBasePath +"vendor/bootstrap-tokenfield.js",
                        objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                        objConfig.scriptsBasePath +"vendor/responsive-calendar.min.js",
                        objConfig.scriptsBasePath +"doctor/dash.home.js"

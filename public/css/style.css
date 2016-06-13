@@ -1,7 +1,16 @@
+
+
+.form-control-feedback-custom{
+    right: 53px !important;
+}
 .login-btn{
     width:100% !important
 }
-
+.dl-horizontal dt,.dl-horizontal dd {
+  width:auto !important;
+  margin-left:auto !important;
+  display:inline-block !important;
+}
 .dashboard-appointment-table-btn{
     margin-top: 10px;
 }

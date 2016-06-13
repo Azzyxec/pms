@@ -13,7 +13,7 @@ $(document).ready(function(){
         endTimeMins:0,
         contact:'', //contact of the patient in appointment could change
         description:'',
-      },
+      }, 
       patient:{
         id:0,
         name:'',
