@@ -31,6 +31,7 @@ class AppointmentDB{
         $appointment['contact'] = $result['contact'];
         $appointment['patientId'] = $result['fk_patient_id'];
         $appointment['name'] = $result['name'];
+        $appointment['contact'] = $result['contact'];
         $appointment['startMins'] = $result['start_mins'];
         $appointment['endMins'] = $result['end_mins'];
         $appointment['description'] = $result['description'];
