@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 13, 2016 at 04:12 PM
+-- Generation Time: Jun 13, 2016 at 08:31 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -1129,6 +1129,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_appointments_for_the_day`(IN `p
 begin
 
 
+
 	select  a.id
 		   ,a.contact
 		   ,a.fk_patient_id
@@ -1138,10 +1139,11 @@ begin
 		   ,a.description
 		   ,a.`state`
 		   ,a.is_rescheduled
+           ,plocation_id as loc
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
 	where a.fk_doctor_id = pdoctor_id
-		  and a.fk_location_id = plocation_id
+		  and a.fk_location_id = case when plocation_id > 0 then  plocation_id else a.fk_location_id end
 		  and DATE(a.appointment_date) =  DATE(STR_TO_DATE(pdate, '%d-%m-%Y'))
 		  and a.is_active = 1
 	order by a.start_mins asc;
@@ -1295,7 +1297,7 @@ begin
 		   ,sd.end_time_mins
 	from schedule_day sd
 	where sd.fk_doctor_id = pdoctor_id
-		  and sd.location_id = plocation_id
+		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
 		  and sd.date = STR_TO_DATE(pdate, '%d-%m-%Y')
 		  and sd.is_active = 1;
 
@@ -1949,8 +1951,8 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 
 INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `description`, `state`, `is_rescheduled`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`) VALUES
 (1, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 0, 0, '2016-06-09 15:23:49', 1, 'D', 1),
-(7, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 0, 0, '2016-06-11 16:41:13', 1, 'D', 1),
-(8, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 0, 0, '2016-06-12 00:01:08', 1, 'D', 1);
+(7, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 1, 0, '2016-06-11 16:41:13', 1, 'D', 1),
+(8, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 2, 0, '2016-06-12 00:01:08', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
