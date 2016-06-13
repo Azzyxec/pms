@@ -2984,7 +2984,7 @@ select[multiple].input-lg {
   }
 }
 .form-horizontal .has-feedback .form-control-feedback {
-  right: 15px;
+  right: 23px;
 }
 @media (min-width: 768px) {
   .form-horizontal .form-group-lg .control-label {
