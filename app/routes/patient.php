@@ -28,6 +28,35 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
 });
 
 
+$this->get('/getPatientListForAutoFill', function ($request, $response) {
+  try {
+
+    $data = "";
+    $message = "you might need to log in as a doctor";
+
+    $user = UserSessionManager::getUser();
+
+    if($user->id != "-1"){
+
+      $patientDB =  new PatientDB();
+      $resultArray = $patientDB->getPatienListForAutofill($user->id);
+
+      $message = "success";
+      $data = $resultArray['data'];
+
+    }
+
+    $data = array('status' => "1", 'data' => $data, 'message' => $message);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
+
+
 
 
     $this->get('/getPatientList', function ($request, $response) {

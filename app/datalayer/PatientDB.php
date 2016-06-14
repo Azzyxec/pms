@@ -55,6 +55,44 @@ class PatientDB{
        $patient['contact'] = $result['contact1'];
        $patient['address'] = $result['address'];
        $patient['picturePath'] = $result['picture_path'];
+       $patient['displayName'] = $result['display'];
+
+       $patientList[] = $patient;
+     }
+
+      return array('status' => 1, 'data' => $patientList, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => -1, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
+  public function getPatienListForAutofill($doctorId){
+    try {
+
+    $paramArray = array(
+                          'pdoctor_id' => $doctorId
+                        );
+
+     $statement = DBHelper::generateStatement('get_patients_list',  $paramArray);
+
+     $statement->execute();
+
+     $patientList = array();
+     while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+       $patient = array();
+       $patient['id'] = $result['id'];
+       $patient['name'] = $result['display'];
+       $patient['dateOfBirth'] = $result['date_of_birth'];
+       $patient['bloodGroup'] = $result['blood_group'];
+       $patient['weight'] = $result['weight'];
+       $patient['height'] = $result['height'];
+       $patient['gender'] = $result['gender'];
+       $patient['contact'] = $result['contact1'];
+       $patient['address'] = $result['address'];
+       $patient['picturePath'] = $result['picture_path'];
+       $patient['displayName'] = $result['display'];
 
        $patientList[] = $patient;
      }

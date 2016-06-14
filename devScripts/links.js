@@ -60,6 +60,8 @@ var links = {
    programmeListDetailsUrl:"index.php/programme/getProgrammeListDetails",
    //patientsProgrammesUrl:"index.php/programme/getPatientProgrammes",
    patientListingUrl:"index.php/patient/getPatientList",
+   getPatientsForAutoFillUrl:"index.php/patient/getPatientListForAutoFill",
+
 
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
    getAppointmentForTheDayUrl: "index.php/appointment/getAppointmentsForTheDay",

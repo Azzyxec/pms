@@ -166,14 +166,9 @@ $(document).ready(function(){
 
           this.locationSelect.val(cont.getSelectedLocId());
 
-
-
         //render appointment locationList
-
         this.appointmentListContainer.empty();
         var appointmentList = cont.getAppointmentList();
-
-
 
         if(appointmentList){
 
