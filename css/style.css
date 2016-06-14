@@ -186,12 +186,16 @@ html,#wrapper{
     border: none !important;
 }
 
-.location-label{
-    display: block !important;
+
+   .location-label{
+    display: inline-block !important;
     border-radius: 20px !important;
-    margin: 4px auto 4px 2px;
-    height: 17px;
-    width: 17px;
+    margin: 0px -6px 0px 0px;
+    height: 15px;
+    padding: 0px !important;
+    width: 15px;
+
+}
 
 }
 td,th{
