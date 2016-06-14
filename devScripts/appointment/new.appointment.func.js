@@ -320,6 +320,19 @@ function makeAppointmentController(){
         this.contact = $('#book-appointment-contact');
         this.descrip = $('#book-appointment-description');
 
+
+        this.appointmentDate.val('');
+        this.appointmentTime.val('');
+        this.patientsName.val('');
+        this.patientsDOB.val('');
+        this.rbMale.attr('checked', true);
+        this.rbFemale.attr('checked', false);
+        this.patientsHeight.val('');
+        this.patientsWeight.val('');
+        this.patientsBloodGroup.val('');
+        this.contact.val('');
+        this.descrip.val('');
+
         //alerts
         this.alertNoScheduleOrTimingOustideWorkTiming = $('#book-appointment-no-schedule');
         this.alertTimingClash = $('#book-appointment-timings-clash');
