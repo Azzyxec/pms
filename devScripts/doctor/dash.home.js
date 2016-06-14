@@ -106,7 +106,7 @@ $(document).ready(function(){
 
         this.newAppointmentModal = $('#book-appointment-modal');
 
-
+       
 
         this.dateInput.datetimepicker({
           inline:true,
@@ -114,6 +114,31 @@ $(document).ready(function(){
         });
 
 
+        this.todayApptDashNavAll = $("#todayApptDashNavAll");
+        this.todayApptDashNavNew = $("#todayApptDashNavNew");
+        this.todayApptDashNavActive = $("#todayApptDashNavActive");
+        this.todayApptDashNavCanceled = $("#todayApptDashNavCanceled");
+        this.todayApptDashNavClosed = $("#todayApptDashNavClosed");
+        
+          
+          
+        this.todayApptDashNavAll.click(function(e){
+            e.preventDefault();
+        })
+        
+        this.todayApptDashNavNew.click(function(e){
+            e.preventDefault();
+        })
+        this.todayApptDashNavActive.click(function(e){
+            e.preventDefault();
+        })
+        this.todayApptDashNavCanceled.click(function(e){
+            e.preventDefault();
+        })
+        this.todayApptDashNavClosed.click(function(e){
+            e.preventDefault();
+        })
+          
         this.goButton.click(function(){
           var date = todayAppointmentListView.dateInput.val();
 
@@ -129,6 +154,8 @@ $(document).ready(function(){
           }
 
         });
+          
+          
 
       },
       render: function(){
