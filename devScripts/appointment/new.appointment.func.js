@@ -1,6 +1,7 @@
 
 function makeAppointmentController(){
 
+/*
     $('#datetimepicker24').datetimepicker({
       format: 'DD/MM/YYYY'
 
@@ -9,6 +10,7 @@ function makeAppointmentController(){
       format: 'hh:mm a'
 
     });
+    */
 
     //initilizing the source typeahead
   //  $('#new-appointment-patients-name').typeahead({
@@ -211,6 +213,10 @@ function makeAppointmentController(){
         this.descrip = $('#book-appointment-description');
 
         this.saveButton = $('#book-appointment-button');
+
+
+        //unbinding events
+        this.saveButton.off();
 
 
         //intilizing the date and time controls
