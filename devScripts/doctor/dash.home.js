@@ -104,6 +104,9 @@ $(document).ready(function(){
         this.cancelledAppointmentTemplate = $('#cancelled-appointment-template');
         this.closedAppointmentTemplate = $('#closed-appointment-template');
 
+        this.newAppointmentModal = $('#book-appointment-modal');
+
+
 
         this.dateInput.datetimepicker({
           format: 'DD-MM-YYYY'
@@ -170,7 +173,11 @@ $(document).ready(function(){
         this.appointmentListContainer.empty();
         var appointmentList = cont.getAppointmentList();
 
+
+
         if(appointmentList){
+
+          this.totalAppointmentCount.text(appointmentList.length);
 
           for(var i = 0; i < appointmentList.length; i++){
 
@@ -189,6 +196,20 @@ $(document).ready(function(){
 
               template.find('.time-period').text('from ' + mStartTime.format("hh:mm A") + ' to ' + mEndTime.format("hh:mm A"));
 
+                template.find('.new-appintment-div').click((function(startTime){
+                  return function(){
+                  console.log('new appoinment click');
+                    var initValues = {
+                      locationList: cont.getLocationList(),
+                      locationId: cont.getSelectedLocId(),
+                      appointmetDate: cont.getSelectedeDate(),
+                      appointmentTime: startTime
+                    }
+                    var appController = makeAppointmentController();
+                    appController.init(initValues);
+                    todayAppointmentListView.newAppointmentModal.modal();
+                  }
+                })(mStartTime.format("hh:mm A")));
 
 
             }else if(item.type == 'a'){
@@ -245,8 +266,10 @@ $(document).ready(function(){
     var cont = new controller();
     cont.init();
 
-
   }());
+
+
+
 
 
   $(".responsive-calendar").responsiveCalendar({

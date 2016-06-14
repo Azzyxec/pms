@@ -1,75 +1,65 @@
-$(document).ready(function(){
 
-  var appController = makeAppointmentController();
-  appController.init();
+function makeAppointmentController(){
 
+    $('#datetimepicker24').datetimepicker({
+      format: 'DD/MM/YYYY'
 
-/*
-    $(function(){
+    });
+    $('#datetimepicker23').datetimepicker({
+      format: 'hh:mm a'
 
-        $('#datetimepicker24').datetimepicker({
-              format: 'DD/MM/YYYY'
-
-                });
-           $('#datetimepicker23').datetimepicker({
-              format: 'hh:mm a'
-
-                });
     });
 
     //initilizing the source typeahead
-        $('#new-appointment-patients-name').typeahead({
+  //  $('#new-appointment-patients-name').typeahead({
 
-        source: ['akhil','joseph','Agnelo','Ruban','Ronald','Sonia']
-        });
+    //  source: ['akhil','joseph','Agnelo','Ruban','Ronald','Sonia']
+    //});
 
 
     $(".feedback-Custom > i").css("right","53px !important");
     var validator = $("#book-Appointment-Form").bootstrapValidator({
-        trigger:" blur",
-        feedbackIcons: {
+      trigger:" blur",
+      feedbackIcons: {
         valid: 'glyphicon glyphicon-ok ',
         invalid: 'glyphicon glyphicon-remove ',
         validating: 'glyphicon glyphicon-refresh'
-    },
-        fields:{
-            newBookSelLocations : {
-                validators : {
-                    notEmpty : {
-                        message : 'Please select location!'
-                    }
-                }
-
-            },
-
-            bloodgroup : {
-
-                validators : {
-                    notEmpty : {
-                        message : 'please blood group is required'
-                    },
-                    stringLength : {
-                        min : 6,
-                        max : 35,
-                        message : 'please dont put characters more than 6 or 35'
-                    }
-
-                }
-            },
-            newAppointmentDate : {
-                validators : {
-                    notEmpty :{
-                        message : 'please select date'
-                    }
-                }
+      },
+      fields:{
+        newBookSelLocations : {
+          validators : {
+            notEmpty : {
+              message : 'Please select location!'
             }
+          }
+
+        },
+
+        bloodgroup : {
+
+          validators : {
+            notEmpty : {
+              message : 'please blood group is required'
+            },
+            stringLength : {
+              min : 6,
+              max : 35,
+              message : 'please dont put characters more than 6 or 35'
+            }
+
+          }
+        },
+        newAppointmentDate : {
+          validators : {
+            notEmpty :{
+              message : 'please select date'
+            }
+          }
         }
+      }
     });
 
-
-  console.log('new appointment');
-
-  $(function() {
+    console.log('new appointment');
 
     var model = {
       appointment:{
@@ -95,10 +85,13 @@ $(document).ready(function(){
       appointmentTimes: [{id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}]
     };
 
-
     function mainController(){
       this.getLocationUrl = links.getLocationUrl;
       this.bookAppointmentUrl = links.bookAppointmentUrl;
+    };
+
+    mainController.prototype.getAppointmentLocationId = function () {
+      return model.appointment.locationId;
     };
 
     mainController.prototype.getLocationList = function() {
@@ -121,12 +114,24 @@ $(document).ready(function(){
       return model.patientList;
     };
 
-    mainController.prototype.init = function () {
+    mainController.prototype.init = function (initObj) {
+
+      console.log('init Obj' + JSON.stringify(initObj));
+
+
 
       appointmentView.init();
 
 
       //getting work locations for the doctor
+      if(initObj){
+        model.appointment.date = initObj.appointmetDate;
+        model.appointment.startTimeMins = initObj.appointmentTime;
+
+        model.locationList = initObj.locationList;
+        model.appointment.locationId = initObj.locationId;
+        appointmentView.render();
+      }else{
       $.get(this.getLocationUrl , {})
       .done(function( response ) {
         console.log('response ' + JSON.stringify(response));
@@ -135,6 +140,7 @@ $(document).ready(function(){
       });
 
     }
+  }
 
     mainController.prototype.updateModelFromview = function () {
       //getting the selected location id
@@ -258,6 +264,8 @@ $(document).ready(function(){
 
         }
 
+        this.locationSelect.val(controller.getAppointmentLocationId());
+
         //initilizign time duration list
         var timeList = controller.getAppointmentTimes();
         this.appointmentDurationSelect.empty();
@@ -285,7 +293,7 @@ $(document).ready(function(){
 
 
         //initilize patients typeahead
-      //  var patientsList = controller.getPatientsList();
+        //  var patientsList = controller.getPatientsList();
 
 
         var appoint = controller.getAppointmentModel();
@@ -318,10 +326,7 @@ $(document).ready(function(){
     };
 
     var controller = new mainController();
-    controller.init();
 
+    return controller;
 
-  }());
-*/
-
-});
+  };
