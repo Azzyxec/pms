@@ -3,7 +3,7 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Location<span class="required">*</span></label>
     <div class="col-md-8">
-      <select id="sel-locations" name="newBookSelLocations" class="form-control" required>
+      <select id="sel-locations" name="newBookSelLocations" class="form-control" >
         <option>...Select...</option>
       </select>
         
@@ -50,7 +50,7 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Appointment Duration<span class="required">*</span></label>
     <div class="col-md-8">
-      <select id="sel-appointment-duration" class="form-control">
+      <select name="newSelApptDuration" id="sel-appointment-duration" class="form-control">
       </select>
    
      
@@ -62,7 +62,7 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
     <div class="col-md-8">
-      <input type="text" id="new-appointment-patients-name"  class="typeahead form-control" pattern="[a-zA-Z ]{3,30}" name="username" placeholder="Patients Name" required>
+      <input type="text" id="new-appointment-patients-name"  class="typeahead form-control"  name="newBookusername" placeholder="Patients Name" required>
     
    
     </div>
@@ -75,7 +75,7 @@
 
 
       <div class='input-group date' id='datetimepicker1'>
-        <input type='text' id="book-appointment-dob" class="form-control" required/>
+        <input name="bookApptDob" type='text' id="book-appointment-dob" class="form-control" required/>
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -88,15 +88,15 @@
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Gender:</label>
     <div class="col-md-8">
-      <div class="radio-inline">
+      <div class="radio">
         <label>
-          <input id="new-appointment-rb-male" type="radio"> Male
+          <input name ="newApptgender" id="new-appointment-rb-male" type="radio"> Male
         </label>
       </div>
 
-      <div class="radio-inline">
+      <div class="radio">
         <label>
-          <input id="new-appointment-rb-female" type="radio"> Female
+          <input  name ="newApptgender" id="new-appointment-rb-female" type="radio"> Female
         </label>
       </div>
     </div>
@@ -105,7 +105,7 @@
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Height<span class="required"></span></label>
     <div class="col-md-8">
-      <input type="text" class="form-control"  id="patient-height" placeholder="Patients Height">
+      <input type="text" name = "newApptHeight"class="form-control"  id="patient-height" placeholder="Patients Height">
     </div>
 
   </div>
@@ -113,7 +113,7 @@
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">weight<span class="required"></span></label>
     <div class="col-md-8 ">
-      <input type="text" class="form-control"  id="patient-weight" placeholder="Patients Weight">
+      <input type="text" name="newbookWeight" class="form-control"  id="patient-weight" placeholder="Patients Weight">
     </div>
 
   </div>
@@ -121,7 +121,7 @@
   <div class="form-group">
     <label for="bloodgroup" class="col-md-2 control-label">Blood Group<span class="required"></span></label>
     <div class="col-md-8">
-      <input type="text" name="bloodgroup" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+      <input type="text" name="newApptbloodgroup" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
     
     </div>
   </div>
@@ -130,8 +130,7 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Contact<span class="required">*</span></label>
     <div class="col-md-8">
-      <input type="text" class="form-control" name="username" id="book-appointment-contact" placeholder="Your telephone contact no" pattern="^[789]\d{9}$"  data-errors="{pattern:'sfdf'}" required> <div class="help-block with-errors"></div>
-       
+      <input type="text" class="form-control" name="newApptContact" id="book-appointment-contact" placeholder="Your telephone contact no"   required> 
     </div>
 
     
@@ -140,7 +139,7 @@
   <div class="form-group has-feedback">
     <label for="focusedinput" class="col-md-2 control-label">Description</label>
     <div class="col-md-8">
-      <textarea class="form-control"   rows ="5" name="address" id="book-appointment-description" required></textarea>
+      <textarea class="form-control"   rows ="5" name="newApptaddress" id="book-appointment-description" required></textarea>
           
       
       
