@@ -192,7 +192,7 @@ function makeAppointmentController(){
         this.patientsBloodGroup = $('#patient-blood-group');
         this.contact = $('#book-appointment-contact');
         this.descrip = $('#book-appointment-description');
-
+        this.bookApptModal = $("#book-appointment-modal");
 
         this.appointmentDate.val('');
         this.appointmentTime.val('');
@@ -356,6 +356,11 @@ function makeAppointmentController(){
           inline: false,
           format:'DD-MM-YYYY'
         });
+          
+        this.bookApptModal.on('hidden.bs.modal', function () {
+            $('#book-Appointment-Form').data('formValidation').resetField($('#sel-locations'));
+       // $('#book-Appointment-Form').bootstrapValidator("resetForm",true); 
+        })
 
         this.saveButton.click(function(){
         appointmentView.validator.on('success.form.bv',function(e){
