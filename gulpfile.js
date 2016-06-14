@@ -32,7 +32,6 @@ var filesList = [
   {build:true, files: [
                        objConfig.scriptsBasePath +"utility.js",
                        objConfig.scriptsBasePath +"links.js",
-                       objConfig.scriptsBasePath +"globalStore.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                        objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                        objConfig.scriptsBasePath +"vendor/typeahead.bundle.min.js",

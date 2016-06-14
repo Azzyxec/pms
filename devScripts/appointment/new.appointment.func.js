@@ -1,17 +1,6 @@
 
 function makeAppointmentController(){
 
-/*
-    $('#datetimepicker24').datetimepicker({
-      format: 'DD/MM/YYYY'
-
-    });
-    $('#datetimepicker23').datetimepicker({
-      format: 'hh:mm a'
-
-    });
-    */
-
     //initilizing the source typeahead
   //  $('#new-appointment-patients-name').typeahead({
 
