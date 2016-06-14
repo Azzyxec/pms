@@ -85,8 +85,9 @@ function makeAppointmentController(){
       model.locationList = initObj.locationList;
       model.appointment.locationId = initObj.locationId;
 
+      appointmentView.render();
 
-      //model.patientList = initObj.patientsList;
+      model.patientList = initObj.patientList;
       //initilizing typeahead for patients name
       appointmentView.patientsName.typeahead({
         name: 'patients-name',
@@ -99,7 +100,7 @@ function makeAppointmentController(){
 
       console.log('object passed ' + JSON.stringify(initObj));
 
-      appointmentView.render();
+
     }else{
       $.get(links.getLocationUrl , {})
       .done(function( response ) {
