@@ -8,6 +8,7 @@ $(document).ready(function(){
       appointmentDate: moment().format('DD-MM-YYYY'),
       DefaultlocationId: 0,
       appointmenListViewModel:{
+        patientList:[],
         locationList:[],
         totalAppointmenCount:0,
         completedAppointmentCount:0,
@@ -21,6 +22,11 @@ $(document).ready(function(){
       //initlize any url
       this.getLocationUrl =  links.getLocationUrl;
       this.getAppointmentForTheDayUrl = links.getAppointmentForTheDayUrl;
+      this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
+    };
+
+    controller.prototype.getPatientList = function () {
+      return model.appointmenListViewModel.patientList;
     };
 
     controller.prototype.getAppointmentList = function () {
@@ -39,7 +45,6 @@ $(document).ready(function(){
       model.DefaultlocationId = locId;
     };
 
-
     controller.prototype.getSelectedLocId = function () {
       return model.DefaultlocationId;
     };
@@ -55,8 +60,18 @@ $(document).ready(function(){
     controller.prototype.init = function () {
       todayAppointmentListView.init();
       this.getLocations();
+      this.getPatients();
       this.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
+    };
 
+    controller.prototype.getPatients = function () {
+      $.get( this.getPatientsForAutoFillUrl , {})
+      .done(function( response ) {
+        console.log("patients: " + JSON.stringify(response));
+        if(response.status == 1){
+          model.appointmenListViewModel.patientList = response.data;
+        }
+      });
     };
 
     controller.prototype.getLocations = function () {
@@ -82,7 +97,7 @@ $(document).ready(function(){
 
     var todayAppointmentListView = {
       init:function(){
-        this.dateInput = $('#appointment-list-date1');
+        this.dateInput = $('#appointment-list-date');
         this.locationSelect = $('#appointment-list-locations-sel');
         this.goButton = $('#appointment-list-go-btn');
 
@@ -106,39 +121,13 @@ $(document).ready(function(){
 
         this.newAppointmentModal = $('#book-appointment-modal');
 
-       
+
 
         this.dateInput.datetimepicker({
-          inline:true,
           format: 'DD-MM-YYYY'
         });
 
 
-        this.todayApptDashNavAll = $("#todayApptDashNavAll");
-        this.todayApptDashNavNew = $("#todayApptDashNavNew");
-        this.todayApptDashNavActive = $("#todayApptDashNavActive");
-        this.todayApptDashNavCanceled = $("#todayApptDashNavCanceled");
-        this.todayApptDashNavClosed = $("#todayApptDashNavClosed");
-        
-          
-          
-        this.todayApptDashNavAll.click(function(e){
-            e.preventDefault();
-        })
-        
-        this.todayApptDashNavNew.click(function(e){
-            e.preventDefault();
-        })
-        this.todayApptDashNavActive.click(function(e){
-            e.preventDefault();
-        })
-        this.todayApptDashNavCanceled.click(function(e){
-            e.preventDefault();
-        })
-        this.todayApptDashNavClosed.click(function(e){
-            e.preventDefault();
-        })
-          
         this.goButton.click(function(){
           var date = todayAppointmentListView.dateInput.val();
 
@@ -154,8 +143,6 @@ $(document).ready(function(){
           }
 
         });
-          
-          
 
       },
       render: function(){
@@ -208,8 +195,6 @@ $(document).ready(function(){
             var mStartTime = moment({hours: item.startMins/60 , minutes: item.startMins%60});
             var mEndTime = moment({hours: item.endMins/60 , minutes: item.endMins%60});
 
-
-
             if(item.type == 'f'){
               console.log('add free time');
               var template = this.bookNewppointmentTemplate.clone();
@@ -226,7 +211,9 @@ $(document).ready(function(){
                       locationList: cont.getLocationList(),
                       locationId: cont.getSelectedLocId(),
                       appointmetDate: cont.getSelectedeDate(),
-                      appointmentTime: startTime
+                      appointmentTime: startTime,
+                      patientList: cont.getPatientList()
+
                     }
 
                     var appController = makeAppointmentController();
@@ -308,10 +295,6 @@ $(document).ready(function(){
   }());
 
 
-
-
-
- 
 
   $(function () {
     $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
