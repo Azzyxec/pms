@@ -17,48 +17,140 @@ function makeAppointmentController(){
     //});
 
 
-    $(".feedback-Custom > i").css("right","53px !important");
+    
     var validator = $("#book-Appointment-Form").bootstrapValidator({
-      trigger:" blur",
-      feedbackIcons: {
+        trigger:" blur",
+        feedbackIcons: {
         valid: 'glyphicon glyphicon-ok ',
         invalid: 'glyphicon glyphicon-remove ',
         validating: 'glyphicon glyphicon-refresh'
-      },
-      fields:{
-        newBookSelLocations : {
-          validators : {
-            notEmpty : {
-              message : 'Please select location!'
-            }
-          }
-
-        },
-
-        bloodgroup : {
-
-          validators : {
-            notEmpty : {
-              message : 'please blood group is required'
+    },
+       
+        fields:{
+            newBookSelLocations : {
+                validators : {
+                    notEmpty : {
+                        message : 'Please select location!'
+                    }
+                }
+                
             },
-            stringLength : {
-              min : 6,
-              max : 35,
-              message : 'please dont put characters more than 6 or 35'
+            
+            bloodgroup : {
+              
+                validators : {
+                    notEmpty : {
+                        message : 'please blood group is required'
+                    },
+                    stringLength : {
+                        min : 6,
+                        max : 35,
+                        message : 'please dont put characters more than 6 or 35'
+                    }
+                    
+                }
+            },
+            newAppointmentDate : {
+                validators : {
+                    notEmpty :{
+                        message : 'Please select date'
+                    }
+                }
+            },
+            newSelApptDuration :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please Select the duration'
+                    }
+                }
             }
-
-          }
-        },
-        newAppointmentDate : {
-          validators : {
-            notEmpty :{
-              message : 'please select date'
+            , newBookusername :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please Enter Patients name'
+                    }
+                }
             }
-          }
+            
+            , bookApptDob :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please Select the duration'
+                    }
+                }
+            }
+            ,  newApptgender :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please select patients gender'
+                    }
+                }
+            }
+            , newApptHeight :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please select patients height'
+                    }
+                }
+            }
+             ,      newbookWeight :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please select patients Weight'
+                    }
+                }
+            }
+       
+            
+            , newApptbloodgroup :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please enter patients blood group'
+                    }
+                }
+            }
+            
+            , newApptContact :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please enter Patients contact no'
+                    }
+                }
+            }
+            
+              ,  newApptaddress :{
+                
+                validators : {
+                    notEmpty :{
+                        message : 'Please enter the address'
+                    }
+                }
+            }
+            
+        
+            
+            
+            
+           
         }
-      }
     });
-
+    
+        validator.on('success.form.bv',function(e){
+            e.preventDefault();
+            $('#book-appointment-before-submit-success').removeClass('hidden');
+          
+   
+           
+        });
+            
     console.log('new appointment');
 
     var model = {
