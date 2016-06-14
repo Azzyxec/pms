@@ -42,8 +42,7 @@ var filesList = [
                        objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
                        objConfig.scriptsBasePath +"moment.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap-tokenfield.js",
-                       objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
-                       objConfig.scriptsBasePath +"vendor/responsive-calendar.min.js",
+                       objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",           
                        objConfig.scriptsBasePath +"doctor/dash.home.js",
                        objConfig.scriptsBasePath +"appointment/new.appointment.func.js",
                        objConfig.scriptsBasePath +"appointment/close.appointment.js"
@@ -85,6 +84,8 @@ var filesList = [
                     objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"links.js",
                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                    objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
+                    objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",    
                     objConfig.scriptsBasePath +"appointment/list.appointment.js"
                   ], buildName: "list.appointment.js"},
  {build:true, files: [

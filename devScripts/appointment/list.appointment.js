@@ -1,9 +1,12 @@
 $(document).ready(function(){
+     $('#dataTables-example').DataTable({
+                responsive: true
+        });
 
     $(function(){
         console.log('lsit appointment js loaded');
 
-
+ 
 
 
         $("#btn-new-appointment").click(function(e){

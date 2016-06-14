@@ -316,9 +316,7 @@ $(document).ready(function(){
 
 
 
-  $(".responsive-calendar").responsiveCalendar({
-    time: '2013-05'
-  });
+ 
 
   $(function () {
     $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
