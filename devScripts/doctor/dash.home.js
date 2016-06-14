@@ -205,8 +205,24 @@ $(document).ready(function(){
                       appointmetDate: cont.getSelectedeDate(),
                       appointmentTime: startTime
                     }
+
                     var appController = makeAppointmentController();
                     appController.init(initValues);
+                    appController.setCompleteEventHandler(function(data){
+                      console.log('got this' + JSON.stringify(data));
+                      if(data.status == 1){
+                        console.log('appointmetn added success fully');
+                        todayAppointmentListView.newAppointmentModal.modal('hide');
+                        //update the location list with new values
+                        cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+                      }else if(data.status == 2){
+                        console.log('schedule not added or timimgs dont match');
+
+                      }else if(data.status == 3){
+                        console.log('timimng clash with existign appointment');
+                      }
+
+                    });
                     todayAppointmentListView.newAppointmentModal.modal();
                   }
                 })(mStartTime.format("hh:mm A")));

@@ -19,7 +19,7 @@ function makeAppointmentController(){
     //});
 
 
-    
+
     var validator = $("#book-Appointment-Form").bootstrapValidator({
         trigger:" blur",
         feedbackIcons: {
@@ -27,7 +27,7 @@ function makeAppointmentController(){
         invalid: 'glyphicon glyphicon-remove ',
         validating: 'glyphicon glyphicon-refresh'
     },
-       
+
         fields:{
             newBookSelLocations : {
                 validators : {
@@ -35,11 +35,11 @@ function makeAppointmentController(){
                         message : 'Please select location!'
                     }
                 }
-                
+
             },
-            
+
             bloodgroup : {
-              
+
                 validators : {
                     notEmpty : {
                         message : 'please blood group is required'
@@ -49,7 +49,7 @@ function makeAppointmentController(){
                         max : 35,
                         message : 'please dont put characters more than 6 or 35'
                     }
-                    
+
                 }
             },
             newAppointmentDate : {
@@ -60,7 +60,7 @@ function makeAppointmentController(){
                 }
             },
             newSelApptDuration :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please Select the duration'
@@ -68,16 +68,16 @@ function makeAppointmentController(){
                 }
             }
             , newBookusername :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please Enter Patients name'
                     }
                 }
             }
-            
+
             , bookApptDob :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please Select the duration'
@@ -85,7 +85,7 @@ function makeAppointmentController(){
                 }
             }
             ,  newApptgender :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please select patients gender'
@@ -93,7 +93,7 @@ function makeAppointmentController(){
                 }
             }
             , newApptHeight :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please select patients height'
@@ -101,58 +101,54 @@ function makeAppointmentController(){
                 }
             }
              ,      newbookWeight :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please select patients Weight'
                     }
                 }
             }
-       
-            
+
+
             , newApptbloodgroup :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please enter patients blood group'
                     }
                 }
             }
-            
+
             , newApptContact :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please enter Patients contact no'
                     }
                 }
             }
-            
+
               ,  newApptaddress :{
-                
+
                 validators : {
                     notEmpty :{
                         message : 'Please enter the address'
                     }
                 }
             }
-            
-        
-            
-            
-            
-           
+
+
+
+
+
+
         }
     });
-    
+
         validator.on('success.form.bv',function(e){
             e.preventDefault();
-            $('#book-appointment-before-submit-success').removeClass('hidden');
-          
-   
-           
         });
-            
+
     console.log('new appointment');
 
     var model = {
@@ -182,6 +178,10 @@ function makeAppointmentController(){
     function mainController(){
       this.getLocationUrl = links.getLocationUrl;
       this.bookAppointmentUrl = links.bookAppointmentUrl;
+    };
+
+    mainController.prototype.setCompleteEventHandler = function (pcallback) {
+      this.completeCallback = pcallback;
     };
 
     mainController.prototype.getAppointmentLocationId = function () {
@@ -283,6 +283,22 @@ function makeAppointmentController(){
       $.post(this.bookAppointmentUrl , {appointment: model.appointment, patient: model.patient})
       .done(function( response ) {
         console.log('response ' + JSON.stringify(response));
+        if(response.status == 1){
+          console.log('appointmetn added success fully');
+          //todayAppointmentListView.newAppointmentModal.modal('hide');
+          //update the location list with new values
+            appointmentView.alertSuccess.removeClass('hidden');
+
+        }else if(response.status == 2){
+          appointmentView.alertNoScheduleOrTimingOustideWorkTiming.removeClass('hidden');
+          console.log('schedule not added or timimgs dont match');
+
+        }else if(response.status == 3){
+          appointmentView.alertTimingClash.removeClass('hidden');
+          console.log('timimng clash with existign appointment');
+        }
+
+        controller.completeCallback(response);
       });
     };
 
@@ -303,6 +319,11 @@ function makeAppointmentController(){
         this.patientsBloodGroup = $('#patient-blood-group');
         this.contact = $('#book-appointment-contact');
         this.descrip = $('#book-appointment-description');
+
+        //alerts
+        this.alertNoScheduleOrTimingOustideWorkTiming = $('#book-appointment-no-schedule');
+        this.alertTimingClash = $('#book-appointment-timings-clash');
+        this.alertSuccess  = $('#book-appointment-before-submit-success');
 
         this.saveButton = $('#book-appointment-button');
 
@@ -338,6 +359,12 @@ function makeAppointmentController(){
       },
       render: function(){
         console.log('render view');
+
+        //hiding the alerts
+        this.alertNoScheduleOrTimingOustideWorkTiming.addClass('hidden');
+        this.alertTimingClash.addClass('hidden');
+        this.alertSuccess.addClass('hidden');
+
         var locList = controller.getLocationList();
 
         //console.log(JSON.stringify(locList));

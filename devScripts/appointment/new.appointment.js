@@ -1,6 +1,19 @@
 $(document).ready(function(){
 
   var appController = makeAppointmentController();
+  appController.setCompleteEventHandler(function(data){
+    console.log('got this' + JSON.stringify(data));
+    if(data.status == 1){
+      console.log('appointmetn added success fully');
+      //todayAppointmentListView.newAppointmentModal.modal('hide');
+      //update the location list with new values
+
+    }else if(data.status == 2){
+      console.log('timimng clash with existign appointment');
+    }else if(data.status == 3){
+      console.log('schedule not added or timimgs dont match');
+    }
+  });
   appController.init();
 
 
