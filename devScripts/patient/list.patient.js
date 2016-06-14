@@ -1,4 +1,5 @@
 $(document).ready(function(){
+     
 
     $(function(){
         console.log('patient listings js loaded');
@@ -31,7 +32,9 @@ $(document).ready(function(){
           init: function(){
             this.tablebody = $('#patient-list-table-body');
             this.newPatientButton = $('#btn-new-patient');
-
+            this.table = $('#dataTables-example').DataTable({
+                responsive: true
+        });
             this.newPatientButton.on('click', function(){
               window.location.href = links.patientsEntryUrl;
             });
