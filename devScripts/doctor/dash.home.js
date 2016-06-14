@@ -82,7 +82,7 @@ $(document).ready(function(){
 
     var todayAppointmentListView = {
       init:function(){
-        this.dateInput = $('#appointment-list-date');
+        this.dateInput = $('#appointment-list-date1');
         this.locationSelect = $('#appointment-list-locations-sel');
         this.goButton = $('#appointment-list-go-btn');
 
@@ -109,6 +109,7 @@ $(document).ready(function(){
 
 
         this.dateInput.datetimepicker({
+          inline:true,
           format: 'DD-MM-YYYY'
         });
 
