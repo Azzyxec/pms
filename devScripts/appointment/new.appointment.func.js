@@ -19,7 +19,6 @@ function makeAppointmentController(){
     //});
 
 
-
     var validator = $("#book-Appointment-Form").bootstrapValidator({
         trigger:" blur",
         feedbackIcons: {
@@ -147,8 +146,12 @@ function makeAppointmentController(){
 
         validator.on('success.form.bv',function(e){
             e.preventDefault();
-        });
 
+          this.booksuccessAlert =  $('.book-appointment-before-submit-success').removeClass('hidden');
+           // this.booksuccessAlert.appendTo("#myModal");
+           $('#book-Appointment-Form').bootstrapValidator("resetForm",true); 
+         
+        });
     console.log('new appointment');
 
     var model = {
