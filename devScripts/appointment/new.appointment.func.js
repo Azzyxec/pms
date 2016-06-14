@@ -8,7 +8,11 @@ function makeAppointmentController(){
   //});
 
 
-
+$("#revalidate").on('click',function(){
+     console.log("patientlist intialized")
+       
+         //    $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newApptHeight');
+});
 
 
   console.log('new appointment');
@@ -115,11 +119,13 @@ function makeAppointmentController(){
 
         if(response.status == 1){
           model.patientList = response.data;
+           
           //initilizing typeahead for patients name
           appointmentView.patientsName.typeahead({
             name: 'patients-name',
             source: model.patientList,
             updater: function(patient) {
+            
               controller.TypeaheadSelectCallBack(patient);
               return patient;
             }
@@ -155,6 +161,14 @@ function makeAppointmentController(){
   };
 
   mainController.prototype.TypeaheadSelectCallBack = function (patient) {
+     this.revalidate = 1;
+      if (typeof(revalidate) !== 1) 
+      {
+          console.log("patientlist intialized success");
+         // $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newApptHeight');
+      }
+     
+       
     console.log('set patient model' + JSON.stringify(patient));
     model.patient.id = patient.id;
     model.patient.name = patient.name;
@@ -251,6 +265,7 @@ function makeAppointmentController(){
       this.contact = $('#book-appointment-contact');
       this.descrip = $('#book-appointment-description');
       this.bookApptModal = $("#book-appointment-modal");
+      this.bookApptclear = $("#book-appointment-clear");
 
       this.appointmentDate.val('');
       this.appointmentTime.val('');
@@ -287,13 +302,13 @@ function makeAppointmentController(){
       });
 
       this.validator =   $("#book-Appointment-Form").bootstrapValidator({
-        trigger:" blur",
+        trigger:" focus blur",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
           invalid: 'glyphicon glyphicon-remove ',
           validating: 'glyphicon glyphicon-refresh'
         },
-
+          excluded: [':disabled'],
         fields:{
           newBookSelLocations : {
             validators : {
@@ -338,7 +353,11 @@ function makeAppointmentController(){
             validators : {
               notEmpty :{
                 message : 'Please Enter Patients name'
-              }
+              },
+                regexp: {
+                        regexp: /^[A-Za-z\s.\(\)0-9]{3,}$/,
+                        message: 'The full name can consist of alphabetical characters and spaces only'
+                    }
             }
           }
 
@@ -381,7 +400,13 @@ function makeAppointmentController(){
             validators : {
               notEmpty :{
                 message : 'Please enter patients blood group'
-              }
+              },
+                 regexp: {
+                    
+                        regexp: /(A|B|AB|O)[+-]/,
+                        message: 'Please enter a proper blood group'
+                    }
+                
             }
           }
 
@@ -390,7 +415,13 @@ function makeAppointmentController(){
             validators : {
               notEmpty :{
                 message : 'Please enter Patients contact no'
-              }
+              },
+                 regexp: {
+                    
+                        regexp: /^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/,
+                        message: 'Please enter a proper phone no'
+                    }
+               
             }
           }
 
@@ -420,8 +451,19 @@ function makeAppointmentController(){
         inline: false,
         format:'DD-MM-YYYY'
       });
-
+      
+      this.bookApptclear.on('click',function(){
+          
+        
+           $(appointmentView.bookApptModal).find('form')[0].reset();
+          $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
+      });
       this.bookApptModal.on('hidden.bs.modal', function () {
+     
+            $(appointmentView.bookApptModal).find('form')[0].reset();
+          $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
+     // $(appointmentView.bookApptModal).find('form').trigger('reset');
+
         //$('#book-Appointment-Form').data('formValidation').resetField($('#sel-locations'));
         // $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
       })
@@ -516,6 +558,7 @@ function makeAppointmentController(){
     renderPatientsView: function(){
       var patient = controller.getPatientModel();
       console.log('render  patient ' + JSON.stringify(patient));
+            
       this.patientsName.val(patient.name);
       this.patientsDOB.val(patient.dateOfBirth);
 

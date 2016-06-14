@@ -120,7 +120,8 @@ $(document).ready(function(){
         this.closedAppointmentTemplate = $('#closed-appointment-template');
 
         this.newAppointmentModal = $('#book-appointment-modal');
-
+          
+          
 
 
         this.dateInput.datetimepicker({
