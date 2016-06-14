@@ -266,7 +266,7 @@ $(document).ready(function(){
           //console.log(locationList[i].name);
           //label label-primary location-label
           var label = $('<label/>', {
-            class: ' label-primary location-label',
+            class: ' location-label label-primary ',
             css: {
               "background-color" : backGroundColorList[i]
             },
@@ -274,7 +274,12 @@ $(document).ready(function(){
 
           var span = $('<span/>', {
             class: 'invisible',
-            text:'......'
+            text:'...'
+          });
+            
+             var span23 = $('<span/>', {
+            class: 'invisible',
+            text:'...'
           });
 
           var label1 = $('<label/>', {
@@ -283,7 +288,8 @@ $(document).ready(function(){
 
           var li = $('<li/>');
           li.append(label);
-          li.append('&nbsp;&nbsp;');
+          label.append(span23);
+         
           li.append(span);
           li.append(label1);
           this.locationListTop.append(li);
@@ -328,8 +334,8 @@ $(document).ready(function(){
                 for(var timingCounter = 0; timingCounter < timimgList.length; timingCounter++){
                   //get the start and end minutes
 
-                  var spanLocation =  $('<span/>',{class: 'location-label label label-info',
-                    css: {
+                  var spanLocation =  $('<span/>',{class: 'location-label-2 label label-info',
+                    css: { 
                       "background-color" : controller.getLocationColour(list[listCounter].locationId)
                     }
                   });
@@ -345,13 +351,13 @@ $(document).ready(function(){
                 //console.log(JSON.stringify(timimgList[timingCounter]));
 
                 var time = mstartTime.format('hh:mm a') + ' - ' + mendTime.format('hh:mm a');
-                var span1 =  $('<span/>',{class: 'label font-16 label-danger'});
+                var span1 =  $('<span/>',{class: 'label font-16 label-custom'});
                 span1.text(time);
-
-                td.append(spanLocation);
+               
+               // td.append(spanLocation);
                 td.append(span1);
 
-
+                spanLocation.appendTo(span1);
               }
 
 

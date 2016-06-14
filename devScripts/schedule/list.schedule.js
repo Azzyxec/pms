@@ -40,7 +40,7 @@ $(document).ready(function(){
             for(var key in listModel){
               //console.log(JSON.stringify(listModel[key].startDate));
 
-                var tr = $('<tr/>');
+                var tr = $('<tr/>'); 
 
                 var td = $('<td/>');
                 td.text(listModel[key].startDate);

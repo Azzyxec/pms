@@ -267,28 +267,8 @@
           <h3 class="panel-title">Calender view</h3>
         </div>
         <div class="panel-body">
-          <div class="responsive-calendar">
-            <div class="controls">
-              <a class="pull-left" data-go="prev"><div class="btn btn-sm btn-primary">Prev</div></a>
-              <h4><span data-head-year></span> <span data-head-month></span></h4>
-              <a class="pull-right" data-go="next"><div class="btn btn-sm btn-primary">Next</div></a>
-            </div><hr/>
-            <div class="day-headers">
-              <div class="day header">Mon</div>
-              <div class="day header">Tue</div>
-              <div class="day header">Wed</div>
-              <div class="day header">Thu</div>
-              <div class="day header">Fri</div>
-              <div class="day header">Sat</div>
-              <div class="day header">Sun</div>
-            </div>
-            <div class="days" data-group="days">
-
-            </div>
-          </div>
-          <!-- Responsive calendar - END -->
-
-
+            <div></div>
+<input id='appointment-list-date1' type='text'  class="hidden" />
         </div>
       </div>
 
@@ -306,16 +286,7 @@
         </div>
         <div class="panel-body">
           <form class="form-inline">
-            <div class="form-group">
-
-              <div class='input-group date ' >
-                <input id='appointment-list-date' type='text'  class="form-control" required/>
-                <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-
-              </div>
-            </div>
+           
             <div class="form-group">
               <select id="appointment-list-locations-sel" class="form-control">
               </select>
@@ -337,11 +308,11 @@
           <label class="form-label cadetblue">Filters</label>
 
           <ul class="nav  nav-pills">
-            <li role="presentation" class="active"><a href="#">All </a></li>
-            <li role="presentation" ><a href="#">New </a></li>
-            <li role="presentation" ><a href="#">Active</a></li>
-            <li role="presentation"><a href="#">Canceled </a></li>
-            <li role="presentation"><a href="#">Closed </a></li>
+            <li role="presentation" id="todayApptDashNavAll" class="active"><a href="#">All </a></li>
+            <li role="presentation"  ><a id="todayApptDashNavNew" href="#">New </a></li>
+            <li role="presentation" ><a id="todayApptDashNavActive" href="#">Active</a></li>
+            <li role="presentation"><a id="todayApptDashNavCanceled" href="#">Canceled </a></li>
+            <li role="presentation"><a id="todayApptDashNavClosed"  href="#">Closed </a></li>
             <button class="btn hidden btn-success">Reload  <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate "></span></button>
           </ul>
           <hr>
