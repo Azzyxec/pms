@@ -9,6 +9,46 @@ use Pms\Datalayer\PatientDB;
 
 $app->group('/appointment', function(){
 
+  $this->post('/closeAppointment', function ($request, $response) {
+    try {
+
+      $message = "success";
+      $status = "-1";
+
+      $user = UserSessionManager::getUser();
+
+      if($user->id != -1){
+
+        $postedData = $request->getParsedBody();
+
+        /*
+        $appointment = $postedData['appointment'];
+        $closingDate = $appointment['closingDate'];
+        $closingTime = $appointment['closingTime'];
+        %next = $appointment['nextAppointmentDate'];
+        $locationId = $appointment['nextAppointmentTime'];
+        $locationId = $appointment['remarks'];
+        $locationId = $appointment['prescriptionList'];
+        */
+
+      //  $appointmentDB = new AppointmentDB();
+      //  $status = $appointmentDB->closeAppointment($appointmentInfo, $user->id, $user->type);
+
+      }else{
+        $message = "user not logged in";
+      }
+
+      $data = array('status' => $status, 'data' => "", 'message' => $message);
+      return $response->withJson($data);
+
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+      return $response->withJson($data);
+    }
+
+  });
+
   $this->post('/cancelAppointment', function ($request, $response) {
     try {
 
@@ -132,18 +172,18 @@ $app->group('/appointment', function(){
 
       $allApointments = $appointmentDB->getAllAppointments($user->doctorId, $locationId, $date);
 
-      
-
-   
-       
-     
-        
-          
 
 
-       
 
-    
+
+
+
+
+
+
+
+
+
       return $response->withJson($data);
 
     } catch (Exception $e) {

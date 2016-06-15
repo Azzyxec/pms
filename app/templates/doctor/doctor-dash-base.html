@@ -49,7 +49,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><span> {{ name }} </span><b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li>
-              <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+              <a id="user-Profile-Btn-Link" href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
             </li>
 
             <li>
@@ -57,7 +57,7 @@
             </li>
             <li class="divider"></li>
             <li>
-              <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+              <a id="doctor-dash-logout-btn" href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
             </li>
           </ul>
         </li>
@@ -73,25 +73,31 @@
 
 
 
-            <a href="#" data-toggle="collapse" data-target="#demo" id="appointment-section-link-btn"><i class="fa fa-edit fa-fw"></i>Appointments</a>
+            <a href="#" data-toggle="collapse" data-target="#demo" id="appointment-section-link-btn"><i class="fa fa-calendar fa-fw"></i> Appointments</a>
             <ul id="demo" class="collapse">
             </ul>
 
           </li>
-
+            <li {% if active == "patient" %}class="active"{%endif%}>
+              <a href="#" data-toggle="collapse" data-target="#demo3"  id="patients-Entry-Section-Link-Btn"><i class="fa fa-users fa-fw"></i> Patients</a>
+            </li>
 
 
           <li {% if active == "schedule" %}class="active"{%endif%}>
-            <a href="#" data-toggle="collapse" data-target="#demo1" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Schedule</a>
+            <a href="#" data-toggle="collapse" data-target="#demo1" id="manage-Doctors-Schedule-Section-Link-Btn"><i class="fa fa fa-file-o fa-fw"></i> Schedule</a>
           </li>
 
 
           <li {% if active == "programme" %}class="active"{%endif%}>
-            <a  href="#" data-toggle="collapse" data-target="#demo2" id="btn-programme-section-link" ><i class="fa fa-table fa-fw"></i>Programs</a>
+            <a  href="#" data-toggle="collapse" data-target="#demo2" id="btn-programme-section-link" ><i class="fa  fa-bars fa-fw"></i> Programs</a>
             </li>
 
-            <li {% if active == "patient" %}class="active"{%endif%}>
-              <a href="#" data-toggle="collapse" data-target="#demo3"  id="patients-Entry-Section-Link-Btn"><i class="fa fa-edit fa-fw"></i>Patients</a>
+            <li {% if active == "accounting" %}class="active"{%endif%}>
+              <a  id="accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Inventory</a>
+            </li>
+
+            <li {% if active == "analytics" %}class="active"{%endif%}>
+              <a  href="#" id="analytics-side-navigation-link-btn"><i class=" fa fa-bar-chart"></i> Analytics</a>
             </li>
 
 
@@ -109,17 +115,8 @@
               <!-- /.nav-second-level -->
             </li>
 
-
-            <li {% if active == "analytics" %}class="active"{%endif%}>
-              <a  href="#" id="analytics-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-stats"></i> Analytics</a>
-            </li>
-
-
-            <li {% if active == "accounting" %}class="active"{%endif%}>
-              <a  id="accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Accounting</a>
-            </li>
             <li {% if active == "medicine" %}class="active"{%endif%}>
-              <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i>Find Pharmacy</a>
+              <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i> Find Pharmacy</a>
             </li>
 
             {% if showOtherPages == true %}
