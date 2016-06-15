@@ -15,6 +15,7 @@
   <link href="css/metisMenu.min.css" rel="stylesheet">
   <!-- Custom CSS -->
 
+
   <!-- admin css 2 customized -->
   <link href="css/sb-admin.css" rel="stylesheet">
     
@@ -56,7 +57,10 @@
             </li>
 
             <li>
-              <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+              <a href="index.php/doctorDashboard/staffListing"><i class="fa fa-fw fa-gear"></i>Manage Staff</a>
+            </li>
+               <li>
+              <a href="index.php/doctorDashboard/workLocationManagement"><i class="fa fa-fw fa-gear"></i>Locations</a>
             </li>
             <li class="divider"></li>
             <li>
@@ -98,10 +102,13 @@
             </li>
 
 
-            <li {% if active == "staff" %}class="active"{%endif%}>
+           
+
+            {% if showOtherPages == true %}
+             <li {% if active == "staff" %}class="active"{%endif%}>
               <a href="#" id="staff-managment-section-link-btn" data-toggle="collapse" data-target="#demo4"  ><i class="fa fa-edit fa-fw"></i>Staff</a>
             </li>
-
+            
             <li {% if active == "others" %}class="active"{%endif%}>
               <a href="#" id="other-settings-section-link-btn" data-toggle="collapse" data-target="#demo5" ><i class="fa fa-edit fa-fw"></i>Other Settings<span class="fa arrow"></span></a>
               <ul id="demo5" class="collapse">
@@ -111,6 +118,7 @@
               </ul>
               <!-- /.nav-second-level -->
             </li>
+{%endif%}
 
 
             <li {% if active == "analytics" %}class="active"{%endif%}>
