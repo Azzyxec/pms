@@ -52,6 +52,9 @@ class PatientDB{
        $patient['weight'] = $result['weight'];
        $patient['height'] = $result['height'];
        $patient['gender'] = $result['gender'];
+       $patient['genderText'] = $result['gender'] == 0 ? 'Female' : 'Male';
+
+       
        $patient['contact'] = $result['contact1'];
        $patient['address'] = $result['address'];
        $patient['picturePath'] = $result['picture_path'];
@@ -172,7 +175,7 @@ class PatientDB{
 
   }
 
-
+ 
 
   public function getPatientDetails($patientId){
     try {

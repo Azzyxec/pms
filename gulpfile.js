@@ -269,10 +269,10 @@ gulp.task('vendor-build-js', function(){
 });
 
 var cssBundleFileList = [
-  objConfig.cssPath + 'style.css',
-  objConfig.cssPath + 'my-custom-style.css',
-  objConfig.cssPath + 'bootstrap.css',
-  objConfig.cssPath + 'bootstrap-theme.css',
+    objConfig.cssPath + 'styles.css',
+    objConfig.cssPath + 'my-custom-style.css',
+     objConfig.cssPath + 'bootstrap.css',
+    objConfig.cssPath + 'bootstrap-theme.css',
   objConfig.cssPath + 'metisMenu.min.css',
   objConfig.cssPath + 'sb-admin.css',
   objConfig.cssPath + 'font-awesome.min.css'
@@ -295,7 +295,7 @@ gulp.task('concat-css-publish', function(){
       //.pipe(sourcemaps.init())
       .pipe(concat(objConfig.cssBuildName))
       //.pipe(sourcemaps.write())
-      .pipe(cssNano())
+      //.pipe(cssNano())
       .pipe(gulp.dest(objConfig.cssDest));
 
 });

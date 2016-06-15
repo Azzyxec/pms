@@ -102,7 +102,7 @@ $app->group('/appointment', function(){
           $todaysSchedule[] = array('type' => 'f', 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
         }
 
-
+ 
       }//outer foreach
 
       $data = array('status' => 1, 'data' => $todaysSchedule, 'message' => $message);
@@ -122,15 +122,15 @@ $app->group('/appointment', function(){
 
       $message = "success";
 
-      $allGetVars = $request->getQueryParams();
-      $locationId = $allGetVars['locId'];
-      $date = $allGetVars['date'];
+      
+      
+     
 
       $user = UserSessionManager::getUser();
 
       $appointmentDB = new AppointmentDB();
 
-      $allApointments = $appointmentDB->getAllAppointments($user->doctorId, $locationId, $date);
+      $allPatientApointments = $appointmentDB->getAllAppointments($user->doctorId);
 
       
 
@@ -143,7 +143,7 @@ $app->group('/appointment', function(){
 
        
 
-    
+     $data = array('status' => 1, 'data' => $allPatientApointments, 'message' => $message);
       return $response->withJson($data);
 
     } catch (Exception $e) {
