@@ -318,21 +318,6 @@ $("#revalidate").on('click',function(){
             }
 
           },
-
-          bloodgroup : {
-
-            validators : {
-              notEmpty : {
-                message : 'please blood group is required'
-              },
-              stringLength : {
-                min : 6,
-                max : 35,
-                message : 'please dont put characters more than 6 or 35'
-              }
-
-            }
-          },
           newAppointmentDate : {
             validators : {
               notEmpty :{
