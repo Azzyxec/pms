@@ -107,8 +107,8 @@
                 <div class='col-md-8'>
 
 
-                  <div class='input-group date' id='datetimepicker2'>
-                    <input type='date' class="form-control" />
+                  <div class='input-group date' >
+                    <input id="datetimepickerForClose2" name="closingDate" type='text' class="form-control" />
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -122,11 +122,8 @@
                 <label for="focusedinput" class="col-md-2 control-label">Closing time</label>
                 <div class='col-md-8'>
 
-                  <div class='input-group date' id='datetimepicker3'>
-                    <select class="form-control">
-                      <option>1:00</option>
-
-                    </select>
+                  <div class='input-group date' >
+                   <input id="datetimepickerForClose3" name="closingTime" type="text" class="form-control">
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-time"></span>
                     </span>
@@ -146,8 +143,8 @@
                 <div class='col-md-8'>
 
 
-                  <div class='input-group date' id='datetimepicker2'>
-                    <input type='date' class="form-control" />
+                  <div class='input-group date' >
+                    <input id="datetimepickerForClose4" name="closeNextAppt" type='text' class="form-control" />
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -156,17 +153,15 @@
                 </div>
 
               </div>
+        
+
 
               <div class="form-group">
                 <label for="focusedinput" class="col-md-2 control-label">Next Appt. Time:</label>
                 <div class='col-md-8'>
 
-                  <div class='input-group date' id='datetimepicker3'>
-
-                    <select class="form-control">
-                      <option>1:00</option>
-
-                    </select>
+                  <div class='input-group date'  >
+<input  name="closingNextApptTime" id="datetimepickerForClose5" type="text" class="form-control" required/>
 
                     <span class="input-group-addon">
                       <span class="glyphicon glyphicon-time"></span>
@@ -185,15 +180,15 @@
               <div class="form-group">
                 <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" name="username" id="username" placeholder="Default Input">
+                  <input type="text" class="form-control" name="closingName" id="username" placeholder="Patients name">
                 </div>
 
               </div>
               <div class="form-group">
-                <label for="focusedinput" class="col-md-2 control-label">Prescription List<span class="required">*</span></label>
+                <label for="focusedinput" class="col-md-2 control-label">Prescription<span class="required">*</span></label>
                 <div class="col-md-8 ">
 
-                  <input type="text" placeholder="Prescription List" class="form-control" id="tokenfield" >
+                  <input name="closingPrescpList" type="text" placeholder="Enter Prescription" class="form-control" id="tokenfield" >
 
 
 
@@ -204,7 +199,7 @@
               <div class="form-group">
                 <label for="focusedinput" class="col-md-2 control-label">Remarks:</label>
                 <div class="col-md-8">
-                  <textarea class="form-control"  rows ="5" name="address" id="address" ></textarea>
+                  <textarea class="form-control"  rows ="5" name="closingRemarks" id="address" ></textarea>
                   <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                 </div>
@@ -245,7 +240,7 @@
 
 
 
-            </form>
+            
 
 
 
@@ -254,6 +249,7 @@
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <input type="submit" class="btn-success btn" id="close-appointment-submit-btn" name="submit" value="Close Appointment"/>
           </div>
+              </form>
         </div>
       </div>
     </div>
