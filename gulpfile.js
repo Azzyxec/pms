@@ -106,6 +106,8 @@ var filesList = [
                   objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                  objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
+                  objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",  
                   objConfig.scriptsBasePath +"patient/list.patient.js"
                 ], buildName: "list.patient.js"},
 {build:true, files: [

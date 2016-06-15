@@ -122,10 +122,8 @@ $(document).ready(function(){
         this.newAppointmentModal = $('#book-appointment-modal');
         this.cancelAppointmentModal = $('#cancel-appointment-modal-window');
 
-
-
         this.dateInput.datetimepicker({
-          inline: true,
+          inline:true,
           format: 'DD-MM-YYYY'
         });
 
