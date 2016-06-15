@@ -270,7 +270,7 @@ $(document).ready(function(){
             css: {
               "background-color" : backGroundColorList[i]
             },
-          });
+          }); 
 
           var span = $('<span/>', {
             class: 'invisible',
