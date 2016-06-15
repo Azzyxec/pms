@@ -51,6 +51,32 @@ class AppointmentDB{
 
   }
 
+  public function getAllAppointments(){
+      
+      try {
+            $paramArray = array(
+        'pdoctor_id' => $doctorId,
+        'plocation_id' => $locationId,
+        'pdate' => $date
+      );
+      $statement = DBHelper::generateStatement('get_all_appointments',  $paramArray);
+      $statement->execute();
+          
+      $Allappointments = array();
+      $Allappointments['id'] = $result['id'];
+      $Allappointments['name'] = $result['id'];
+      $Allappointments['patientId'] = $result['id'];
+      $Allappointments['date'] = $result['id'];
+      $Allappointments['startMins'] = $result['id'];
+      $Allappointments['location'] = $result['id'];
+      $Allappointments['description'] = $result['id'];
+          
+      } catch(Exception $e) {
+          return -1;
+      }
+     
+  }
+
   public function getScheduleTimingsForTheDay($doctorId, $locationId, $date){
     try {
 
