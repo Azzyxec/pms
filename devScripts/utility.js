@@ -13,7 +13,12 @@ var utility = {
 
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   },
-  getTimeMinutesArray:  function(){
+  getTimeFromMinutes:  function(mins){
+    var hrs = mins/60;
+    var mins = mins%60;
+    var mdate = moment({hours:hrs, minutes: mins});
+
+    return mdate.format('hh:mm A');
 
   }
 }

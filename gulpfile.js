@@ -33,7 +33,7 @@ var filesList = [
                        objConfig.scriptsBasePath +"utility.js",
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
-                       objConfig.scriptsBasePath +"bootstrapValidator.min.js",   
+                       objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap3-typeahead.min.js",
                        objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
                        objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
@@ -44,6 +44,7 @@ var filesList = [
                        objConfig.scriptsBasePath +"doctor/dash.home.js",
                        objConfig.scriptsBasePath +"appointment/new.appointment.func.js",
                        objConfig.scriptsBasePath +"appointment/cancel.appointment.func.js",
+                       objConfig.scriptsBasePath +"appointment/close.appointment.func.js",
                        objConfig.scriptsBasePath +"appointment/close.appointment.js"
                        ], buildName: "dash.home.js"},
  {build:true, files: [
@@ -106,7 +107,7 @@ var filesList = [
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
-                  objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",  
+                  objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",
                   objConfig.scriptsBasePath +"patient/list.patient.js"
                 ], buildName: "list.patient.js"},
 {build:true, files: [

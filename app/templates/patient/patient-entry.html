@@ -11,10 +11,10 @@
       <ul class="nav nav-tabs" role="tablist">
 
         <li role="presentation"><a id="patients-entry-link" href="#patients-entry-section" aria-expanded="true" aria-controls="profile" role="tab" data-toggle="tab">Patients Details</a></li>
-        <li role="presentation"><a id="guardian-entry-link" href="#guardian-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Guardian details</a></li>
-        <li role="presentation"><a id="birth-entry-link" href="#birth-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Births details</a></li>
-        <li role="presentation"><a id="patients-programme-link" href="#patients-entry-more-details-section" aria-controls="messages" role="tab" data-toggle="tab">Checkup program</a></li>
-        <li role="presentation"><a id="patients-history-link" href="#patients-history-section" aria-controls="messages" role="tab" data-toggle="tab">History</a></li>
+        <li role="presentation"><a id="guardian-entry-link" href="#guardian-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Guardian Details</a></li>
+        <!--<li role="presentation"><a id="birth-entry-link" href="#birth-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Births Details</a></li>-->
+        <li role="presentation"><a id="patients-programme-link" href="#patients-entry-more-details-section" aria-controls="messages" role="tab" data-toggle="tab">Checkup Program</a></li>
+        <li role="presentation"><a id="patients-history-link" href="#patients-history-section" aria-controls="messages" role="tab" data-toggle="tab">Appointment History</a></li>
 
       </ul>
 
@@ -56,14 +56,14 @@
                 <form id="addCompanyForm"  class="form-horizontal">
 
                    <div class="form-group">
-                      <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Name</label>
+                      <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Name:<span class="required">*</span></label>
                       <div class=' col-lg-9 col-md-9'>
-                        <input type="text" class="form-control" name="username" id="patient-name" placeholder="Patients Name">
+                        <input type="text" class="form-control" name="username" id="patient-name" placeholder="Full Name">
                       </div>
 
                     </div>
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">DOB:</label>
+                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Date Of Birth:<span class="required">*</span></label>
                       <div class='col-md-9 col-lg-9'>
 
                         <div class='input-group date' >
@@ -94,24 +94,24 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="" class="col-md-3 col-lg-3 control-label">Blood Group<span class="required">*</span></label>
+                      <label for="" class="col-md-3 col-lg-3 control-label">Blood Group:</label>
                       <div class="col-md-9 col-lg-9">
                         <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">weight<span class="required">*</span></label>
+                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Weight:</label>
                       <div class="col-md-9 col-lg-9 ">
-                        <input type="text" class="form-control"  id="patient-weight-input" placeholder="Patients Weight">
+                        <input type="text" class="form-control"  id="patient-weight-input" placeholder="Weight">
                       </div>
 
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Height<span class="required">*</span></label>
+                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Height:</label>
                       <div class="col-md-9 col-lg-9">
-                        <input type="text" class="form-control"  id="patient-height" placeholder="Patients Height">
+                        <input type="text" class="form-control"  id="patient-height" placeholder="Height">
                       </div>
 
                     </div>
@@ -125,24 +125,38 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Alternate phone No<span class="required">*</span></label>
+                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Alternate Phone No:</label>
                       <div class="col-md-9 col-lg-9">
-                        <input type="text" class="form-control"  id="patient-contact2" placeholder="Phone no">
+                        <input type="text" class="form-control"  id="patient-contact2" placeholder="Alternate Phone no">
                       </div>
 
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Address</label>
+                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Address:</label>
                       <div class="col-md-9 col-lg-9">
                         <textarea class="form-control"  rows ="5" name="address" id="patient-address" ></textarea>
                         <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                       </div>
                     </div>
+                      
+                    <div class="form-group">
+                      <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Status:</label>
+                      <div class=" col-lg-9 col-md-9">
+                        <div class="radio-inline">
+                          <label>
+                            <input id="rb-male" type="radio"> Active
+                          </label>
+                        </div>
 
-
-
+                        <div class="radio-inline">
+                          <label>
+                            <input id="rb-female" type="radio"> Inactive
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                 </form>
 
 
@@ -200,7 +214,7 @@
                   <form id="addCompanyForm"  class="form-horizontal">
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Name</label>
+                      <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Name:<span class="required">*</span></label>
                       <div class='col-md-9'>
 
                         <input type="text" class="form-control" name="" id="txt-guardian-name" placeholder="Name">
@@ -209,7 +223,7 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="from-date" class="col-sm-2 control-label">Birth date</label>
+                      <label for="from-date" class="col-sm-2 control-label">Birth date:<span class="required">*</span></label>
                       <div class="col-md-9">
                         <input type="text" class="form-control" id="guardian-dob" >
                       </div>
@@ -233,7 +247,7 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-2 col-lg-2  control-label">Contact 1:<span class="required">*</span></label>
+                      <label for="focusedinput" class="col-md-2 col-lg-2  control-label">Phone No:<span class="required">*</span></label>
                       <div class="col-md-9">
                         <input type="text" class="form-control"  id="guardian-contact1" placeholder="Contact info">
                       </div>
@@ -242,7 +256,7 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Contact 2:<span class="required">*</span></label>
+                      <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Alternate Phone No:</label>
                       <div class="col-md-9">
                         <input type="text" class="form-control"  id="guardian-contact2" placeholder="Contact info">
                       </div>
@@ -405,7 +419,7 @@
           <div class="">
 
             <hr class="invisible">
-            <button id="btn-attach-programme" type="button" class="btn btn-default">attach Program</button>
+            <button id="btn-attach-programme" type="button" class="btn btn-default">Assign</button>
           </div>
 
 

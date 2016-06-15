@@ -90,7 +90,7 @@ $(document).ready(function(){
       .done(function( response ) {
         console.log("today Appointment: " + JSON.stringify(response));
         model.appointmentList = response.data;
-          todayAppointmentListView.render();
+        todayAppointmentListView.render();
       });
 
     };
@@ -121,6 +121,7 @@ $(document).ready(function(){
 
         this.newAppointmentModal = $('#book-appointment-modal');
         this.cancelAppointmentModal = $('#cancel-appointment-modal-window');
+        this.closeAppointmentModal = $('#close-appointment-modal-window');
 
         this.dateInput.datetimepicker({
           inline:true,
@@ -136,10 +137,10 @@ $(document).ready(function(){
           var selectedValue = selectedOption.attr('value');
           var name = selectedOption.text();
           if(selectedValue){
-              todayAppointmentListView.listHeadertText.text('Location ' + name);
-              cont.setSelectedDate(date);
-              cont.setSelectedLocationId(selectedValue);
-              cont.getappointmentListForDate(date, selectedValue);
+            todayAppointmentListView.listHeadertText.text('Location ' + name);
+            cont.setSelectedDate(date);
+            cont.setSelectedLocationId(selectedValue);
+            cont.getappointmentListForDate(date, selectedValue);
           }
 
         });
@@ -164,10 +165,10 @@ $(document).ready(function(){
 
         this.locationSelect.empty();
 
-          this.locationSelect.append($('<option/>', {
-            value: 0,
-            text: ' All '
-          }));
+        this.locationSelect.append($('<option/>', {
+          value: 0,
+          text: ' All '
+        }));
 
         var locationList = cont.getLocationList();
 
@@ -176,10 +177,10 @@ $(document).ready(function(){
             value: locationList[i].id,
             text: locationList[i].name
           });
-            this.locationSelect.append(option);
+          this.locationSelect.append(option);
         }
 
-          this.locationSelect.val(cont.getSelectedLocId());
+        this.locationSelect.val(cont.getSelectedLocId());
 
         //render appointment locationList
         this.appointmentListContainer.empty();
@@ -204,37 +205,37 @@ $(document).ready(function(){
 
               template.find('.time-period').text('from ' + mStartTime.format("hh:mm A") + ' to ' + mEndTime.format("hh:mm A"));
 
-                template.find('.new-appintment-div').click((function(startTime){
-                  return function(){
+              template.find('.new-appintment-div').click((function(startTime){
+                return function(){
                   console.log('new appoinment click');
-                    var initValues = {
-                      locationList: cont.getLocationList(),
-                      locationId: cont.getSelectedLocId(),
-                      appointmetDate: cont.getSelectedeDate(),
-                      appointmentTime: startTime,
-                      patientList: cont.getPatientList()
+                  var initValues = {
+                    locationList: cont.getLocationList(),
+                    locationId: cont.getSelectedLocId(),
+                    appointmetDate: cont.getSelectedeDate(),
+                    appointmentTime: startTime,
+                    patientList: cont.getPatientList()
+                  }
+
+                  var appController = makeAppointmentController();
+                  appController.init(initValues);
+                  appController.setCompleteEventHandler(function(data){
+                    console.log('got this' + JSON.stringify(data));
+                    if(data.status == 1){
+                      console.log('appointmetn added success fully');
+                      todayAppointmentListView.newAppointmentModal.modal('hide');
+                      //update the location list with new values
+                      cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+                    }else if(data.status == 2){
+                      console.log('schedule not added or timimgs dont match');
+
+                    }else if(data.status == 3){
+                      console.log('timimng clash with existign appointment');
                     }
 
-                    var appController = makeAppointmentController();
-                    appController.init(initValues);
-                    appController.setCompleteEventHandler(function(data){
-                      console.log('got this' + JSON.stringify(data));
-                      if(data.status == 1){
-                        console.log('appointmetn added success fully');
-                        todayAppointmentListView.newAppointmentModal.modal('hide');
-                        //update the location list with new values
-                        cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
-                      }else if(data.status == 2){
-                        console.log('schedule not added or timimgs dont match');
-
-                      }else if(data.status == 3){
-                        console.log('timimng clash with existign appointment');
-                      }
-
-                    });
-                    todayAppointmentListView.newAppointmentModal.modal();
-                  }
-                })(mStartTime.format("hh:mm A")));
+                  });
+                  todayAppointmentListView.newAppointmentModal.modal();
+                }
+              })(mStartTime.format("hh:mm A")));
 
 
             }else if(item.type == 'a'){
@@ -252,6 +253,38 @@ $(document).ready(function(){
 
                 template.find('.booked-appointment-popover').popover(popoverSettings);
 
+                //close appointment button
+                var closeAppointmentButton = template.find('.close-appointment-template-button');
+
+                closeAppointmentButton.on('click', (function(appointment){
+                  return function(){
+                    console.log('close appointment click');
+                    var closeAppointmentController = getCloseAppointmentController();
+
+                    var initObj = {
+                        appointmentId: appointment.id,
+                        closingTime: appointment.endMins,
+                        patientsName: appointment.name,
+                    };
+
+                    closeAppointmentController.setCloseAppointmentCallback(function(response){
+                      console.log('call back in dash home, response' + JSON.stringify(response) );
+
+                      todayAppointmentListView.closeAppointmentModal.modal('hide');
+                    });
+                    closeAppointmentController.init(initObj);
+
+                    todayAppointmentListView.closeAppointmentModal.modal();
+
+                    todayAppointmentListView.closeAppointmentModal.on('hidden.bs.modal', function(){
+                      console.log('close appointment modal close');
+                      closeAppointmentController.resetForm();
+                    });
+
+                  }
+                })(item));
+
+                //cancel appointment button
                 var cancelAppointmentButton = template.find('.cancel-appointment-template-btn');
 
                 cancelAppointmentButton.on('click', (function(appointment){
@@ -300,10 +333,10 @@ $(document).ready(function(){
       getAppointmentPopoverContent: function(contact, description){
 
         var content = '<dl class="dl-horizontal"><dt>Contact&nbsp;:&nbsp;</dt><dd>' +
-                        contact +
-                      '</dd></dl><dl class="dl-horizontal"><dt>Ailment&nbsp;:&nbsp;</dt><dd>' +
-                      description +
-                      '</dd></dl>';
+        contact +
+        '</dd></dl><dl class="dl-horizontal"><dt>Ailment&nbsp;:&nbsp;</dt><dd>' +
+        description +
+        '</dd></dl>';
 
         return content;
       }

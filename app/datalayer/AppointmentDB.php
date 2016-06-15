@@ -16,7 +16,7 @@ class AppointmentDB{
         'plocation_id' => $locationId,
         'pdate' => $date
       );
- 
+
       $statement = DBHelper::generateStatement('get_appointments_for_the_day',  $paramArray);
 
       $statement->execute();
@@ -51,17 +51,18 @@ class AppointmentDB{
 
   }
 
+
   public function getAllAppointments($doctorId){
-      
+
+
       try {
             $paramArray = array(
         'pdoctor_id' => $doctorId
       );
       $statement = DBHelper::generateStatement('get_all_appointments',  $paramArray);
       $statement->execute();
-          
-          
-          
+
+
       $Allappointments = array();
       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 
@@ -78,13 +79,11 @@ class AppointmentDB{
       }
 
       return $Allappointments;
-          
-     
-          
+
       } catch(Exception $e) {
           return -1;
       }
-     
+
   }
 
   public function getScheduleTimingsForTheDay($doctorId, $locationId, $date){
@@ -142,6 +141,33 @@ class AppointmentDB{
 
     } catch (Exception $e) {
       return -1;
+    }
+
+  }
+
+  public function closeAppointment($appointmentInfo, $loggedinUserId, $loggedinUserType){
+    try {
+
+      $paramArray = array(
+        'pappointment_id' => $appointmentInfo['appointmentId'],
+        'pclosing_date' => $appointmentInfo['closingDate'],
+        'pclosing_time_mins' => $appointmentInfo['closingTime'],
+        'premarks' => $appointmentInfo['remarks'],
+        'pclosed_by_id' => $loggedinUserId,
+        'pclosed_by_type' => $loggedinUserType,
+        'pPrescriptionListXML' => ''
+      );
+
+      $statement = DBHelper::generateStatement('close_appointment_proc',  $paramArray);
+
+      $statement->execute();
+
+      $result = $statement->fetch();
+
+      return $result['status'];
+
+    } catch (Exception $e) {
+      return 1;
     }
 
   }

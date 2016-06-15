@@ -36,7 +36,7 @@
 /* timeline style */
 .timeline_child_item{
      border-left: 6px solid #62bdfa;
-  
+
     padding: 5px;
 }
 
@@ -46,7 +46,7 @@
     }
     .timeline-sideStyle{
       // border-right: none !important;
-      
+
 }
 }
 
@@ -55,15 +55,15 @@
 }
 
 .timeline_item{
-   
-     
+
+
      border-bottom: 1px solid #62bdfa;
 }
 
 .timeline-container .timeline_item:first-child{
- 
+
       border-top: 1px solid #62bdfa ;
-     
+
 }
 .timeline-container{
     margin-top: 11px;
@@ -81,15 +81,15 @@
 }
 
 .timeline-stats{
-  
+
 }
 
 @media only screen and (max-width: 769px) {
     .timeline-stats {
         position:relative !important;
-        right: 0 !important; 
-        top: 0 !important; 
-       
+        right: 0 !important;
+        top: 0 !important;
+
     }
 }
 
@@ -121,11 +121,11 @@
 }
 
  .timeline-item-default-height,.timeline-cancelled-appoint,.timeline-closed-appoint,.timeline-new-book-appoint{
-     height: 78px !important;
+     height: 55px !important;
  }
-.timeline-new-book-appoint,.timeline-cancelled-appoint,.timeline-closed-appoint{
+.timeline-item-default-height,.timeline-new-book-appoint,.timeline-cancelled-appoint,.timeline-closed-appoint{
     text-align:left !important;
-       padding: 10px 15px !important;
+       padding: 5px 15px !important;
 }
 
 .timeline-h3{
@@ -338,11 +338,11 @@ margin-bottom: 3px !important;
 }
 
 .location-label{
-   
+
     border-radius: 20px !important;
     height: 20px;
     width: 20px;
- 
+
 
 }
 td,th{
