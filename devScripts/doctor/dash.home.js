@@ -97,7 +97,7 @@ $(document).ready(function(){
 
     var todayAppointmentListView = {
       init:function(){
-        this.dateInput = $('#appointment-list-date');
+        this.dateInput = $('#appointment-list-date1');
         this.locationSelect = $('#appointment-list-locations-sel');
         this.goButton = $('#appointment-list-go-btn');
 
@@ -120,10 +120,12 @@ $(document).ready(function(){
         this.closedAppointmentTemplate = $('#closed-appointment-template');
 
         this.newAppointmentModal = $('#book-appointment-modal');
+        this.cancelAppointmentModal = $('#cancel-appointment-modal-window');
 
 
 
         this.dateInput.datetimepicker({
+          inline: true,
           format: 'DD-MM-YYYY'
         });
 
@@ -251,6 +253,27 @@ $(document).ready(function(){
                 };
 
                 template.find('.booked-appointment-popover').popover(popoverSettings);
+
+                var cancelAppointmentButton = template.find('.cancel-appointment-template-btn');
+
+                cancelAppointmentButton.on('click', (function(appointment){
+                  return function(){
+                    console.log('click on ' + JSON.stringify(appointment));
+                    var cancelAppointmentController = getCancelAppointmentController();
+                    cancelAppointmentController.setCancelCallback(function(response){
+                      //on operation completion
+                      console.log('cancel callback ' + JSON.stringify(response));
+                      if(response.status == 1){
+                        todayAppointmentListView.cancelAppointmentModal.modal('hide');
+                        cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+                      }
+                    });
+                    cancelAppointmentController.init(appointment);
+
+                    todayAppointmentListView.cancelAppointmentModal.modal();
+
+                  }
+                })(item));
 
               }else if(item.state == 1){
                 //closed

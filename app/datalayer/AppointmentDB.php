@@ -110,6 +110,30 @@ class AppointmentDB{
 
   }
 
+  public function cancelAppointment($appointmentId, $remarks, $loggedinUserId, $loggedinUserType){
+    try {
+
+      $paramArray = array(
+        'pappointment_id' => $appointmentId,
+        'premarks' => $remarks,
+        'pcancelled_by_id' => $loggedinUserId,
+        'pcancelled_by_type' => $loggedinUserType
+      );
+
+      $statement = DBHelper::generateStatement('cancel_appointment',  $paramArray);
+
+      $statement->execute();
+
+      $result = $statement->fetch();
+
+      return $result['status'];
+
+    } catch (Exception $e) {
+      return 1;
+    }
+
+  }
+
   public function insertAppointmentEntry($appointment, $doctorId, $loggedinUserId, $loggedinUserType){
     try {
 

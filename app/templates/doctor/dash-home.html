@@ -74,12 +74,12 @@
     </div>
 
     <!-- cancel dialog modal -->
-    <div class="modal fade" id="timeline-cancel-modal-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="cancel-appointment-modal-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel">Cancel Reason</h4>
+            <h4 class="modal-title" >Cancel Reason</h4>
           </div>
           <div class="modal-body">
             {% include '/appointment/cancel-appointment-form.html' %}
@@ -286,7 +286,7 @@
         </div>
         <div class="panel-body">
           <form class="form-inline">
-           
+
             <div class="form-group">
               <select id="appointment-list-locations-sel" class="form-control">
               </select>
@@ -308,11 +308,11 @@
           <label class="form-label cadetblue">Filters</label>
 
           <ul class="nav  nav-pills">
-            <li role="presentation" id="todayApptDashNavAll" class="active"><a href="#">All </a></li>
-            <li role="presentation"  ><a id="todayApptDashNavNew" href="#">New </a></li>
-            <li role="presentation" ><a id="todayApptDashNavActive" href="#">Active</a></li>
-            <li role="presentation"><a id="todayApptDashNavCanceled" href="#">Canceled </a></li>
-            <li role="presentation"><a id="todayApptDashNavClosed"  href="#">Closed </a></li>
+            <li role="presentation" id="todayApptDashNavAll" class="active"><a >All </a></li>
+            <li role="presentation"  ><a id="todayApptDashNavNew" >New </a></li>
+            <li role="presentation" ><a id="todayApptDashNavActive" >Active</a></li>
+            <li role="presentation"><a id="todayApptDashNavCanceled" >Canceled </a></li>
+            <li role="presentation"><a id="todayApptDashNavClosed"  >Closed </a></li>
             <button class="btn hidden btn-success">Reload  <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate "></span></button>
           </ul>
           <hr>
@@ -379,13 +379,14 @@
     <div class=" timeline-item-default-height  list-group-item">
       <ul class="nav nav-pills pull-right">
 
-        <button type="button" id="timeline_btn_patient_history" class="btn btn-sm btn-primary" data-tooltip="tooltip"  title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
+        <button type="button" class="btn btn-sm btn-primary" data-tooltip="tooltip"  title="view patient History"><span  class="glyphicon glyphicon glyphicon-list-alt" aria-hidden="true"></span></button>
         <span class="invisible">..</span>
-        <button type="button"  data-toggle="modal" data-target="#reSchedule-appointment-modal-window" id="timeline_btn_re_schedule" class="btn btn-sm btn-default" data-tooltip="tooltip"  title="Re-schedule"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
+        <button type="button"  data-toggle="modal" data-target="#reSchedule-appointment-modal-window"  class="btn btn-sm btn-default" data-tooltip="tooltip"  title="Re-schedule"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></button>
         <span class="invisible">..</span>
-        <button type="button" data-toggle="modal" data-target="#timeline-close-appointment-window" id="timeline_btn_re_schedule" class="btn btn-sm btn-warning" data-tooltip="tooltip"  title="Close Appointment"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
+        <button type="button" data-toggle="modal" data-target="#timeline-close-appointment-window"  class="btn btn-sm btn-warning" data-tooltip="tooltip"  title="Close Appointment"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></button>
         <span class="invisible">..</span>
-        <button type="button"  data-toggle="modal" data-target="#timeline-cancel-modal-window" id="timeline_btn_cancel" class="btn btn-sm btn-danger" data-tooltip="tooltip"  title="Cancel Appointment"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+        <button type="button" class="cancel-appointment-template-btn btn btn-sm btn-danger"
+        title="Cancel Appointment"><span  class="glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span></button>
 
 
       </ul>

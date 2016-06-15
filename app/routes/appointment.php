@@ -9,6 +9,37 @@ use Pms\Datalayer\PatientDB;
 
 $app->group('/appointment', function(){
 
+  $this->post('/cancelAppointment', function ($request, $response) {
+    try {
+
+      $message = "success";
+      $status = "-1";
+
+      $user = UserSessionManager::getUser();
+
+      if($user->id != -1){
+
+        $postedData = $request->getParsedBody();
+
+        $appointmentId = $postedData['id'];
+        $remarks = $postedData['remarks'];
+
+        $appointmentDB = new AppointmentDB();
+        $status = $appointmentDB->cancelAppointment($appointmentId, $remarks, $user->id, $user->type);
+
+      }else{
+        $message = "user not logged in";
+      }
+
+      $data = array('status' => $status, 'data' => "", 'message' => $message);
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+      return $response->withJson($data);
+    }
+
+  });
 
   $this->get('/getAppointmentsForTheDay', function ($request, $response) {
     try {
@@ -38,25 +69,33 @@ $app->group('/appointment', function(){
 
           if($schedule['startMins']  <= $appointment['startMins'] &&
           $schedule['endMins'] >=  $appointment['endMins']){
-              $endMins = $appointment['startMins'];
 
-              $differenceMins = $endMins - $startMins;
-              //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+          $endMins = $appointment['startMins'];
 
-              if($differenceMins >= $minTimeMins){
-                  $freeTimeSlot = array('type' => 'f',  'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
-                  $todaysSchedule[] = $freeTimeSlot;
-              }
 
-              $appointment['type'] = 'a';
-              $todaysSchedule[] = $appointment;
 
-              $startMins = $appointment['endMins'];
+            $differenceMins = $endMins - $startMins;
+            //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+
+            if($differenceMins >= $minTimeMins){
+              $freeTimeSlot = array('type' => 'f',  'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+              $todaysSchedule[] = $freeTimeSlot;
+            }
+
+            $appointment['type'] = 'a';
+            $todaysSchedule[] = $appointment;
+
+            if($appointment['state'] == 2){
+              //if appointment is cancelled it will be considered as free time
+               $startMins = $appointment['startMins'];
+            }else{
+            $startMins = $appointment['endMins'];
+          }
 
           }
         } //inner foreach
 
-        //checking if there is
+        //checking if there is free time slot at the end
         $endMins = $schedule['endMins'];
         $differenceMins = $endMins - $startMins;
         if($differenceMins >= $minTimeMins){
