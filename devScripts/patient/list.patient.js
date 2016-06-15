@@ -38,7 +38,7 @@ $(document).ready(function(){
             return listModel;
           }
        
-        };
+        }; 
 
 
         var listView = {
@@ -53,7 +53,7 @@ $(document).ready(function(){
           },
           render:  function(){
 
-            var patientsList = controller.getListModel();
+             var patientsList = controller.getListModel();
               //console.log(JSON.stringify(controller.getData()));
             console.log('model in view' + JSON.stringify(patientsList));
               
@@ -72,7 +72,7 @@ $(document).ready(function(){
             { "mData": "name" },
             { "mData": "dateOfBirth" },
             { "mData": "bloodGroup" },
-            { "mData": "gender" },
+            { "mData": "genderText" },
             { "mData": "contact" },
             { "mData": 'id',
             

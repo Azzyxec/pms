@@ -51,25 +51,34 @@ class AppointmentDB{
 
   }
 
-  public function getAllAppointments(){
+
+  public function getAllAppointments($doctorId){
+
 
       try {
             $paramArray = array(
-        'pdoctor_id' => $doctorId,
-        'plocation_id' => $locationId,
-        'pdate' => $date
+        'pdoctor_id' => $doctorId
       );
       $statement = DBHelper::generateStatement('get_all_appointments',  $paramArray);
       $statement->execute();
 
+
       $Allappointments = array();
-      $Allappointments['id'] = $result['id'];
-      $Allappointments['name'] = $result['id'];
-      $Allappointments['patientId'] = $result['id'];
-      $Allappointments['date'] = $result['id'];
-      $Allappointments['startMins'] = $result['id'];
-      $Allappointments['location'] = $result['id'];
-      $Allappointments['description'] = $result['id'];
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+      $Allappointment = array();
+      $Allappointment['id'] = $result['id'];
+      $Allappointment['name'] = $result['name'];
+      $Allappointment['patientId'] = $result['fk_patient_id'];
+      $Allappointment['date'] = $result['appointment_date'];
+      $Allappointment['startMins'] = $result['start_mins'];
+      $Allappointment['location'] = $result['location_name'];
+      $Allappointment['description'] = $result['description'];
+
+        $Allappointments[] = $Allappointment;
+      }
+
+      return $Allappointments;
 
       } catch(Exception $e) {
           return -1;

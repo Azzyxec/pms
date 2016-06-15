@@ -162,28 +162,14 @@ $app->group('/appointment', function(){
 
       $message = "success";
 
-      $allGetVars = $request->getQueryParams();
-      $locationId = $allGetVars['locId'];
-      $date = $allGetVars['date'];
 
       $user = UserSessionManager::getUser();
 
       $appointmentDB = new AppointmentDB();
 
-      $allApointments = $appointmentDB->getAllAppointments($user->doctorId, $locationId, $date);
+      $allPatientApointments = $appointmentDB->getAllAppointments($user->doctorId);
 
-
-
-
-
-
-
-
-
-
-
-
-
+     $data = array('status' => 1, 'data' => $allPatientApointments, 'message' => $message);
       return $response->withJson($data);
 
     } catch (Exception $e) {

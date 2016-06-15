@@ -25,7 +25,7 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
     return $response->withJson($data);
   }
 
-});
+}); 
 
 
 $this->get('/getPatientListForAutoFill', function ($request, $response) {
