@@ -10,7 +10,7 @@ function makeAppointmentController(){
 
 $("#revalidate").on('click',function(){
      console.log("patientlist intialized")
-       
+
          //    $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newApptHeight');
 });
 
@@ -119,13 +119,13 @@ $("#revalidate").on('click',function(){
 
         if(response.status == 1){
           model.patientList = response.data;
-           
+
           //initilizing typeahead for patients name
           appointmentView.patientsName.typeahead({
             name: 'patients-name',
             source: model.patientList,
             updater: function(patient) {
-            
+
               controller.TypeaheadSelectCallBack(patient);
               return patient;
             }
@@ -162,13 +162,13 @@ $("#revalidate").on('click',function(){
 
   mainController.prototype.TypeaheadSelectCallBack = function (patient) {
      this.revalidate = 1;
-      if (typeof(revalidate) !== 1) 
+      if (typeof(revalidate) !== 1)
       {
           console.log("patientlist intialized success");
          // $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newApptHeight');
       }
-     
-       
+
+
     console.log('set patient model' + JSON.stringify(patient));
     model.patient.id = patient.id;
     model.patient.name = patient.name;
@@ -402,11 +402,11 @@ $("#revalidate").on('click',function(){
                 message : 'Please enter patients blood group'
               },
                  regexp: {
-                    
+
                         regexp: /(A|B|AB|O)[+-]/,
                         message: 'Please enter a proper blood group'
                     }
-                
+
             }
           }
 
@@ -415,13 +415,8 @@ $("#revalidate").on('click',function(){
             validators : {
               notEmpty :{
                 message : 'Please enter Patients contact no'
-              },
-                 regexp: {
-                    
-                        regexp: /^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/,
-                        message: 'Please enter a proper phone no'
-                    }
-               
+              }
+
             }
           }
 
@@ -451,21 +446,21 @@ $("#revalidate").on('click',function(){
         inline: false,
         format:'DD-MM-YYYY'
       });
-      
+
       this.bookApptclear.on('click',function(){
-          
-        
+
+
            $(appointmentView.bookApptModal).find('form')[0].reset();
           $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
       });
       this.bookApptModal.on('hidden.bs.modal', function () {
-     
+
             $(appointmentView.bookApptModal).find('form')[0].reset();
           $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
-     // $(appointmentView.bookApptModal).find('form').trigger('reset');
 
-        //$('#book-Appointment-Form').data('formValidation').resetField($('#sel-locations'));
-        // $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
+
+
+
       })
 
       this.saveButton.click(function(){
@@ -475,7 +470,7 @@ $("#revalidate").on('click',function(){
           console.log('book appointment');
           controller.updateModelFromview();
           controller.bookAppointment();
-          $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
+
 
         });
 
@@ -498,7 +493,7 @@ $("#revalidate").on('click',function(){
       this.locationSelect.empty();
 
       this.locationSelect.append($('<option/>', {
-        value: '0',
+        value: '',
         text: 'select'
       }));
 
@@ -522,7 +517,7 @@ $("#revalidate").on('click',function(){
       this.appointmentDurationSelect.empty();
 
       this.appointmentDurationSelect.append($('<option/>', {
-        value: '0',
+        value: '',
         text: 'select'
       }));
 
@@ -558,7 +553,7 @@ $("#revalidate").on('click',function(){
     renderPatientsView: function(){
       var patient = controller.getPatientModel();
       console.log('render  patient ' + JSON.stringify(patient));
-            
+
       this.patientsName.val(patient.name);
       this.patientsDOB.val(patient.dateOfBirth);
 

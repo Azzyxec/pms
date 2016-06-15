@@ -9,8 +9,8 @@ class AppConfig{
   public static $dbhost = 'localhost';
   public static $dbname = 'pms';
   public static $port = '3306';
-  public static $dbuser = 'root';
-  public static $dbpass = '';
+  public static $dbuser = 'pms';
+  public static $dbpass = 'pms';
 
   public static $passwordResetConfig = array(
     'resetLink' => 'http://dreamlogic.in/demo/pms/public/index.php/authenticate/passwordReset?code=',
