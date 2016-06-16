@@ -33,43 +33,6 @@ $(document).ready(function(){
       return _.orderBy(model.appointmentList, ['state'], ['asc']);
     };
 
-
-    controller.prototype.getCancelledList = function () {
-
-      return _.filter(model.appointmentList, function(item){
-        if(+item.state == 2 && item.type === 'a'){
-          return true;
-        }
-      });
-    };
-
-    controller.prototype.getFreeTimeSlotsList = function () {
-
-      return _.filter(model.appointmentList, function(item){
-        if(+item.state == 0 && item.type === 'f'){
-          return true;
-        }
-      });
-    };
-
-    controller.prototype.getActiveAppointmentsList = function () {
-
-      return _.filter(model.appointmentList, function(item){
-        if(+item.state == 0 && item.type === 'a'){
-          return true;
-        }
-      });
-    };
-
-    controller.prototype.getClosedAppointmentsList = function () {
-
-      return _.filter(model.appointmentList, function(item){
-        if(+item.state == 1 && item.type === 'a'){
-          return true;
-        }
-      });
-    };
-
     controller.prototype.getLocationList = function () {
       return model.appointmenListViewModel.locationList;
     };
@@ -154,13 +117,10 @@ $(document).ready(function(){
       .done(function( response ) {
         console.log("today Appointment: " + JSON.stringify(response));
         model.appointmentList = response.data;
-        var appointmentList = cont.getSortedAppointmentList();
-        todayAppointmentListView.renderAppointmentist(appointmentList);
-
+        todayAppointmentListView.render();
       });
 
     };
-
 
     var todayAppointmentListView = {
       init:function(){
@@ -178,58 +138,6 @@ $(document).ready(function(){
         //appointment list contianer
         this.appointmentListContainer = $('#appointment-list-container');
 
-        //filer buttons
-        this.closeAppointmentFilerButton = $('#cancelled-appointment-filter-button');
-
-        this.closeAppointmentFilerButton.on('click', function(){
-          var list = cont.getCancelledList();
-          console.log(JSON.stringify(list));
-          if(_.size(list) > 0 ){
-            todayAppointmentListView.renderAppointmentist(list);
-          }
-        })
-
-        this.allAppointmentFilerButton = $('#all-appointments-filter-button');
-
-        this.allAppointmentFilerButton.on('click', function(){
-          var list = cont.getSortedAppointmentList();
-          console.log(JSON.stringify(list));
-          if(_.size(list) > 0 ){
-            todayAppointmentListView.renderAppointmentist(list);
-          }
-        })
-
-
-        this.freeTimeSlotsFilterButton = $('#free-slots-filter-button');
-
-        this.freeTimeSlotsFilterButton.on('click', function(){
-          var list = cont.getFreeTimeSlotsList();
-          console.log(JSON.stringify(list));
-          if(_.size(list) > 0 ){
-            todayAppointmentListView.renderAppointmentist(list);
-          }
-        })
-
-
-        this.activeAppointmentsFilterButton = $('#active-appointments-filter-button');
-
-        this.activeAppointmentsFilterButton.on('click', function(){
-          var list = cont.getActiveAppointmentsList();
-          console.log(JSON.stringify(list));
-          if(_.size(list) > 0 ){
-            todayAppointmentListView.renderAppointmentist(list);
-          }
-        })
-
-        this.closedAppointmentsFilterButton = $('#closed-appointment-filter-button');
-
-        this.activeAppointmentsFilterButton.on('click', function(){
-          var list = cont.getClosedAppointmentsList();
-          console.log(JSON.stringify(list));
-          if(_.size(list) > 0 ){
-            todayAppointmentListView.renderAppointmentist(list);
-          }
-        })
 
 
         //templates
@@ -301,10 +209,12 @@ $(document).ready(function(){
 
         this.locationSelect.val(cont.getSelectedLocId());
 
-      },
-      renderAppointmentist: function(appointmentList){
+        //render appointment locationList
+        this.appointmentListContainer.empty();
+        //var appointmentList = cont.gedtAppointmentList();
+        var appointmentList = cont.getSortedAppointmentList();
+
         if(appointmentList){
-          this.appointmentListContainer.empty();
 
           //this.totalAppointmentCount.text(appointmentList.length);
 
@@ -317,12 +227,114 @@ $(document).ready(function(){
             if(item.type == 'f'){
               console.log('add free time');
               var template = this.freeTimeSlotTemplate.clone();
+
               this.initilizeFreeTimeSlotTemplate(template, item );
+              /*
+              template.find('.time').text(mStartTime.format("hh:mm"));
+              template.find('.aa').text(mStartTime.format(" A"));
+
+              template.find('.time-period').text('from ' + mStartTime.format("hh:mm A") + ' to ' + mEndTime.format("hh:mm A"));
+
+              template.find('.new-appintment-div').click((function(startTime){
+                return function(){
+                  console.log('new appoinment click');
+                  var initValues = {
+                    locationList: cont.getLocationList(),
+                    locationId: cont.getSelectedLocId(),
+                    appointmetDate: cont.getSelectedeDate(),
+                    appointmentTime: startTime,
+                    patientList: cont.getPatientList()
+                  }
+
+                  var appController = makeAppointmentController();
+                  appController.init(initValues);
+                  appController.setCompleteEventHandler(function(data){
+                    console.log('got this' + JSON.stringify(data));
+                    if(data.status == 1){
+                      console.log('appointmetn added success fully');
+                      todayAppointmentListView.newAppointmentModal.modal('hide');
+                      //update the location list with new values
+                      cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+                    }else if(data.status == 2){
+                      console.log('schedule not added or timimgs dont match');
+
+                    }else if(data.status == 3){
+                      console.log('timimng clash with existign appointment');
+                    }
+
+                  });
+                  todayAppointmentListView.newAppointmentModal.modal();
+                }
+              })(mStartTime.format("hh:mm A")));
+
+*/
             }else if(item.type == 'a'){
 
               if(item.state == 0){
                 var template = this.bookedAppointmentTemplate.clone();
-                this.intilizeBookedAppointmentTemplate(template, item );
+
+                var popoverSettings = {
+                  placement:'left',
+                  container: 'body',
+                  trigger: 'focus',
+                  html: true,
+                  content:this.getAppointmentPopoverContent(item.contact, item.description)
+                };
+
+                template.find('.booked-appointment-popover').popover(popoverSettings);
+
+                //close appointment button
+                var closeAppointmentButton = template.find('.close-appointment-template-button');
+
+                closeAppointmentButton.on('click', (function(appointment){
+                  return function(){
+                    console.log('close appointment click');
+                    var closeAppointmentController = getCloseAppointmentController();
+
+                    var initObj = {
+                      appointmentId: appointment.id,
+                      closingTime: appointment.endMins,
+                      patientsName: appointment.name,
+                    };
+
+                    closeAppointmentController.setCloseAppointmentCallback(function(response){
+                      console.log('call back in dash home, response' + JSON.stringify(response) );
+
+                      todayAppointmentListView.closeAppointmentModal.modal('hide');
+                    });
+                    closeAppointmentController.init(initObj);
+
+                    todayAppointmentListView.closeAppointmentModal.modal();
+
+                    todayAppointmentListView.closeAppointmentModal.on('hidden.bs.modal', function(){
+                      console.log('close appointment modal close');
+                      closeAppointmentController.resetForm();
+                    });
+
+                  }
+                })(item));
+
+                //cancel appointment button
+                var cancelAppointmentButton = template.find('.cancel-appointment-template-btn');
+
+                cancelAppointmentButton.on('click', (function(appointment){
+                  return function(){
+                    console.log('click on ' + JSON.stringify(appointment));
+                    var cancelAppointmentController = getCancelAppointmentController();
+                    cancelAppointmentController.setCancelCallback(function(response){
+                      //on operation completion
+                      console.log('cancel callback ' + JSON.stringify(response));
+                      if(response.status == 1){
+                        todayAppointmentListView.cancelAppointmentModal.modal('hide');
+                        cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+                      }
+                    });
+                    cancelAppointmentController.init(appointment);
+
+                    todayAppointmentListView.cancelAppointmentModal.modal();
+
+                  }
+                })(item));
 
               }else if(item.state == 1){
                 //closed
@@ -333,6 +345,12 @@ $(document).ready(function(){
                 //cancelled
               }
 
+
+              template.find('.time').text(mStartTime.format("hh:mm"));
+              template.find('.aa').text(mStartTime.format(" A"));
+
+              template.find('.patient-name').text(item.name);
+
             }
 
             this.appointmentListContainer.append(template);
@@ -340,238 +358,163 @@ $(document).ready(function(){
           }
 
         }
+
       },
-      intilizeBookedAppointmentTemplate: function(template, appointmentItem){
-        if(template && appointmentItem){
-          var mStartTime = moment({hours: appointmentItem.startMins/60 , minutes: appointmentItem.startMins%60});
-          var mEndTime = moment({hours: appointmentItem.endMins/60 , minutes: appointmentItem.endMins%60});
-
-
-
-          template.find('.time').text(mStartTime.format("hh:mm"));
-          template.find('.aa').text(mStartTime.format(" A"));
-
-          template.find('.patient-name').text(appointmentItem.name);
-
-          var popoverSettings = {
-            placement:'left',
-            container: 'body',
-            trigger: 'focus',
-            html: true,
-            content:this.getAppointmentPopoverContent(appointmentItem.contact, appointmentItem.description)
-          };
-
-          template.find('.booked-appointment-popover').popover(popoverSettings);
-
-          //close appointment button
-          var closeAppointmentButton = template.find('.close-appointment-template-button');
-
-          closeAppointmentButton.on('click', (function(appointment){
-            return function(){
-              console.log('close appointment click');
-              var closeAppointmentController = getCloseAppointmentController();
-
-              var initObj = {
-                appointmentId: appointment.id,
-                closingTime: appointment.endMins,
-                patientsName: appointment.name,
-              };
-
-              closeAppointmentController.setCloseAppointmentCallback(function(response){
-                console.log('call back in dash home, response' + JSON.stringify(response) );
-
-                todayAppointmentListView.closeAppointmentModal.modal('hide');
-              });
-              closeAppointmentController.init(initObj);
-
-              todayAppointmentListView.closeAppointmentModal.modal();
-
-              todayAppointmentListView.closeAppointmentModal.on('hidden.bs.modal', function(){
-                console.log('close appointment modal close');
-                closeAppointmentController.resetForm();
-              });
-
-            }
-          })(appointmentItem));
-
-          //cancel appointment button
-          var cancelAppointmentButton = template.find('.cancel-appointment-template-btn');
-
-          cancelAppointmentButton.on('click', (function(appointment){
-            return function(){
-              console.log('click on ' + JSON.stringify(appointment));
-              var cancelAppointmentController = getCancelAppointmentController();
-              cancelAppointmentController.setCancelCallback(function(response){
-                //on operation completion
-                console.log('cancel callback ' + JSON.stringify(response));
-                if(response.status == 1){
-                  todayAppointmentListView.cancelAppointmentModal.modal('hide');
-                  cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
-                }
-              });
-              cancelAppointmentController.init(appointment);
-
-              todayAppointmentListView.cancelAppointmentModal.modal();
-
-            }
-          })(appointmentItem));
-
+      renderAppointmentist: function(appointmentList){
+        if(appointmentList){
         }
-      },
-      initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
-
-        if(template && appointmentItem){
+        },
+        initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
 
           var mStartTime = moment({hours: appointmentItem.startMins/60 , minutes: appointmentItem.startMins%60});
           var mEndTime = moment({hours: appointmentItem.endMins/60 , minutes: appointmentItem.endMins%60});
 
-          template.find('.patient-name').text(appointmentItem.name);
+          if(template && appointmentItem){
+            template.find('.time').text(mStartTime.format("hh:mm"));
+            template.find('.aa').text(mStartTime.format(" A"));
 
-          template.find('.time').text(mStartTime.format("hh:mm"));
-          template.find('.aa').text(mStartTime.format(" A"));
+            template.find('.time-period').text('from ' + mStartTime.format("hh:mm A") + ' to ' + mEndTime.format("hh:mm A"));
 
-          template.find('.time-period').text('from ' + mStartTime.format("hh:mm A") + ' to ' + mEndTime.format("hh:mm A"));
+            template.find('.new-appintment-div').click((function(startTime){
+              return function(){
+                console.log('new appoinment click');
+                var initValues = {
+                  locationList: cont.getLocationList(),
+                  locationId: cont.getSelectedLocId(),
+                  appointmetDate: cont.getSelectedeDate(),
+                  appointmentTime: startTime,
+                  patientList: cont.getPatientList()
+                }
 
-          template.find('.new-appintment-div').click((function(startTime){
-            return function(){
-              console.log('new appoinment click');
-              var initValues = {
-                locationList: cont.getLocationList(),
-                locationId: cont.getSelectedLocId(),
-                appointmetDate: cont.getSelectedeDate(),
-                appointmentTime: startTime,
-                patientList: cont.getPatientList()
+                var appController = makeAppointmentController();
+                appController.init(initValues);
+                appController.setCompleteEventHandler(function(data){
+                  console.log('got this' + JSON.stringify(data));
+                  if(data.status == 1){
+                    console.log('appointmetn added success fully');
+                    todayAppointmentListView.newAppointmentModal.modal('hide');
+                    //update the location list with new values
+                    cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+                  }else if(data.status == 2){
+                    console.log('schedule not added or timimgs dont match');
+
+                  }else if(data.status == 3){
+                    console.log('timimng clash with existign appointment');
+                  }
+
+                });
+                todayAppointmentListView.newAppointmentModal.modal();
               }
+            })(mStartTime.format("hh:mm A")));
 
-              var appController = makeAppointmentController();
-              appController.init(initValues);
-              appController.setCompleteEventHandler(function(data){
-                console.log('got this' + JSON.stringify(data));
-                if(data.status == 1){
-                  console.log('appointmetn added success fully');
-                  todayAppointmentListView.newAppointmentModal.modal('hide');
-                  //update the location list with new values
-                  cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
-                }else if(data.status == 2){
-                  console.log('schedule not added or timimgs dont match');
+          }
 
-                }else if(data.status == 3){
-                  console.log('timimng clash with existign appointment');
-                }
+        },
+        getAppointmentPopoverContent: function(contact, description){
 
-              });
-              todayAppointmentListView.newAppointmentModal.modal();
-            }
-          })(mStartTime.format("hh:mm A")));
+          var content = '<dl class="dl-horizontal"><dt>Contact&nbsp;:&nbsp;</dt><dd>' +
+          contact +
+          '</dd></dl><dl class="dl-horizontal"><dt>Ailment&nbsp;:&nbsp;</dt><dd>' +
+          description +
+          '</dd></dl>';
+
+          return content;
+        }
+      }
+
+      var cont = new controller();
+      cont.init();
+
+    }());
+
+
+
+    $(function () {
+      $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
+
+
+    });
+    $(function () {
+      $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
+
+    });
+
+
+
+    $(function(){
+      console.log('Doctor Dashboard home js loaded');
+
+
+      $("#view-patients-dashboard-section-btn").click(function(e){
+        e.preventDefault();
+        window.location.href = links.patientsListingUrl;
+      });
+
+      $("#view-sales-dash-btn").click(function(e){
+        e.preventDefault();
+        window.location.href = links.getAnalyticsUrl;
+      });
+
+
+
+
+
+      var TimelineModel = {
+
+
+        activePatients : [{
+          id:0,
+          name:"joseph",
+          time:"14:00",
+          ailment:"back ache"
+
+        },
+        {
+          id:0,
+          name:"Fernandes",
+          time:"15:00",
+          ailment:"Sore throat"
 
         }
 
-      },
-      getAppointmentPopoverContent: function(contact, description){
-
-        var content = '<dl class="dl-horizontal"><dt>Contact&nbsp;:&nbsp;</dt><dd>' +
-        contact +
-        '</dd></dl><dl class="dl-horizontal"><dt>Ailment&nbsp;:&nbsp;</dt><dd>' +
-        description +
-        '</dd></dl>';
-
-        return content;
-      }
-    }
-
-    var cont = new controller();
-    cont.init();
-
-  }());
-
-
-
-  $(function () {
-    $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
-
-
-  });
-  $(function () {
-    $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
-
-  });
-
-
-
-  $(function(){
-    console.log('Doctor Dashboard home js loaded');
-
-
-    $("#view-patients-dashboard-section-btn").click(function(e){
-      e.preventDefault();
-      window.location.href = links.patientsListingUrl;
-    });
-
-    $("#view-sales-dash-btn").click(function(e){
-      e.preventDefault();
-      window.location.href = links.getAnalyticsUrl;
-    });
-
-
-
-
-
-    var TimelineModel = {
-
-
-      activePatients : [{
+      ],
+      closedPatients :[{
         id:0,
-        name:"joseph",
-        time:"14:00",
-        ailment:"back ache"
-
+        name:"Clive",
+        time:"13:00",
+        ailment:"back ache",
+        remarks:''
       },
       {
         id:0,
-        name:"Fernandes",
-        time:"15:00",
-        ailment:"Sore throat"
-
+        name:"Brad",
+        time:"14:00",
+        ailment:"back ache",
+        remarks:''
       }
 
+
     ],
-    closedPatients :[{
+
+
+    canceledPatients :[{
       id:0,
-      name:"Clive",
+      name:"Rogue",
       time:"13:00",
       ailment:"back ache",
       remarks:''
     },
+
     {
       id:0,
-      name:"Brad",
-      time:"14:00",
+      name:"Warren",
+      time:"13:00",
       ailment:"back ache",
       remarks:''
     }
-
-
   ],
 
-
-  canceledPatients :[{
-    id:0,
-    name:"Rogue",
-    time:"13:00",
-    ailment:"back ache",
-    remarks:''
-  },
-
-  {
-    id:0,
-    name:"Warren",
-    time:"13:00",
-    ailment:"back ache",
-    remarks:''
-  }
-],
-
-bookAppointments :[{time:'15:00'},{time:'14:00'}
+  bookAppointments :[{time:'15:00'},{time:'14:00'}
 ],
 
 timeLineArray : [{

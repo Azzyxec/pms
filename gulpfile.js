@@ -27,6 +27,7 @@ var filesList = [
                       ], buildName: "login.all.js"},
   {build:true, files: [
                         objConfig.scriptsBasePath +"links.js",
+                        objConfig.scriptsBasePath +"validator.js",
                         objConfig.scriptsBasePath + "doctor/registration.js"
                       ], buildName: "doctor.registration.js"},
   {build:true, files: [
@@ -38,7 +39,8 @@ var filesList = [
                        objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
                        objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
                        objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
-                       objConfig.scriptsBasePath +"moment.js",
+                       objConfig.scriptsBasePath +"vendor/loadash.js",
+                       objConfig.scriptsBasePath +"vendor/moment.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap-tokenfield.js",
                        objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                        objConfig.scriptsBasePath +"doctor/dash.home.js",
@@ -50,6 +52,7 @@ var filesList = [
  {build:true, files: [
                       objConfig.scriptsBasePath +"utility.js",
                       objConfig.scriptsBasePath +"links.js",
+                      objConfig.scriptsBasePath +"validator.js",
                       objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                       objConfig.scriptsBasePath +"doctor/registration.js"
                     ], buildName: "doctor.profile.js"},
