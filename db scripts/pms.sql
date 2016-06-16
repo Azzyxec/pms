@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 14, 2016 at 08:33 PM
+-- Generation Time: Jun 16, 2016 at 10:38 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -345,6 +345,106 @@ begin
 	
 	select 1 as state;
 
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cancel_appointment`(IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))
+    MODIFIES SQL DATA
+begin
+
+/*
+status 1 appointment cancelled
+status 2 appointment cant be cancelled
+
+*/
+
+declare lcanCancelAppointment int;
+
+select count(*)
+into @lcanCancelAppointment
+from appointment a
+where a.id = pappointment_id
+	  and a.state = 0
+	  and a.is_active = 1;
+	  
+if @lcanCancelAppointment > 0 then
+
+update appointment a
+	set a.state = 2
+where a.id = pappointment_id
+	  and a.state = 0
+	  and a.is_active = 1;
+	  
+insert into cancelled_appointments (
+									fk_appointment_id,
+									remarks,
+									cancelled_date_time,
+									fk_cancelled_by_pk,
+									cancelled_by_type
+									)
+									values
+									(
+									 pappointment_id,
+									 premarks,
+									 now(),
+									 pcancelled_by_id,
+									 pcancelled_by_type
+									);
+									 
+commit;		
+select 1 as status;							
+end if;
+
+select 2 as status;
+
+end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN `pPrescriptionListXML` VARCHAR(65535))
+    NO SQL
+begin
+
+declare lpatientId int;
+
+select fk_patient_id
+into @lpatientId
+from appointment
+where id = pappointment_id;
+
+if COALESCE(@lpatientId, 0) > 0 then
+
+update appointment a
+set a.state = 1
+where id = pappointment_id;
+
+insert into close_appointment(
+							  fk_appointment_id
+							  ,closing_date
+							  ,closing_time_mins
+							  ,fk_patient_id
+							  ,remarks
+							  ,created_date_time
+							  ,fk_created_by_id
+							  ,created_by_type
+							  )
+						values
+						      (
+							   pappointment_id
+							   ,pclosing_date
+							   ,pclosing_time_mins
+							   ,@lpatientId
+							   ,premarks
+							   ,now()
+							   ,pclosed_by_id
+							   ,pclosed_by_type
+							  );
+							  
+select 1 as status;
+
+#need to insert the prescriptions							  
+							  
+end if;					
+
+select 2 as status;
 
 end$$
 
@@ -1096,6 +1196,33 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_appointments`(IN `pdoctor_id` INT)
+    READS SQL DATA
+begin
+
+
+
+ select  a.id
+     ,a.contact
+     ,a.fk_patient_id
+           ,a.appointment_date
+     ,p.name
+           ,l.name as location_name
+     ,a.start_mins
+     ,a.end_mins
+     ,a.description
+     ,a.`state`
+     ,a.is_rescheduled
+ from appointment a
+ inner join patient p on a.fk_patient_id = p.id
+    inner join work_locations l on a.fk_location_id = l.id
+ where a.fk_doctor_id = pdoctor_id
+    and a.is_active = 1
+ order by a.start_mins asc;
+
+
+end$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
     NO SQL
 begin
@@ -1220,7 +1347,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` 
     READS SQL DATA
 SELECT `id`
 		,`name`
-		, `date_of_birth`
+		, date_format(`date_of_birth`, '%d-%m-%Y') as date_of_birth
 		, `blood_group`,
 		`weight`
 		, `height`
@@ -1944,7 +2071,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `appointment`
@@ -1960,7 +2087,46 @@ INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_i
 (12, 1, 14, 110, '323423', '2016-06-14', 585, 600, 'asdfasd', 0, 0, '2016-06-14 12:28:48', 1, 'D', 1),
 (13, 1, 14, 111, '3243', '2016-06-14', 600, 615, 'just a lil test', 0, 0, '2016-06-14 12:54:43', 1, 'D', 1),
 (14, 1, 14, 112, '34234', '2016-06-14', 615, 630, 'dfdasf', 0, 0, '2016-06-14 13:19:41', 1, 'D', 1),
-(15, 1, 14, 113, '23414', '2016-06-14', 630, 645, 'this is good', 0, 0, '2016-06-14 13:21:10', 1, 'D', 1);
+(15, 1, 14, 113, '23414', '2016-06-14', 630, 645, 'this is good', 2, 0, '2016-06-14 13:21:10', 1, 'D', 1),
+(16, 1, 14, 100, '14242341', '2016-06-15', 540, 555, 'New Appointment', 2, 0, '2016-06-15 09:06:28', 1, 'D', 1),
+(17, 1, 14, 100, '14242341', '2016-06-15', 555, 570, 'sdfasd', 2, 0, '2016-06-15 10:59:30', 1, 'D', 1),
+(18, 1, 14, 114, '9049035958', '2016-06-15', 555, 570, 'guygu', 2, 0, '2016-06-15 11:54:49', 1, 'D', 1),
+(19, 1, 14, 93, '14242341', '2016-06-15', 540, 555, 'temp', 0, 0, '2016-06-15 16:10:28', 1, 'D', 1),
+(20, 1, 14, 106, '4352', '2016-06-15', 660, 675, 'test jay', 0, 0, '2016-06-15 16:12:10', 1, 'D', 1),
+(21, 1, 14, 108, '7038348822', '2016-06-15', 615, 630, 'Tim ', 0, 0, '2016-06-15 16:12:57', 1, 'D', 1),
+(22, 1, 14, 115, '23414', '2016-06-15', 555, 565, 'asda', 0, 0, '2016-06-15 18:02:56', 1, 'D', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cancelled_appointments`
+--
+
+CREATE TABLE IF NOT EXISTS `cancelled_appointments` (
+  `fk_appointment_id` int(11) NOT NULL,
+  `remarks` varchar(300) NOT NULL,
+  `cancelled_date_time` datetime NOT NULL,
+  `fk_cancelled_by_pk` int(11) NOT NULL,
+  `cancelled_by_type` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `cancelled_appointments`
+--
+
+INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled_date_time`, `fk_cancelled_by_pk`, `cancelled_by_type`) VALUES
+(17, 'cancel', '2016-06-15 11:04:03', 1, 'D'),
+(17, 'asdfasd', '2016-06-15 11:06:17', 1, 'D'),
+(17, 'asdfasd', '2016-06-15 11:08:56', 1, 'D'),
+(17, 'sdfasdf', '2016-06-15 11:10:50', 1, 'D'),
+(17, '', '2016-06-15 11:12:58', 1, 'D'),
+(17, 'cancel', '2016-06-15 11:14:47', 1, 'D'),
+(17, 'dfasadf', '2016-06-15 11:16:10', 1, 'D'),
+(17, 'cancel', '2016-06-15 11:17:38', 1, 'D'),
+(17, 'this is cancelled for test', '2016-06-15 11:18:44', 1, 'D'),
+(15, 'cancel', '2016-06-15 11:51:24', 1, 'D'),
+(16, 'dfasdfasd', '2016-06-15 16:09:59', 1, 'D'),
+(18, 'test', '2016-06-15 16:11:05', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -2043,7 +2209,7 @@ CREATE TABLE IF NOT EXISTS `doctor` (
   `recovery_email` varchar(100) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
 -- Dumping data for table `doctor`
@@ -2073,7 +2239,9 @@ INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `emai
 (21, 53, 'ddd', '2134', '2134', 'dsaf', 'asdf', 'asdf', 'asdf', 'asdf', 1),
 (22, 54, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1),
 (23, 55, 'Frank', '1234', '12342', '1234', '1234', '123', 'asdf', 'asdf', 1),
-(24, 56, 'Savio', '1234512345', '', 'savio@dreamlogic.in', 'MA', 'adjnasldn', '123', 'saviothecooliohotmail.com', 1);
+(24, 56, 'Savio', '1234512345', '', 'savio@dreamlogic.in', 'MA', 'adjnasldn', '123', 'saviothecooliohotmail.com', 1),
+(25, 58, 'savio', '94234234', 'dfasdfa', 'savio@dreamlogic.in', 'asdfasdf', 'asdf', '5245245', 'savio@dreamlogic.in', 1),
+(26, 59, 'savio', '94234234', 'dfasdfa', 'savio@dreamlogic.in', 'asdfasdf', 'asdf', '5245245', 'savio@dreamlogic.in', 1);
 
 -- --------------------------------------------------------
 
@@ -2119,7 +2287,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=58 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=60 ;
 
 --
 -- Dumping data for table `login`
@@ -2151,7 +2319,9 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (54, 'D', 'frank', 'frank', '2016-05-04 00:16:08', NULL, 1),
 (55, 'D', 'frank2', 'frank2', '2016-05-04 00:17:25', '2016-05-04 00:33:15', 1),
 (56, 'D', 'saviopereira88', 'cipla@123', '2016-05-13 21:46:23', '2016-05-14 01:31:31', 1),
-(57, 'S', 'usie', 'usie', '2016-05-28 22:35:17', NULL, 1);
+(57, 'S', 'usie', 'usie', '2016-05-28 22:35:17', NULL, 1),
+(58, 'D', 'savio', '$2y$12$/W.gLAwQ/i5/FnVeHnJBDOe.N.2MBLW/wZL7Ma30I33dT.C5J86y.', '2016-06-15 21:07:02', NULL, 1),
+(59, 'D', 'savio1', '$2y$12$f0Yjda8tXKfNPyGnjC7VDuSU3UV5fW9.5VeGcbBJwpfMlRTf5ogti', '2016-06-15 21:07:22', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -2236,7 +2406,7 @@ CREATE TABLE IF NOT EXISTS `password_reset_request` (
   `modified_date` datetime DEFAULT NULL,
   `is_valid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=98 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=99 ;
 
 --
 -- Dumping data for table `password_reset_request`
@@ -2330,7 +2500,8 @@ INSERT INTO `password_reset_request` (`id`, `fk_login_id`, `old_password`, `rese
 (94, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'J3947206', 'azzyxec@gmail.com', NULL, '2016-06-04 23:52:32', NULL, 0),
 (95, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'P3737999', 'azzyxec@gmail.com', NULL, '2016-06-04 23:53:02', NULL, 0),
 (96, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'O4862497', 'azzyxec@gmail.com', NULL, '2016-06-04 23:54:09', NULL, 0),
-(97, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V1259638', 'azzyxec@gmail.com', NULL, '2016-06-05 00:03:48', NULL, 1);
+(97, 33, '$2y$12$rb0YCYGlpR1JGe12p703ZuHGJg4JHSCXuneDpV/kiSt1W8AVYM5iu', 'V1259638', 'azzyxec@gmail.com', NULL, '2016-06-05 00:03:48', NULL, 1),
+(98, 58, '$2y$12$/W.gLAwQ/i5/FnVeHnJBDOe.N.2MBLW/wZL7Ma30I33dT.C5J86y.', 'F4377188', 'savio@dreamlogic.in', NULL, '2016-06-15 21:10:31', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -2360,7 +2531,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=114 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=116 ;
 
 --
 -- Dumping data for table `patient`
@@ -2384,7 +2555,9 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (110, 1, 'one more3', '2016-06-14', 'sa', '23', '12', 1, '323423', NULL, NULL, NULL, NULL, '2016-06-14 12:28:48', 1, 'D', NULL, NULL, NULL, 1),
 (111, 1, 'Wiz', '2016-06-12', 'A', '34', '21', 1, '3243', NULL, NULL, NULL, NULL, '2016-06-14 12:54:43', 1, 'D', NULL, NULL, NULL, 1),
 (112, 1, 'asdf', '2016-06-21', 'a', '434', '43', 1, '34234', NULL, NULL, NULL, NULL, '2016-06-14 13:19:41', 1, 'D', NULL, NULL, NULL, 1),
-(113, 1, 'dfasd', '2016-06-22', 'asd', '23', 'e', 1, '23414', NULL, NULL, NULL, NULL, '2016-06-14 13:21:10', 1, 'D', NULL, NULL, NULL, 1);
+(113, 1, 'dfasd', '2016-06-22', 'asd', '23', 'e', 1, '23414', NULL, NULL, NULL, NULL, '2016-06-14 13:21:10', 1, 'D', NULL, NULL, NULL, 1),
+(114, 1, 'Amanda Lee (14242341)', '1995-04-01', 'AB+', '57 Kg', '5.8 ft', 0, '9049035958', NULL, NULL, NULL, NULL, '2016-06-15 11:54:49', 1, 'D', NULL, NULL, NULL, 1),
+(115, 1, 'dfasd (23414)', '2016-06-06', 'A+', '23', 'e', 1, '23414', NULL, NULL, NULL, NULL, '2016-06-15 18:02:56', 1, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 

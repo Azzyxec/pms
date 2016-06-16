@@ -136,12 +136,11 @@
             <label class="form-label cadetblue">Filters</label>
 
             <ul class="nav  nav-pills">
-              <li role="presentation" id="todayApptDashNavAll" class="active"><a >All </a></li>
-              <li role="presentation"  ><a id="todayApptDashNavNew" >Available </a></li>
-              <li role="presentation" ><a id="todayApptDashNavActive" >Active</a></li>
-              <li role="presentation"><a id="todayApptDashNavCanceled" >Canceled </a></li>
-              <li role="presentation"><a id="todayApptDashNavClosed"  >Closed </a></li>
-              <button class="btn hidden btn-success">Reload  <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate "></span></button>
+              <li role="presentation" id="all-appointments-filter-button" class="active"><a >All </a></li>
+              <li role="presentation"  ><a id="free-slots-filter-button" >Book Slots </a></li>
+              <li role="presentation" ><a id="active-appointments-filter-button" >Active</a></li>
+              <li role="presentation"><a id="cancelled-appointment-filter-button" >Canceled </a></li>
+              <li role="presentation"><a id="closed-appointment-filter-button"  >Closed </a></li>
             </ul>
             <hr>
 
@@ -149,7 +148,7 @@
               <div style="padding:0px 30px 0px 15px">
                 <h3 id="appointment-list-header" class="timeline-h3 inline-imp"></h3>
                 <div class="pull-right timeline-stats">
-                  <span>Total  <span id="total-appointment-count" class='badge'></span></span>   <span>Completed <span id="completed-appointment-count" class='badge'></span></span>  <span>Canceled <span id="cancelled-appointment-count" class='badge'></span></span> <span>rescheduled <span id="rescheduled-appointment-count" class='badge'></span></span>
+                  <span>Total  <span id="total-appointment-count" class='badge'></span></span>   <span>Completed <span id="completed-appointment-count" class='badge'></span></span>  <span>Canceled <span id="cancelled-appointment-count" class='badge'></span></span>
                 </div>
                 <span class="invisible">...</span>
               </div>

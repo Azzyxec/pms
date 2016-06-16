@@ -10,7 +10,6 @@ function makeAppointmentController(){
 
 $("#revalidate").on('click',function(){
      console.log("patientlist intialized")
-
          //    $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newApptHeight');
 });
 

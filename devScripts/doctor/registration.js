@@ -78,7 +78,10 @@ $(document).ready(function(){
         doctorModel.qualifications = formView.qualificationControl.val();
         doctorModel.address = formView.addressControl.val();
         doctorModel.userName = formView.userNameControl.val();
-        doctorModel.password = formView.passwordControl.val();
+        var newPass = formView.passwordControl.val();
+        if(!validator.isEmptyString(newPass)){
+          doctorModel.password =  newPass
+        }
         doctorModel.recoveryContact = formView.recoveryContactControl.val();
         doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
 
@@ -196,7 +199,7 @@ $(document).ready(function(){
       this.qualificationControl.val(model.qualifications);
       this.addressControl.val(model.address);
       this.userNameControl.val(model.userName);
-      this.passwordControl.val(model.password);
+      //this.passwordControl.val(model.password);
       this.recoveryContactControl.val(model.recoveryContact);
       this.recoveryEmailControl.val(model.recoveryEmail);
 

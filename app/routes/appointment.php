@@ -118,7 +118,7 @@ $app->group('/appointment', function(){
             //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
 
             if($differenceMins >= $minTimeMins){
-              $freeTimeSlot = array('type' => 'f',  'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+              $freeTimeSlot = array('type' => 'f', 'state' => 0,  'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
               $todaysSchedule[] = $freeTimeSlot;
             }
 
@@ -139,7 +139,7 @@ $app->group('/appointment', function(){
         $endMins = $schedule['endMins'];
         $differenceMins = $endMins - $startMins;
         if($differenceMins >= $minTimeMins){
-          $todaysSchedule[] = array('type' => 'f', 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+          $todaysSchedule[] = array('type' => 'f', 'state' => 0,'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
         }
 
 
