@@ -43,7 +43,7 @@ $app->group('/doctorDashboard', function(){
     array('basePath' => AppConfig::$basePath, 'active' => "schedule", 'name' => $user->name));
   });
 
-
+  
   //patient
   $this->get('/patientsEntry', function ($request, $response) {
     $user = UserSessionManager::getUser();
@@ -53,6 +53,9 @@ $app->group('/doctorDashboard', function(){
 
   $this->get('/patientHistory', function ($request, $response) {
     $user = UserSessionManager::getUser();
+      
+      
+      
     return $this->view->render($response, '/patient/patient-history.html',
     array('basePath' => AppConfig::$basePath, 'active' => "patient", 'name' => $user->name));
   });

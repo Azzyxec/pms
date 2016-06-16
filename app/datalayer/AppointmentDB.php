@@ -19,8 +19,8 @@ class AppointmentDB{
 
       $statement = DBHelper::generateStatement('get_appointments_for_the_day',  $paramArray);
 
-      $statement->execute();
-
+      $statement->execute(); 
+ 
       $appointments = array();
       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 

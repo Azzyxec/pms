@@ -2,7 +2,7 @@ $(document).ready(function(){
  /*    
  this.table = $('#dataTables-example').DataTable({
                 responsive: true,
-     ajax: dataSet,
+      ajax: dataSet,
         columns: [
             { title: "Name" },
             { title: "Date of birth" },

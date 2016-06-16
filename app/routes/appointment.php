@@ -156,13 +156,13 @@ $app->group('/appointment', function(){
   });
  $this->get('/getAllAppointments', function ($request, $response) {
     try {
-
+ 
       $minTimeMins = 5;
       //if the free time is greater than 5 mins then slot is made available for booking an appointment
 
       $message = "success";
 
-
+ 
       $user = UserSessionManager::getUser();
 
       $appointmentDB = new AppointmentDB();
