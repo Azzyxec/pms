@@ -31,7 +31,7 @@ var filesList = [
                         objConfig.scriptsBasePath + "doctor/registration.js"
                       ], buildName: "doctor.registration.js"},
   {build:true, files: [
-                       objConfig.scriptsBasePath +"utility.js",
+                       objConfig.scriptsBasePath +"utility.js", 
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                        objConfig.scriptsBasePath +"bootstrapValidator.min.js",
@@ -137,7 +137,10 @@ var filesList = [
                                   objConfig.scriptsBasePath +"utility.js",
                                   objConfig.scriptsBasePath +"links.js",
                                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
-                                  objConfig.scriptsBasePath +"patient/patient.entry.js"
+                                  objConfig.scriptsBasePath +"patient/patient.entry.js",
+                                objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
+                                objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",
+                                  objConfig.scriptsBasePath +"patient/patient.history.js"
                                 ], buildName: "patient.entry.js"},
 {build:true, files: [
                   objConfig.scriptsBasePath +"links.js",

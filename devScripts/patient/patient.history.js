@@ -67,7 +67,10 @@ $(document).ready(function(){
         "order": [[1, 'asc']]
     } );
      
-   
+   $(function () {
+    $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
+
+  });
 
 
           /*  for(var i = 0; i < patientsList.length; i++){
