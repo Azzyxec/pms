@@ -166,7 +166,27 @@ $(document).ready(function(){
       init:function(){
         this.dateInput = $('#appointment-list-date1');
         this.locationSelect = $('#appointment-list-locations-sel');
-        this.goButton = $('#appointment-list-go-btn');
+
+        this.locationSelect.on('change', function(){
+          console.log('select');
+
+          var selectedOption = todayAppointmentListView.locationSelect.find(":selected");
+          var selectedValue = selectedOption.attr('value');
+          var name = selectedOption.text();
+          if(selectedValue){
+            todayAppointmentListView.listHeadertText.text('Location ' + name);
+            cont.setSelectedLocationId(selectedValue);
+            var ldate = cont.getSelectedeDate();
+            cont.getappointmentListForDate(ldate, selectedValue);
+          }
+
+          //model.DefaultlocationId
+        })
+
+
+
+
+        //this.goButton = $('#appointment-list-go-btn');
 
         this.listHeadertText = $('#appointment-list-header');
 
@@ -223,7 +243,8 @@ $(document).ready(function(){
 
         this.closedAppointmentsFilterButton = $('#closed-appointment-filter-button');
 
-        this.activeAppointmentsFilterButton.on('click', function(){
+        this.closedAppointmentsFilterButton.on('click', function(){
+          console.log('closed appointment filter');
           var list = cont.getClosedAppointmentsList();
           console.log(JSON.stringify(list));
           if(_.size(list) > 0 ){
@@ -247,7 +268,14 @@ $(document).ready(function(){
           format: 'DD-MM-YYYY'
         });
 
+        this.dateInput.on('dp.change', function(){
+          var date = todayAppointmentListView.dateInput.val();
+          cont.setSelectedDate(date);
+          var locId = cont.getSelectedLocId();
+          cont.getappointmentListForDate(date, locId);
+        });
 
+        /*
         this.goButton.click(function(){
           var date = todayAppointmentListView.dateInput.val();
 
@@ -262,7 +290,7 @@ $(document).ready(function(){
             cont.getappointmentListForDate(date, selectedValue);
           }
 
-        });
+        });*/
 
       },
       render: function(){
@@ -273,12 +301,6 @@ $(document).ready(function(){
         todayAppointmentListView.listHeadertText.text('Location');
 
         //appointment statictics
-
-        var stats = cont.getAppointmentListInfo();
-
-        this.totalAppointmentCount.text(stats.totalAppointmenCount);
-        this.cancelledAppointmentCount.text(stats.cancelledAppointmentCount);
-        this.completedAppointmentCount.text(stats.completedAppointmentCount);
         //this.rescheduledAppointmentCount.text(stats.rescheduledAppointmentCount);
 
 
@@ -303,7 +325,16 @@ $(document).ready(function(){
 
       },
       renderAppointmentist: function(appointmentList){
+        //if there are no appointment, display a message that there are no appointment available or schedule must have not b
         if(appointmentList){
+
+          //update appointment status
+          var stats = cont.getAppointmentListInfo();
+
+          this.totalAppointmentCount.text(stats.totalAppointmenCount);
+          this.cancelledAppointmentCount.text(stats.cancelledAppointmentCount);
+          this.completedAppointmentCount.text(stats.completedAppointmentCount);
+
           this.appointmentListContainer.empty();
 
           //this.totalAppointmentCount.text(appointmentList.length);
@@ -327,9 +358,11 @@ $(document).ready(function(){
               }else if(item.state == 1){
                 //closed
                 var template = this.closedAppointmentTemplate.clone();
+                this.intilizeClosedAppointmentTemplate(template, item );
 
               }else  if(item.state == 2){
                 var template = this.cancelledAppointmentTemplate.clone();
+                this.intilizeCancelledAppointmentTemplate(template, item );
                 //cancelled
               }
 
@@ -338,6 +371,30 @@ $(document).ready(function(){
             this.appointmentListContainer.append(template);
 
           }
+
+        }
+      },
+      intilizeCancelledAppointmentTemplate: function(template, appointmentItem){
+        if(template && appointmentItem){
+          var mStartTime = moment({hours: appointmentItem.startMins/60 , minutes: appointmentItem.startMins%60});
+          var mEndTime = moment({hours: appointmentItem.endMins/60 , minutes: appointmentItem.endMins%60});
+
+          template.find('.time').text(mStartTime.format("hh:mm"));
+          template.find('.aa').text(mStartTime.format(" A"));
+
+          template.find('.patient-name').text(appointmentItem.name);
+
+        }
+      },
+      intilizeClosedAppointmentTemplate: function(template, appointmentItem){
+        if(template && appointmentItem){
+          var mStartTime = moment({hours: appointmentItem.startMins/60 , minutes: appointmentItem.startMins%60});
+          var mEndTime = moment({hours: appointmentItem.endMins/60 , minutes: appointmentItem.endMins%60});
+
+          template.find('.time').text(mStartTime.format("hh:mm"));
+          template.find('.aa').text(mStartTime.format(" A"));
+
+          template.find('.patient-name').text(appointmentItem.name);
 
         }
       },
@@ -496,183 +553,5 @@ $(document).ready(function(){
 
   });
 
-
-
-  $(function(){
-    console.log('Doctor Dashboard home js loaded');
-
-
-    $("#view-patients-dashboard-section-btn").click(function(e){
-      e.preventDefault();
-      window.location.href = links.patientsListingUrl;
-    });
-
-    $("#view-sales-dash-btn").click(function(e){
-      e.preventDefault();
-      window.location.href = links.getAnalyticsUrl;
-    });
-
-
-
-
-
-    var TimelineModel = {
-
-
-      activePatients : [{
-        id:0,
-        name:"joseph",
-        time:"14:00",
-        ailment:"back ache"
-
-      },
-      {
-        id:0,
-        name:"Fernandes",
-        time:"15:00",
-        ailment:"Sore throat"
-
-      }
-
-    ],
-    closedPatients :[{
-      id:0,
-      name:"Clive",
-      time:"13:00",
-      ailment:"back ache",
-      remarks:''
-    },
-    {
-      id:0,
-      name:"Brad",
-      time:"14:00",
-      ailment:"back ache",
-      remarks:''
-    }
-
-
-  ],
-
-
-  canceledPatients :[{
-    id:0,
-    name:"Rogue",
-    time:"13:00",
-    ailment:"back ache",
-    remarks:''
-  },
-
-  {
-    id:0,
-    name:"Warren",
-    time:"13:00",
-    ailment:"back ache",
-    remarks:''
-  }
-],
-
-bookAppointments :[{time:'15:00'},{time:'14:00'}
-],
-
-timeLineArray : [{
-  type:'ActivePatients',
-  id:0,
-  name:"Rogue",
-  time:"13:00",
-  ailment:"back ache",
-  remarks:''
-},
-{ type:'closedPatients',
-id:0,
-name:"Brad",
-time:"14:00",
-ailment:"back ache",
-remarks:''
-}
-
-],
-
-location:"Panjim"
-
-}
-
-var controller = {
-
-
-  init:function(){
-    Timelineview.init();
-  },
-
-  getPatientArrayCount: function(){
-
-    var PatientArray  = this.getPatient();
-    var count = PatientArray.length;
-    return count;
-  },
-
-  getTimelineLoction : function(){
-    return TimelineModel.location;
-  },
-  getActivePatient: function(){
-    return TimelineModel.activePatients;
-  },
-  getCancelledPatient: function(){
-    return TimelineModel.canceledPatients;
-  },
-  getClosedPatient: function(){
-    return TimelineModel.closedPatients;
-  },
-  getbookAppointments: function(){
-    return TimelineModel.bookAppointments;
-  },
-
-  createTimelineObjArray:function(){
-    var TimelineObjArray = [];
-    TimelineObjArray.push(controller.getActivePatient());
-    TimelineObjArray.push(controller.getCancelledPatient());
-    TimelineObjArray.push(controller.getClosedPatient());
-    TimelineObjArray.push(controller.getbookAppointments());
-    return TimelineObjArray;
-  },
-
-  getTimeArrayObj : function(){
-    return TimelineModal.timeLineArray();
-  }
-
-
-}
-
-var Timelineview = {
-  init:function(){
-    this.time_line_container = $(".timeline_item");
-    this.timeline_time = $(".timeline-time");
-    this.timeline_child_items = $(".timeline_child_item");
-    this.timeline_child_item_description = $(".timeline_lg_description");
-    this.timeline_item_name = $('#timeline_item_name');
-    this.timeline_btn_patientHistory = $('#timeline_btn_patient_history');
-    this.timeline_btn_reschedule = $('#timeline_btn_re_schedule');
-    this.timline_btn_cancel = $('#timeline_btn_cancel');
-    this.timeline_book_new_panel = $('#timeline_book_new_panel');
-    this.timline_cancel_panel = $('#timeline_cancel_panel');
-    this.time_line_h3 = $(".timeline-h3");
-
-
-    this.render();
-  },
-
-  render:function(){
-
-    this.time_line_h3.text(controller.getTimelineLoction() +' Today');
-
-
-
-  }
-
-}
-
-
-controller.init();
-
-}());
 
 });

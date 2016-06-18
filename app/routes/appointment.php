@@ -21,24 +21,18 @@ $app->group('/appointment', function(){
 
         $postedData = $request->getParsedBody();
 
-        /*
-        $appointment = $postedData['appointment'];
-        $closingDate = $appointment['closingDate'];
-        $closingTime = $appointment['closingTime'];
-        %next = $appointment['nextAppointmentDate'];
-        $locationId = $appointment['nextAppointmentTime'];
-        $locationId = $appointment['remarks'];
-        $locationId = $appointment['prescriptionList'];
-        */
 
-      //  $appointmentDB = new AppointmentDB();
-      //  $status = $appointmentDB->closeAppointment($appointmentInfo, $user->id, $user->type);
+        $appointment = $postedData['appointment'];
+        //$prescriptionList = $appointment['prescriptionList'];
+
+        $appointmentDB = new AppointmentDB();
+        $appointmentDB->closeAppointment($appointment, $user->id, $user->type);
 
       }else{
         $message = "user not logged in";
       }
 
-      $data = array('status' => $status, 'data' => "", 'message' => $message);
+      $data = array('status' => $status, 'data' => $appointment, 'message' => $message);
       return $response->withJson($data);
 
 
