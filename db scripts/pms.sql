@@ -24,6 +24,37 @@ DELIMITER $$
 --
 -- Procedures
 --
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_all_appointments_history`(IN `patient_id` INT)
+    NO SQL
+begin
+
+
+
+	select  a.id
+		   ,a.contact
+           ,a.appointment_date
+		   ,p.name
+           ,l.name as location_name
+		   ,a.start_mins
+		   ,a.end_mins
+		   ,a.description
+		   ,a.`state`
+		   ,a.is_rescheduled
+	from appointment a
+	inner join patient p on a.fk_patient_id = p.id
+    inner join work_locations l on a.fk_location_id = l.id
+	where a.fk_patient_id = patient_id
+		  and a.is_active = 1
+	order by a.start_mins asc;
+
+
+end$$
+
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
@@ -2825,6 +2856,8 @@ INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`) VALUE
 (14, 1, 'Margaon', ''),
 (15, 1, 'Panjim', ''),
 (16, 18, 'dsaf', '');
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
