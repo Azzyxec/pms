@@ -19,8 +19,8 @@ class AppointmentDB{
 
       $statement = DBHelper::generateStatement('get_appointments_for_the_day',  $paramArray);
 
-      $statement->execute(); 
- 
+      $statement->execute();
+
       $appointments = array();
       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 
@@ -105,6 +105,7 @@ class AppointmentDB{
         $timing = array();
         $timing['startMins'] = $result['start_time_mins'];
         $timing['endMins'] = $result['end_time_mins'];
+        $timing['locId'] = $result['loc_id'];
 
         $timingList[] = $timing;
       }

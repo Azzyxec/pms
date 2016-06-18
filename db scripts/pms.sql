@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 16, 2016 at 10:38 AM
+-- Generation Time: Jun 18, 2016 at 03:03 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -429,7 +429,7 @@ insert into close_appointment(
 						values
 						      (
 							   pappointment_id
-							   ,pclosing_date
+							   ,STR_TO_DATE(pclosing_date, '%d-%m-%Y') 
 							   ,pclosing_time_mins
 							   ,@lpatientId
 							   ,premarks
@@ -1266,7 +1266,7 @@ begin
 		   ,a.description
 		   ,a.`state`
 		   ,a.is_rescheduled
-           ,plocation_id as loc
+           ,a.fk_location_id as loc
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
 	where a.fk_doctor_id = pdoctor_id
@@ -1423,6 +1423,7 @@ begin
 
 	select sd.start_time_mins
 		   ,sd.end_time_mins
+           ,sd.location_id as loc_id
 	from schedule_day sd
 	where sd.fk_doctor_id = pdoctor_id
 		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
@@ -2078,7 +2079,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 --
 
 INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `description`, `state`, `is_rescheduled`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`) VALUES
-(1, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 0, 0, '2016-06-09 15:23:49', 1, 'D', 1),
+(1, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 1, 0, '2016-06-09 15:23:49', 1, 'D', 1),
 (7, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 1, 0, '2016-06-11 16:41:13', 1, 'D', 1),
 (8, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 2, 0, '2016-06-12 00:01:08', 1, 'D', 1),
 (9, 1, 14, 107, '7038348822', '2016-06-14', 540, 555, 'test problem', 0, 0, '2016-06-14 12:11:46', 1, 'D', 1),
@@ -2144,6 +2145,13 @@ CREATE TABLE IF NOT EXISTS `close_appointment` (
   `fk_created_by_id` int(11) NOT NULL,
   `created_by_type` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `close_appointment`
+--
+
+INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_time_mins`, `fk_patient_id`, `remarks`, `created_date_time`, `fk_created_by_id`, `created_by_type`) VALUES
+(1, '0000-00-00', 9, 96, 'remarks are there', '2016-06-17 10:52:39', 1, 0);
 
 -- --------------------------------------------------------
 

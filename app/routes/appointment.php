@@ -21,24 +21,18 @@ $app->group('/appointment', function(){
 
         $postedData = $request->getParsedBody();
 
-        /*
-        $appointment = $postedData['appointment'];
-        $closingDate = $appointment['closingDate'];
-        $closingTime = $appointment['closingTime'];
-        %next = $appointment['nextAppointmentDate'];
-        $locationId = $appointment['nextAppointmentTime'];
-        $locationId = $appointment['remarks'];
-        $locationId = $appointment['prescriptionList'];
-        */
 
-      //  $appointmentDB = new AppointmentDB();
-      //  $status = $appointmentDB->closeAppointment($appointmentInfo, $user->id, $user->type);
+        $appointment = $postedData['appointment'];
+        //$prescriptionList = $appointment['prescriptionList'];
+
+        $appointmentDB = new AppointmentDB();
+        $appointmentDB->closeAppointment($appointment, $user->id, $user->type);
 
       }else{
         $message = "user not logged in";
       }
 
-      $data = array('status' => $status, 'data' => "", 'message' => $message);
+      $data = array('status' => $status, 'data' => $appointment, 'message' => $message);
       return $response->withJson($data);
 
 
@@ -118,7 +112,7 @@ $app->group('/appointment', function(){
             //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
 
             if($differenceMins >= $minTimeMins){
-              $freeTimeSlot = array('type' => 'f', 'state' => 0,  'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+              $freeTimeSlot = array('type' => 'f', 'state' => 0, 'loc' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
               $todaysSchedule[] = $freeTimeSlot;
             }
 
@@ -139,7 +133,7 @@ $app->group('/appointment', function(){
         $endMins = $schedule['endMins'];
         $differenceMins = $endMins - $startMins;
         if($differenceMins >= $minTimeMins){
-          $todaysSchedule[] = array('type' => 'f', 'state' => 0,'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+          $todaysSchedule[] = array('type' => 'f', 'state' => 0, 'loc' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
         }
 
 
@@ -156,13 +150,13 @@ $app->group('/appointment', function(){
   });
  $this->get('/getAllAppointments', function ($request, $response) {
     try {
- 
+
       $minTimeMins = 5;
       //if the free time is greater than 5 mins then slot is made available for booking an appointment
 
       $message = "success";
 
- 
+
       $user = UserSessionManager::getUser();
 
       $appointmentDB = new AppointmentDB();
