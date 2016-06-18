@@ -125,9 +125,11 @@ var filesList = [
                   objConfig.scriptsBasePath +"staff/list.staff.js"
                 ], buildName: "list.staff.js"},
 {build:true, files: [
-                  objConfig.scriptsBasePath +"links.js",
-                  objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
-                  objConfig.scriptsBasePath +"patient/patient.history.js"
+                    objConfig.scriptsBasePath +"links.js",
+                    objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                    objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
+                    objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",
+                    objConfig.scriptsBasePath +"patient/patient.history.js"
                 ], buildName: "patient.history.js"},
                 {build:true, files: [
                                   objConfig.scriptsBasePath +"moment.js",

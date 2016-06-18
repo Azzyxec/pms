@@ -5,7 +5,7 @@ use \PDO;
 use Pms\Datalayer\DBHelper;
 use Pms\Entities\Patient;
 use Pms\Entities\BirthDetails;
-
+ 
 
 class PatientDB{
 
@@ -392,6 +392,49 @@ class PatientDB{
 
   }
 
+    
+     public function getPatientsHistory($patientId){
+    try {
+
+        $paramArray = array(
+                            'patient_id' => $patientId
+                          );
+
+        $statement = DBHelper::generateStatement('get_patient_all_appointments_history',  $paramArray);
+
+        $statement->execute();
+
+        $programmes = array();
+
+        while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+          $patientHistory = array();
+
+         
+
+          
+          $patientHistoryRow['name'] = $result['name'];
+          $patientHistoryRow['appt_date'] = $result['appointment_date'];
+          $patientHistoryRow['loc_name'] = $result['location_name'];
+          $patientHistoryRow['appt_time'] = $result['start_mins'];
+          $patientHistoryRow['patient_desc'] = $result['description'];
+             
+        
+         
+
+
+          $patientHistory[] = $patientHistoryRow;
+
+        }
+      return array('status' => 1, 'data' => $patientHistory, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => $status, 'data' => "", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+ 
+    
   //shift this to a utility class
   function array_to_xml( $data, $xml_data ) {
 

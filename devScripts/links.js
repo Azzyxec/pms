@@ -16,7 +16,7 @@ var links = {
    doctorListingUrl: "index.php/adminDashboard/doctorListing",
 
    logoutUrl : "index.php/authenticate/logout",
- 
+  
    //doctor dashboard links
    doctorProfile: "index.php/doctorDashboard/doctorProfile",
    dashboardHomeUrl : "index.php/doctorDashboard/",
@@ -61,6 +61,7 @@ var links = {
    //patientsProgrammesUrl:"index.php/programme/getPatientProgrammes",
    patientListingUrl:"index.php/patient/getPatientList",
    getPatientsForAutoFillUrl:"index.php/patient/getPatientListForAutoFill",
+   getPatientHistoryUrl:'index.php/patient/getPatientHistory',
 
 
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
