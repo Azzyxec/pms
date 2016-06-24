@@ -41,15 +41,26 @@ $(document).ready(function(){
     });
   };
 
-  controller.prototype.getSortedAppointmentList = function () {
-    return _.orderBy(model.appointmentList, ['state'], ['asc']);
+  controller.prototype.getSortedAppointmentList = function (locationId) {
+
+    console.log('sorting with location Id' + locationId);
+
+    var lappointmentList =  _.filter(model.appointmentList, function(item){
+        if(locationId == 0 || +item.locId == locationId){
+          return true;
+        }
+      });
+
+        return _.orderBy(lappointmentList, ['state'], ['asc']);
+
   };
 
 
   controller.prototype.getCancelledList = function () {
 
     return _.filter(model.appointmentList, function(item){
-      if(+item.state == 2 && item.type === 'a'){
+      if((+item.state == 2 && item.type === 'a')
+        && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return true;
       }
     });
@@ -57,8 +68,12 @@ $(document).ready(function(){
 
   controller.prototype.getFreeTimeSlotsList = function () {
 
+    console.log('free appontment list ' + cont.getSelectedLocId());
+
     return _.filter(model.appointmentList, function(item){
-      if(+item.state == 0 && item.type === 'f'){
+
+      if((+item.state == 0 && item.type === 'f')
+            && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return true;
       }
     });
@@ -66,8 +81,11 @@ $(document).ready(function(){
 
   controller.prototype.getActiveAppointmentsList = function () {
 
+    console.log('loc id' + cont.getSelectedLocId());
+
     return _.filter(model.appointmentList, function(item){
-      if(+item.state == 0 && item.type === 'a'){
+      if( (+item.state == 0 && item.type === 'a')
+          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return true;
       }
     });
@@ -76,7 +94,8 @@ $(document).ready(function(){
   controller.prototype.getClosedAppointmentsList = function () {
 
     return _.filter(model.appointmentList, function(item){
-      if(+item.state == 1 && item.type === 'a'){
+      if( (+item.state == 1 && item.type === 'a')
+           && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return true;
       }
     });
@@ -88,30 +107,39 @@ $(document).ready(function(){
 
   controller.prototype.getAppointmentListInfo = function () {
 
-    var activeAppointment = _.countBy(model.appointmentList, function(item){
-      if(+item.state == 0 && item.type === 'a'){
-        return "count";
+    var stats = _.countBy(model.appointmentList, function(item){
+      if((+item.state == 0 && item.type === 'a')
+          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
+        return "active";
+      }else if((+item.state == 1 && item.type === 'a')
+          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
+        return "completed";
+      }else if((+item.state == 2 && item.type === 'a')
+          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
+        return "cancelled";
       }
-    }).count;
+    });
 
     var completedCount = _.countBy(model.appointmentList, function(item){
-      if(+item.state == 1 && item.type === 'a'){
+      if((+item.state == 1 && item.type === 'a')
+          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return "count";
       }
     }).count;
 
     var cancelledCount = _.countBy(model.appointmentList, function(item){
-      if(+item.state == 2 && item.type === 'a'){
+      if((+item.state == 2 && item.type === 'a')
+          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return "count";
       }
     }).count;
 
-    console.log('array filer rsult' + JSON.stringify(completedCount));
+    console.log('array filer rsult' + JSON.stringify(stats));
 
     var infoObj = {
-      totalAppointmenCount: activeAppointment?activeAppointment:0,
-      completedAppointmentCount:completedCount?completedCount:0,
-      cancelledAppointmentCount:cancelledCount?cancelledCount:0
+      totalAppointmenCount: stats.active?stats.active:0,
+      completedAppointmentCount:stats.completed?stats.completed:0,
+      cancelledAppointmentCount:stats.cancelled?stats.cancelled:0
     };
 
     return infoObj;
@@ -166,7 +194,7 @@ $(document).ready(function(){
     .done(function( response ) {
       console.log("today Appointment: " + JSON.stringify(response));
       model.appointmentList = response.data;
-      var appointmentList = cont.getSortedAppointmentList();
+      var appointmentList = cont.getSortedAppointmentList(locId);
       todayAppointmentListView.renderAppointmentist(appointmentList);
 
     });
@@ -179,6 +207,7 @@ $(document).ready(function(){
       this.dateInput = $('#appointment-list-date1');
       this.locationSelect = $('#appointment-list-locations-sel');
 
+      //Selected location change event wiring
       this.locationSelect.on('change', function(){
 
 
@@ -191,7 +220,7 @@ $(document).ready(function(){
         if(selectedValue){
           todayAppointmentListView.listHeadertText.text('Location ' + name);
           cont.setSelectedLocationId(selectedValue);
-          var ldate = cont.getSelectedeDate();
+          //var ldate = cont.getSelectedeDate();
           var appointments = cont.GetAppointmentForLocation(selectedValue);
           todayAppointmentListView.renderAppointmentist(appointments);
           //cont.getappointmentListForDate(ldate, selectedValue);
@@ -221,19 +250,16 @@ $(document).ready(function(){
       this.closeAppointmentFilerButton.on('click', function(){
         var list = cont.getCancelledList();
         console.log(JSON.stringify(list));
-        if(_.size(list) > 0 ){
           todayAppointmentListView.renderAppointmentist(list);
-        }
       })
 
       this.allAppointmentFilerButton = $('#all-appointments-filter-button');
 
       this.allAppointmentFilerButton.on('click', function(){
-        var list = cont.getSortedAppointmentList();
+        var locId = cont.getSelectedLocId();
+        var list = cont.getSortedAppointmentList(locId);
         console.log(JSON.stringify(list));
-        if(_.size(list) > 0 ){
           todayAppointmentListView.renderAppointmentist(list);
-        }
       })
 
 
@@ -242,9 +268,7 @@ $(document).ready(function(){
       this.freeTimeSlotsFilterButton.on('click', function(){
         var list = cont.getFreeTimeSlotsList();
         console.log(JSON.stringify(list));
-        if(_.size(list) > 0 ){
           todayAppointmentListView.renderAppointmentist(list);
-        }
       })
 
 
@@ -253,9 +277,7 @@ $(document).ready(function(){
       this.activeAppointmentsFilterButton.on('click', function(){
         var list = cont.getActiveAppointmentsList();
         console.log(JSON.stringify(list));
-        if(_.size(list) > 0 ){
           todayAppointmentListView.renderAppointmentist(list);
-        }
       })
 
       this.closedAppointmentsFilterButton = $('#closed-appointment-filter-button');
@@ -264,9 +286,7 @@ $(document).ready(function(){
         console.log('closed appointment filter');
         var list = cont.getClosedAppointmentsList();
         console.log(JSON.stringify(list));
-        if(_.size(list) > 0 ){
           todayAppointmentListView.renderAppointmentist(list);
-        }
       })
 
 
@@ -275,6 +295,10 @@ $(document).ready(function(){
       this.bookedAppointmentTemplate = $('#booked-appointment-template');
       this.cancelledAppointmentTemplate = $('#cancelled-appointment-template');
       this.closedAppointmentTemplate = $('#closed-appointment-template');
+      this.noResultsFoundTemplate = $('#no-result-found-template');
+
+
+      //modals
 
       this.newAppointmentModal = $('#book-appointment-modal');
       this.cancelAppointmentModal = $('#cancel-appointment-modal-window');
@@ -342,15 +366,25 @@ render: function(){
 
 },
 renderAppointmentist: function(appointmentList){
-  //if there are no appointment, display a message that there are no appointment available or schedule must have not b
-  if(appointmentList){
 
+  //updating status, for total appointments, closed and cancelled appointments
+  var stats = cont.getAppointmentListInfo();
+
+  this.totalAppointmentCount.text(stats.totalAppointmenCount);
+  this.cancelledAppointmentCount.text(stats.cancelledAppointmentCount);
+  this.completedAppointmentCount.text(stats.completedAppointmentCount);
+
+  if(_.size(appointmentList) == 0){
+    console.log('appointemtn list with no entries');
+    //adding the result found template
+    this.appointmentListContainer.empty();
+    var template = this.noResultsFoundTemplate.clone();
+    this.appointmentListContainer.append(template);
+  }else{
+
+    console.log('render appointet list with entires');
     //update appointment status
-    var stats = cont.getAppointmentListInfo();
 
-    this.totalAppointmentCount.text(stats.totalAppointmenCount);
-    this.cancelledAppointmentCount.text(stats.cancelledAppointmentCount);
-    this.completedAppointmentCount.text(stats.completedAppointmentCount);
 
     this.appointmentListContainer.empty();
 

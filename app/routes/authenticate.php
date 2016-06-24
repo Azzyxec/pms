@@ -6,8 +6,6 @@ use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\UserDB;
 use Pms\Datalayer\AuthenticateDB;
 
-use \AppConfig;
-
 $app->group('/authenticate', function(){
 
   $this->get('/login', function ($request, $response) {
@@ -142,7 +140,6 @@ $this->post('/isLoggedIn', function ($request, $response) {
 });
 
 $this->post('/authenitcateUser', function ($request, $response) {
-
   $user = new User();
 
   try{

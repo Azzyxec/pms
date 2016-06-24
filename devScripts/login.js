@@ -13,6 +13,8 @@ $(document).ready(function(){
       forgotPaswordUrl: links.forgotPasswordUrl,
       adminUrl: links.adminUrl,
       authenticate: function(pLoginId, pPassword){
+        console.log('call authenticate');
+        console.log(controller.authenticateUrl);
         $.post( controller.authenticateUrl , { loginId:  pLoginId, password:  pPassword })
         .done(function( response ) {
           console.log('response ' + JSON.stringify(response));
