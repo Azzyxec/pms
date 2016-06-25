@@ -1,9 +1,7 @@
 $(document).ready(function(){
 
 
-  $(function () {
-    $('[data-toggle="popover"]').popover()
-  });
+
 
   $(function(){
     console.log('patient entry js loaded');
@@ -41,7 +39,7 @@ $(document).ready(function(){
         fathersBloodGroup:"",
         siblings:"",
         remarks:"",
-        isActive: 0
+        isActive: 0 
       },
       patientsProgramCount: 0,
       patientsPrograms: [],

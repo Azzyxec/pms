@@ -29,7 +29,7 @@ function getCancelAppointmentController(){
          }
 
          console.log('cancel response ' + JSON.stringify(response));
-         //close in proper resonse, else dsplay messge the appoitmetn could not be compated
+         //close in proper resonse, else dsplay messge the appoitmetn could not be compated 
        });
     }
 

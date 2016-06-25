@@ -84,6 +84,11 @@ var links = {
 
    createModifyStaffUrl:"index.php/staff/createModifyStaff",
    getStaffDetailsUrl: "index.php/staff/getStaffDetails",
-   staffListingUrl: "index.php/staff/getDoctorsStaffList"
+   staffListingUrl: "index.php/staff/getDoctorsStaffList",
+    
+    
+    //upload
+    
+    UploadFiles:"index.php/Upload/upload"
 
 }

@@ -8,7 +8,7 @@ function getCloseAppointmentController(){
     nextAppointmentTime:'',
     patientsName:'',
     remarks: '',
-    prescriptionList:[]
+    prescriptionList:[] 
   }
 
   var controller = {
