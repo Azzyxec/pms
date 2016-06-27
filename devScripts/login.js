@@ -49,6 +49,34 @@ $(document).ready(function(){
 
         var controls = {loginId: this.loginId, password: this.password};
 
+        $(document).keypress(function(event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13') {
+              //console.log('handler exec : ' + cat.Id);
+              console.log('click submit' + controls.loginId.val());
+              console.log('url: ' + controller.authenticateUrl);
+
+              loginView.hideAllAlerts();
+
+              //validations
+              var lloginId = loginView.loginId.val();
+              var lpassword = loginView.password.val();
+
+              if(!lloginId || !lloginId.trim()){
+                console.log('pass');
+                loginView.alertLoginIdNeeded.removeClass('hidden');
+                return;
+              }else if(!lpassword || !lpassword.trim()){
+                console.log('confirm pass');
+                loginView.alertPassNeeded.removeClass('hidden');
+                return;
+              }
+
+              controller.authenticate(lloginId, lpassword);
+            }
+        });
+
+
 
         //wiring events
         $('#login-submit').on('click', function(){
