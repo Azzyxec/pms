@@ -36,6 +36,9 @@ $(document).ready(function(){
         this.analyticsReportUrl = links.getAnalyticsUrl;
         this.accountingUrl = links.accountingUrl;
         this.medicineSearchUrl = links.medicineSearchUrl;
+
+        this.staffListingUrl = links.doctorsStaffListingUr;
+
         //do somethng about doctors info and registration
 
         //The url from the browser  can be compared to set the active navigation
@@ -85,6 +88,9 @@ $(document).ready(function(){
         $("#analytics-side-navigation-link-btn").attr('href', controller.analyticsReportUrl);
         $("#accounting-side-navigation-link-btn").attr('href', controller.accountingUrl);
         $("#medicine-side-navigation-link-btn").attr('href', controller.medicineSearchUrl);
+
+        $("#dash-staff-manage-link").attr('href', controller.doctorsStaffListingUr);
+        $("#dash-location-manage-link").attr('href', controller.ManageLocationsUrl);
 
 
 

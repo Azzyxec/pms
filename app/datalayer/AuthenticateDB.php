@@ -24,6 +24,8 @@ class AuthenticateDB{
         $queryResult['type'] = $result['type'];
         $queryResult['name'] = $result['name'];
         $queryResult['doctorId'] = $result['doctor_id'];
+        $queryResult['isActive'] = $result['is_active'];
+        $queryResult['locationId'] = $result['location_id'];
       }
 
       return $queryResult;
