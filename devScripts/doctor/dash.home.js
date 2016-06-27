@@ -13,12 +13,14 @@ $(document).ready(function(){
       }
     }
 
-
     function controller(){
       //initlize any url
       this.getLocationUrl =  links.getLocationUrl;
       this.getAppointmentForTheDayUrl = links.getAppointmentForTheDayUrl;
       this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
+      this.patientsLoaded = false;
+      this.locationsLoaded = false;
+      this.appointmentsLoaded = false;
     };
 
     controller.prototype.getPatientList = function () {
@@ -166,16 +168,37 @@ $(document).ready(function(){
     this.getLocations();
     this.getPatients();
     this.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
+
+  };
+
+  controller.prototype.removeOverLay = function () {
+
+
+    console.log('patients loaded ' + this.patientsLoaded +
+                'locations loaded ' + this.locationsLoaded +
+                'appointments loaded ' + this.appointmentsLoaded
+               );
+
+    if(this.patientsLoaded  == true &&
+        this.locationsLoaded  == true &&
+        this.appointmentsLoaded == true){
+         console.log(' removing overlay ');
+    }
+
   };
 
   controller.prototype.getPatients = function () {
+
     $.get( this.getPatientsForAutoFillUrl , {})
     .done(function( response ) {
       console.log("patients: " + JSON.stringify(response));
       if(response.status == 1){
         model.appointmenListViewModel.patientList = response.data;
+        cont.patientsLoaded = true;
+        cont.removeOverLay();
       }
     });
+
   };
 
   controller.prototype.getLocations = function () {
@@ -184,7 +207,8 @@ $(document).ready(function(){
       console.log("locations: " + JSON.stringify(response));
       model.appointmenListViewModel.locationList = response.data;
       todayAppointmentListView.render();
-
+      cont.locationsLoaded = true;
+      cont.removeOverLay();
     });
   };
 
@@ -196,7 +220,8 @@ $(document).ready(function(){
       model.appointmentList = response.data;
       var appointmentList = cont.getSortedAppointmentList(locId);
       todayAppointmentListView.renderAppointmentist(appointmentList);
-
+      cont.appointmentsLoaded = true;
+      cont.removeOverLay();
     });
 
   };

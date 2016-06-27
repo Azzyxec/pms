@@ -4,7 +4,7 @@ $(document).ready(function(){
    $(function () {
 
 //initialize blueimp fileupload plugin
-       
+
 
 var process_url = links.UploadFiles; //PHP script
 $('#fileupload').fileupload({
@@ -16,17 +16,17 @@ $('#fileupload').fileupload({
     // Enable image resizing, except for Android and Opera,
     // which actually support image resizing, but fail to
     // send Blob objects via XHR requests:
-    disableImageResize: /Android(?!.*Chrome)|Opera/ 
+    disableImageResize: /Android(?!.*Chrome)|Opera/
     .test(window.navigator.userAgent),
     previewMaxWidth: 50,
     previewMaxHeight: 50,
     previewCrop: true
-    
+
 });
-       
-       
+
+
        var progressBar = $('<div/>').addClass('progress').append($('<div/>').addClass('progress-bar')); //create progress bar
-var uploadButton = $('<button/>').addClass('button btn-blue upload').text('Upload');    //create upload button
+var uploadButton = $('<button/>').addClass('btn btn-info ').text('Upload');    //create upload button
 
 uploadButton.on('click', function () { //button click function
     var $this = $(this), data = $this.data();
@@ -39,27 +39,27 @@ $('#fileupload').on('fileuploadadd', function (e, data) {
         data.context = $('<div/>').addClass('file-wrapper').appendTo('#files'); //create new DIV with "file-wrapper" class
         $.each(data.files, function (index, file){  //loop though each file
         var node = $('<div/>').addClass('file-row'); //create a new node with "file-row" class
-        var removeBtn  = $('<button/>').addClass('button btn-red remove').text('Remove'); //create new remove button
+        var removeBtn  = $('<button/>').addClass('btn btn-info ').text('Remove'); //create new remove button
         removeBtn.on('click', function(e, data){ //remove button function
             $(this).parent().parent().remove(); //remove file's wrapper to remove queued file
         });
-        
+
         //create file info text, name and file size
-        var file_txt = $('<div/>').addClass('file-row-text').append('<span>'+file.name  + '</span>');
-        
+        var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
+
         file_txt.append(removeBtn); //add remove button inside info text element
         file_txt.prependTo(node).append(uploadButton.clone(true).data(data)); //add to node element
         progressBar.clone().appendTo(file_txt); //add progress bar
         if (!index){
             node.prepend(file.preview); //add image preview
         }
-        
+
         node.appendTo(data.context); //attach node to data context
     });
 });
 
    });
- 
+
 
 $('#fileupload').on('fileuploadprogress', function (e, data) {
     var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -69,9 +69,9 @@ $('#fileupload').on('fileuploadprogress', function (e, data) {
         });
     }
 });
-    
-    
-    
+
+
+
     $('#fileupload').on('fileuploaddone', function (e, data) { // invoke callback method on success
     $.each(data.result.files, function (index, file) { //loop though each file
         if (file.url){ //successful upload returns a file url
