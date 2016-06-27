@@ -18,8 +18,8 @@
 
   <!-- admin css 2 customized -->
   <link href="css/sb-admin.css" rel="stylesheet">
-    
-    <!-- Bundled css 
+
+    <!-- Bundled css
     <link rel="stylesheet" type="text/css" href="css/bundle.css">-->
 
     <!-- other block style sheets -->
@@ -31,7 +31,7 @@
   <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body><div class="overlay hidden"><h1 class="text-center">Loading.....</h1></div>
   <div id="wrapper">
 
 
@@ -108,13 +108,13 @@
             </li>
 
 
-           
+
 
             {% if showOtherPages == true %}
              <li {% if active == "staff" %}class="active"{%endif%}>
               <a href="#" id="staff-managment-section-link-btn" data-toggle="collapse" data-target="#demo4"  ><i class="fa fa-edit fa-fw"></i>Staff</a>
             </li>
-            
+
             <li {% if active == "others" %}class="active"{%endif%}>
               <a href="#" id="other-settings-section-link-btn" data-toggle="collapse" data-target="#demo5" ><i class="fa fa-edit fa-fw"></i>Other Settings<span class="fa arrow"></span></a>
               <ul id="demo5" class="collapse">
