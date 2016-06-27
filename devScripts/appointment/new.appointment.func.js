@@ -37,7 +37,7 @@ $("#revalidate").on('click',function(){
     },
     patientList:[],
     locationList:[],
-    appointmentTimes: [{id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}]
+    appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
   };
 
   function mainController(){

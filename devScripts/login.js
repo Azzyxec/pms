@@ -22,6 +22,8 @@ $(document).ready(function(){
           if(response.data.type == "-1"){
             console.log('invalid username or password');
             loginView.alertCredentialsInvalid.removeClass('hidden');
+          }else if(+response.data.isActive == 0){
+            console.log('Account is inactive, please contact the administrator to activate the account');
           }else if(response.data.type == "A"){
             console.log('authenticated as admin');
             window.location.href = controller.adminUrl;
@@ -29,6 +31,7 @@ $(document).ready(function(){
             console.log('authenticated as doctor');
             window.location.href = controller.successRedirectUrl;
           }else if(response.data.type == "S"){
+            window.location.href = controller.successRedirectUrl;
             console.log('staff authenticated');
           }
 

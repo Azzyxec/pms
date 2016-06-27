@@ -18,14 +18,14 @@
 
   <!-- admin css 2 customized -->
   <link href="css/sb-admin.css" rel="stylesheet">
-    
-    <!-- Bundled css 
-    <link rel="stylesheet" type="text/css" href="css/bundle.css">-->
 
-    <!-- other block style sheets -->
-    {% block addCss %}
+  <!-- Bundled css
+  <link rel="stylesheet" type="text/css" href="css/bundle.css">-->
 
-    {% endblock %}
+  <!-- other block style sheets -->
+  {% block addCss %}
+
+  {% endblock %}
 
   <!-- Custom Fonts -->
   <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -52,16 +52,17 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i><span> {{ name }} </span><b class="caret"></b></a>
           <ul class="dropdown-menu">
+            {% if userType == 'D' %}
             <li>
               <a id="user-Profile-Btn-Link" href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
             </li>
-
             <li>
-              <a href="index.php/doctorDashboard/staffListing"><i class="fa fa-fw fa-gear"></i>Manage Staff</a>
+              <a id="dash-staff-manage-link" href="#"><i class="fa fa-fw fa-gear"></i>Manage Staff</a>
             </li>
-               <li>
-              <a href="index.php/doctorDashboard/workLocationManagement"><i class="fa fa-fw fa-gear"></i>Locations</a>
+            <li>
+              <a id="dash-location-manage-link" href="#"><i class="fa fa-fw fa-gear"></i>Locations</a>
             </li>
+            {%endif%}
             <li class="divider"></li>
             <li>
               <a id="doctor-dash-logout-btn" href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
@@ -75,19 +76,9 @@
           <li {% if active == "dashboard" %}class="active"{%endif%}>
             <a href="#" id="dashboard-Section-Btn"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
           </li>
-
-          <li  {% if active == "appointment" %}class="active"{%endif%}>
-
-
-
-            <a href="#" data-toggle="collapse" data-target="#demo" id="appointment-section-link-btn"><i class="fa fa-calendar fa-fw"></i> Appointments</a>
-            <ul id="demo" class="collapse">
-            </ul>
-
+          <li {% if active == "patient" %}class="active"{%endif%}>
+            <a href="#" data-toggle="collapse" data-target="#demo3"  id="patients-Entry-Section-Link-Btn"><i class="fa fa-users fa-fw"></i> Patients</a>
           </li>
-            <li {% if active == "patient" %}class="active"{%endif%}>
-              <a href="#" data-toggle="collapse" data-target="#demo3"  id="patients-Entry-Section-Link-Btn"><i class="fa fa-users fa-fw"></i> Patients</a>
-            </li>
 
 
           <li {% if active == "schedule" %}class="active"{%endif%}>
@@ -97,73 +88,53 @@
 
           <li {% if active == "programme" %}class="active"{%endif%}>
             <a  href="#" data-toggle="collapse" data-target="#demo2" id="btn-programme-section-link" ><i class="fa  fa-bars fa-fw"></i> Programs</a>
-            </li>
+          </li>
 
-            <li {% if active == "accounting" %}class="active"{%endif%}>
-              <a  id="accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Inventory</a>
-            </li>
+          <li {% if active == "accounting" %}class="active"{%endif%}>
+            <a  id="accounting-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-book"></i> Inventory</a>
+          </li>
 
-            <li {% if active == "analytics" %}class="active"{%endif%}>
-              <a  href="#" id="analytics-side-navigation-link-btn"><i class=" fa fa-bar-chart"></i> Analytics</a>
-            </li>
+          {% if userType == 'D' %}
+          <li {% if active == "analytics" %}class="active"{%endif%}>
+            <a  href="#" id="analytics-side-navigation-link-btn"><i class=" fa fa-bar-chart"></i> Analytics</a>
+          </li>
 
+          <li {% if active == "medicine" %}class="active"{%endif%}>
+            <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i> Find Pharmacy</a>
+          </li>
+          {%endif%}
 
-           
-
-            {% if showOtherPages == true %}
-             <li {% if active == "staff" %}class="active"{%endif%}>
-              <a href="#" id="staff-managment-section-link-btn" data-toggle="collapse" data-target="#demo4"  ><i class="fa fa-edit fa-fw"></i>Staff</a>
-            </li>
-            
-            <li {% if active == "others" %}class="active"{%endif%}>
-              <a href="#" id="other-settings-section-link-btn" data-toggle="collapse" data-target="#demo5" ><i class="fa fa-edit fa-fw"></i>Other Settings<span class="fa arrow"></span></a>
-              <ul id="demo5" class="collapse">
+          {% if showOtherPages == true %}
+          <li class="active">
+            <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" >
+              <i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
+              <ul id="demo6" class="collapse">
                 <li>
-                  <a href="#" id="btn-manage-locations">Work Locations</a>
+                  <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
                 </li>
               </ul>
               <!-- /.nav-second-level -->
             </li>
-{%endif%}
-
-            <li {% if active == "medicine" %}class="active"{%endif%}>
-              <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i> Find Pharmacy</a>
-            </li>
-
-            {% if showOtherPages == true %}
-            <li class="active">
-              <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" >
-                <i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
-                <ul id="demo6" class="collapse">
-                  <li>
-                    <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
-                  </li>
-                </ul>
-                <!-- /.nav-second-level -->
-              </li>
-              {%endif%}
+            {%endif%}
 
 
-            </ul>
-          </div>
-          <!-- /.navbar-collapse -->
-        </nav>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </nav>
 
-
-
-
-        <div id="page-wrapper">
-          <div class="container-fluid">
-            {% block content %}
-            {% endblock %}
-          </div>
+      <div id="page-wrapper">
+        <div class="container-fluid">
+          {% block content %}
+          {% endblock %}
         </div>
       </div>
+    </div>
 
-      <script src="js/jquery-2.1.4.min.js"></script>
-      <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
-      {% block addScripts %}{% endblock %}
+    {% block addScripts %}{% endblock %}
 
-    </body>
-    </html>
+  </body>
+  </html>
