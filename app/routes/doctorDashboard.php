@@ -16,7 +16,7 @@ $app->group('/doctorDashboard', function(){
     $user = UserSessionManager::getUser();
     return $this->view->render($response, '/doctor/dash-home.html',
     array('basePath' => AppConfig::$basePath, 'active' => "dashboard", 'name' => $user->name));
-  });
+  })->setName('doctorDashboard');
 
   //schedule
   $this->get('/scheduleManagement', function ($request, $response) {
@@ -43,7 +43,7 @@ $app->group('/doctorDashboard', function(){
     array('basePath' => AppConfig::$basePath, 'active' => "schedule", 'name' => $user->name));
   });
 
-  
+
   //patient
   $this->get('/patientsEntry', function ($request, $response) {
     $user = UserSessionManager::getUser();
@@ -53,9 +53,9 @@ $app->group('/doctorDashboard', function(){
 
   $this->get('/patientHistory', function ($request, $response) {
     $user = UserSessionManager::getUser();
-      
-      
-      
+
+
+
     return $this->view->render($response, '/patient/patient-history.html',
     array('basePath' => AppConfig::$basePath, 'active' => "patient", 'name' => $user->name));
   });
@@ -149,11 +149,4 @@ $app->group('/doctorDashboard', function(){
   });
 
 
-  $this->get('/calendarTemplate', function ($request, $response) {
-    $user = UserSessionManager::getUser();
-    return $this->view->render($response, '/WorkPages/calendarTemplate.html',
-    array('basePath' => AppConfig::$basePath, 'active' => "WorkPages", 'name' => $user->name));
-  });
-
-
-});
+})->add('Pms\Middleware\AuthenticateMiddleware:redirectNonLogin');

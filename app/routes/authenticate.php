@@ -10,7 +10,8 @@ $app->group('/authenticate', function(){
 
   $this->get('/login', function ($request, $response) {
     return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
-  });
+  })->setName('loginPage')  // name for the route in the app
+    ->add('Pms\Middleware\AuthenticateMiddleware:redirectDashboard');  //middllware to redirect to users dashboard
 
   $this->get('/passwordReset', function ($request, $response) {
 
@@ -21,7 +22,7 @@ $app->group('/authenticate', function(){
     //$isValid = $authenticateDB->isPaswordResetCodeValid();
 
     return $this->view->render($response, '/authenticate/password-reset.html', array('basePath' => AppConfig::$basePath));
-  });
+  })->add('Pms\Middleware\AuthenticateMiddleware:redirectDashboard');  //middllware to redirect to users dashboard
 
   $this->post('/passwordReset', function ($request, $response) {
     try {
@@ -180,7 +181,8 @@ $this->post('/logout', function($request, $response){
 
 $this->get('/logout', function($request, $response){
   UserSessionManager::destroySession();
-  return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+  return $response->withRedirect('index.php/authenticate/login');
+  //return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
 });
 
 }); //authenticate group
