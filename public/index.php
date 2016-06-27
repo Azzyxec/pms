@@ -9,6 +9,8 @@ require_once '../AppConfig.php';
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
+use Pms\Middleware\AuthenticateMiddleware;
+
 //importing entites
 //use Pms\Entities\UserSessionManager;
 //use Pms\Entities\Patient;
@@ -64,9 +66,18 @@ $container['view'] = function ($container) {
     return $view;
 };
 
+
+$container['Pms\Middleware\AuthenticateMiddleware'] = function ($container) {
+    return new AuthenticateMiddleware($container);
+};
+
 //Default route
 $app->get('/', function ($request, $response) {
-    return $this->view->render($response, 'login.html', array('basePath' => AppConfig::$basePath));
+
+   //redirect to login page
+   //$uri =  $this->getContainer()->get('router')->pathFor('loginPage');
+   //return $response->write();
+   return $response->withRedirect('index.php/authenticate/login');
 });
 
 //requiring the routes, the routes are in group in the files below

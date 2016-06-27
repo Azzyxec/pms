@@ -10,7 +10,7 @@ $app->group('/doctor', function(){
   //used for doctor registration
   $this->get('/doctorInfo', function ($request, $response) {
     return $this->view->render($response, '/doctor/doctor-registration.html', array('basePath' => AppConfig::$basePath));
-  });
+  })->add('Pms\Middleware\AuthenticateMiddleware:redirectNonLogin');
 
   // BOC Doctor management
   $this->get('/getDoctorDetails', function ($request, $response) {

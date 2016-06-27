@@ -54,6 +54,7 @@ return array(
     'Pms\\Entities\\User' => $baseDir . '/app/entities/User.php',
     'Pms\\Entities\\UserSessionManager' => $baseDir . '/app/entities/UserSessionManager.php',
     'Pms\\Entities\\bookAppointmentObject' => $baseDir . '/app/entities/bookAppointment.php',
+    'Pms\\Middleware\\AuthenticateMiddleware' => $baseDir . '/app/middleware/AuthenticateMiddleware.php',
     'Pms\\Utilities\\XMLHelper' => $baseDir . '/app/utilities/Utilities.php',
     'Psr\\Http\\Message\\MessageInterface' => $vendorDir . '/psr/http-message/src/MessageInterface.php',
     'Psr\\Http\\Message\\RequestInterface' => $vendorDir . '/psr/http-message/src/RequestInterface.php',
