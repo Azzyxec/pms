@@ -19,6 +19,7 @@
   <!-- admin css 2 customized -->
   <link href="css/sb-admin.css" rel="stylesheet">
 
+
   <!-- Bundled css
   <link rel="stylesheet" type="text/css" href="css/bundle.css">-->
 
@@ -31,7 +32,7 @@
   <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
+<body><div class="overlay hidden"><h1 class="text-center">Loading.....</h1></div>
   <div id="wrapper">
 
 
@@ -98,25 +99,11 @@
           <li {% if active == "analytics" %}class="active"{%endif%}>
             <a  href="#" id="analytics-side-navigation-link-btn"><i class=" fa fa-bar-chart"></i> Analytics</a>
           </li>
+          {%endif%}
 
           <li {% if active == "medicine" %}class="active"{%endif%}>
             <a  id="medicine-side-navigation-link-btn"><i class=" fa-fw glyphicon glyphicon-search"></i> Find Pharmacy</a>
           </li>
-          {%endif%}
-
-          {% if showOtherPages == true %}
-          <li class="active">
-            <a href="#" id="calendar-template-section-link-btn" data-toggle="collapse" data-target="#demo6" >
-              <i class="fa fa-edit fa-fw"></i>Other Pages<span class="fa arrow"></span></a>
-              <ul id="demo6" class="collapse">
-                <li>
-                  <a href="#" id="calendar-Template-Btn-Link">Calendar Template</a>
-                </li>
-              </ul>
-              <!-- /.nav-second-level -->
-            </li>
-            {%endif%}
-
 
           </ul>
         </div>

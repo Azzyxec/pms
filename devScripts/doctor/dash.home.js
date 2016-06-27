@@ -173,7 +173,7 @@ $(document).ready(function(){
 
   controller.prototype.removeOverLay = function () {
 
-
+ //$(".overlay").removeClass('hidden');
     console.log('patients loaded ' + this.patientsLoaded +
                 'locations loaded ' + this.locationsLoaded +
                 'appointments loaded ' + this.appointmentsLoaded
@@ -183,6 +183,7 @@ $(document).ready(function(){
         this.locationsLoaded  == true &&
         this.appointmentsLoaded == true){
          console.log(' removing overlay ');
+        //   $(".overlay").addClass('hidden');
     }
 
   };
