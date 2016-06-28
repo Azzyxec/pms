@@ -378,22 +378,6 @@ $("#revalidate").on('click',function(){
             }
           }
 
-
-          , newApptbloodgroup :{
-
-            validators : {
-              notEmpty :{
-                message : 'Please enter patients blood group'
-              },
-                 regexp: {
-
-                        regexp: /(A|B|AB|O)[+-]/,
-                        message: 'Please enter a proper blood group'
-                    }
-
-            }
-          }
-
           , newApptContact :{
 
             validators : {
