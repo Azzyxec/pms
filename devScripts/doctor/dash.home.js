@@ -621,12 +621,21 @@ cont.init();
 
 
 $(function () {
-  $('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
-
+//  $('body').$('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
+  $('body').tooltip({
+      placement:'top',
+      selector: '[data-tooltip="tooltip"]'
+  });
 
 });
 $(function () {
-  $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
+  $('body').popover({
+    trigger:'focus',
+    placement:'left',
+    selector: '[data-toggle="popover"]'
+  });
+
+  //$('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
 
 });
 
