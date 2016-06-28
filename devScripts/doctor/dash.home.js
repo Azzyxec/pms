@@ -7,6 +7,7 @@ $(document).ready(function(){
       appointmentList:[],
       appointmentDate: moment().format('DD-MM-YYYY'),
       DefaultlocationId: 0,
+      userInfo:{},
       appointmenListViewModel:{
         patientList:[],
         locationList:[]
@@ -18,6 +19,7 @@ $(document).ready(function(){
       this.getLocationUrl =  links.getLocationUrl;
       this.getAppointmentForTheDayUrl = links.getAppointmentForTheDayUrl;
       this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
+      this.getUserInfoUrl = links.loginCheckUrl;
       this.patientsLoaded = false;
       this.locationsLoaded = false;
       this.appointmentsLoaded = false;
@@ -29,6 +31,11 @@ $(document).ready(function(){
 
     controller.prototype.getAppointmentList = function () {
       return model.appointmentList;
+    };
+
+
+    controller.prototype.getUserInfoModel = function () {
+      return model.userInfo;
     };
 
     controller.prototype.GetAppointmentForLocation = function (locId) {
@@ -165,9 +172,10 @@ $(document).ready(function(){
 
   controller.prototype.init = function () {
     todayAppointmentListView.init();
+    this.getUserInfo();
     this.getLocations();
     this.getPatients();
-    this.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
+    //this.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
 
   };
 
@@ -187,6 +195,21 @@ $(document).ready(function(){
     }
 
   };
+
+controller.prototype.getUserInfo = function () {
+  $.post( this.getUserInfoUrl , {})
+  .done(function( response ) {
+    console.log("user info: " + JSON.stringify(response));
+    model.userInfo = response.data;
+
+    //get the appointment list for the user, i.e. doctor or staff for a location
+    model.DefaultlocationId = model.userInfo.locationId == -1?0:model.userInfo.locationId;
+    todayAppointmentListView.customizeViewForUser();
+    cont.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
+
+  });
+
+};
 
   controller.prototype.getPatients = function () {
 
@@ -232,6 +255,7 @@ $(document).ready(function(){
     init:function(){
       this.dateInput = $('#appointment-list-date1');
       this.locationSelect = $('#appointment-list-locations-sel');
+      this.locationSelect.hide();
 
       //Selected location change event wiring
       this.locationSelect.on('change', function(){
@@ -389,6 +413,31 @@ render: function(){
   }
 
   this.locationSelect.val(cont.getSelectedLocId());
+
+},
+customizeViewForUser: function(){
+  var userInfo = cont.getUserInfoModel();
+
+
+ if(userInfo && userInfo.type == 'D'){
+   //show the location selector drop down
+    this.locationSelect.show();
+
+  }else if(userInfo && userInfo.type == 'S'){
+    //keep the location dropdown hidden
+
+  /*
+   var location =  _.find(model.appointmentList, function(item){
+
+     if( +item.locId == userInfo.locationId ){
+       return true;
+     }
+   };
+   */
+
+
+  }
+
 
 },
 renderAppointmentist: function(appointmentList){

@@ -159,7 +159,7 @@ $(document).ready(function(){
        CreateUpdateView.email.val(model.staff.email);
        CreateUpdateView.address.val(model.staff.address);
        CreateUpdateView.userName.val(model.staff.userName);
-       CreateUpdateView.pasword.val(model.staff.pasword);
+       CreateUpdateView.pasword.val('');
        CreateUpdateView.recoveryContact.val(model.staff.recoveryContact);
        CreateUpdateView.recoveryEmail.val(model.staff.recoveryEmail);
 

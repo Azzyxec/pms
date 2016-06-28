@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 27, 2016 at 05:23 PM
+-- Generation Time: Jun 28, 2016 at 12:05 PM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.4
 
@@ -1535,8 +1535,10 @@ declare lname varchar(100);
 declare lhashPassword varchar(255);
 declare luserId int;
 declare ldoctorId int;
+declare llocationId int;
 
 set @ldoctorId = -1;
+set @locationId = -1;
 
 select id
 	   ,`type`
@@ -1554,6 +1556,7 @@ if @lUserType is null then
     	   ,'-1' as `type`
            ,'-1' as name
 		   , "" as `password`
+		   ,@locationId as location_id
 		   ,@ldoctorId as doctor_id;
               
               
@@ -1563,6 +1566,7 @@ elseif @lUserType = 'A' then
     	   ,@lUserType as `type`
            ,'admin' as name
 		   ,@lhashPassword as `password`
+		   ,@locationId as location_id
 		   ,@ldoctorId as doctor_id;
            
 elseif @lUserType = 'D' then
@@ -1578,6 +1582,7 @@ elseif @lUserType = 'D' then
     	   ,@lUserType as `type`
            ,@lname as name
 		   ,@lhashPassword as `password`
+		   ,@locationId as location_id
 		   ,@luserId as doctor_id;
 		   
 elseif @lUserType = 'S' then
@@ -1585,9 +1590,11 @@ elseif @lUserType = 'S' then
 	select first_name
     	   ,id
 		   ,fk_doctor_id
+		   ,fk_location_id
     into @lname
     	 ,@luserId
-		 ,ldoctorId
+		 ,@ldoctorId
+		 ,@locationId
     from staff
     where fk_user_id = @lLoginId;
 
@@ -1595,6 +1602,7 @@ elseif @lUserType = 'S' then
     	   ,@lUserType as `type`
            ,@lname as name
 		   ,@lhashPassword as `password`
+		   ,@locationId as location_id
 		   ,@ldoctorId as doctor_id;
 
 end if;
@@ -2640,7 +2648,7 @@ ALTER TABLE `delivery_methods`
 -- AUTO_INCREMENT for table `doctor`
 --
 ALTER TABLE `doctor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `login`
 --
@@ -2650,17 +2658,17 @@ ALTER TABLE `login`
 -- AUTO_INCREMENT for table `medication_programme`
 --
 ALTER TABLE `medication_programme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `medication_programme_list`
 --
 ALTER TABLE `medication_programme_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `password_reset_request`
 --
 ALTER TABLE `password_reset_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `patient`
 --
@@ -2670,12 +2678,12 @@ ALTER TABLE `patient`
 -- AUTO_INCREMENT for table `patient_medication_programme`
 --
 ALTER TABLE `patient_medication_programme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `patient_medication_programme_list`
 --
 ALTER TABLE `patient_medication_programme_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `schedule`
 --

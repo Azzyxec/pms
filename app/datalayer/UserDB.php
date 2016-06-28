@@ -27,6 +27,7 @@ class UserDB{
         $user->name = $result['name'];
         $user->password = $result['password'];
         $user->doctorId = $result['doctor_id'];
+        $user->locationId = $result['location_id'];
       }
 
       return $user;

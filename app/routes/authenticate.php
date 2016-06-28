@@ -138,6 +138,7 @@ $this->post('/isLoggedIn', function ($request, $response) {
   $user = UserSessionManager::getUser();
   $data = array('data' => $user);
   return $response->withJson($data);
+  
 });
 
 $this->post('/authenitcateUser', function ($request, $response) {
