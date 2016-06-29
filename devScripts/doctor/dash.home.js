@@ -11,7 +11,7 @@ $(document).ready(function(){
         patientList:[],
         locationList:[]
       }
-    }
+    } 
 
     function controller(){
       //initlize any url
