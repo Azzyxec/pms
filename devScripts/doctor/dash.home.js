@@ -9,9 +9,9 @@ $(document).ready(function(){
       DefaultlocationId: 0,
       appointmenListViewModel:{
         patientList:[],
-        locationList:[]
+        locationList:[] 
       }
-    } 
+    }
 
     function controller(){
       //initlize any url
