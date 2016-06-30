@@ -191,6 +191,7 @@ $(document).ready(function(){
         this.locationsLoaded  == true &&
         this.appointmentsLoaded == true){
          console.log(' removing overlay ');
+         todayAppointmentListView.overlay.addClass('hidden');
         //   $(".overlay").addClass('hidden');
     }
 
@@ -215,7 +216,7 @@ controller.prototype.getUserInfo = function () {
 
     $.get( this.getPatientsForAutoFillUrl , {})
     .done(function( response ) {
-      console.log("patients: " + JSON.stringify(response));
+      //console.log("patients: " + JSON.stringify(response));
       if(response.status == 1){
         model.appointmenListViewModel.patientList = response.data;
         cont.patientsLoaded = true;
@@ -237,7 +238,7 @@ controller.prototype.getUserInfo = function () {
   };
 
   controller.prototype.getappointmentListForDate = function (pdate, locId) {
-
+    console.log('called with' +  pdate + ' ' + locId);
     $.get( this.getAppointmentForTheDayUrl , {date:   pdate, locId: locId})
     .done(function( response ) {
       console.log("today Appointment: " + JSON.stringify(response));
@@ -253,6 +254,8 @@ controller.prototype.getUserInfo = function () {
 
   var todayAppointmentListView = {
     init:function(){
+      this.overlay = $('#dash-overlay');
+
       this.dateInput = $('#appointment-list-date1');
       this.locationSelect = $('#appointment-list-locations-sel');
       this.locationSelect.hide();
@@ -562,8 +565,12 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
 
         closeAppointmentController.setCloseAppointmentCallback(function(response){
           console.log('call back in dash home, response' + JSON.stringify(response) );
+          //refresh appointment
+          console.log('selected date ' + cont.getSelectedeDate() + ' loc Id ' + cont.getSelectedLocId());
+          cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
 
           todayAppointmentListView.closeAppointmentModal.modal('hide');
+
         });
         closeAppointmentController.init(initObj);
 

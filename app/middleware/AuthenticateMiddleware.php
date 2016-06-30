@@ -36,7 +36,7 @@ class AuthenticateMiddleware {
     if($user->id == -1){
       //if user is not logged in proceed as usual
       return $next($request, $response);
-    }else if($user->type == 'S' &&
+    }else if($user->type == 'S' ||
              $user->type == 'D'){
       $uri = $this->container->get('router')->pathFor('dashboardHome');
       return $response->withRedirect($uri);
@@ -44,6 +44,8 @@ class AuthenticateMiddleware {
       $uri = $this->container->get('router')->pathFor('adminDashboard');
       return $response->withRedirect($uri);
     }
+      return $next($request, $response);
+
 
 
   }

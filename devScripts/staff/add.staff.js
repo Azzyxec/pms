@@ -63,6 +63,23 @@ $(document).ready(function(){
            CreateUpdateView.render();
          });
       },
+      resetModel: function() {
+        model.staff = {
+             id:0,
+             firstName:"",
+             lastName:"",
+             contact1:"",
+             contact2:"",
+             email:"",
+             address:"",
+             userName:"",
+             pasword:"",
+             recoveryContact:"",
+             recoveryEmail:"",
+             locationId:0,
+             isActive:0
+          }
+      },
       getUpdateModelFromView: function(){
 
         model.staff.firstName = CreateUpdateView.firstName.val();
@@ -109,6 +126,9 @@ $(document).ready(function(){
         this.selectLocations = $('#sel-locations');
 
         this.saveButton = $('#btn-save');
+        this.cancelButton = $('#btn-staff-cancel');
+
+
 
         this.saveButton.click(function() {
 
@@ -119,14 +139,26 @@ $(document).ready(function(){
           $.post(controller.createModifyStaffUrl , staff)
            .done(function( response ) {
              console.log('response ' + JSON.stringify(response));
+
+             controller.resetModel();
+             CreateUpdateView.render();
              //model.locations = response.data;
              //CreateUpdateView.render();
            });
 
         });
 
+        this.cancelButton .on('click', function(e){
+          e.preventDefault();
+          controller.resetModel();
+          CreateUpdateView.render();
+        });
+
       },
       render: function(){
+
+
+        this.selectLocations.empty();
 
         //adding the select option to the list
         var option = $('<option/>',{

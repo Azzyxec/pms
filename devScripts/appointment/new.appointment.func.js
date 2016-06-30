@@ -240,6 +240,9 @@ $("#revalidate").on('click',function(){
       }else if(response.status == 3){
         appointmentView.alertTimingClash.removeClass('hidden');
         console.log('timimng clash with existign appointment');
+      }else if(response.status == 4){
+        appointmentView.backdatedBooking.removeClass('hidden');
+        console.log('cannot book a backdated appointment');
       }
 
       controller.completeCallback(response);
@@ -282,6 +285,8 @@ $("#revalidate").on('click',function(){
       this.alertNoScheduleOrTimingOustideWorkTiming = $('#book-appointment-no-schedule');
       this.alertTimingClash = $('#book-appointment-timings-clash');
       this.alertSuccess  = $('#book-appointment-before-submit-success');
+      this.backdatedBooking  = $('#book-appointment-backdated');
+
 
       this.saveButton = $('#book-appointment-button');
 
@@ -453,6 +458,7 @@ $("#revalidate").on('click',function(){
       this.alertNoScheduleOrTimingOustideWorkTiming.addClass('hidden');
       this.alertTimingClash.addClass('hidden');
       this.alertSuccess.addClass('hidden');
+      this.backdatedBooking.addClass('hidden');
 
       var locList = controller.getLocationList();
 

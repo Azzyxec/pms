@@ -30,7 +30,7 @@ $app->group('/locations', function(){
 
       $user = UserSessionManager::getUser();
       $doctorDB = new DoctorDB();
-      $data = $doctorDB->getAllLocations($user->id);
+      $data = $doctorDB->getAllLocations($user->doctorId);
 
       $data = array('status' => "1", 'data' => $data['data'], 'message' => 'success' );
       return $response->withJson($data);

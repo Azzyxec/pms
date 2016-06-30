@@ -22,6 +22,7 @@ $app->group('/doctorDashboard', function(){
     $user = UserSessionManager::getUser();
     $viewData = array('basePath' => AppConfig::$basePath,
                       'active' => "dashboard",
+                      'addOverlay' => true,
                       'name' => $user->name,
                       'userType' => $user->type);
 

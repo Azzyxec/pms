@@ -32,7 +32,10 @@
   <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body><div class="overlay hidden"><h1 class="text-center">Loading.....</h1></div>
+<body>
+  {%if addOverlay == true %}
+  <div id="dash-overlay" class="overlay"><h1 class="text-center">Loading.....</h1></div>
+  {%endif%}
   <div id="wrapper">
 
 

@@ -93,6 +93,15 @@ $app->group('/appointment', function(){
 
       $allApointments = $appointmentDB->getAppointmentsForTheDay($user->doctorId, $locationId, $date);
 
+
+      //if date is previous date then dont calculate the free time, so that booking appointment slot is not shown
+
+      $todaysDate = date_create(); // date("Y-m-d H:i:s");
+      $appointmentDate = DateTime::createFromFormat('d-m-Y', $date);
+
+      $allowBooking =  $appointmentDate >= $todaysDate;//   $todaysDate->diff($appointmentDate);
+
+
       $timingList = $appointmentDB->getScheduleTimingsForTheDay($user->doctorId, $locationId, $date);
 
       $todaysSchedule = array();
@@ -112,8 +121,10 @@ $app->group('/appointment', function(){
             //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
 
             if($differenceMins >= $minTimeMins){
-              $freeTimeSlot = array('type' => 'f', 'state' => 0, 'locId' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
-              $todaysSchedule[] = $freeTimeSlot;
+              if($allowBooking){
+                $freeTimeSlot = array('type' => 'f', 'state' => 0, 'locId' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+                $todaysSchedule[] = $freeTimeSlot;
+              }
             }
 
             $appointment['type'] = 'a';
@@ -133,13 +144,15 @@ $app->group('/appointment', function(){
         $endMins = $schedule['endMins'];
         $differenceMins = $endMins - $startMins;
         if($differenceMins >= $minTimeMins){
-          $todaysSchedule[] = array('type' => 'f', 'state' => 0, 'locId' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+          if($allowBooking){
+            $todaysSchedule[] = array('type' => 'f', 'state' => 0, 'locId' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+          }
         }
 
 
       }//outer foreach
 
-      $data = array('status' => 1, 'data' => $todaysSchedule, 'message' => $message);
+      $data = array('status' => 1, 'data' => $todaysSchedule, 'message' => $message, 'allowBooking' => $allowBooking);
       return $response->withJson($data);
 
     } catch (Exception $e) {
@@ -239,6 +252,10 @@ $app->group('/appointment', function(){
       }else if($status == 3){
         // the timing over lap with an existing appointment
         $message = "Timings clash with an existing appointment";
+      }
+      else if($status == 4){
+        // the timing over lap with an existing appointment
+        $message = "cannot book appointment for a previous date";
       }
 
       $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
