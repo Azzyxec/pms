@@ -159,7 +159,7 @@ $(document).ready(function(){
           invalid: 'glyphicon glyphicon-remove ',
           validating: 'glyphicon glyphicon-refresh'
         },
-
+          excluded: [':disabled'],
         fields:{
           dname : {
             validators : {
@@ -180,7 +180,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please Select the duration'
+                message : 'Please enter your alternte contact no'
               }
             }
           }
@@ -205,7 +205,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please select patients gender'
+                message : 'Please enter address'
               }
             }
           }
@@ -221,7 +221,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please select patients Weight'
+                message : 'Please enter your password'
               }
             }
           }
@@ -230,7 +230,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please enter Patients contact no'
+                message : 'please select an option'
               }
 
             }
