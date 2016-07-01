@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2016 at 06:20 AM
+-- Generation Time: Jul 01, 2016 at 08:03 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.4
 
@@ -80,8 +80,6 @@ begin
 							, `email`
 							, `qualification`
 							, `address`
-							, `recovery_contact`
-							, `recovery_email`
 							,is_active
 							) 
 					VALUES (@llogin_id
@@ -91,8 +89,6 @@ begin
 							,pemail
 							,pqualification
 							,paddress
-							,precovery_contact
-							,precovery_email
 							,pis_active
 							);
 							
@@ -124,8 +120,6 @@ begin
 						,`email`= pemail
 						,`qualification`= pqualification
 						,`address`= paddress
-						,`recovery_contact`= precovery_contact
-						,`recovery_email`= precovery_email
 						,is_active = pis_active
 			WHERE id = pid;
 
@@ -1016,8 +1010,6 @@ begin
 								`contact2`,
 								`email`,
 								`address`,
-								`recovery_contact`,
-								`recovery_email`,
 								`fk_location_id`,
 								`fk_doctor_id`,
 								 fk_user_id,
@@ -1031,8 +1023,6 @@ begin
 							   pcontact2,
 							   pemail,
 							   paddress,
-							   precovery_contact,
-							   precovery_email,
 							   pfk_location_id,
 							   pfk_doctor_id,
 							   @llogin_id,
@@ -1068,8 +1058,6 @@ begin
 								,`contact2`= pcontact2
 								,`email`= pemail
 								,`address`= paddress
-								,`recovery_contact`= precovery_contact
-								,`recovery_email`= precovery_email
 								,`fk_location_id`= pfk_location_id
 								,`fk_doctor_id`= pfk_doctor_id
 								,fk_modified_by_id = pfk_logged_in_user_id
@@ -2162,8 +2150,6 @@ CREATE TABLE `doctor` (
   `email` varchar(100) NOT NULL,
   `qualification` varchar(1000) NOT NULL,
   `address` varchar(2000) NOT NULL,
-  `recovery_contact` varchar(100) NOT NULL,
-  `recovery_email` varchar(100) NOT NULL,
   `is_active` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -2171,9 +2157,12 @@ CREATE TABLE `doctor` (
 -- Dumping data for table `doctor`
 --
 
-INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `email`, `qualification`, `address`, `recovery_contact`, `recovery_email`, `is_active`) VALUES
-(1, 33, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', '', '', 1),
-(25, 58, 'savio', '94234234', 'dfasdfa', 'savio@dreamlogic.in', 'asdfasdf', 'asdf', '5245245', 'savio@dreamlogic.in', 1);
+INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `email`, `qualification`, `address`, `is_active`) VALUES
+(1, 33, 'Abharamasdf', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 1),
+(25, 58, 'savio', '94234234', 'dfasdfa', 'savio@dreamlogic.in', 'asdfasdf', 'asdf', 1),
+(26, 68, 'Greg', '3413', 'dsfasdf', 'azzyxec@gmail.com', 'woldfads', 'dasfasdf', 0),
+(27, 69, 'Greg', 'sdfasdf', 'sdfasdf', 'azzyxec@gmail.com', 'sdfasdf', 'sdfasdf', 0),
+(28, 70, 'Greg', '32423', '23423', 'a', 'asdfasdf', 'asdfasdf', 0);
 
 -- --------------------------------------------------------
 
@@ -2215,10 +2204,19 @@ CREATE TABLE `login` (
 
 INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`, `is_active`) VALUES
 (1, 'A', 'admin', '$2y$12$4exp7y9xOEJ4mJoryW/H0eEPA6VE5o.y3lVtnPYIh/lPfOW8rN9b2', '1899-11-30 00:00:00', '0000-00-00 00:00:00', 1),
-(33, 'D', 'doc', '$2y$12$Jv1jvQ6/LSNz6cc37O7ZqO/EVJmpySs4VRJsEQCfx0UvUTGHcGwJO', '2016-05-01 18:26:09', '2016-07-01 02:13:19', 1),
+(33, 'D', 'doc', '$2y$12$cXnJ8dLJiRSZFhn3IRIozePhFbZAtvngFoAHlhSPUOndMWUDUtob.', '2016-05-01 18:26:09', '2016-07-01 10:44:44', 1),
 (58, 'D', 'savio', '$2y$12$/W.gLAwQ/i5/FnVeHnJBDOe.N.2MBLW/wZL7Ma30I33dT.C5J86y.', '2016-06-15 21:07:02', NULL, 1),
 (60, 'S', 'staff', '$2y$12$.tRDVYkRw9SuzxctqalzeuBdfjCjP9o4TQuWiOJYd6UCDYuNCkSbu', '2016-06-27 20:18:24', '2016-06-29 12:38:16', 1),
-(61, 'D', 'aria', '$2y$12$Hiouw4.4LUcQ/WKnG.ZbDODrGBVvd/0IjKa./EccDTfBHVPp3hmEm', '2016-07-01 02:14:11', NULL, 0);
+(61, 'D', 'aria', '$2y$12$Hiouw4.4LUcQ/WKnG.ZbDODrGBVvd/0IjKa./EccDTfBHVPp3hmEm', '2016-07-01 02:14:11', NULL, 0),
+(62, 'D', 'tony', '$2y$12$jHKiL.Riw6KaKVzk3M2CYOLi6C9zItBYSdTGQpt5NXWyaK3kavb4a', '2016-07-01 10:15:40', NULL, 0),
+(63, 'D', 'greg', '$2y$12$lyMZG4NfGYfmewY6ou3UEuC4vpVlUK/0nQPGC4hkkqim0lJwRrkC.', '2016-07-01 10:45:27', NULL, 0),
+(64, 'D', 'greg1', '$2y$12$BW89BPjY2pITg86UYqeGVeu0Riq3nAQkilhJVa6MW9Pq21B8ZJu6a', '2016-07-01 10:48:53', NULL, 0),
+(65, 'D', 'greg2', '$2y$12$1TvTrlVmiLbrbPzKjVyGO.XeDPnHaQqNBwOz4u9g8Lim57RHAXXHu', '2016-07-01 10:51:07', NULL, 0),
+(66, 'D', 'greg3', '$2y$12$EK9sa.UTLTaijQbHGQ5yLOUrwHpm2H3qwNsFQM5DgUdTkaxccV.xe', '2016-07-01 10:52:24', NULL, 0),
+(67, 'D', 'greg4', '$2y$12$0vIhNynSvrj5Cz1gdaKjRO/qEmpnOjWj6NldO558NEuVJNHUmDTuS', '2016-07-01 10:53:23', NULL, 0),
+(68, 'D', 'wol', '$2y$12$W6.o2Dzm5sM.UvMh/qX5CedSl//4s3HE03lzAlAMZ/B/29lz.lxfy', '2016-07-01 11:23:40', NULL, 0),
+(69, 'D', 'wol2', '$2y$12$C.qGqkSGRrceUK3H7PB8E.qkFQtTKHreqoCh1N30IU5dCXYPTpxYO', '2016-07-01 11:27:31', NULL, 0),
+(70, 'D', 'wol3', '$2y$12$6Aoe1yHnHGCKh9cPWic.6u68URctumt6PvD74QtGdsiT7/q4FkCXy', '2016-07-01 11:28:46', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -2480,8 +2478,6 @@ CREATE TABLE `staff` (
   `contact2` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `address` varchar(2000) NOT NULL,
-  `recovery_contact` varchar(50) NOT NULL,
-  `recovery_email` varchar(100) NOT NULL,
   `fk_location_id` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_user_id` int(11) NOT NULL,
@@ -2498,8 +2494,8 @@ CREATE TABLE `staff` (
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `email`, `address`, `recovery_contact`, `recovery_email`, `fk_location_id`, `fk_doctor_id`, `fk_user_id`, `fk_created_by_id`, `created_by_type`, `created_date`, `fk_modified_by_id`, `modified_by_type`, `modified_date`, `is_active`) VALUES
-(2, 'staff', 'staff', '423412', '3234', 'staff@gmail.com', '34124', '34123423', 'staff@gmail.com', 18, 1, 60, 1, 'D', '2016-06-27 20:18:24', 1, 0, '2016-06-29 12:38:16', 1);
+INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `email`, `address`, `fk_location_id`, `fk_doctor_id`, `fk_user_id`, `fk_created_by_id`, `created_by_type`, `created_date`, `fk_modified_by_id`, `modified_by_type`, `modified_date`, `is_active`) VALUES
+(2, 'staff', 'staff', '423412', '3234', 'staff@gmail.com', '34124', 18, 1, 60, 1, 'D', '2016-06-27 20:18:24', 1, 0, '2016-06-29 12:38:16', 1);
 
 -- --------------------------------------------------------
 
@@ -2641,12 +2637,12 @@ ALTER TABLE `delivery_methods`
 -- AUTO_INCREMENT for table `doctor`
 --
 ALTER TABLE `doctor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `login`
 --
 ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 --
 -- AUTO_INCREMENT for table `medication_programme`
 --
