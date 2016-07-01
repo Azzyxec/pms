@@ -40,6 +40,7 @@ $(document).ready(function(){
                console.log('save response ' + JSON.stringify(response));
                model.list = response.data;
                locationListView.render();
+               LocationView.overLay.addClass('hidden');
              });
           },
           updateModel: function(id, name){
@@ -53,6 +54,7 @@ $(document).ready(function(){
         var LocationView = {
           init: function(){
             this.locationName = $('#txt-location-name');
+            this.overLay = $('#dash-overlay');
 
             $('#btn-add-location').click(function(){
               console.log('save click');

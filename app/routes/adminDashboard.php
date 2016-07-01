@@ -1,15 +1,19 @@
 <?php
+use Pms\Datalayer\DoctorDB;
+
 //Admin group
 $app->group('/adminDashboard', function(){
 
   $this->get('/admin', function ($request, $response) {
-      return $this->view->render($response, '/admin/dash-home.html',
-                                                                array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
+    return $this->view->render($response, '/admin/doctor-listing.html',
+                        array('basePath' => AppConfig::$basePath,
+                              'active' => "doctors",
+                              'addOverlay' => true));
   })->setName('adminDashboard');
 
   $this->get('/doctorListing', function ($request, $response) {
       return $this->view->render($response, '/admin/doctor-listing.html',
-                                                                array('basePath' => AppConfig::$basePath, 'active' => "doctors"));
+                          array('basePath' => AppConfig::$basePath, 'active' => "doctors", 'addOverlay' => true));
   });
 
 
@@ -37,6 +41,7 @@ $app->group('/adminDashboard', function(){
                                                                       , 'active' => "doctors"
                                                                       , 'showActiveContol' => "true"
                                                                       , 'title' => "Update Doctor"
+                                                                      , 'addOverlay' => true
                                                                      ));
   });
 

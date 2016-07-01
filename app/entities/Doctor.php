@@ -30,8 +30,8 @@ class Doctor{
     $doctor->email = $dataAray['email'];
     $doctor->qualifications = $dataAray['qualifications'];
     $doctor->address = $dataAray['address'];
-    $doctor->recoveryContact = $dataAray['recoveryContact'];
-    $doctor->recoveryEmail = $dataAray['recoveryEmail'];
+    //$doctor->recoveryContact = $dataAray['recoveryContact'];
+    //$doctor->recoveryEmail = $dataAray['recoveryEmail'];
     $doctor->userName = $dataAray['userName'];
     $doctor->password = $dataAray['password'];
     $doctor->isActive = $dataAray['isActive'];

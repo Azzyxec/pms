@@ -1,5 +1,7 @@
 var links = {
 
+
+
   //login js urls
    authenticateUrl : "index.php/authenticate/authenitcateUser",
    successRedirectUrl : "index.php/doctorDashboard/",
@@ -14,6 +16,8 @@ var links = {
 
    //admin related
    doctorListingUrl: "index.php/adminDashboard/doctorListing",
+   getAllDoctorsUrl: "index.php/adminDashboard/getAllDoctors",
+   adminDoctorEditRedirect:"index.php/adminDashboard/adminDoctorEdit",
 
    logoutUrl : "index.php/authenticate/logout",
 

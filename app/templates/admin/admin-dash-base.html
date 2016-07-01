@@ -20,6 +20,9 @@
 
 </head>
 <body>
+  {%if addOverlay == true %}
+  <div id="dash-overlay" class="overlay"><h1 class="text-center">Loading.....</h1></div>
+  {%endif%}
   <!-- Navigation -->
   <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
@@ -39,11 +42,9 @@
 
       <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+          <span> Admin </span><i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
         </a>
         <ul class="dropdown-menu dropdown-user">
-          <li><a  id="user-Profile-Btn-Link"><i class="fa fa-user fa-fw"></i>Profile</a>
-            <li class="divider"></li>
             <li><a  id="admin-dash-logout-btn"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
             </li>
           </ul>
@@ -79,10 +80,9 @@
         <div id="wrapper">{% block content %}{% endblock %}</div>
       </div>
 
-      <script src="js/jquery-2.1.4.min.min.js"></script>
+      <script src="js/jquery-2.1.4.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
-      <script src="js/metisMenu.min.js"></script>
-      <script src="js/sb-admin-2.js"></script>
+
       {% block addScripts %}{% endblock %}
 
     </body>

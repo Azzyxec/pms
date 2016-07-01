@@ -7,17 +7,22 @@ $(document).ready(function(){
 
         var controller = {
           init: function(){
-            this.doctorListingUrl = "index.php/admin/getAllDoctors";
-            this.adminDoctorEditRedirect = "index.php/admin/adminDoctorEdit";
+            this.doctorListingUrl = links.getAllDoctorsUrl;
+            this.adminDoctorEditRedirect = links.adminDoctorEditRedirect;
 
             listView.init();
 
+            console.log('doc listing' + this.doctorListingUrl);
+
             //getting the programme list for the doctor
-            $.get(controller.doctorListingUrl ,  {})
+            $.get(this.doctorListingUrl ,  {})
             .done(function( response ) {
               console.log("patients list: " + JSON.stringify(response));
-              listModel = response.data;
-              listView.render();
+              if(response.status == 1){
+                listModel = response.data;
+                listView.render();
+                listView.overLay.addClass('hidden');
+              }
             });
 
           },
@@ -30,6 +35,7 @@ $(document).ready(function(){
                 var listView = {
                   init: function(){
                     this.tablebody = $('#doctor-list-table-body');
+                    this.overLay = $('#dash-overlay');
 
 
                   },
