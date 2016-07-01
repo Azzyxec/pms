@@ -105,8 +105,6 @@ class DoctorDB
       $doctor->email = $row['email'];
       $doctor->qualifications = $row['qualification'];
       $doctor->address = $row['address'];
-      $doctor->recoveryContact = $row['recovery_contact'];
-      $doctor->recoveryEmail = $row['recovery_email'];
       $doctor->userName = $row['login_id'];
       $doctor->password = $row['password'];
       $doctor->isActive = $row['is_active'];

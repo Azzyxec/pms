@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2016 at 08:03 AM
+-- Generation Time: Jul 01, 2016 at 09:11 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.4
 
@@ -1174,8 +1174,6 @@ SELECT
    d.email ,
    d.qualification ,
    d.address ,
-   d.recovery_contact,
-   d.recovery_email,
    d.is_active ,
    l.login_id,
    l.password
@@ -2204,7 +2202,7 @@ CREATE TABLE `login` (
 
 INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`, `is_active`) VALUES
 (1, 'A', 'admin', '$2y$12$4exp7y9xOEJ4mJoryW/H0eEPA6VE5o.y3lVtnPYIh/lPfOW8rN9b2', '1899-11-30 00:00:00', '0000-00-00 00:00:00', 1),
-(33, 'D', 'doc', '$2y$12$cXnJ8dLJiRSZFhn3IRIozePhFbZAtvngFoAHlhSPUOndMWUDUtob.', '2016-05-01 18:26:09', '2016-07-01 10:44:44', 1),
+(33, 'D', 'doc', '$2y$12$x2dMd7yzOPlxWVCMMeqJm.Tzwrcz73vF3j956RhsfVUbQ/nUEdqcy', '2016-05-01 18:26:09', '2016-07-01 12:39:51', 1),
 (58, 'D', 'savio', '$2y$12$/W.gLAwQ/i5/FnVeHnJBDOe.N.2MBLW/wZL7Ma30I33dT.C5J86y.', '2016-06-15 21:07:02', NULL, 1),
 (60, 'S', 'staff', '$2y$12$.tRDVYkRw9SuzxctqalzeuBdfjCjP9o4TQuWiOJYd6UCDYuNCkSbu', '2016-06-27 20:18:24', '2016-06-29 12:38:16', 1),
 (61, 'D', 'aria', '$2y$12$Hiouw4.4LUcQ/WKnG.ZbDODrGBVvd/0IjKa./EccDTfBHVPp3hmEm', '2016-07-01 02:14:11', NULL, 0),

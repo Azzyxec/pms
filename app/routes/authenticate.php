@@ -138,7 +138,7 @@ $this->post('/isLoggedIn', function ($request, $response) {
   $user = UserSessionManager::getUser();
   $data = array('data' => $user);
   return $response->withJson($data);
-  
+
 });
 
 $this->post('/authenitcateUser', function ($request, $response) {
@@ -149,8 +149,12 @@ $this->post('/authenitcateUser', function ($request, $response) {
     $postedData = $request->getParsedBody();
     if( isset($postedData['loginId']) && isset($postedData['password']) ){
 
+
+
       $userDb = new UserDB();
       $user = $userDb->getUser($postedData['loginId']);
+
+
 
       $password = $postedData['password'];
       if(password_verify($password, $user->password) === false){

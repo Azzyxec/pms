@@ -69,11 +69,41 @@ $app->group('/doctor', function(){
 
       }
 
+
     $doctorDB = new DoctorDB();
 
     $resultArray = $doctorDB->persistDoctor($doctor);
 
     $status = $resultArray['status'];
+
+
+    //if its a new entry then its new registration send mail confirming the registration
+    if($doctor->id == 0){
+
+
+
+      try {
+
+        $transport = Swift_MailTransport::newInstance();
+
+        $message = Swift_Message::newInstance('Thank you for registering')
+        ->setFrom(array(AppConfig::$registratoinSettings['fromEmail'] => AppConfig::$registratoinSettings['sendAs']))
+        ->setTo(array($doctor->email))
+        ->setBody('Thank you for registering with us, we will activate you account soon, if you have any queries please email us as at ' . AppConfig::$registratoinSettings['adminMail'] . ', once the account is active you can <a href="' . AppConfig::$registratoinSettings['loginLink'] .'">login</a>', 'text/html');
+
+        $mailer = Swift_Mailer::newInstance($transport);
+
+
+        // Send the message
+        //TODO uncomment in production
+        $mailResult = $mailer->send($message);
+
+    } catch (Exception $e) {
+      $mailResult = "mail could not be sent";
+    }
+
+    }
+
 
     //log the user in on succesful insert or update
     //if(strcmp($status, "1") == 0){
@@ -81,11 +111,11 @@ $app->group('/doctor', function(){
     //UserSessionManager::setUser($user);
     //}
 
-    $data = array('status' => $status, 'data' => '');
+    $data = array('status' => $status, 'user' => $user);
     return $response->withJson($data);
 
   } catch (Exception $e) {
-      $data = array('status' => $status, 'data' => '');
+      $data = array('status' => $status, 'user' => '', 'message' => $e->getMessage() );
     return $response->withJson($data);
   }
 
