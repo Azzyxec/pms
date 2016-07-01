@@ -122,8 +122,13 @@
     <hr class="invisible">
     <hr class="invisible">
 
-    <div class="from-group col-md-6 text-center">
+    <div class="from-group col-md-6 text-center" id="">
+      {%if addOverlay ==false %}
+      <button type="button" onclick="history.go(-1);" class=" btn btn-primary">back</button>
+      {%endif%}
       <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary" name="submit">Save</button>
+
+
       <!--  <button type="clear" id="btn-doc-clear-btn" class=" btn btn-primary">clear</button>-->
 
     </div>
