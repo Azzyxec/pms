@@ -95,27 +95,24 @@ $(document).ready(function(){
 
         return doctorModel;
       },
+
       saveDoctorAndRedirect: function(){
 
-        $.post( controller.doctorUrl , doctorModel)
-         .done(function( response ) {
+             $.post( controller.doctorUrl , doctorModel)
+              .done(function( response ) {
+                console.log('response ' + JSON.stringify(response));
 
-           console.log('response ' + JSON.stringify(response));
 
-
-           if(response.data.status == "1"){
-             $('.doc-profile-before-submit-warning-error').removeClass('hidden');
-
-             console.log('Please select another login Id');
-           }else if(response.data.status == "-1"){
-                $('#doc-profile-before-submit-success').removeClass('hidden');
-
-             console.log('saved successfully, now you will receive a confirmation email, then you can login');
-             window.location.href = controller.logoutUrl;
-           }
-
-         });
-      }
+                if(response.status == "-1"){
+                  console.log('Please select another login Id');
+                     $('.doc-profile-before-submit-warning-error').removeClass('hidden');
+                }else if(response.type == "1"){
+                    $('#doc-profile-before-submit-success').removeClass('hidden');
+                  console.log('Thank you for registering with us, we have send you a email with info about how you can access your account');
+                  window.location.href = controller.logoutUrl;
+                }
+      });
+    }
       /*getURLParam: function(name: string){
 
       var url = window.location.href;
