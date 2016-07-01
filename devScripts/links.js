@@ -1,5 +1,7 @@
 var links = {
 
+
+
   //login js urls
    authenticateUrl : "index.php/authenticate/authenitcateUser",
    successRedirectUrl : "index.php/doctorDashboard/",
@@ -14,9 +16,11 @@ var links = {
 
    //admin related
    doctorListingUrl: "index.php/adminDashboard/doctorListing",
+   getAllDoctorsUrl: "index.php/adminDashboard/getAllDoctors",
+   adminDoctorEditRedirect:"index.php/adminDashboard/adminDoctorEdit",
 
    logoutUrl : "index.php/authenticate/logout",
-  
+
    //doctor dashboard links
    doctorProfile: "index.php/doctorDashboard/doctorProfile",
    dashboardHomeUrl : "index.php/doctorDashboard/",
@@ -85,10 +89,10 @@ var links = {
    createModifyStaffUrl:"index.php/staff/createModifyStaff",
    getStaffDetailsUrl: "index.php/staff/getStaffDetails",
    staffListingUrl: "index.php/staff/getDoctorsStaffList",
-    
-    
+
+
     //upload
-    
+
     UploadFiles:"index.php/Upload/upload"
 
 }

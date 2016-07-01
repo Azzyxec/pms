@@ -11,8 +11,8 @@ $(document).ready(function(){
            email: "",
            qualifications: "",
            address:"",
-           recoveryContact:"",
-           recoveryEmail:"",
+           //recoveryContact:"",
+           //recoveryEmail:"",
            userName:"",
            password:"",
            isActive:1
@@ -20,9 +20,9 @@ $(document).ready(function(){
 
         var controller = {
             init: function(){
-              this.doctorUrl =  "index.php/saveUpdateDoctor";
-              this.doctorDetailsUrl =  "index.php/getDoctorDetails";
-              this.adminDoctorsListingUrl = "index.php/doctorListing";
+              this.doctorUrl = links.doctorUrl;
+              this.doctorDetailsUrl =  links.doctorDetailsUrl;
+              this.adminDoctorsListingUrl = links.doctorListingUrl;
               formView.init();
 
               //getting doctors info for the doctors id in the url
@@ -31,6 +31,8 @@ $(document).ready(function(){
               console.log('doctors Id ' + doctorsId);
               if(doctorsId){
                 controller.updateModelFromServer(doctorsId);
+              }else{
+                formView.overLay.addClass('hidden');
               }
 
             },
@@ -52,13 +54,13 @@ $(document).ready(function(){
                  doctorModel.qualifications = doctor.qualifications;
                  doctorModel.address = doctor.address;
                  doctorModel.userName = doctor.userName;
-                 doctorModel.password = doctor.password;
-                 doctorModel.recoveryContact = doctor.recoveryContact;
-                 doctorModel.recoveryEmail = doctor.recoveryEmail;
+                 doctorModel.password = ''; //doctor.password;
+                 //doctorModel.recoveryContact = doctor.recoveryContact;
+                 //doctorModel.recoveryEmail = doctor.recoveryEmail;
                  doctorModel.isActive = doctor.isActive;
 
                  formView.render();
-
+                 formView.overLay.addClass('hidden');
                });
 
             },
@@ -72,8 +74,8 @@ $(document).ready(function(){
               doctorModel.address = formView.addressControl.val();
               doctorModel.userName = formView.userNameControl.val();
               doctorModel.password = formView.passwordControl.val();
-              doctorModel.recoveryContact = formView.recoveryContactControl.val();
-              doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
+              //doctorModel.recoveryContact = formView.recoveryContactControl.val();
+              //doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
 
 
               if(formView.activeControl.is(":checked")){
@@ -85,15 +87,15 @@ $(document).ready(function(){
               return doctorModel;
             },
             saveDoctorAndRedirect: function(){
-
-              $.post( controller.doctorUrl , doctorModel)
+              console.log('save doc' + this.doctorUrl);
+              $.post( this.doctorUrl , doctorModel)
                .done(function( response ) {
                  console.log('response ' + JSON.stringify(response));
 
 
-                 if(response.data.status == "-1"){
+                 if(response.status == "-1"){
                    console.log('Please select another login Id');
-                 }else if(response.data.user.type == "D"){
+                 }else if(response.status == "1"){
                       window.location.href = controller.adminDoctorsListingUrl;
                  }
 
@@ -105,7 +107,7 @@ $(document).ready(function(){
           var formView = {
             init: function(){
               console.log('form view inti');
-
+              this.overLay = $('#dash-overlay');
               this.idControl = $('#did');
               this.nameControl = $('#dname');
               this.contactControl = $('#dcontact');
@@ -115,29 +117,11 @@ $(document).ready(function(){
               this.addressControl = $('#daddress');
               this.userNameControl = $('#duser-name');
               this.passwordControl = $('#dpassword');
-              this.recoveryContactControl = $('#drecovery-contact');
-              this.recoveryEmailControl = $('#drecovery-email');
+              //this.recoveryContactControl = $('#drecovery-contact');
+              //this.recoveryEmailControl = $('#drecovery-email');
               //doctor isactive/inactive radio controls
               this.activeControl = $('#dactive');
               this.inactiveControl = $('#dinactive');
-
-              //controls are passed, so that they are available to click function as closure variables
-              /*
-              this.controls = { idControl: this.idControl,
-                              nameControl: this.nameControl,
-                              contactControl: this.contactControl,
-                              alternatContactControl: this.alternatContactControl,
-                              emailControl: this.emailControl,
-                              qualificationControl: this.qualificationControl,
-                              addressControl: this.addressControl,
-                              userNameControl: this.userNameControl,
-                              passwordControl: this.passwordControl,
-                              activeControl: this.activeControl,
-                              //inactiveControl: this.inactiveControl
-                              };
-                              */
-              //wiring events
-
 
               $('#btn-doc-reg-sumit').on('click', (function(controller){
                 //console.log('handler added : ' + cat.Id);
@@ -174,8 +158,8 @@ $(document).ready(function(){
               this.addressControl.val(model.address);
               this.userNameControl.val(model.userName);
               this.passwordControl.val(model.password);
-              this.recoveryContactControl.val(model.recoveryContact);
-              this.recoveryEmailControl.val(model.recoveryEmail);
+              //this.recoveryContactControl.val(model.recoveryContact);
+              //this.recoveryEmailControl.val(model.recoveryEmail);
 
 
               if(model.isActive == 1){

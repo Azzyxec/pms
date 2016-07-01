@@ -44,24 +44,30 @@ $app->group('/doctor', function(){
     $user = new User();
     $status = -2;
 
+
+
+    $postedData = $request->getParsedBody();
+    $doctor = Doctor::getInsanceFromArray($postedData);
+
     try {
 
-      $postedData = $request->getParsedBody();
-      $doctor = Doctor::getInsanceFromArray($postedData);
-
       //hash password
+      if($doctor->password != ''){
 
-      $passwordHash = password_hash(
-        $doctor->password,
-        AppConfig::$passwordHashSettings['algorithm'],
-        AppConfig::$passwordHashSettings['settings']
-      );
+        $passwordHash = password_hash(
+          $doctor->password,
+          AppConfig::$passwordHashSettings['algorithm'],
+          AppConfig::$passwordHashSettings['settings']
+        );
 
-    if($passwordHash === false){
-      throw new Exception("Password hash failed");
-    }
+        $doctor->password = $passwordHash;
 
-    $doctor->password = $passwordHash;
+
+        if($passwordHash === false){
+          throw new Exception("Password hash failed");
+        }
+
+      }
 
     $doctorDB = new DoctorDB();
 
@@ -75,11 +81,11 @@ $app->group('/doctor', function(){
     //UserSessionManager::setUser($user);
     //}
 
-    $data = array('data' => array('status' => $status, "user"=> $user));
+    $data = array('status' => $status, 'data' => '');
     return $response->withJson($data);
 
   } catch (Exception $e) {
-    $data = array('data' => array('status' => $status, "user"=> $user));
+      $data = array('status' => $status, 'data' => '');
     return $response->withJson($data);
   }
 
