@@ -79,16 +79,20 @@ $app->group('/doctor', function(){
 
     //if its a new entry then its new registration send mail confirming the registration
     if($doctor->id == 0){
+
+
+
       try {
 
         $transport = Swift_MailTransport::newInstance();
 
         $message = Swift_Message::newInstance('Thank you for registering')
         ->setFrom(array(AppConfig::$registratoinSettings['fromEmail'] => AppConfig::$registratoinSettings['sendAs']))
-        ->setTo(array($email))
+        ->setTo(array($doctor->email))
         ->setBody('Thank you for registering with us, we will activate you account soon, if you have any queries please email us as at ' . AppConfig::$registratoinSettings['adminMail'] . ', once the account is active you can <a href="' . AppConfig::$registratoinSettings['loginLink'] .'">login</a>', 'text/html');
 
         $mailer = Swift_Mailer::newInstance($transport);
+
 
         // Send the message
         //TODO uncomment in production
@@ -99,6 +103,7 @@ $app->group('/doctor', function(){
     }
 
     }
+
 
     //log the user in on succesful insert or update
     //if(strcmp($status, "1") == 0){

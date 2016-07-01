@@ -37,8 +37,6 @@ class Staff{
     $staff->address = $dataAray['address'];
     $staff->userName = $dataAray['userName'];
     $staff->pasword = $dataAray['pasword'];
-    $staff->recoveryContact = $dataAray['recoveryContact'];
-    $staff->recoveryEmail = $dataAray['recoveryEmail'];
     $staff->locationId = $dataAray['locationId'];
     $staff->isActive = $dataAray['isActive'];
 

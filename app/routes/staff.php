@@ -83,13 +83,22 @@ $app->group('/staff', function(){
 
       $staff = Staff::getInsanceFromArray($postedData);
 
-      $passwordHash = password_hash(
-        $staff->pasword,
-        AppConfig::$passwordHashSettings['algorithm'],
-        AppConfig::$passwordHashSettings['settings']
-      );
+      //hash password
+      if($staff->pasword != ''){
 
-      $staff->pasword = $passwordHash;
+        $passwordHash = password_hash(
+          $staff->pasword,
+          AppConfig::$passwordHashSettings['algorithm'],
+          AppConfig::$passwordHashSettings['settings']
+        );
+
+        $staff->pasword = $passwordHash;
+
+        if($passwordHash === false){
+          throw new Exception("Password hash failed");
+        }
+
+      }
 
 
       $staffDB = new StaffDB();

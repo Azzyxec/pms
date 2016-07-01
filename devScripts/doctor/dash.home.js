@@ -10,7 +10,7 @@ $(document).ready(function(){
       userInfo:{},
       appointmenListViewModel:{
         patientList:[],
-        locationList:[] 
+        locationList:[]
       }
     }
 

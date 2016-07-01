@@ -63,8 +63,6 @@ class StaffDB{
       $staff->address = $row['address'];
       $staff->userName = $row['user_name'];
       $staff->pasword = $row['password'];
-      $staff->recoveryContact = $row['recovery_contact'];
-      $staff->recoveryEmail = $row['recovery_email'];
       $staff->isActive = $row['is_active'];
 
 
