@@ -23,6 +23,16 @@ $(document).ready(function(){
               this.doctorUrl = links.doctorUrl;
               this.doctorDetailsUrl =  links.doctorDetailsUrl;
               this.adminDoctorsListingUrl = links.doctorListingUrl;
+              this.container = $('.container');
+              this.temp = $("<h1>sdfs</h1>");
+              this.alert = function(msg,classnm,id){
+                $('.pms-alerts').remove();
+                var alert = $('<div  id = "'+id+'" class=" alert ' +classnm+' pms-alerts alert-dismissible doc-profile-before-submit-warning-error" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+                return alert;
+              }
+
+
+
               formView.init();
 
               //getting doctors info for the doctors id in the url
@@ -95,6 +105,7 @@ $(document).ready(function(){
 
 
                  if(response.status == "-1"){
+                    controller.container.prepend(controller.alert("Please select another login Id","alert-warning text-center",'login-error-msg'));
                    console.log('Please select another login Id');
                  }else if(response.status == "1"){
                       window.location.href = controller.adminDoctorsListingUrl;

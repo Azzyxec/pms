@@ -106,15 +106,16 @@ $(document).ready(function(){
                   console.log('Please select another login Id');
                   $('#doc-profile-before-submit-success').addClass('hidden');
                   $('.doc-profile-before-submit-warning-error').removeClass('hidden');
+                
                 }else if(response.status == "1"){
 
-                  if(response.user && response.user.type == -1){
+                  if(response.user.id && response.user.type == 1){
                     //the user is not logged in so its a new registration
                     $('.doc-profile-before-submit-warning-error').addClass('hidden');
                     $('#doc-profile-before-submit-success').removeClass('hidden');
                     console.log('Thank you for registering with us, we have send you a email with your account info');
                     //window.location.href = controller.logoutUrl;
-                  }else if(response.user && response.user.type == 'D'){
+                  }else if(response.user.id && response.user.type == '-1'){
                     //logged in user, so its profile modifications
                     console.log('modifying');
                   }
