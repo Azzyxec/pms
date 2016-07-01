@@ -106,7 +106,7 @@ $(document).ready(function(){
                 if(response.status == "-1"){
                   console.log('Please select another login Id');
                      $('.doc-profile-before-submit-warning-error').removeClass('hidden');
-                }else if(response.type == "1"){
+                }else if(response.status == "-2"){
                     $('#doc-profile-before-submit-success').removeClass('hidden');
                   console.log('Thank you for registering with us, we have send you a email with info about how you can access your account');
                   window.location.href = controller.logoutUrl;
