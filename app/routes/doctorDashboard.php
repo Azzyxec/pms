@@ -184,7 +184,8 @@ $app->group('/doctorDashboard', function(){
     $viewData = array('basePath' => AppConfig::$basePath,
                       'active' => "others",
                       'name' => $user->name,
-                      'userType' => $user->type);
+                      'userType' => $user->type,
+                      'addOverlay' => true);
     return $this->view->render($response, '/doctor/manage-locations.html', $viewData);
   });
   //Analytics reporting
