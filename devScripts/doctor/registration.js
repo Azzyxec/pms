@@ -106,7 +106,7 @@ $(document).ready(function(){
                   console.log('Please select another login Id');
                      $('.doc-profile-before-submit-warning-error').removeClass('hidden');
                 }else if(response.status == "1"){
-
+                $('#doc-profile-before-submit-success').removeClass('hidden');
                   if(response.user && response.user.type == -1){
                     //the user is not logged in so its a new registration
                     $('#doc-profile-before-submit-success').removeClass('hidden');
@@ -114,7 +114,8 @@ $(document).ready(function(){
                     //window.location.href = controller.logoutUrl;
                   }else if(response.user && response.user.type == 'D'){
                     //logged in user, so its profile modifications
-
+                    $('#doc-profile-before-modify-success').removeClass('hidden');
+                    console.log('modifying');
                   }
 
                 }
@@ -159,6 +160,7 @@ $(document).ready(function(){
       //doctor isactive/inactive radio controls
       this.activeControl = $('#dactive');
       this.inactiveControl = $('#dinactive');
+      /*
       this.validator = $("#doctor-profile-reg-form").bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
@@ -166,7 +168,7 @@ $(document).ready(function(){
           invalid: 'glyphicon glyphicon-remove ',
           validating: 'glyphicon glyphicon-refresh'
         },
-
+          excluded: [':disabled'],
         fields:{
           dname : {
             validators : {
@@ -187,7 +189,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please Select the duration'
+                message : 'Please enter your alternte contact no'
               }
             }
           }
@@ -212,7 +214,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please select patients gender'
+                message : 'Please enter address'
               }
             }
           }
@@ -228,7 +230,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please select patients Weight'
+                message : 'Please enter your password'
               }
             }
           }
@@ -237,7 +239,7 @@ $(document).ready(function(){
 
             validators : {
               notEmpty :{
-                message : 'Please enter Patients contact no'
+                message : 'please select an option'
               }
 
             }
@@ -245,7 +247,7 @@ $(document).ready(function(){
 
         }
       });
-
+*/
 
       //controls are passed, so that they are available to click function as closure variables
       /*
@@ -286,14 +288,13 @@ $(document).ready(function(){
       })(controller)); //submit click handler
 
 
-
-
-            this.docProfclear.on('click',function(){
+/*
+        this.docProfclear.on('click',function(){
 
                             $('#doctor-profile-reg-form').bootstrapValidator("resetForm",true);
                     });
 
-
+*/
       this.render();
     },
     getControls: function(){

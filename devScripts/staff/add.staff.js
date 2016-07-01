@@ -139,7 +139,7 @@ $(document).ready(function(){
           $.post(controller.createModifyStaffUrl , staff)
            .done(function( response ) {
              console.log('response ' + JSON.stringify(response));
-             if(response.data.message == "success"){
+             if(response.data.status == "1"){
                  $('#man-staff-before-submit-success').removeClass('hidden');
 
                console.log('Please select another login Id');

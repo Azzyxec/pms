@@ -121,7 +121,8 @@
 }
 
  .timeline-item-default-height,.timeline-cancelled-appoint,.timeline-closed-appoint,.timeline-new-book-appoint{
-     height: 55px !important;
+   min-height: 55px !important;
+   max-height: 73px;
  }
 .timeline-item-default-height,.timeline-new-book-appoint,.timeline-cancelled-appoint,.timeline-closed-appoint{
     text-align:left !important;
@@ -386,4 +387,12 @@ td,th{
 .overlay > h1 {
 color: white;
 margin-top: 50vh;
+}
+
+
+
+/*upload btn css ********/
+.file-row-text .btn{
+margin: 6px;
+padding: 6px;
 }
