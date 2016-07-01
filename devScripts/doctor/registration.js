@@ -23,7 +23,12 @@ $(document).ready(function(){
         this.loginCheckUrl = links.loginCheckUrl;
         this.doctorDashUrl = links.doctorDashUrl;
         this.logoutUrl = links.logoutUrl;
-
+        this.alertcontainer = $('.container');
+        this.alert = function(msg,classnm,id){
+          $('.pms-alerts').remove();
+          var alert = $('<div  id = "'+id+'" class=" alert ' +classnm+' pms-alerts alert-dismissible doc-profile-before-submit-warning-error" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+          return alert;
+        }
         formView.init();
 
         this.getDoctorInfo();
@@ -104,20 +109,19 @@ $(document).ready(function(){
 
                 if(response.status == "-1"){
                   console.log('Please select another login Id');
-                  $('#doc-profile-before-submit-success').addClass('hidden');
-                  $('.doc-profile-before-submit-warning-error').removeClass('hidden');
-                
+                  controller.alertcontainer.prepend(controller.alert("Please select another login Id","alert-warning text-center",''));
+
                 }else if(response.status == "1"){
 
                   if(response.user.id && response.user.type == 1){
                     //the user is not logged in so its a new registration
-                    $('.doc-profile-before-submit-warning-error').addClass('hidden');
-                    $('#doc-profile-before-submit-success').removeClass('hidden');
+                  controller.alertcontainer.prepend(controller.alert("Thank you for registering with us, we have send you a email with your account info","alert-success text-center",''));
                     console.log('Thank you for registering with us, we have send you a email with your account info');
                     //window.location.href = controller.logoutUrl;
                   }else if(response.user.id && response.user.type == '-1'){
                     //logged in user, so its profile modifications
                     console.log('modifying');
+                    controller.alertcontainer.prepend(controller.alert("Doctor Info updated succesfully","alert-success text-center",''));
                   }
 
                 }
