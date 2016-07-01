@@ -1,7 +1,7 @@
 <div class="container">
   <div  class="hidden alert alert-warning alert-dismissible doc-profile-before-submit-warning-error" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>Warning!</strong> Please Select another login id!.
+    <strong>oops!</strong> The login id is taken, please try another Id!.
   </div>
 
 
@@ -24,7 +24,7 @@
   <div id="doc-profile-before-submit-success" class="hidden alert alert-success alert-dismissible" role="alert">
 
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>Success!</strong> saved successfully, now you will receive a confirmation email, then you can login
+  Thank you for registering with us, we have send you a email with your account info
   </div>
 
   <div id="doc-profile-before-modify-success" class="hidden alert alert-success alert-dismissible" role="alert">
@@ -123,11 +123,11 @@
     <hr class="invisible">
 
     <div class="from-group col-md-6 text-center" id="">
+
+      <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary" name="submit">Register</button>
       {%if addOverlay ==false %}
       <button type="button" onclick="history.go(-1);" class=" btn btn-primary">back</button>
       {%endif%}
-      <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary" name="submit">Save</button>
-
 
       <!--  <button type="clear" id="btn-doc-clear-btn" class=" btn btn-primary">clear</button>-->
 
