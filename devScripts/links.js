@@ -5,7 +5,7 @@ var links = {
   //login js urls
    authenticateUrl : "index.php/authenticate/authenitcateUser",
    successRedirectUrl : "index.php/doctorDashboard/",
-   registerDoctorUrl : "index.php/doctor/doctorInfo",
+   registerDoctorUrl : "index.php/doctor/doctorInfo", 
    adminUrl:"index.php/adminDashboard/admin",
 
    //password reset

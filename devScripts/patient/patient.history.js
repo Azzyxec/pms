@@ -4,17 +4,17 @@ $(document).ready(function(){
         console.log('patient History js loaded');
 
         var listModel = {};
-        
-      
+
+
         var controller = {
           init: function(){
             this.patientHistoryUrl = links.getPatientHistoryUrl;
-           
 
-          
+
+
 
             //getting the programme list for the doctor
-            $.get( controller.patientHistoryUrl+'?patient_id=96' , {})
+            $.get( controller.patientHistoryUrl+'?patient_id=93' , {})
             .done(function( response ) {
               //console.log("patients list: " + JSON.stringify(response));
               listModel = response.data;
@@ -25,13 +25,13 @@ $(document).ready(function(){
           getListModel: function(){
             return listModel;
           }
-       
-        }; 
+
+        };
 
 
         var listView = {
           init: function(){
-        
+
 
           },
           render:  function(){
@@ -39,34 +39,34 @@ $(document).ready(function(){
              var patientsList = controller.getListModel();
               //console.log(JSON.stringify(controller.getData()));
             console.log('model in view' + JSON.stringify(patientsList));
-              
-              
-          
-              
- 
 
- 
+
+
+
+
+
+
 
     var table = $('#example').DataTable( {
         "bProcessing": true,
     "data":  controller.getListModel(),
         "aoColumns": [
-           
-              
+
+
             { "mData": "loc_name" },
             { "mData": "appt_date" },
             { "mData": "appt_time" },
             { "mData": "patient_desc",
             "mRender" : function ( data, type, full ) {
     return ' <span tabindex="0" class="" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="View Ailment" data-content="'+data+'">'+data.slice(0,10)+'...</span>';}
-            
-            
+
+
             }
-          
+
         ],
         "order": [[1, 'asc']]
     } );
-     
+
    $(function () {
     $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})
 
@@ -103,7 +103,7 @@ $(document).ready(function(){
                 href: controller.editPatientRedirect + '?id=' +  patientsList[i].id
               });
               tr.append(td);
-               
+
               this.tablebody.append(tr);
             }*/
 

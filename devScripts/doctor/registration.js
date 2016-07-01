@@ -102,11 +102,11 @@ $(document).ready(function(){
       },
 
       saveDoctorAndRedirect: function(){
-
+             formView.addSaveButtonAnimation(true);
              $.post( controller.doctorUrl , doctorModel)
               .done(function( response ) {
                 console.log('response ' + JSON.stringify(response));
-
+                formView.addSaveButtonAnimation(false);
                 if(response.status == "-1"){
                   console.log('Please select another login Id');
                   controller.alertcontainer.prepend(controller.alert("Please select another login Id","alert-warning text-center",''));
@@ -303,8 +303,16 @@ $(document).ready(function(){
 */
       this.render();
     },
-    getControls: function(){
-      return this.controls;
+    addSaveButtonAnimation: function(show){
+      if(show){
+        this.saveButton.attr('disabled','disbled')
+                       .children('span')
+                       .addClass('fa fa-spinner fa-pulse fa-fw');
+      }else{
+        this.saveButton.removeAttr('disabled')
+                       .children('span')
+                       .removeClass('fa fa-spinner fa-pulse fa-fw');
+      }
     },
     render: function() {
 

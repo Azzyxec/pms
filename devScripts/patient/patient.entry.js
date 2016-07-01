@@ -7,7 +7,7 @@ $(document).ready(function(){
     console.log('patient entry js loaded');
 
     var model = {
-      patientInfo: {
+      patientInfo: { 
         id:0,
         name:"",
         dateOfBirth: "",
