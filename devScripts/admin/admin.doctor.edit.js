@@ -40,6 +40,7 @@ $(document).ready(function(){
               return doctorModel;
             },
             updateModelFromServer: function(doctorId){
+              console.log('get doc info link' + controller.doctorDetailsUrl);
               $.get( controller.doctorDetailsUrl , {id: doctorId})
                .done(function( response ) {
                  console.log("updateInfoFromServer: " + JSON.stringify(response));
