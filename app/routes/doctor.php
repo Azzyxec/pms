@@ -89,7 +89,7 @@ $app->group('/doctor', function(){
         $message = Swift_Message::newInstance('Thank you for registering')
         ->setFrom(array(AppConfig::$registratoinSettings['fromEmail'] => AppConfig::$registratoinSettings['sendAs']))
         ->setTo(array($doctor->email))
-        ->setBody('Thank you for registering with us, we will activate you account soon, if you have any queries please email us as at ' . AppConfig::$registratoinSettings['adminMail'] . ', once the account is active you can <a href="' . AppConfig::$registratoinSettings['loginLink'] .'">login</a>', 'text/html');
+        ->setBody('Thank you for registering with us, we will activate you account soon, if you have any queries please email us as at ' . AppConfig::$registratoinSettings['adminMail'] . ', once the account is active you can <a href="' . AppConfig::$registratoinSettings['loginLink'] .'">login</a> to use the application', 'text/html');
 
         $mailer = Swift_Mailer::newInstance($transport);
 
