@@ -139,6 +139,16 @@ $(document).ready(function(){
           $.post(controller.createModifyStaffUrl , staff)
            .done(function( response ) {
              console.log('response ' + JSON.stringify(response));
+             if(response.data.message == "success"){
+                 $('#man-staff-before-submit-success').removeClass('hidden');
+
+               console.log('Please select another login Id');
+             }else if(response.data.status == "-1"){
+               $('#man-staff-before-submit-success').removeClass('hidden');
+
+               console.log('saved successfully, now you will receive a confirmation email, then you can login');
+
+             }
 
              controller.resetModel();
              CreateUpdateView.render();

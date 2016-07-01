@@ -27,11 +27,12 @@ var filesList = [
                       ], buildName: "login.all.js"},
   {build:true, files: [
                         objConfig.scriptsBasePath +"links.js",
+                        objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                         objConfig.scriptsBasePath +"validator.js",
                         objConfig.scriptsBasePath + "doctor/registration.js"
                       ], buildName: "doctor.registration.js"},
   {build:true, files: [
-                       objConfig.scriptsBasePath +"utility.js", 
+                       objConfig.scriptsBasePath +"utility.js",
                        objConfig.scriptsBasePath +"links.js",
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                        objConfig.scriptsBasePath +"bootstrapValidator.min.js",
@@ -53,6 +54,7 @@ var filesList = [
                       objConfig.scriptsBasePath +"utility.js",
                       objConfig.scriptsBasePath +"links.js",
                       objConfig.scriptsBasePath +"validator.js",
+                      objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                       objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                       objConfig.scriptsBasePath +"doctor/registration.js"
                     ], buildName: "doctor.profile.js"},

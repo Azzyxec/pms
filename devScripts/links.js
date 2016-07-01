@@ -16,7 +16,7 @@ var links = {
    doctorListingUrl: "index.php/adminDashboard/doctorListing",
 
    logoutUrl : "index.php/authenticate/logout",
-  
+
    //doctor dashboard links
    doctorProfile: "index.php/doctorDashboard/doctorProfile",
    dashboardHomeUrl : "index.php/doctorDashboard/",
@@ -62,6 +62,7 @@ var links = {
    patientListingUrl:"index.php/patient/getPatientList",
    getPatientsForAutoFillUrl:"index.php/patient/getPatientListForAutoFill",
    getPatientHistoryUrl:'index.php/patient/getPatientHistory',
+   getpatientsImageUrl:'index.php/patient/getPatientImage',
 
 
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
@@ -85,10 +86,10 @@ var links = {
    createModifyStaffUrl:"index.php/staff/createModifyStaff",
    getStaffDetailsUrl: "index.php/staff/getStaffDetails",
    staffListingUrl: "index.php/staff/getDoctorsStaffList",
-    
-    
+
+
     //upload
-    
+
     UploadFiles:"index.php/Upload/upload"
 
 }

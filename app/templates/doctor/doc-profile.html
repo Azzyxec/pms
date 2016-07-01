@@ -1,6 +1,38 @@
 <div class="container">
+  <div  class="hidden alert alert-warning alert-dismissible doc-profile-before-submit-warning-error" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Warning!</strong> Please Select another login id!.
+  </div>
 
-  <form class="form-horizontal" >
+
+  <div id="book-appointment-no-schedule" class="hidden alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Could'nt book!</strong> Either the timings are oustide the work timings or doctor is not available
+  </div>
+
+  <div id="book-appointment-timings-clash" class="hidden alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Could'nt book!</strong> Timings clash with an existing appointment
+  </div>
+
+  <div id="book-appointment-backdated" class="hidden alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Could'nt book!</strong> on a previous date
+  </div>
+
+
+  <div id="doc-profile-before-submit-success" class="hidden alert alert-success alert-dismissible" role="alert">
+
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Success!</strong> saved successfully, now you will receive a confirmation email, then you can login
+  </div>
+
+  <div  class="book-appointment-before-submit-other-error hidden Salert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Sorry!</strong>Somethings not right.
+  </div>
+
+  <form class="form-horizontal" role="form" data-toggle="validator" id="doctor-profile-reg-form" >
     <label class="col-md-12 text-center" >Doctor Info</label>
     <hr class="invisible">
     <hr class="invisible">
@@ -10,21 +42,21 @@
     <div class="form-group ">
       <label  class="col-md-2 control-label" for="dcontact">Name</label>
         <div class="col-md-6">
-          <input type="text" id="dname"  class="form-control" placeholder="Name">
+          <input type="text" id="dname"  name="dname" class="form-control" placeholder="Name">
         </div>
     </div>
 
     <div class="form-group">
       <label  class="col-md-2 control-label" for="dcontact">Phone No:</label>
         <div class="col-md-6">
-          <input type="text" id="dcontact"  class="form-control" placeholder="Contact">
+          <input type="text" id="dcontact" name="dcontact" class="form-control" placeholder="Contact">
         </div>
     </div>
 
     <div class="form-group 2">
       <label  class="col-md-2 control-label" for="dalternate-contact">Alternate Contact</label>
         <div class="col-md-6">
-          <input type="text" id="dalternate-contact"  class="form-control" placeholder="Contact">
+          <input type="text" id="dalternate-contact" name="dalternatecontact" class="form-control" placeholder="Contact">
         </div>
     </div>
 
@@ -85,7 +117,8 @@
     <hr class="invisible">
 
     <div class="from-group col-md-6 text-center">
-      <button type="button" id="btn-doc-reg-sumit" class=" btn btn-primary">Save</button>
+      <button type="submit" id="btn-doc-reg-sumit" class=" btn btn-primary" name="submit">Save</button>
+        <button type="button" id="btn-doc-clear-btn" class=" btn btn-primary">clear</button>
     </div>
 
 

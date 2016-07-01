@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 
-
+      $('#patient-profile-image').attr('src','second.jpg');
 
   $(function(){
     console.log('patient entry js loaded');
@@ -39,7 +39,7 @@ $(document).ready(function(){
         fathersBloodGroup:"",
         siblings:"",
         remarks:"",
-        isActive: 0 
+        isActive: 0
       },
       patientsProgramCount: 0,
       patientsPrograms: [],
@@ -58,6 +58,10 @@ $(document).ready(function(){
 
       this.patientDetailPersistUrl = links.patientDetailPersistUrl;
       this.patientsDetailsUrl = links.patientsDetailsUrl;
+      this.patientsImageUrl = links.getpatientsImageUrl;
+
+
+
 
       //this.patientsProgrammesUrl = links.patientsProgrammesUrl;
 

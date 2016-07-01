@@ -25,7 +25,13 @@ $this->get('/getDeliveryMethods', function ($request, $response) {
     return $response->withJson($data);
   }
 
-}); 
+});
+
+$this->get('/getPatientImage', function ($request, $response) {
+  return $response->withJson('/lksdflj');
+
+});
+
 
 
 $this->get('/getPatientListForAutoFill', function ($request, $response) {
@@ -86,20 +92,20 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
       }
 
     });
-    
-    
-    
-    
+
+
+
+
       $this->get('/getPatientHistory', function ($request, $response) {
       try {
-          
-      
+
+
 
         $data = "";
         $message = "you might need to log in as a doctor";
         $allGetVars = $request->getQueryParams();
 
-      
+
 
         if( isset($allGetVars['patient_id'])){
 
@@ -109,11 +115,11 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $message = "success";
           $data = $resultArray['data'];
 
-        
+
 
         $data = array('status' => "1", 'data' => $data, 'message' => $message);
         return $response->withJson($data);
-            
+
             }
 
       } catch (Exception $e) {
