@@ -104,17 +104,18 @@ $(document).ready(function(){
 
                 if(response.status == "-1"){
                   console.log('Please select another login Id');
-                     $('.doc-profile-before-submit-warning-error').removeClass('hidden');
+                  $('#doc-profile-before-submit-success').addClass('hidden');
+                  $('.doc-profile-before-submit-warning-error').removeClass('hidden');
                 }else if(response.status == "1"){
-                $('#doc-profile-before-submit-success').removeClass('hidden');
+
                   if(response.user && response.user.type == -1){
                     //the user is not logged in so its a new registration
+                    $('.doc-profile-before-submit-warning-error').addClass('hidden');
                     $('#doc-profile-before-submit-success').removeClass('hidden');
-                    console.log('Thank you for registering with us, we have send you a email with info about how you can access your account');
+                    console.log('Thank you for registering with us, we have send you a email with your account info');
                     //window.location.href = controller.logoutUrl;
                   }else if(response.user && response.user.type == 'D'){
                     //logged in user, so its profile modifications
-                    $('#doc-profile-before-modify-success').removeClass('hidden');
                     console.log('modifying');
                   }
 
