@@ -136,6 +136,94 @@ $(document).ready(function(){
               this.activeControl = $('#dactive');
               this.inactiveControl = $('#dinactive');
 
+              this.validator = $("#doctor-profile-reg-form").bootstrapValidator({
+                trigger:" focus blur",
+                feedbackIcons: {
+                  valid: 'glyphicon glyphicon-ok ',
+                  invalid: 'glyphicon glyphicon-remove ',
+                  validating: 'glyphicon glyphicon-refresh'
+                },
+                  excluded: [':disabled'],
+                fields:{
+                  dname : {
+                    validators : {
+                      notEmpty : {
+                        message : 'Please enter your name!'
+                      }
+                    }
+
+                  },
+                  dcontact : {
+                    validators : {
+                      notEmpty :{
+                        message : 'Please enter your contact No'
+                      }
+                    }
+                  },
+                  dalternatecontact :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'Please enter your alternte contact no'
+                      }
+                    }
+                  }
+                  , email :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'Please Enter email'
+                      }
+                    }
+                  }
+
+                  , qualifications :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'Please enter qualification'
+                      }
+                    }
+                  }
+                  ,  address :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'Please enter address'
+                      }
+                    }
+                  }
+                  , username :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'Please enter Username'
+                      }
+                    }
+                  }
+                  ,      password :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'Please enter your password'
+                      }
+                    }
+                  }
+
+                  , activeOptions :{
+
+                    validators : {
+                      notEmpty :{
+                        message : 'please select an option'
+                      }
+
+                    }
+                  }
+
+                }
+              });
+
+
               $('#btn-doc-reg-sumit').on('click', (function(controller){
                 //console.log('handler added : ' + cat.Id);
                 return function(){
@@ -145,10 +233,15 @@ $(document).ready(function(){
                   //update mode with info from the view
                   //persist the model i.e save update
 
-                  //updates the model with info from the view
-                  controller.updateModelFromView();
-                  console.log('model value' + JSON.stringify(doctorModel) );
-                  controller.saveDoctorAndRedirect();
+                  formView.validator.on('success.form.bv',function(e){
+                    e.preventDefault();
+
+                    console.log('model value' + JSON.stringify(doctorModel) );
+                    controller.updateModelFromView();
+
+                   controller.saveDoctorAndRedirect();
+
+                  });
                 };
               })(controller)); //submit click handler
 
