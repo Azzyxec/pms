@@ -6,7 +6,7 @@ use Pms\Entities\BirthDetails;
 use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\PatientDB;
 use Pms\Datalayer\ProgrammeDB;
-
+ 
 
 $app->group('/patient', function(){
 
