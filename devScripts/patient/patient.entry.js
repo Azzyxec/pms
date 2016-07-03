@@ -7,7 +7,7 @@ $(document).ready(function(){
     console.log('patient entry js loaded');
 
     var model = {
-      patientInfo: { 
+      patientInfo: {
         id:0,
         name:"",
         dateOfBirth: "",
@@ -63,6 +63,7 @@ $(document).ready(function(){
 
 
 
+
       //this.patientsProgrammesUrl = links.patientsProgrammesUrl;
 
     };
@@ -75,6 +76,13 @@ $(document).ready(function(){
     MainController.prototype.getDeliveryMethodsList = function () {
       return model.deliveryMethods;
     };
+
+    MainController.prototype.getPatientsImage = function(patientID) {
+      console.log(patientID);
+      $.get(this.patientsImageUrl,{patient_id:patientID}).done(function(response){
+
+      });
+    }
 
     MainController.prototype.getDoctorsProgrameNamesList = function(){
 

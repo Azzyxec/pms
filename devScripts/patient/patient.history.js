@@ -29,7 +29,7 @@ $(document).ready(function(){
 
 
             //getting the History for the doctor
-            $.get( controller.patientHistoryUrl+'?patient_id='+controller.patientId+'' , {})
+            $.get( controller.patientHistoryUrl, {patient_id:controller.patientId})
             .done(function( response ) {
               //console.log("patients list: " + JSON.stringify(response));
               listModel = response.data;
