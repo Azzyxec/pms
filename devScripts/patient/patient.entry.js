@@ -77,12 +77,12 @@ $(document).ready(function(){
       return model.deliveryMethods;
     };
 
-    MainController.prototype.getPatientsImage = function(patientID) {
+  /*  MainController.prototype.getPatientsImage = function(patientID) {
       console.log(patientID);
       $.get(this.patientsImageUrl,{patient_id:patientID}).done(function(response){
 
       });
-    }
+    }*/
 
     MainController.prototype.getDoctorsProgrameNamesList = function(){
 
