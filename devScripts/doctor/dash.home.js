@@ -19,6 +19,7 @@ $(document).ready(function(){
       this.getLocationUrl =  links.getLocationUrl;
       this.getAppointmentForTheDayUrl = links.getAppointmentForTheDayUrl;
       this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
+      this.getPatientsHistoryUrl = links.patientsHistoryUrl;
       this.getUserInfoUrl = links.loginCheckUrl;
       this.patientsLoaded = false;
       this.locationsLoaded = false;
@@ -538,6 +539,21 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
     template.find('.aa').text(mStartTime.format(" A"));
 
     template.find('.patient-name').text(appointmentItem.name);
+    template.find('.patient_history_btn').on('click',(function(){
+      return function(){
+        console.log(cont.getPatientsHistoryUrl);
+        window.open(cont.getPatientsHistoryUrl+'?id='+appointmentItem.patientId,'_blank');
+        console.log(appointmentItem.patientId);
+      }
+
+
+    })(appointmentItem));
+
+    /*template.find('.patient_history_btn').attr('data-id',appointmentItem.patientId);
+    template.find('.patient_history_btn').on('click',function(){
+
+        this.attr('data-id');
+      });*/
 
     var popoverSettings = {
       placement:'left',
