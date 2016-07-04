@@ -106,6 +106,9 @@ class AppointmentDB{
         $timing['startMins'] = $result['start_time_mins'];
         $timing['endMins'] = $result['end_time_mins'];
         $timing['locId'] = $result['loc_id'];
+        $timing['scheduleId'] = $result['schedule_id'];
+
+
 
         $timingList[] = $timing;
       }

@@ -106,26 +106,34 @@ $app->group('/appointment', function(){
 
       $todaysSchedule = array();
       foreach ($timingList as $key => $schedule) {
-        //value is array with start and end time
+        //value is array with start and end timings i.e. 9 to 5 and 3 to 6
         $startMins = $schedule['startMins'];
         foreach ($allApointments as $key1 => $appointment) {
 
+          //Loop throught the schedules and determine if ther are withing the time range of a  schedule
           if($schedule['startMins']  <= $appointment['startMins'] &&
           $schedule['endMins'] >=  $appointment['endMins']){
 
+          //each appointmetn has a start mins and end mins
           $endMins = $appointment['startMins'];
-
-
 
             $differenceMins = $endMins - $startMins;
             //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
 
             if($differenceMins >= $minTimeMins){
               if($allowBooking){
-                $freeTimeSlot = array('type' => 'f', 'state' => 0, 'locId' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+                $freeTimeSlot = array('type' => 'f',
+                                      'state' => 0,
+                                      'scheduleId' => $schedule['scheduleId'],
+                                      'locId' => $schedule['locId'],
+                                      'diff' => $differenceMins,
+                                      'startMins' => $startMins,
+                                      'endMins' => $endMins);
                 $todaysSchedule[] = $freeTimeSlot;
               }
             }
+
+            //type f for free time slot and a for any kin gof appointment
 
             $appointment['type'] = 'a';
             $todaysSchedule[] = $appointment;
@@ -145,7 +153,13 @@ $app->group('/appointment', function(){
         $differenceMins = $endMins - $startMins;
         if($differenceMins >= $minTimeMins){
           if($allowBooking){
-            $todaysSchedule[] = array('type' => 'f', 'state' => 0, 'locId' => $schedule['locId'], 'diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+            $todaysSchedule[] = array('type' => 'f',
+                                      'state' => 0,
+                                      'scheduleId' => $schedule['scheduleId'],
+                                      'locId' => $schedule['locId'],
+                                      'diff' => $differenceMins,
+                                      'startMins' => $startMins,
+                                      'endMins' => $endMins);
           }
         }
 
