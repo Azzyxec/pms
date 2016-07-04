@@ -51,6 +51,34 @@ $(document).ready(function(){
     });
   };
 
+  controller.prototype.combineFreeSlots = function (list) {
+    //updating the time of the freetime slot
+    // and putting the extra freetime slots in remove item list
+    var returnList = [];
+    var preItem = {};
+    var add = true;
+    for(var i = 0; i < list.length; i++){
+      var appointment = list[i];
+
+      if(appointment.type == "f" && preItem.type == "f" &&
+         +appointment.scheduleId == +preItem.scheduleId){
+        appointment.startMins = preItem.startMins;
+        add = false;
+      }else{
+        add = true;
+      }
+
+      if(add){
+        returnList.push(appointment);
+      }
+
+      preItem = appointment;
+    }
+
+   return returnList;
+
+  };
+
   controller.prototype.getSortedAppointmentList = function (locationId) {
 
     console.log('sorting with location Id' + locationId);
@@ -63,34 +91,7 @@ $(document).ready(function(){
         }
       });
 
-      var sortedList = _.orderBy(lappointmentList, ['state'], ['asc']);
-
-
-
-      //updating the time of the freetime slot
-      // and putting the extra freetime slots in remove item list
-      var returnList = [];
-      var preItem = {};
-      var add = true;
-      for(var i = 0; i < sortedList.length; i++){
-        var appointment = sortedList[i];
-
-        if(appointment.type == "f" && preItem.type == "f" &&
-           +appointment.scheduleId == +preItem.scheduleId){
-          appointment.startMins = preItem.startMins;
-          add = false;
-        }else{
-          add = true;
-        }
-
-        if(add){
-          returnList.push(appointment);
-        }
-
-        preItem = appointment;
-      }
-
-     return returnList;
+      return _.orderBy(lappointmentList, ['state'], ['asc']);
 
   };
 
@@ -109,13 +110,21 @@ $(document).ready(function(){
 
     console.log('free appontment list ' + cont.getSelectedLocId());
 
-    return _.filter(model.appointmentList, function(item){
+    var freeSlots =  _.filter(model.appointmentList, function(item){
 
       if((+item.state == 0 && item.type === 'f')
             && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
         return true;
       }
     });
+
+    if(freeSlots.length > 0){
+      return this.combineFreeSlots(freeSlots);
+    }else {
+      return freeSlots;
+    }
+
+
   };
 
   controller.prototype.getActiveAppointmentsList = function () {
@@ -159,6 +168,7 @@ $(document).ready(function(){
       }
     });
 
+    /*
     var completedCount = _.countBy(model.appointmentList, function(item){
       if((+item.state == 1 && item.type === 'a')
           && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
@@ -172,6 +182,7 @@ $(document).ready(function(){
         return "count";
       }
     }).count;
+    */
 
     console.log('array filer rsult' + JSON.stringify(stats));
 
@@ -274,6 +285,18 @@ controller.prototype.getUserInfo = function () {
       console.log("today Appointment: " + JSON.stringify(response));
       model.appointmentList = response.data;
       var appointmentList = cont.getSortedAppointmentList(locId);
+
+      var freeSlots = _.countBy(model.appointmentList, function(item){
+        if(item.type === 'f'){
+          return "count";
+        }
+      }).count;
+
+      if(freeSlots > 1){
+        appointmentList = cont.combineFreeSlots(appointmentList);
+      }
+
+
       todayAppointmentListView.renderAppointmentist(appointmentList);
       cont.appointmentsLoaded = true;
       cont.removeOverLay();
@@ -304,7 +327,19 @@ controller.prototype.getUserInfo = function () {
           todayAppointmentListView.listHeadertText.text('Location ' + name);
           cont.setSelectedLocationId(selectedValue);
           //var ldate = cont.getSelectedeDate();
-          var appointments = cont.GetAppointmentForLocation(selectedValue);
+          var appointments = cont.getSortedAppointmentList(selectedValue);
+
+          var freeSlots = _.countBy(appointments, function(item){
+            if(item.type === 'f'){
+              return "count";
+            }
+          }).count;
+
+          if(freeSlots > 1){
+              appointments = cont.combineFreeSlots(appointments);
+          }
+
+
           todayAppointmentListView.renderAppointmentist(appointments);
           //cont.getappointmentListForDate(ldate, selectedValue);
         }
@@ -341,7 +376,19 @@ controller.prototype.getUserInfo = function () {
       this.allAppointmentFilerButton.on('click', function(){
         var locId = cont.getSelectedLocId();
         var list = cont.getSortedAppointmentList(locId);
-        console.log(JSON.stringify(list));
+        //console.log(JSON.stringify(list));
+
+
+      var freeSlots = _.countBy(list, function(item){
+        if(item.type === 'f'){
+          return "count";
+        }
+      }).count;
+
+      if(freeSlots > 1){
+          list = cont.combineFreeSlots(appointments);
+      }
+
           todayAppointmentListView.renderAppointmentist(list);
       })
 
