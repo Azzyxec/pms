@@ -54,13 +54,42 @@ $(document).ready(function(){
 
     console.log('sorting with location Id' + locationId);
 
+    //if locatoin id is 0 then all appointments are returneed and sorted
+
     var lappointmentList =  _.filter(model.appointmentList, function(item){
         if(locationId == 0 || +item.locId == locationId){
           return true;
         }
       });
 
-        return _.orderBy(lappointmentList, ['state'], ['asc']);
+      var sortedList = _.orderBy(lappointmentList, ['state'], ['asc']);
+
+
+
+      //updating the time of the freetime slot
+      // and putting the extra freetime slots in remove item list
+      var returnList = [];
+      var preItem = {};
+      var add = true;
+      for(var i = 0; i < sortedList.length; i++){
+        var appointment = sortedList[i];
+
+        if(appointment.type == "f" && preItem.type == "f" &&
+           +appointment.scheduleId == +preItem.scheduleId){
+          appointment.startMins = preItem.startMins;
+          add = false;
+        }else{
+          add = true;
+        }
+
+        if(add){
+          returnList.push(appointment);
+        }
+
+        preItem = appointment;
+      }
+
+     return returnList;
 
   };
 

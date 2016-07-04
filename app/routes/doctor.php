@@ -76,20 +76,18 @@ $app->group('/doctor', function(){
 
     $status = $resultArray['status'];
 
-
-    //if its a new entry then its new registration send mail confirming the registration
-    if($doctor->id == 0){
-
-
+    $user = UserSessionManager::getUser();
+    if($user->type == 'D' && $doctor->id == 0){
+      //if its a new entry then its new registration send mail confirming the registration
 
       try {
 
         $transport = Swift_MailTransport::newInstance();
 
         $message = Swift_Message::newInstance('Thank you for registering')
-        ->setFrom(array(AppConfig::$registratoinSettings['fromEmail'] => AppConfig::$registratoinSettings['sendAs']))
+        ->setFrom(array(AppConfig::$accountSettings['fromEmail'] => AppConfig::$accountSettings['sendAs']))
         ->setTo(array($doctor->email))
-        ->setBody('Thank you for registering with us, we will activate you account soon, if you have any queries please email us as at ' . AppConfig::$registratoinSettings['adminMail'] . ', once the account is active you can <a href="' . AppConfig::$registratoinSettings['loginLink'] .'">login</a> to use the application', 'text/html');
+        ->setBody('Thank you for registering with us, we will activate you account soon, if you have any queries please email us as at ' . AppConfig::$accountSettings['adminMail'] . ', once the account is active you can <a href="' . AppConfig::$accountSettings['loginLink'] .'">login</a> to use the application', 'text/html');
 
         $mailer = Swift_Mailer::newInstance($transport);
 
@@ -102,7 +100,30 @@ $app->group('/doctor', function(){
       $mailResult = "mail could not be sent";
     }
 
-    }
+  }else if($user->type == 'D' &&  $doctor->isActive == 1 && $doctor->id > 0){
+    //if doctor is made active send mail
+
+    try {
+
+      $transport = Swift_MailTransport::newInstance();
+
+      $message = Swift_Message::newInstance('Account activated')
+      ->setFrom(array(AppConfig::$accountSettings['fromEmail'] => AppConfig::$accountSettings['sendAs']))
+      ->setTo(array($doctor->email))
+      ->setBody('Your account has been activated, you can login to your <a href="' . AppConfig::$accountSettings['loginLink'] .'">account</a> here', 'text/html');
+
+      $mailer = Swift_Mailer::newInstance($transport);
+
+
+      // Send the message
+      //TODO uncomment in production
+      $mailResult = $mailer->send($message);
+
+  } catch (Exception $e) {
+    $mailResult = "mail could not be sent";
+  }
+
+  }
 
 
     //log the user in on succesful insert or update

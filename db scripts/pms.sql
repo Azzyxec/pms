@@ -24,23 +24,23 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_doctor` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)  MODIFIES SQL DATA
 begin
 
 	declare llogin_id_exists int;
 	declare llogin_id int;
 	declare ldoctor_id int;
 
-	if COALESCE(pid, 0) > 0 then 
+	if COALESCE(pid, 0) > 0 then
 
 		select fk_login_id
 		into @llogin_id
 		from doctor
 		where  id = pid;
-		  
+
 	end if;
 
-    select count(id) 
+    select count(id)
     into  @llogin_id_exists
     from login
     where login_id = plogin_id
@@ -50,7 +50,7 @@ begin
 	if  COALESCE(@llogin_id_exists, 0) = 0 then
 
 		if pid <= 0 then
-			
+
 			INSERT INTO `login`( `type`
 								, `login_id`
 								, `password`
@@ -58,7 +58,7 @@ begin
 								,last_modified
                                 ,is_active
 								)
-								VALUES 
+								VALUES
 								('D'
 								,plogin_id
 								,ppassword
@@ -66,12 +66,12 @@ begin
 								,null
                                 ,pis_active
 								);
-								
+
 			 select max(id)
 			 into @llogin_id
 			 from login;
-			 
-			 
+
+
 			INSERT INTO `doctor`
 							(`fk_login_id`
 							, `name`
@@ -81,7 +81,7 @@ begin
 							, `qualification`
 							, `address`
 							,is_active
-							) 
+							)
 					VALUES (@llogin_id
 							,pname
 							,pcontact1
@@ -91,29 +91,29 @@ begin
 							,paddress
 							,pis_active
 							);
-							
+
 		     select max(id)
 			 into @ldoctor_id
 			 from doctor;
-			
+
 		else
 
 			select fk_login_id
 			into @llogin_id
-			from doctor 
+			from doctor
 			where id = pid;
-			
+
 			set @ldoctor_id = pid;
-			
-			UPDATE `login` 
+
+			UPDATE `login`
 					SET `login_id` = plogin_id
 					,`password` = case when ppassword is null OR ppassword = '' then `password` else ppassword end
 					,`last_modified`= now()
                     ,is_active = pis_active
 			WHERE id = @llogin_id;
-			
-			
-			UPDATE `doctor` 
+
+
+			UPDATE `doctor`
 						SET `name`= pname
 						,`contact1`= pcontact1
 						,`contact2`= pcontact2
@@ -124,7 +124,7 @@ begin
 			WHERE id = pid;
 
 	end if;
-	
+
         commit;
 		select '1' as status
 			   ,@ldoctor_id as id
@@ -142,12 +142,12 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_locations` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)  MODIFIES SQL DATA
 begin
 
 
 	if pid <= 0 then
-	
+
 		insert into work_locations(
             						fk_doctor_id
 									,name
@@ -158,16 +158,16 @@ begin
 									,pname
 								   );
 		else
-		
-		UPDATE `work_locations` 
+
+		UPDATE `work_locations`
 		SET `name` = pname
 		WHERE id = pid;
-		
-	
+
+
 	end if;
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `add_update_patient_birth_details` (IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details` (IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)  MODIFIES SQL DATA
 begin
 
 declare lbirthEntryExists int;
@@ -194,7 +194,7 @@ INSERT INTO `patient_birth_details`(
 									 , `siblings`
 									 , `remarks`
 									 , `is_active`
-									 ) 
+									 )
 							VALUES (
 									ppatient_id
 									,pdelivery_method_id
@@ -212,7 +212,7 @@ INSERT INTO `patient_birth_details`(
 									);
 else
 
-UPDATE `patient_birth_details` SET 
+UPDATE `patient_birth_details` SET
 									`fk_delivery_method_id` = pdelivery_method_id
 									,`birth_weight` = pbirth_weight
 									,`length`= plength
@@ -224,16 +224,16 @@ UPDATE `patient_birth_details` SET
 									,`father_blood_group`= pfathers_blood_group
 									,`siblings` = psiblings
 									,`remarks` = premarks
-									,`is_active`= pis_active 
+									,`is_active`= pis_active
 						WHERE fk_patient_id = ppatient_id;
 end if;
 
-select 1 as status;	
+select 1 as status;
 
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `authenticate` (IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `authenticate` (IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))  READS SQL DATA
 begin
 
 declare lLoginId int;
@@ -257,7 +257,7 @@ set @ldoctorId = -1;
 			,@lisActive
        from login
        where login_id = plogin_id;
-              
+
 if @lUserType is null then
 
     select '-1' as id
@@ -267,7 +267,7 @@ if @lUserType is null then
 		   ,0 as is_active
 		   , -1 as location_id
 		   ,@ldoctorId as doctor_id;
-		   
+
 elseif @lisActive = 0 then
 
 	select 1 as id
@@ -285,7 +285,7 @@ elseif @lUserType = 'A' then
            ,'' as name
 		   ,@lhashPassword as `password`
 		   ,@ldoctorId as doctor_id;
-           
+
 elseif @lUserType = 'D' then
 
 	select name
@@ -302,7 +302,7 @@ elseif @lUserType = 'D' then
 		   ,1 as is_active
 		   ,-1 as location_id
 		   ,@luserId as doctor_id;
-		   
+
 elseif @lUserType = 'S' then
 
 	select first_name
@@ -328,10 +328,10 @@ end if;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `book_appointment` (IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `book_appointment` (IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))  NO SQL
 begin
 
-		
+
 	INSERT INTO `appointment`(
 								`fk_doctor_id`
 								, `fk_patient_id`
@@ -341,7 +341,7 @@ begin
 								, `appointment_state`
 								, `created_date`
 								, `is_active`
-								) 
+								)
 						 VALUES (
 								  pdoctor_id
 								 ,ppatient_id
@@ -351,13 +351,13 @@ begin
 								 ,pdescription
 								 ,1
 								 );
-	
+
 	select 1 as state;
 
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `cancel_appointment` (IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cancel_appointment` (IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))  MODIFIES SQL DATA
 begin
 
 
@@ -370,7 +370,7 @@ from appointment a
 where a.id = pappointment_id
 	  and a.state = 0
 	  and a.is_active = 1;
-	  
+
 if @lcanCancelAppointment > 0 then
 
 update appointment a
@@ -378,7 +378,7 @@ update appointment a
 where a.id = pappointment_id
 	  and a.state = 0
 	  and a.is_active = 1;
-	  
+
 insert into cancelled_appointments (
 									fk_appointment_id,
 									remarks,
@@ -394,16 +394,16 @@ insert into cancelled_appointments (
 									 pcancelled_by_id,
 									 pcancelled_by_type
 									);
-									 
-commit;		
-select 1 as status;							
+
+commit;
+select 1 as status;
 end if;
 
 select 2 as status;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `close_appointment_proc` (IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN `pPrescriptionListXML` VARCHAR(65535))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc` (IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN `pPrescriptionListXML` VARCHAR(65535))  NO SQL
 begin
 
 declare lpatientId int;
@@ -432,7 +432,7 @@ insert into close_appointment(
 						values
 						      (
 							   pappointment_id
-							   ,STR_TO_DATE(pclosing_date, '%d-%m-%Y') 
+							   ,STR_TO_DATE(pclosing_date, '%d-%m-%Y')
 							   ,pclosing_time_mins
 							   ,@lpatientId
 							   ,premarks
@@ -440,17 +440,17 @@ insert into close_appointment(
 							   ,pclosed_by_id
 							   ,pclosed_by_type
 							  );
-							  
+
 select 1 as status;
 
-							  
-end if;					
+
+end if;
 
 select 2 as status;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_guardian` (IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_guardian` (IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))  MODIFIES SQL DATA
 begin
 
 declare lguardianEntryExists int;
@@ -477,7 +477,7 @@ INSERT INTO `guardian`
 					) VALUES (
 					 pfk_patient_id
 					,pname
-					,STR_TO_DATE(pdate_of_birth, '%d-%m-%Y') 
+					,STR_TO_DATE(pdate_of_birth, '%d-%m-%Y')
 					,pgender
 					,ppicture_path
 					,pphone1
@@ -491,7 +491,7 @@ INSERT INTO `guardian`
 else
 
 	UPDATE `guardian` SET `name`= pname
-						  ,`date_of_birth`= STR_TO_DATE(pdate_of_birth, '%d-%m-%Y') 
+						  ,`date_of_birth`= STR_TO_DATE(pdate_of_birth, '%d-%m-%Y')
 						  ,`gender`= pgender
 						  ,`phone1`= pphone1
 						  ,`phone2`= pphone2
@@ -499,7 +499,7 @@ else
 						  ,`picture_path`= ppicture_path
 						  ,`is_active` =  pis_active
 					WHERE fk_patient_id = pfk_patient_id;
-					
+
 end if;
 
 select 1 as status;
@@ -507,12 +507,12 @@ select 1 as status;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_medical_programme` (IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme` (IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))  MODIFIES SQL DATA
 begin
 
 	declare lmaxProgrammeId int;
 	declare lcounter int;
-	
+
 	declare lprogrammeId int;
 	declare lprogrammeDuration int;
 	declare ldurationText varchar(50);
@@ -520,28 +520,28 @@ begin
 	declare ldoseNo int;
 
 	if pprogramme_id <= 0 then
-			
+
 		INSERT INTO `medication_programme`(
 											`fk_doctors_id`
 											, `name`
 											, `created_date`
 											, `is_active`
-											) 
+											)
 									VALUES (
 											pdoctor_id
 											,pprogramme_name
 											,now()
 											,1
 										   );
-										   
+
 		select max(id)
 		into @lmaxProgrammeId
 		from medication_programme;
-		
+
 		set @lcounter = 1;
-	
+
 		while @lcounter <= pprogrammes_count do
-		
+
 			SELECT ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/id')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/duration')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/text')
@@ -552,7 +552,7 @@ begin
 				 ,@ldurationText
 				 ,@lvaccine
 				 ,@ldoseNo;
-				 
+
 			INSERT INTO `medication_programme_list`(
 													 `fk_medication_programme_id`
 													, `duration_days`
@@ -562,7 +562,7 @@ begin
 													, `created_date`
 													, `fk_doctor_id`
 													, `is_active`
-													) 
+													)
 											VALUES (
 													@lmaxProgrammeId
 													,@lprogrammeDuration
@@ -573,21 +573,21 @@ begin
 													,pdoctor_id
 													,1
 												  );
-		
+
 			SET @lcounter = @lcounter + 1;
-		END WHILE; 
-	
+		END WHILE;
+
 
 	else
-		
-		UPDATE `medication_programme` 
+
+		UPDATE `medication_programme`
 		   SET  `name`= pprogramme_name
 		 WHERE id = pprogramme_id;
-		 
+
 		 set @lcounter = 1;
-	
+
 		while @lcounter <= pprogrammes_count do
-		
+
 			SELECT ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/id')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/duration')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/text')
@@ -598,9 +598,9 @@ begin
 				 ,@ldurationText
 				 ,@lvaccine
 				 ,@ldoseNo;
-				 
+
 		    if COALESCE(@lprogrammeId, 0)  <= 0 then
-				 
+
 			INSERT INTO `medication_programme_list`(
 													 `fk_medication_programme_id`
 													, `duration_days`
@@ -611,7 +611,7 @@ begin
 													, `fk_doctor_id`
 													, `is_active`
 													,update_marker
-													) 
+													)
 											VALUES (
 													pprogramme_id
 													,@lprogrammeDuration
@@ -624,48 +624,48 @@ begin
 													,1
 												  );
 			else
-			
-			    				UPDATE `medication_programme_list` 
+
+			    				UPDATE `medication_programme_list`
 				   SET  `duration_days`= @lprogrammeDuration
 						,`duration_text`= @ldurationText
 						,`medicine`= @lvaccine
 						,`dose_no`= @ldoseNo
 						,`modified_date`= now()
-						,`update_marker` = 1 
+						,`update_marker` = 1
 				WHERE id = @lprogrammeId
 					  and fk_medication_programme_id  = pprogramme_id
 					  and is_active = 1;
 
 			end if;
-		
+
 			SET @lcounter = @lcounter + 1;
-		END WHILE; 
-		
-		UPDATE `medication_programme_list` 
+		END WHILE;
+
+		UPDATE `medication_programme_list`
 		   SET  is_active = 0
 		WHERE  fk_medication_programme_id  = pprogramme_id
 			  and update_marker = 0
 			  and is_active = 1;
-		
-				UPDATE `medication_programme_list` 
-		   SET  `update_marker` = 0 
+
+				UPDATE `medication_programme_list`
+		   SET  `update_marker` = 0
 		WHERE fk_medication_programme_id  = pprogramme_id
 			  and is_active = 1;
-		 
-		 
-	
-						
-									
-	
+
+
+
+
+
+
 	end if;
-	
+
 	commit;
-	
+
 	select 1 as status;
-	
+
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_patient` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)  begin
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)  begin
 
 declare lmaxPatientId int;
 
@@ -690,7 +690,7 @@ INSERT INTO `patient`
 					) VALUES (
 					pdoctor_id
 					,pname
-					,STR_TO_DATE(pdate_of_birth, '%d-%m-%Y') 
+					,STR_TO_DATE(pdate_of_birth, '%d-%m-%Y')
 					,pblood_group
 					,pweight
 					,pheight
@@ -707,14 +707,14 @@ INSERT INTO `patient`
 	select max(id)
 	into @lmaxPatientId
 	from patient;
-	
+
 	select 1 as status
 		   ,@lmaxPatientId as patient_id;
-							
+
 else
 
 	UPDATE `patient` SET `name`= pname
-						  ,`date_of_birth`= STR_TO_DATE(pdate_of_birth, '%d-%m-%Y') 
+						  ,`date_of_birth`= STR_TO_DATE(pdate_of_birth, '%d-%m-%Y')
 						  ,blood_group = pblood_group
 						  ,`weight`= pweight
 						  ,`height`= pheight
@@ -727,7 +727,7 @@ else
 						  ,`modified_by_type`= plogged_in_user_type
 						  ,`is_active` =  pis_active
 					WHERE id = pid;
-					
+
 	select 1 as status
 		  ,pid as patient_id;
 
@@ -739,14 +739,14 @@ commit;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_patients_programme` (IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patients_programme` (IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))  MODIFIES SQL DATA
 begin
 	declare lprogrammeExists int;
 	declare lprogrammeId int;
 	declare lprogrammeName varchar(100);
 	declare lprogrameDetailsCount int;
 	declare lcounter1 int;
-	
+
 		declare lcounter2 int;
 	declare lprogrammeDetailsExists int;
 	declare lprogrammeDetailsId int;
@@ -757,23 +757,23 @@ begin
 	declare ldueOn varchar(20);
 	declare lgivenOn varchar(20);
 	declare lbatchNo varchar(100);
-	
+
 	set @lcounter1 = 1;
-	
+
 	while @lcounter1 <= pprogramme_count do
-	
+
 		SELECT ExtractValue(pprogramme_xml, 'programme/item[$@lcounter1]/id')
 			   ,ExtractValue(pprogramme_xml, 'programme/item[$@lcounter1]/name')
 			   ,ExtractValue(pprogramme_xml, 'programme/item[$@lcounter1]/count')
 		into @lprogrammeId
 			 ,@lprogrammeName
 			 ,@lprogrameDetailsCount;
-			 
+
 				select count(id)
 		into @lprogrammeExists
 		from patient_medication_programme
 		where fk_medication_pogramme_id = @lprogrammeId;
-		
+
 		if @lprogrammeExists = 0 then
 
 			INSERT INTO `patient_medication_programme`
@@ -791,13 +791,13 @@ begin
 						,now()
 						,1
 						);
-						
+
 		end if;
-		
+
 		set @lcounter2 = 1;
-	
+
 		while @lcounter2 <= @lprogrameDetailsCount do
-		
+
 			SELECT ExtractValue(pprogramme_xml, 'programme/item[$@lcounter1]/list/item[$@lcounter2]/id')
 				   ,ExtractValue(pprogramme_xml, 'programme/item[$@lcounter1]/list/item[$@lcounter2]/programmeListId')
 				   ,ExtractValue(pprogramme_xml, 'programme/item[$@lcounter1]/list/item[$@lcounter2]/durationDays')
@@ -814,14 +814,14 @@ begin
 				 ,@ldueOn
 				 ,@lgivenOn
 				 ,@lbatchNo;
-		
+
 			select count(id)
 			into @lprogrammeDetailsExists
 			from patient_medication_programme_list
 			where id = @lprogrammeDetailsId;
-			
+
 			if @lprogrammeDetailsExists = 0 then
-								
+
 				INSERT INTO `patient_medication_programme_list`(
 											`fk_patient_id`
 											, `fk_doctor_id`
@@ -841,52 +841,52 @@ begin
 											,@ldurationDays
 											,@lmedicine
 											,@ldoseNo
-											,STR_TO_DATE(@ldueOn, '%d-%m-%Y') 
-											,STR_TO_DATE(@lgivenOn, '%d-%m-%Y') 
+											,STR_TO_DATE(@ldueOn, '%d-%m-%Y')
+											,STR_TO_DATE(@lgivenOn, '%d-%m-%Y')
 											,@lbatchNo);
-											
+
 			else
-			
-				update patient_medication_programme_list 
-				   set due_on = STR_TO_DATE(@ldueOn, '%d-%m-%Y') 
-					   ,give_on = STR_TO_DATE(@lgivenOn, '%d-%m-%Y') 
+
+				update patient_medication_programme_list
+				   set due_on = STR_TO_DATE(@ldueOn, '%d-%m-%Y')
+					   ,give_on = STR_TO_DATE(@lgivenOn, '%d-%m-%Y')
 					   ,batch_no = @lbatchNo
 			    where id = @lprogrammeDetailsId;
-				
+
 			end if;
-			
-			
-			
+
+
+
 			SET @lcounter2 = @lcounter2 + 1;
-			
-		END WHILE; 
-				
+
+		END WHILE;
+
 		SET @lcounter1 = @lcounter1 + 1;
-	END WHILE; 
-		
-	
-	
+	END WHILE;
+
+
+
 	select pprogramme_count as status;
 
-	
+
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_schedule` (IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule` (IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))  NO SQL
 begin
 
 
     DECLARE lmaxScheduleId INT;
-	
+
 	DECLARE lnodeCount int DEFAULT 0;
 	DECLARE lcounter INT DEFAULT 1;
 	declare lcounter2 int;
-	
+
 	DECLARE lscheduleDate varchar(20);
 	DECLARE llocationId INT;
 	DECLARE lstartTimeMins varchar(20);
 	DECLARE lendTimeMins varchar(20);
-	
-	
+
+
 	INSERT INTO `schedule`
 							(`fk_doctor_id`
 							, `start_date`
@@ -894,7 +894,7 @@ begin
 							, `created_date`
 							, `created_by`
 							, `is_active`
-							) 
+							)
 					VALUES (pdoctor_id
 							,STR_TO_DATE(pstart_date, '%m-%d-%Y')
 							,STR_TO_DATE(pend_date, '%m-%d-%Y')
@@ -904,26 +904,26 @@ begin
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
-	
-	
+
+
 	set @lcounter = 1;
 	WHILE @lcounter <= plocation_count DO
-	
+
 		SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/id')
 		into @llocationId;
-		
+
 		set @lcounter2 = 1;
-		
+
 		while @lcounter2 <= pschedule_count do
-		
+
 			SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/schedule/item[$@lcounter2]/date')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/schedule/item[$@lcounter2]/timeSlots/startTime')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/schedule/item[$@lcounter2]/timeSlots/startTime')
 			into @lscheduleDate
 				 ,@lstartTimeMins
 				 ,@lendTimeMins;
-		
-		
+
+
 			INSERT INTO `schedule_day`
 					(
 					  fk_doctor_id
@@ -933,7 +933,7 @@ begin
 					  ,start_time_mins
 					  ,end_time_mins
 					  ,is_active
-					 ) 
+					 )
 			 VALUES (
 					 pdoctor_id
 					,@lmaxScheduleId
@@ -943,46 +943,46 @@ begin
 					,@lendTimeMins
 					,1
 					 );
-		
-				 
+
+
 			SET @lcounter2 = @lcounter2 + 1;
 		end while;
-		
+
 		SET @lcounter = @lcounter + 1;
 	END WHILE;
-	
+
 	commit;
-	
+
 	SELECT plocation_count as schedule;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_modify_staff` (IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_staff` (IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)  MODIFIES SQL DATA
 begin
 
 	declare llogin_id_exists int;
 	declare llogin_id int;
 	declare lstaff_id int;
 
-	if COALESCE(pid, 0) > 0 then 
+	if COALESCE(pid, 0) > 0 then
 
 		select fk_user_id
 		into @llogin_id
 		from staff
 		where id = pid;
-		  
+
 	end if;
-	
-    select count(id) 
+
+    select count(id)
     into  @llogin_id_exists
     from login
     where login_id = puser_name
           and id <> COALESCE(@llogin_id, 0);
-		  
+
 	if  COALESCE(@llogin_id_exists, 0) = 0 then
-	
+
 		if pid <= 0 then
-		
+
 			INSERT INTO `login`( `type`
 						, `login_id`
 						, `password`
@@ -990,7 +990,7 @@ begin
 						,last_modified
 						,is_active
 						)
-						VALUES 
+						VALUES
 						('S'
 						,puser_name
 						,ppassword
@@ -998,14 +998,14 @@ begin
 						,null
 						,pis_active
 						);
-								
+
 			 select max(id)
 			 into @llogin_id
 			 from login;
-		
+
 			INSERT INTO `staff`(
 								`first_name`,
-								`last_name`, 
+								`last_name`,
 								`contact1`,
 								`contact2`,
 								`email`,
@@ -1016,7 +1016,7 @@ begin
 								`fk_created_by_id`,
 								created_by_type,
 								`created_date`,
-								`is_active`) 
+								`is_active`)
 					   VALUES (pfirst_name,
 							   plast_name,
 							   pcontact1,
@@ -1031,27 +1031,27 @@ begin
 							   now(),
 							   pis_active
 							   );
-							   
+
 			 select max(id)
 			 into @lstaff_id
 			 from staff;
-			 
+
 		else
-		
+
 			select fk_user_id
 			into @llogin_id
-			from staff 
+			from staff
 			where id = pid;
-			
+
 			set @lstaff_id = pid;
-			
-			UPDATE `login` 
+
+			UPDATE `login`
 					SET `login_id`= puser_name
 					,`password`= case when ppassword is null OR ppassword = '' then `password` else ppassword end
 					,`last_modified`= now()
                     ,is_active = pis_active
 			WHERE id = @llogin_id;
-			
+
 			UPDATE `staff` SET  `first_name`= pfirst_name
 								,`last_name`= plast_name
 								,`contact1`= pcontact1
@@ -1063,17 +1063,17 @@ begin
 								,fk_modified_by_id = pfk_logged_in_user_id
 								,modified_by_type = plogged_in_user_type
 								,modified_date = now()
-								,`is_active`= pis_active 
+								,`is_active`= pis_active
 							WHERE id = pid;
-				
+
 		end if;
-		
+
 		commit;
 		select '1' as status
 	   ,@lstaff_id as id
 	   ,pfirst_name as name
 	   ,'S' as `type`;
-	
+
 	else
 
 		select '-1' as status
@@ -1085,20 +1085,20 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `create_schedule` (IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_schedule` (IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))  MODIFIES SQL DATA
     DETERMINISTIC
 begin
 
     DECLARE lmaxScheduleId INT;
 	DECLARE lcounter INT DEFAULT 1;
-	
+
 	DECLARE lscheduleDate varchar(20);
 	DECLARE lstartTimeMins varchar(20);
 	DECLARE lendTimeMins varchar(20);
 	DECLARE lisBlocked INT;
 	DECLARE lisActive INT;
-	
-	
+
+
 	INSERT INTO `schedule`
 							(`fk_doctor_id`
 							,`start_date`
@@ -1107,7 +1107,7 @@ begin
 							,`created_by`
 							,created_by_type
 							,`is_active`
-							) 
+							)
 					VALUES (pdoctor_id
 							,STR_TO_DATE(pstart_date, '%d-%m-%Y')
 							,STR_TO_DATE(pend_date, '%d-%m-%Y')
@@ -1119,11 +1119,11 @@ begin
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
-	
+
 	set @lcounter = 1;
-	
+
 	while @lcounter <= pschedule_count do
-	
+
 			SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/date')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/startTimeMinutes')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/endTimeMinutes')
@@ -1134,7 +1134,7 @@ begin
 				 ,@lendTimeMins
 				 ,@lisBlocked
 				 ,@lisActive;
-				 
+
 			INSERT INTO `schedule_day`
 					(
 					  fk_doctor_id
@@ -1145,7 +1145,7 @@ begin
 					  ,end_time_mins
 					  ,is_blocked
 					  ,is_active
-					) 
+					)
 			 VALUES (
 					  pdoctor_id
 					  ,@lmaxScheduleId
@@ -1156,17 +1156,17 @@ begin
 					  ,@lisBlocked
 					  ,@lisActive
 					 );
-	
+
 			SET @lcounter = @lcounter + 1;
 	END WHILE;
-	
+
 	commit;
-	
+
 	SELECT 1 as status;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `getDoctorInfo` (IN `pid` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo` (IN `pid` INT)  READS SQL DATA
 SELECT
    d.name ,
    d.contact1 ,
@@ -1181,7 +1181,7 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_appointments` (IN `pdoctor_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_appointments` (IN `pdoctor_id` INT)  READS SQL DATA
 begin
 
 
@@ -1207,7 +1207,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_doctors` ()  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors` ()  NO SQL
 begin
 
 SELECT `id`
@@ -1215,14 +1215,14 @@ SELECT `id`
 		, `contact1`
 		, `email`
 		, `qualification`
-		, `is_active` 
-  FROM `doctor`; 
+		, `is_active`
+  FROM `doctor`;
 
 
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_all_doctor_locations` (IN `pdoctor_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations` (IN `pdoctor_id` INT)  NO SQL
 begin
 
 select id
@@ -1233,7 +1233,7 @@ where fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_appointments_for_the_day` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_appointments_for_the_day` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))  NO SQL
 begin
 
 
@@ -1260,7 +1260,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_birth_details` (IN `ppatient_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_details` (IN `ppatient_id` INT)  READS SQL DATA
 begin
 
 
@@ -1275,26 +1275,26 @@ SELECT `fk_delivery_method_id`
 		, `father_blood_group`
 		, `siblings`
 		, `remarks`
-		, `is_active` 
-FROM `patient_birth_details` 
+		, `is_active`
+FROM `patient_birth_details`
 WHERE fk_patient_id = ppatient_id;
 
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_delivery_methods` ()  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods` ()  READS SQL DATA
 select id
 	   ,name
 from delivery_methods$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_doctors_checkup_programs` (IN `pdoctor_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_doctors_checkup_programs` (IN `pdoctor_id` INT)  READS SQL DATA
 select id
 	   , name
        , date_format(created_date, '%d %b %Y') as created_date
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_guardian_info` (IN `ppatient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_guardian_info` (IN `ppatient_id` INT)  NO SQL
 begin
 
 SELECT `name`
@@ -1304,14 +1304,14 @@ SELECT `name`
 		, `phone1`
 		, `phone2`
 		, `address`
-		, `is_active` 
-FROM `guardian` 
+		, `is_active`
+FROM `guardian`
 WHERE fk_patient_id = ppatient_id;
 
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_medication_programme` (IN `pdoctor_id` INT, IN `pprogramme_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme` (IN `pdoctor_id` INT, IN `pprogramme_id` INT)  READS SQL DATA
 select id
 	   , name
        , date_format(created_date, '%d %b %Y') as created_date
@@ -1319,7 +1319,7 @@ from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_list` (IN `pdoctor_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list` (IN `pdoctor_id` INT)  READS SQL DATA
 SELECT `id`
 		,`name`
 		, date_format(`date_of_birth`, '%d-%m-%Y') as date_of_birth
@@ -1331,18 +1331,18 @@ SELECT `id`
 		,`address`
 		, `picture_path`
         , concat(`name`, ' (', contact1 , ')') as display
-FROM `patient` 
+FROM `patient`
 WHERE fk_doctor_id = pdoctor_id
 	  and is_active = 1$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_programmes` (IN `ppatient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes` (IN `ppatient_id` INT)  NO SQL
 SELECT 	 id
 		,fk_medication_pogramme_id
 		, name
 FROM patient_medication_programme
 WHERE fk_patient_id = ppatient_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patients_programme_details` (IN `ppatient_id` INT, IN `pmedication_programme_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programme_details` (IN `ppatient_id` INT, IN `pmedication_programme_id` INT)  NO SQL
 SELECT 	id
 		, fk_medication_programme_id
 		, fk_medication_programme_list_id
@@ -1352,11 +1352,11 @@ SELECT 	id
 		, due_on
 		, give_on
 		, batch_no
-FROM  patient_medication_programme_list 
+FROM  patient_medication_programme_list
 WHERE fk_patient_id = ppatient_id
 	  and fk_medication_programme_id = pmedication_programme_id$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patient_all_appointments_history` (IN `patient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_all_appointments_history` (IN `patient_id` INT)  NO SQL
 begin
 
 
@@ -1381,7 +1381,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_patient_details` (IN `ppatient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details` (IN `ppatient_id` INT)  NO SQL
 begin
 
 SELECT  `name`
@@ -1396,14 +1396,14 @@ SELECT  `name`
 		, `address`
 		, `picture_path`
         , is_active
-FROM `patient` 
+FROM `patient`
 WHERE id = ppatient_id;
 
 
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_programme_list_details` (IN `pprogramme_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details` (IN `pprogramme_id` INT)  READS SQL DATA
 select `duration_days`
 	  , duration_text
 	  , `medicine`
@@ -1413,12 +1413,13 @@ from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
 	  and is_active = 1$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedules_timings_for_the_day` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_timings_for_the_day` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))  READS SQL DATA
 begin
 
 	select sd.start_time_mins
-		   ,sd.end_time_mins
-           ,sd.location_id as loc_id
+		    ,sd.end_time_mins
+         ,sd.location_id as loc_id
+				,sd.fk_schedule_id as schedule_id
 	from schedule_day sd
 	where sd.fk_doctor_id = pdoctor_id
 		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
@@ -1428,25 +1429,25 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedule_calander_details` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))  READS SQL DATA
 begin
 
 
 SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
-	   ,start_time_mins 
-	   ,end_time_mins 
+	   ,start_time_mins
+	   ,end_time_mins
 	   ,fk_schedule_id
-  FROM schedule_day 
-  WHERE fk_doctor_id = pdoctor_id 
+  FROM schedule_day
+  WHERE fk_doctor_id = pdoctor_id
 		and location_id = plocation_id
 		and `date` >= STR_TO_DATE(pstart_date, '%d-%m-%Y')
 		and `date` <= STR_TO_DATE(pend_date, '%d-%m-%Y')
-  group by `date`, start_time_mins, end_time_mins 
+  group by `date`, start_time_mins, end_time_mins
   order by `date` asc, start_time_mins asc;
-  
+
  end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_schedule_list` (IN `pdoctor_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list` (IN `pdoctor_id` INT)  NO SQL
 begin
 
 SELECT s.id
@@ -1454,12 +1455,12 @@ SELECT s.id
 	   ,s.end_date
 	   ,s.created_date
 	   ,s.is_active
-FROM schedule s 
+FROM schedule s
 where s.fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_staff_details` (IN `pid` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_details` (IN `pid` INT)  READS SQL DATA
 begin
 
 declare luser_id int;
@@ -1475,7 +1476,7 @@ SELECT `login_id`
 		,`password`
 into   @luser_name
 	   ,@lpassword
-FROM `login` 
+FROM `login`
 WHERE  id = @luser_id;
 
 SELECT `first_name`
@@ -1488,12 +1489,12 @@ SELECT `first_name`
 		, `is_active`
 		,@luser_name as user_name
 		,@lpassword as password
-FROM `staff` 
+FROM `staff`
 WHERE id = pid;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_staff_list_for_doctor` (IN `pdoctor_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_list_for_doctor` (IN `pdoctor_id` INT)  NO SQL
 begin
 
 SELECT   s.id
@@ -1511,7 +1512,7 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_user_info` (IN `puser_id` VARCHAR(100))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info` (IN `puser_id` VARCHAR(100))  READS SQL DATA
 begin
 
 declare lLoginId int;
@@ -1534,7 +1535,7 @@ select id
        from login
        where login_id = puser_id
               and is_active = 1;
-              
+
 if @lUserType is null then
 
     select '-1' as id
@@ -1543,8 +1544,8 @@ if @lUserType is null then
 		   , "" as `password`
 		   ,@locationId as location_id
 		   ,@ldoctorId as doctor_id;
-              
-              
+
+
 elseif @lUserType = 'A' then
 
 	select 1 as id
@@ -1553,7 +1554,7 @@ elseif @lUserType = 'A' then
 		   ,@lhashPassword as `password`
 		   ,@locationId as location_id
 		   ,@ldoctorId as doctor_id;
-           
+
 elseif @lUserType = 'D' then
 
 	select name
@@ -1569,7 +1570,7 @@ elseif @lUserType = 'D' then
 		   ,@lhashPassword as `password`
 		   ,@locationId as location_id
 		   ,@luserId as doctor_id;
-		   
+
 elseif @lUserType = 'S' then
 
 	select first_name
@@ -1594,13 +1595,13 @@ end if;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `get_user_info_for_login` (IN `plogin_id_pk` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login` (IN `plogin_id_pk` INT)  READS SQL DATA
 begin
 
 	declare lLoginId int;
 	declare lUserType varchar(5);
 	declare ldoctorId int;
-	
+
 	set @ldoctorId = -1;
 
 	select id
@@ -1609,23 +1610,23 @@ begin
 		,@lUserType
 	from login
 	where id = plogin_id_pk;
-	
-	
+
+
 if @lUserType is null then
 
     select '-1' as id
     	   ,'-1' as `type`
            ,'-1' as name
 		   ,@ldoctorId as doctor_id;
-              
-              
+
+
 elseif @lUserType = 'A' then
 
 	select 1 as id
     	   ,@lUserType as `type`
            ,'admin' as name
 		   ,@ldoctorId as doctor_id;
-           
+
 elseif @lUserType = 'D' then
 
 	select name
@@ -1639,7 +1640,7 @@ elseif @lUserType = 'D' then
     	   ,@lUserType as `type`
            ,@lname as name
 		   ,@luserId as doctor_id;
-		   
+
 elseif @lUserType = 'S' then
 
 	select first_name
@@ -1661,7 +1662,7 @@ end if;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `insert_new_appointment` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `ppatient_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `pcontact` VARCHAR(20), IN `pdescription` VARCHAR(2000))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_appointment` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `ppatient_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `pcontact` VARCHAR(20), IN `pdescription` VARCHAR(2000))  MODIFIES SQL DATA
 begin
 
 
@@ -1693,103 +1694,103 @@ INSERT INTO `appointment`(
 							,pcreated_by_id
 							,pcreated_by_type
 							,1 							);
-			
-commit;				
+
+commit;
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `make_reset_password_request` (IN `plogin_id` VARCHAR(100))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request` (IN `plogin_id` VARCHAR(100))  MODIFIES SQL DATA
 begin
-	
+
 
 	DECLARE lstatus INT;
 	DECLARE llogin_id_pk INT;
-	DECLARE lpreviousRequestCount INT;	
-	DECLARE lresetRequestId INT;	
+	DECLARE lpreviousRequestCount INT;
+	DECLARE lresetRequestId INT;
 	DECLARE lpassword varchar(100);
-	DECLARE luserType varchar(5);	
-	DECLARE lrecoveryEmail varchar(100);	
-	DECLARE lresetCode varchar(100);	
+	DECLARE luserType varchar(5);
+	DECLARE lrecoveryEmail varchar(100);
+	DECLARE lresetCode varchar(100);
 	declare lexitLoop int;
 	declare lmaxNo int;
 	declare lminNo int;
-	
-	
+
+
     set @lstatus = 0; 	set @lresetCode  = '';
 	set @lrecoveryEmail = '';
 	set @lmaxNo = 11350;
 	set @lminNo = 1350;
-	
+
 		SELECT `password`
 		   ,`type`
 		   ,id
 	into  @lpassword
 		  ,@luserType
 		  ,@llogin_id_pk
-	FROM `login` 
+	FROM `login`
 	WHERE login_id = plogin_id
 		  and is_active = 1;
-		  
+
 	if @lpassword is null then
-		set @lstatus = 2;  		
-	else 
-		
-				
+		set @lstatus = 2;
+	else
+
+
     select count(*)
 	into @lpreviousRequestCount
 	from password_reset_request
 	where fk_login_id = @llogin_id_pk
 		  and is_valid = 1;
-		  
+
 	if COALESCE(@lpreviousRequestCount, 0) > 0 then
-					  
+
 		update password_reset_request
 		set is_valid = 0
 		where fk_login_id = @llogin_id_pk
 			  and is_valid = 1;
-		
+
 	end if;
-	
-		
-		
-	
-			
-	
+
+
+
+
+
+
 	set @lexitLoop = 1;
 	while COALESCE(@lexitLoop, 0) = 1 do
-	
+
 		SELECT concat(
 					CAST(CONCAT( CHAR(FLOOR(RAND()*26)+65),FLOOR(100+RAND()*(500-100))) AS CHAR(50))
 					, FLOOR(@lminNo +RAND() *(@lmaxNo - @lminNo))
 				)AS random_num
 		into @lresetCode;
-		
+
 		SELECT count(*)
-		into @lexitLoop  		FROM password_reset_request 
+		into @lexitLoop  		FROM password_reset_request
 		where reset_code = @lresetCode
 			  and is_valid =  1;
-	
+
 		SET @lcounter = @lcounter + 1;
 	END WHILE;
-	
-	
-		
+
+
+
 	if @luserType = 'D' then
-	
+
 		select email
 		into @lrecoveryEmail
 		from doctor
 		where fk_login_id = @llogin_id_pk;
-	
+
 	elseif @luserType = 'S' then
-	
+
 		select recovery_email
 		into @lrecoveryEmail
 		from staff
 		where fk_user_id = @llogin_id_pk;
-	
-	end if;	
-	
+
+	end if;
+
 	INSERT INTO `password_reset_request`(`fk_login_id`
 										 , `old_password`
 										 , `reset_code`
@@ -1797,8 +1798,8 @@ begin
 										 , `recovery_mobile`
 										 , `created_date_time`
 										 , `is_valid`
-										 ) 
-										VALUES 
+										 )
+										VALUES
 										(@llogin_id_pk
 										,@lpassword
 										,@lresetCode
@@ -1807,26 +1808,26 @@ begin
 										,now()
 										,1
 										);
-	
+
 	end if;
-	
+
 	commit;
-	
+
 	select @lstatus as status
 		   ,@lresetCode as reset_code
 		   ,@lrecoveryEmail as recovery_email;
-	
+
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` PROCEDURE `reset_password` (IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password` (IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))  NO SQL
 begin
-	
+
 	DECLARE lstatus INT;
 	declare llogin_id_pk int;
 	declare lreset_request_id int;
 	DECLARE ldiff int;
 	DECLARE lmaxValidHours int;
-	
+
 	set @lstatus = 0;
 	set @lmaxValidHours = 48;
 
@@ -1840,36 +1841,36 @@ begin
 	where reset_code = preset_code
 		  and created_date_time < now()
 		  and is_valid = 1;
-	
-	
+
+
 	if @llogin_id_pk is not null and @ldiff < @lmaxValidHours then
-				  
+
 		update login
 		set password = pnew_password
 			,last_modified = now()
 		where id = @llogin_id_pk
 			  and is_active = 1;
-			  
+
 		update password_reset_request
 		set is_valid = 0
 			,modified_date = now()
 		where id = @lreset_request_id;
-	
+
 	else
 		set @lstatus = 2;
 	end if;
-	
+
 	commit;
-	
+
 	select @lstatus as status
 		   ,@llogin_id_pk as login_id_pk;
-	
+
 end$$
 
 --
 -- Functions
 --
-CREATE DEFINER=`dreamdkp`@`localhost` FUNCTION `check_appointment_avalibility` (`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_appointment_avalibility` (`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) NO SQL
 begin
 
 	/*
@@ -1879,23 +1880,23 @@ begin
 	  4 cannot book appointment for a previous date
 	*/
 
-	
+
 	declare lnewAppointmentDate date;
 	declare lscheduleCount int;
 
 	declare lappointmentSum int;
 	declare ltodaysDate date;
-	
+
 	set @ltodaysDate = CURDATE();
-	
+
 	set @lnewAppointmentDate = STR_TO_DATE(pappointment_date, '%d-%m-%Y');
-	
+
 	if @lnewAppointmentDate  <  @ltodaysDate then
-		return 4;  
+		return 4;
 		#cannot book appointment for a previous date
 	end if;
-	
-	
+
+
 	select count(sc.id)
 	into   @lscheduleCount
 	from schedule_day sc
@@ -1906,10 +1907,10 @@ begin
 		  and sc.end_time_mins >= pend_time
 		  and sc.is_blocked = 0
 		  and sc.is_active = 1;
-		  
+
 	if COALESCE(@lscheduleCount, 0) = 0 then
 		return 2;  	end if;
-	 
+
 	 select sum(is_timing_overlapping(pstart_time, pend_time, a.start_mins, a.end_mins))
 	 into  @lappointmentSum
 	 from appointment a
@@ -1918,8 +1919,8 @@ begin
 			and date(a.appointment_date) = date(@lnewAppointmentDate)
 			and a.state = 0
 			and a.is_active = 1;
-			
-	if COALESCE(@lappointmentSum, 0) > 0 then 
+
+	if COALESCE(@lappointmentSum, 0) > 0 then
 		return 3; 	else
 		return 1; 	end if;
 
@@ -1928,7 +1929,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` FUNCTION `isCbetweenAB` (`pointA` INT, `pointB` INT, `pointC` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `isCbetweenAB` (`pointA` INT, `pointB` INT, `pointC` INT) RETURNS INT(11) NO SQL
 begin
 
 
@@ -1939,7 +1940,7 @@ declare lenghtSsuare int;
 set @dotProduct = (pointC - pointA) * (pointB -pointA);
 
 if @dotProduct < 0 then
-	return 0; 
+	return 0;
     end if;
 
 
@@ -1949,15 +1950,15 @@ if @dotProduct > @lenghtSsuare then
 	return 0;
     end if;
 
-return 1; 
+return 1;
 end$$
 
-CREATE DEFINER=`dreamdkp`@`localhost` FUNCTION `is_timing_overlapping` (`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `is_timing_overlapping` (`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS INT(11) NO SQL
 begin
-	
-	
-	
-		if  pnewStartTime >= pnewEndTime 
+
+
+
+		if  pnewStartTime >= pnewEndTime
 		or  pAppointStartTime >= pAppointEndTime then
 		return 1;
 	end if;
@@ -1967,7 +1968,7 @@ begin
 	else
 		return 1;
 	end if;
-	
+
 end$$
 
 DELIMITER ;
