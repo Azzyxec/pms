@@ -77,12 +77,6 @@ $(document).ready(function(){
       return model.deliveryMethods;
     };
 
-  /*  MainController.prototype.getPatientsImage = function(patientID) {
-      console.log(patientID);
-      $.get(this.patientsImageUrl,{patient_id:patientID}).done(function(response){
-
-      });
-    }*/
 
     MainController.prototype.getDoctorsProgrameNamesList = function(){
 
@@ -383,6 +377,7 @@ var patientDetailsView = {
     this.contact2 = $('#patient-contact2');
     this.address = $('#patient-address');
     this.picUpload =$('#patient-picture');
+    this.imgBox = $('#patient-picture-container');
 
     $('#patient-save-button').click(function(){
       console.log('patient click');
@@ -413,6 +408,7 @@ var patientDetailsView = {
     this.contact1.val(lpatientInfo.contact1);
     this.contact2.val(lpatientInfo.contact2);
     this.address.val(lpatientInfo.address);
+    this.imgBox.attr('src','images/patients/'+lpatientInfo.picturePath);
     //this.picUpload.val(model.);
 
 
