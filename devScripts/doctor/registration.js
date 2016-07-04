@@ -166,7 +166,7 @@ $(document).ready(function(){
       //doctor isactive/inactive radio controls
       this.activeControl = $('#dactive');
       this.inactiveControl = $('#dinactive');
-      /*
+
       this.validator = $("#doctor-profile-reg-form").bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
@@ -253,7 +253,7 @@ $(document).ready(function(){
 
         }
       });
-*/
+
 
       //controls are passed, so that they are available to click function as closure variables
       /*
@@ -273,7 +273,7 @@ $(document).ready(function(){
       //wiring events
 
 
-      this.saveButton.on('click', (function(controller){
+    this.saveButton.on('click', (function(controller){
         //console.log('handler added : ' + cat.Id);
         return function(){
           //console.log('handler exec : ' + cat.Id);
@@ -281,18 +281,24 @@ $(document).ready(function(){
           //steps in saved
           //update mode with info from the view
           //persist the model i.e save update
+          formView.validator.on('success.form.bv',function(e){
+            e.preventDefault();
 
+            console.log('model value' + JSON.stringify(doctorModel) );
+            controller.updateModelFromView();
+
+           controller.saveDoctorAndRedirect();
+
+          });
 
 
 
           //updates the model with info from the view
-          controller.updateModelFromView();
-          console.log('model value' + JSON.stringify(doctorModel) );
-         controller.saveDoctorAndRedirect();
+
 
         };
       })(controller)); //submit click handler
-
+  
 
 /*
         this.docProfclear.on('click',function(){

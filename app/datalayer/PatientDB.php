@@ -5,7 +5,7 @@ use \PDO;
 use Pms\Datalayer\DBHelper;
 use Pms\Entities\Patient;
 use Pms\Entities\BirthDetails;
- 
+
 
 class PatientDB{
 
@@ -54,7 +54,7 @@ class PatientDB{
        $patient['gender'] = $result['gender'];
        $patient['genderText'] = $result['gender'] == 0 ? 'Female' : 'Male';
 
-       
+
        $patient['contact'] = $result['contact1'];
        $patient['address'] = $result['address'];
        $patient['picturePath'] = $result['picture_path'];
@@ -175,7 +175,7 @@ class PatientDB{
 
   }
 
- 
+
 
   public function getPatientDetails($patientId){
     try {
@@ -392,7 +392,7 @@ class PatientDB{
 
   }
 
-    
+
      public function getPatientsHistory($patientId){
     try {
 
@@ -404,23 +404,23 @@ class PatientDB{
 
         $statement->execute();
 
-        $programmes = array();
 
+        $patientHistory = array();
         while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 
-          $patientHistory = array();
 
-         
 
-          
+          $patientHistoryRow = array();
+
+
           $patientHistoryRow['name'] = $result['name'];
           $patientHistoryRow['appt_date'] = $result['appointment_date'];
           $patientHistoryRow['loc_name'] = $result['location_name'];
           $patientHistoryRow['appt_time'] = $result['start_mins'];
           $patientHistoryRow['patient_desc'] = $result['description'];
-             
-        
-         
+
+
+
 
 
           $patientHistory[] = $patientHistoryRow;
@@ -433,8 +433,8 @@ class PatientDB{
     }
 
   }
- 
-    
+
+
   //shift this to a utility class
   function array_to_xml( $data, $xml_data ) {
 

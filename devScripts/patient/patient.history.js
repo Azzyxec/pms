@@ -9,12 +9,27 @@ $(document).ready(function(){
         var controller = {
           init: function(){
             this.patientHistoryUrl = links.getPatientHistoryUrl;
+            this.getPatientUrlParam = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+            this.patientId = this.getPatientUrlParam('id');
 
 
 
 
-            //getting the programme list for the doctor
-            $.get( controller.patientHistoryUrl+'?patient_id=93' , {})
+            //getting the History for the doctor
+            $.get( controller.patientHistoryUrl, {patient_id:controller.patientId})
             .done(function( response ) {
               //console.log("patients list: " + JSON.stringify(response));
               listModel = response.data;
