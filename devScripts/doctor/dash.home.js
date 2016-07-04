@@ -386,7 +386,7 @@ controller.prototype.getUserInfo = function () {
       }).count;
 
       if(freeSlots > 1){
-          list = cont.combineFreeSlots(appointments);
+          list = cont.combineFreeSlots(list);
       }
 
           todayAppointmentListView.renderAppointmentist(list);
@@ -753,7 +753,7 @@ getAppointmentPopoverContent: function(contact, description){
 
   var content = '<dl class="dl-horizontal"><dt>Contact&nbsp;:&nbsp;</dt><dd>' +
   contact +
-  '</dd></dl><dl class="dl-horizontal"><dt>Ailment&nbsp;:&nbsp;</dt><dd>' +
+  '</dd></dl><dl class="dl-horizontal"><dt>Description&nbsp;:&nbsp;</dt><dd>' +
   description +
   '</dd></dl>';
 
