@@ -37,9 +37,11 @@ var filesList = [
                        objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                        objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap3-typeahead.min.js",
-                       objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
-                       objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
-                       objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
+
+                        objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
+                        objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
+                        objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
+
                        objConfig.scriptsBasePath +"vendor/loadash.js",
                        objConfig.scriptsBasePath +"vendor/moment.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap-tokenfield.js",
@@ -139,6 +141,10 @@ var filesList = [
                                   objConfig.scriptsBasePath +"utility.js",
                                   objConfig.scriptsBasePath +"links.js",
                                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                                  objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
+                                  objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
+                                  objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
+
                                   objConfig.scriptsBasePath +"patient/patient.entry.js",
                                 objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
                                 objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",

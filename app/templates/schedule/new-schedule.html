@@ -24,21 +24,45 @@
 
           </div>
 
+          <div class="form-group has-feedback">
 
-
-          <div class="form-group">
             <label for="from-date" class="col-sm-2 control-label">From Date</label>
-            <div class="col-sm-6">
-              <input type="date" class="form-control" name="from-date" id="from-date" >
+            <div class='col-md-6 col-sm-6'>
+
+
+              <div class='input-group date' id='datetimepicker24'>
+                <input type="text" class="form-control" name="from-date" id="from-date" >
+
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+
+              </div>
+
             </div>
+
           </div>
 
-          <div class="form-group">
-            <label for="to-date" class="col-sm-2 control-label">To Date</label>
-            <div class="col-sm-6">
-              <input type="date" class="form-control" name="to-date" id="to-date" >
+
+          <div class="form-group has-feedback">
+
+            <label for="to-date" class="col-md-2  col-sm-2 control-label">To Date</label>
+            <div class='col-md-6 col-sm-6'>
+
+
+              <div class='input-group date' id='datetimepicker24'>
+                <input type="text" class="form-control" name="to-date" id="to-date" >
+
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+
+              </div>
+
             </div>
+
           </div>
+
 
 
           <div class="form-group">
@@ -78,18 +102,25 @@
         </form>
 
         <div class="form-inline col-sm-offset-2">
-          <div class="form-group">
             <span for="" >From</span>
+          <div class="input-group date">
 
-            <input type="text" class="form-control" name="" id="from-time" >
 
+            <input type="text" class="form-control" name="" id="from-time" style="width:90px" >
+            <span class="input-group-addon">
+
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
           </div>
+  <span for="">To</span>
+          <div class="input-group date">
 
-          <div class="form-group">
-            <span for="">To</span>
 
-            <input type="text" class="form-control" name="" id="to-time" >
+            <input type="text" class="form-control" name="" id="to-time" style="width:90px"  >
+            <span class="input-group-addon">
 
+              <span class="glyphicon glyphicon-time"></span>
+            </span>
           </div>
 
 
@@ -145,7 +176,7 @@
       </div>
 
     </div>
- 
+
   </div>
 
   <!-- Appointment step two  -->
@@ -163,7 +194,7 @@
             <input type="text" class="form-control"  id="datetimepicker6">
           </div>
         </form>
- 
+
       </td>
     </tr>
 

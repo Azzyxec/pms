@@ -100,6 +100,7 @@ require '../app/routes/doctor.php';
 require '../app/routes/staff.php';
 
 require '../app/routes/appointment.php';
+require '../app/routes/upload.php';
 
 // Run app
 $app->run();

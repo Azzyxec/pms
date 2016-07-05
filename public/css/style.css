@@ -396,3 +396,14 @@ margin-top: 50vh;
 margin: 6px;
 padding: 6px;
 }
+
+/*** patient section upload styles *******/
+@media screen and (max-width:992px){
+.patient-upload-label{
+  text-align:center !important;
+}
+.patient-upload-input{
+  text-align:center !important;
+}
+
+}
