@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2016 at 11:00 AM
--- Server version: 10.1.10-MariaDB
--- PHP Version: 7.0.4
+-- Generation Time: Jul 04, 2016 at 08:54 PM
+-- Server version: 10.1.13-MariaDB
+-- PHP Version: 5.6.23
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -1245,11 +1245,16 @@ begin
 		   ,a.start_mins
 		   ,a.end_mins
 		   ,a.description
+		   ,case when a.`state` = 1 then cl.remarks 
+				 when a.`state` = 2 then ca.remarks 
+									else '' end as remarks
 		   ,a.`state`
 		   ,a.is_rescheduled
            ,a.fk_location_id as loc
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
+	left join cancelled_appointments ca on ca.fk_appointment_id = a.id
+	left join close_appointment cl on cl.fk_appointment_id = a.id
 	where a.fk_doctor_id = pdoctor_id
 		  and a.fk_location_id = case when plocation_id > 0 then  plocation_id else a.fk_location_id end
 		  and DATE(a.appointment_date) =  DATE(STR_TO_DATE(pdate, '%d-%m-%Y'))
@@ -1417,9 +1422,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_timings_for_the_day` 
 begin
 
 	select sd.start_time_mins
-		    ,sd.end_time_mins
-         ,sd.location_id as loc_id
-				,sd.fk_schedule_id as schedule_id
+		   ,sd.end_time_mins
+           ,sd.location_id as loc_id
+           ,sd.fk_schedule_id as schedule_id
 	from schedule_day sd
 	where sd.fk_doctor_id = pdoctor_id
 		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
@@ -1667,7 +1672,7 @@ begin
 
 
 INSERT INTO `appointment`(
-							`fk_doctor_id`
+					        `fk_doctor_id`
 							, `fk_location_id`
 							, `fk_patient_id`
     						, contact
@@ -1682,7 +1687,7 @@ INSERT INTO `appointment`(
 							, `created_by_type`
 							, `is_active`
 							) VALUES (
-							pdoctor_id
+							 pdoctor_id
 							,plocation_id
 							,ppatient_id
                             , pcontact
@@ -1690,10 +1695,13 @@ INSERT INTO `appointment`(
 							,pstart_mins
 							,pend_mins
                             ,pdescription
-							, 0  							,0 							,now()
+							,0  							
+							,0 							
+							,now()
 							,pcreated_by_id
 							,pcreated_by_type
-							,1 							);
+							,1 							
+						 );
 
 commit;
 
@@ -1873,12 +1881,7 @@ end$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `check_appointment_avalibility` (`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) NO SQL
 begin
 
-	/*
-	  1 can book
-	  2 Either there is no schedule or appointment timings are oustide the work timings
-	  3 Timings clash with an existing appointment
-	  4 cannot book appointment for a previous date
-	*/
+	
 
 
 	declare lnewAppointmentDate date;
@@ -1893,8 +1896,7 @@ begin
 
 	if @lnewAppointmentDate  <  @ltodaysDate then
 		return 4;
-		#cannot book appointment for a previous date
-	end if;
+			end if;
 
 
 	select count(sc.id)
@@ -1981,6 +1983,7 @@ DELIMITER ;
 
 CREATE TABLE `appointment` (
   `id` int(11) NOT NULL,
+  `fk_schedule_id` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_location_id` int(11) NOT NULL,
   `fk_patient_id` int(11) NOT NULL,
@@ -2001,30 +2004,35 @@ CREATE TABLE `appointment` (
 -- Dumping data for table `appointment`
 --
 
-INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `description`, `state`, `is_rescheduled`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`) VALUES
-(1, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 1, 0, '2016-06-09 15:23:49', 1, 'D', 1),
-(7, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 1, 0, '2016-06-11 16:41:13', 1, 'D', 1),
-(8, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 2, 0, '2016-06-12 00:01:08', 1, 'D', 1),
-(9, 1, 14, 107, '7038348822', '2016-06-14', 540, 555, 'test problem', 1, 0, '2016-06-14 12:11:46', 1, 'D', 1),
-(10, 1, 14, 108, '7038348822', '2016-06-14', 555, 570, 'qwerqew', 0, 0, '2016-06-14 12:21:12', 1, 'D', 1),
-(11, 1, 14, 109, '323423', '2016-06-14', 570, 585, 'dsdsfdasf', 0, 0, '2016-06-14 12:28:31', 1, 'D', 1),
-(12, 1, 14, 110, '323423', '2016-06-14', 585, 600, 'asdfasd', 0, 0, '2016-06-14 12:28:48', 1, 'D', 1),
-(13, 1, 14, 111, '3243', '2016-06-14', 600, 615, 'just a lil test', 0, 0, '2016-06-14 12:54:43', 1, 'D', 1),
-(14, 1, 14, 112, '34234', '2016-06-14', 615, 630, 'dfdasf', 0, 0, '2016-06-14 13:19:41', 1, 'D', 1),
-(15, 1, 14, 113, '23414', '2016-06-14', 630, 645, 'this is good', 2, 0, '2016-06-14 13:21:10', 1, 'D', 1),
-(16, 1, 14, 100, '14242341', '2016-06-15', 540, 555, 'New Appointment', 2, 0, '2016-06-15 09:06:28', 1, 'D', 1),
-(17, 1, 14, 100, '14242341', '2016-06-15', 555, 570, 'sdfasd', 2, 0, '2016-06-15 10:59:30', 1, 'D', 1),
-(18, 1, 14, 114, '9049035958', '2016-06-15', 555, 570, 'guygu', 2, 0, '2016-06-15 11:54:49', 1, 'D', 1),
-(19, 1, 14, 93, '14242341', '2016-06-15', 540, 555, 'temp', 0, 0, '2016-06-15 16:10:28', 1, 'D', 1),
-(20, 1, 14, 106, '4352', '2016-06-15', 660, 675, 'test jay', 0, 0, '2016-06-15 16:12:10', 1, 'D', 1),
-(21, 1, 14, 108, '7038348822', '2016-06-15', 615, 630, 'Tim ', 0, 0, '2016-06-15 16:12:57', 1, 'D', 1),
-(22, 1, 14, 115, '23414', '2016-06-15', 555, 565, 'asda', 0, 0, '2016-06-15 18:02:56', 1, 'D', 1),
-(23, 1, 18, 116, '14242341', '2016-06-29', 540, 555, 'sdfasdf', 1, 0, '2016-06-29 12:31:26', 1, 'D', 1),
-(24, 1, 18, 104, '4444444', '2016-06-30', 540, 555, 'test appointment', 1, 0, '2016-06-30 14:13:40', 1, 'D', 1),
-(25, 1, 18, 108, '7038348822', '2016-06-30', 555, 570, 'test', 1, 0, '2016-06-30 14:15:10', 1, 'D', 1),
-(26, 1, 18, 108, '7038348822', '2016-06-30', 570, 585, 'dfasd', 1, 0, '2016-06-30 14:19:24', 1, 'D', 1),
-(27, 1, 18, 108, '7038348822', '2016-06-30', 585, 600, 'test', 1, 0, '2016-06-30 14:25:03', 1, 'D', 1),
-(28, 1, 18, 117, '14242341', '2016-06-30', 600, 615, 'test', 0, 0, '2016-06-30 14:29:14', 1, 'D', 1);
+INSERT INTO `appointment` (`id`, `fk_schedule_id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `description`, `state`, `is_rescheduled`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`) VALUES
+(1, 0, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 1, 0, '2016-06-09 15:23:49', 1, 'D', 1),
+(7, 0, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 1, 0, '2016-06-11 16:41:13', 1, 'D', 1),
+(8, 0, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 2, 0, '2016-06-12 00:01:08', 1, 'D', 1),
+(9, 0, 1, 14, 107, '7038348822', '2016-06-14', 540, 555, 'test problem', 1, 0, '2016-06-14 12:11:46', 1, 'D', 1),
+(10, 0, 1, 14, 108, '7038348822', '2016-06-14', 555, 570, 'qwerqew', 0, 0, '2016-06-14 12:21:12', 1, 'D', 1),
+(11, 0, 1, 14, 109, '323423', '2016-06-14', 570, 585, 'dsdsfdasf', 0, 0, '2016-06-14 12:28:31', 1, 'D', 1),
+(12, 0, 1, 14, 110, '323423', '2016-06-14', 585, 600, 'asdfasd', 0, 0, '2016-06-14 12:28:48', 1, 'D', 1),
+(13, 0, 1, 14, 111, '3243', '2016-06-14', 600, 615, 'just a lil test', 0, 0, '2016-06-14 12:54:43', 1, 'D', 1),
+(14, 0, 1, 14, 112, '34234', '2016-06-14', 615, 630, 'dfdasf', 0, 0, '2016-06-14 13:19:41', 1, 'D', 1),
+(15, 0, 1, 14, 113, '23414', '2016-06-14', 630, 645, 'this is good', 2, 0, '2016-06-14 13:21:10', 1, 'D', 1),
+(16, 0, 1, 14, 100, '14242341', '2016-06-15', 540, 555, 'New Appointment', 2, 0, '2016-06-15 09:06:28', 1, 'D', 1),
+(17, 0, 1, 14, 100, '14242341', '2016-06-15', 555, 570, 'sdfasd', 2, 0, '2016-06-15 10:59:30', 1, 'D', 1),
+(18, 0, 1, 14, 114, '9049035958', '2016-06-15', 555, 570, 'guygu', 2, 0, '2016-06-15 11:54:49', 1, 'D', 1),
+(19, 0, 1, 14, 93, '14242341', '2016-06-15', 540, 555, 'temp', 0, 0, '2016-06-15 16:10:28', 1, 'D', 1),
+(20, 0, 1, 14, 106, '4352', '2016-06-15', 660, 675, 'test jay', 0, 0, '2016-06-15 16:12:10', 1, 'D', 1),
+(21, 0, 1, 14, 108, '7038348822', '2016-06-15', 615, 630, 'Tim ', 0, 0, '2016-06-15 16:12:57', 1, 'D', 1),
+(22, 0, 1, 14, 115, '23414', '2016-06-15', 555, 565, 'asda', 0, 0, '2016-06-15 18:02:56', 1, 'D', 1),
+(23, 0, 1, 18, 116, '14242341', '2016-06-29', 540, 555, 'sdfasdf', 1, 0, '2016-06-29 12:31:26', 1, 'D', 1),
+(24, 0, 1, 18, 104, '4444444', '2016-06-30', 540, 555, 'test appointment', 1, 0, '2016-06-30 14:13:40', 1, 'D', 1),
+(25, 0, 1, 18, 108, '7038348822', '2016-06-30', 555, 570, 'test', 1, 0, '2016-06-30 14:15:10', 1, 'D', 1),
+(26, 0, 1, 18, 108, '7038348822', '2016-06-30', 570, 585, 'dfasd', 1, 0, '2016-06-30 14:19:24', 1, 'D', 1),
+(27, 0, 1, 18, 108, '7038348822', '2016-06-30', 585, 600, 'test', 1, 0, '2016-06-30 14:25:03', 1, 'D', 1),
+(28, 0, 1, 18, 117, '14242341', '2016-06-30', 600, 615, 'test', 0, 0, '2016-06-30 14:29:14', 1, 'D', 1),
+(29, 0, 1, 18, 100, '14242341', '2016-07-04', 540, 555, 'sdfasdf', 2, 0, '2016-07-04 18:57:32', 1, 'D', 1),
+(30, 0, 1, 18, 100, '14242341', '2016-07-04', 570, 585, 'sdfsdf', 2, 0, '2016-07-04 18:58:14', 1, 'D', 1),
+(31, 0, 1, 18, 100, '14242341', '2016-07-04', 600, 615, 'asdfasd', 2, 0, '2016-07-04 19:27:31', 1, 'D', 1),
+(32, 0, 1, 18, 93, '14242341', '2016-07-04', 540, 555, 'asdfasd', 0, 0, '2016-07-04 21:36:20', 1, 'D', 1),
+(33, 0, 1, 18, 104, '4444444', '2016-07-04', 555, 570, 'new appp', 1, 0, '2016-07-04 22:21:59', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2056,7 +2064,10 @@ INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled
 (17, 'this is cancelled for test', '2016-06-15 11:18:44', 1, 'D'),
 (15, 'cancel', '2016-06-15 11:51:24', 1, 'D'),
 (16, 'dfasdfasd', '2016-06-15 16:09:59', 1, 'D'),
-(18, 'test', '2016-06-15 16:11:05', 1, 'D');
+(18, 'test', '2016-06-15 16:11:05', 1, 'D'),
+(29, 'cancel\n', '2016-07-04 18:58:24', 1, 'D'),
+(30, 'cancel', '2016-07-04 18:58:40', 1, 'D'),
+(31, 'asdfasd', '2016-07-04 19:27:36', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -2086,7 +2097,8 @@ INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_t
 (24, '2016-06-30', 9, 104, 'test', '2016-06-30 14:13:57', 1, 0),
 (25, '2016-06-30', 9, 108, 'sadfasdf', '2016-06-30 14:15:29', 1, 0),
 (26, '2016-06-30', 9, 108, 'sdfasdf', '2016-06-30 14:19:45', 1, 0),
-(27, '2016-06-30', 10, 108, 'dfadsfds', '2016-06-30 14:25:23', 1, 0);
+(27, '2016-06-30', 10, 108, 'dfadsfds', '2016-06-30 14:25:23', 1, 0),
+(33, '2016-07-04', 9, 104, 'closed', '2016-07-04 22:22:10', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -2631,7 +2643,7 @@ ALTER TABLE `work_locations`
 -- AUTO_INCREMENT for table `appointment`
 --
 ALTER TABLE `appointment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT for table `delivery_methods`
 --

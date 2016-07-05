@@ -590,6 +590,18 @@ intilizeCancelledAppointmentTemplate: function(template, appointmentItem){
 
     template.find('.patient-name').text(appointmentItem.name);
 
+
+    //setting info popover
+    var popoverSettings = {
+      placement:'left',
+      container: 'body',
+      trigger: 'focus',
+      html: true,
+      content: this.getCancelClosePopoverContent(appointmentItem.contact, appointmentItem.description, appointmentItem.remarks)
+    };
+
+    template.find('.btn-cancel-remarks').popover(popoverSettings);
+
   }
 },
 intilizeClosedAppointmentTemplate: function(template, appointmentItem){
@@ -601,6 +613,17 @@ intilizeClosedAppointmentTemplate: function(template, appointmentItem){
     template.find('.aa').text(mStartTime.format(" A"));
 
     template.find('.patient-name').text(appointmentItem.name);
+
+    //setting info popover
+    var popoverSettings = {
+      placement:'left',
+      container: 'body',
+      trigger: 'focus',
+      html: true,
+      content: this.getCancelClosePopoverContent(appointmentItem.contact, appointmentItem.description, appointmentItem.remarks)
+    };
+
+    template.find('.btn-close-appointment-remarks').popover(popoverSettings);
 
   }
 },
@@ -625,11 +648,6 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
 
     })(appointmentItem));
 
-    /*template.find('.patient_history_btn').attr('data-id',appointmentItem.patientId);
-    template.find('.patient_history_btn').on('click',function(){
-
-        this.attr('data-id');
-      });*/
 
     var popoverSettings = {
       placement:'left',
@@ -758,6 +776,20 @@ getAppointmentPopoverContent: function(contact, description){
   '</dd></dl>';
 
   return content;
+},
+getCancelClosePopoverContent: function(contact, description, remarks){
+  return '<dl class="dl-horizontal">' +
+    '<dt>Contact&nbsp;:&nbsp;</dt>' +
+    '<dd>' + contact + '</dd>' +
+  '</dl>' +
+  '<dl class="dl-horizontal">' +
+    '<dt>Description&nbsp;:&nbsp;</dt>' +
+    '<dd>' + description + '</dd>' +
+  '</dl>' +
+  '<dl class="dl-horizontal">' +
+    '<dt>Remarks&nbsp;:&nbsp;</dt>' +
+  '  <dd>'+ remarks +'</dd>' +
+  '</dl>'
 }
 }
 

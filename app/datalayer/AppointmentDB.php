@@ -33,6 +33,7 @@ class AppointmentDB{
         $appointment['startMins'] = $result['start_mins'];
         $appointment['endMins'] = $result['end_mins'];
         $appointment['description'] = $result['description'];
+        $appointment['remarks'] = $result['remarks'];
         $appointment['state'] = $result['state'];
         $appointment['isRescheduled'] = $result['is_rescheduled'];
         $appointment['locId'] = $result['loc'];
