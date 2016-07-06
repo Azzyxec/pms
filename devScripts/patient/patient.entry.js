@@ -572,10 +572,6 @@ var patientDetailsView = {
         console.log("form submit 1");
        $('#patientDetailsEntryForm').submit(); 
         
-      
-              
-          
-    
 
     });
       
