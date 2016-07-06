@@ -204,12 +204,19 @@
                 <div class="text-center">
 
                   <div class="form-group">
-                    <img class="img-rounded" id="patient-profile-image" style="height:12em; width:12em;">
+                    <img class="img-rounded" id="guardian-profile-image" style="height:12em; width:12em;">
                     <hr>
-                    <div class=' col-md-offset-4 col-md-4'>
-                      <label for="focusedinput" class=" control-label">Upload pic</label>
-                      <input type="file" class="form-control">
+
+                    <div class="patient-upload-label text-right">  <label for="focusedinput" class=" col-lg-3 col-md-3 control-label">Upload pic</label>
                     </div>
+
+                      <div class=' col-lg-9 col-md-9 patient-upload-input text-left'>
+                                      <input id="guardian-picture"  type="file" class=" hidden" name="files[]" >
+                    <label for="guardian-picture" id="guardian-picture-lb-btn" class=" btn btn-info ">Select file</label>
+                    <div id="files2"></div>
+                    </div>
+
+
 
                   </div>
 

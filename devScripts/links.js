@@ -95,7 +95,8 @@ var links = {
     //upload
 
     closeApptUploadFiles:"index.php/Upload/CloseApptUpload",
-    PatientUploadimage:"index.php/Upload/PatientImageUpload"
+    PatientUploadimage:"index.php/Upload/PatientImageUpload",
+    GaurdianUploadimage:"index.php/Upload/GuardianImageUpload"
 
 
 }

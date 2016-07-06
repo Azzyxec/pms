@@ -193,6 +193,8 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $guardian->contact1 = $guardianArray['contact1'];
           $guardian->contact2 = $guardianArray['contact2'];
           $guardian->address =  $guardianArray['address'];
+          $guardian->picturePath =  $guardianArray['picUploadPath'];
+
           $guardian->isActive = $patient->isActive;
           //$guardian->picturePath =  $guardianArray['picUploadPath'];
 
