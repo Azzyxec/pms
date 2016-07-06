@@ -312,6 +312,13 @@ var createScheduleView = {
     this.tableBody = $('#table-body-schedule-calander');
 
     this.tableDataTemplate = $('#table-data-template');
+    this.appointmentLabel = $(".apptLabel");
+      
+    this.appointmentLabel.on('click',function(){
+        console.log("clicked");
+        $(this).parent().addClass('red');
+    
+    });
 
     $('#btn-schedule-create').on('click', (function(self){
       return function(){
@@ -443,8 +450,11 @@ var createScheduleView = {
           var span1 =  $('<span/>',{class: 'schedule-timing-span font-10', text:time});
 
           span1.on('click', (function(passedOn){
+            
             return function(){
               console.log('span click');
+       
+             
               //$('#collapseExample1').collapse('toggle');
 
               //adding timepicker dynamically
@@ -543,17 +553,21 @@ var createScheduleView = {
         var isActive = schedule.scheduleList[indexCounter].active;
         if(isActive == 1){
           var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
-          var span1 =  $('<span/>',{class: 'label font-16 label-danger', text:time});
+          var span1 =  $('<span/>',{class: 'label font-16 apptLabel label-danger', text:time});
 
           span1.on('click', (function(passedOn){
             return function(){
               console.log('span click');
+                $('td').removeClass('selectCell');
+                 $('calendar-date').removeClass('calendar-date-white');
+                 $(this).parent().addClass('selectCell');
+                $(this).parent().find('.calendar-date').addClass("calendar-date-white");
               //$('#collapseExample1').collapse('toggle');
 
               //adding timepicker dynamically
 
-              var fromInput = $('<input/>',{type: "text", class: 'form-control',style:'width:90px', value:passedOn.item.startTime});
-              var toInput = $('<input/>',{type: "text", class: 'form-control',style:'width:90px', value:passedOn.item.endTime});
+              var fromInput = $('<input/>',{type: "text", class: ' form-control', value:passedOn.item.startTime});
+              var toInput = $('<input/>',{type: "text", class: 'form-control ', value:passedOn.item.endTime});
               var id = 'collapsed-time-pickers';
               var tr = $('#collapsed-time-pickers');
               tr.remove();  //remove the previously added time pickers

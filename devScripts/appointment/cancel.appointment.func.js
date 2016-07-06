@@ -4,7 +4,7 @@ function getCancelAppointmentController(){
 
   var model = {
     appointmentId: 0
-  }
+  } 
 
   var controller = {
     init: function(appointmentInfo){
@@ -40,12 +40,54 @@ function getCancelAppointmentController(){
     init: function(){
       this.cancelReason = $('#cancel-appointment-reason');
       this.cancelButton =  $('#cancel-appointment-btn');
+        
+        this.validator =   $("#timeline-cancel-form").bootstrapValidator({
+        trigger:" focus blur",
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok ',
+          invalid: 'glyphicon glyphicon-remove ',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+          excluded: [':disabled'],
+        fields:{
+          address : {
+            validators : {
+              notEmpty : {
+                message : 'Please Enter Description!'
+              }
+            }
+
+          }
+         
+
+        }
+      });
+         $('#cancel-appointment-modal-window').on('hidden.bs.modal', function () {
+
+            $('#cancel-appointment-modal-window').find('form')[0].reset();
+          $('#timeline-cancel-form').bootstrapValidator("resetForm",true);
+
+
+
+
+      });
+             
+
 
       this.cancelReason.val('');
 
       this.cancelButton.off();
       this.cancelButton.on('click', function(){
-        controller.cancelAppointment();
+          cancelView.validator.on('success.form.bv',function(e){
+          e.preventDefault();
+
+          console.log('appointment cancelled');
+         controller.cancelAppointment();
+
+
+        });
+
+       
       });
 
     },
