@@ -36,7 +36,7 @@
 /* timeline style */
 .timeline_child_item{
      border-left: 6px solid #62bdfa;
-
+  
     padding: 5px;
 }
 
@@ -46,7 +46,7 @@
     }
     .timeline-sideStyle{
       // border-right: none !important;
-
+      
 }
 }
 
@@ -55,15 +55,15 @@
 }
 
 .timeline_item{
-
-
+   
+     
      border-bottom: 1px solid #62bdfa;
 }
 
 .timeline-container .timeline_item:first-child{
-
+ 
       border-top: 1px solid #62bdfa ;
-
+     
 }
 .timeline-container{
     margin-top: 11px;
@@ -81,15 +81,15 @@
 }
 
 .timeline-stats{
-
+  
 }
 
 @media only screen and (max-width: 769px) {
     .timeline-stats {
         position:relative !important;
-        right: 0 !important;
-        top: 0 !important;
-
+        right: 0 !important; 
+        top: 0 !important; 
+       
     }
 }
 
@@ -121,12 +121,11 @@
 }
 
  .timeline-item-default-height,.timeline-cancelled-appoint,.timeline-closed-appoint,.timeline-new-book-appoint{
-   min-height: 55px !important;
-   max-height: 73px;
+     height: 78px !important;
  }
-.timeline-item-default-height,.timeline-new-book-appoint,.timeline-cancelled-appoint,.timeline-closed-appoint{
+.timeline-new-book-appoint,.timeline-cancelled-appoint,.timeline-closed-appoint{
     text-align:left !important;
-       padding: 5px 15px !important;
+       padding: 10px 15px !important;
 }
 
 .timeline-h3{
@@ -339,11 +338,11 @@ margin-bottom: 3px !important;
 }
 
 .location-label{
-
+   
     border-radius: 20px !important;
     height: 20px;
     width: 20px;
-
+ 
 
 }
 td,th{
@@ -371,63 +370,3 @@ td,th{
 
 
 /********** end style for calendar *************/
-
-.overlay{
-
-
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.74);
-  top: 0px;
-  right: 0px;
-  z-index: 5000;
-}
-
-.overlay > h1 {
-color: white;
-margin-top: 50vh;
-}
-
-
-
-/*upload btn css ********/
-.file-row-text .btn{
-margin: 6px;
-padding: 6px;
-}
-
-
-
-/*** patient section upload styles *******/
-@media screen and (max-width:992px){
-.patient-upload-label{
-  text-align:center !important;
-}
-.patient-upload-input{
-  text-align:center !important;
-}
-
-}
-
-
-/**** schedule calendar selection style sheet ***********/
-
-
-@media screen and (min-width:768px){
-.schedule-form-time{
-  width:90px !important;
-    
-}
-
-}
-
-
-
-.calendar-date-white{
-    color:white;
-}
-
-.selectCell{
-    background-color:darkgray;
-}

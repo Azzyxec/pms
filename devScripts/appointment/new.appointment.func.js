@@ -1,4 +1,4 @@
-
+ 
 function makeAppointmentController(){
 
   //initilizing the source typeahead
