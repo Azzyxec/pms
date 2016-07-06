@@ -61,8 +61,8 @@ $(document).ready(function(){
         //cannot dates in revrese order
         //cannot make schedule for more than 60 days
 
-        var mfromDate = moment(fromDateStr, "YYYY-MM-DD");
-        var mtoDate = moment(toDateStr, "YYYY-MM-DD");
+        var mfromDate = moment(fromDateStr, "DD-MM-YYYY");
+        var mtoDate = moment(toDateStr, "DD-MM-YYYY");
 
         //setting the models start and end date
         scheduleModel.startDate = mfromDate.format('DD-MM-YYYY');
@@ -198,6 +198,14 @@ var stepOneView = {
       this.toDateControl = $('#to-date');
       this.fromTimeControl = $('#from-time');
       this.toTimeControl = $('#to-time');
+      this.fromDateControl.datetimepicker({
+        inline: false,
+        format:'DD-MM-YYYY'
+      });
+      this.toDateControl.datetimepicker({
+        inline: false,
+        format:'DD-MM-YYYY'
+      });
 
       this.fromTimeControl.val("09:00:AM");
       this.fromTimeControl.datetimepicker({
@@ -235,9 +243,9 @@ var stepOneView = {
 
       //TODO testing code to be removed
       var currDate = moment();
-      this.fromDateControl.val(currDate.format('YYYY-MM-DD'));
+      this.fromDateControl.val(currDate.format('DD-MM-YYYY'));
       currDate.add(15, 'days')
-      this.toDateControl.val(currDate.format('YYYY-MM-DD'));
+      this.toDateControl.val(currDate.format('DD-MM-YYYY'));
 
       $('#btn-schedule-next').on('click', (function(self){
         return function(){
@@ -325,18 +333,18 @@ var createScheduleView = {
     var form = $('<form/>',{class: "form-inline"});
     td.append(form);
 
-    var div = $('<div/>',{class: "form-group"});
-    form.append(div);
 
-    var fromLabel = $('<label/>',{class: "col-sm-2 control-label", text: 'From'});
-    div.append(fromLabel);
+
+    var fromLabel = $('<label/>',{class: " control-label", text: 'From',style:"margin: 0px 10px"});
+    form.append(fromLabel);
+    div = $('<div/>',{class: "input-group date"});
+    form.append(div);
     div.append(fromInput);
 
-
-    div = $('<div/>',{class: "form-group"});
+    var  toLabel= $('<label/>',{class: " control-label", text: 'To',style:"margin: 0px 10px"});
+    form.append(toLabel);
+    var div = $('<div/>',{class: "input-group date"});
     form.append(div);
-    var toLabel = $('<label/>',{class: "col-sm-2 control-label", text: 'To'});
-    div.append(toLabel);
     div.append(toInput);
 
     return tr;
@@ -543,8 +551,9 @@ var createScheduleView = {
               //$('#collapseExample1').collapse('toggle');
 
               //adding timepicker dynamically
-              var fromInput = $('<input/>',{type: "text", class: 'form-control', value:passedOn.item.startTime});
-              var toInput = $('<input/>',{type: "text", class: 'form-control', value:passedOn.item.endTime});
+
+              var fromInput = $('<input/>',{type: "text", class: 'form-control',style:'width:90px', value:passedOn.item.startTime});
+              var toInput = $('<input/>',{type: "text", class: 'form-control',style:'width:90px', value:passedOn.item.endTime});
               var id = 'collapsed-time-pickers';
               var tr = $('#collapsed-time-pickers');
               tr.remove();  //remove the previously added time pickers
@@ -553,7 +562,7 @@ var createScheduleView = {
               timePickerTableRow.collapse('toggle');
 
               fromInput.datetimepicker({
-                inline: true,
+                inline: false,
                 format:'LT'
               });
 
@@ -573,7 +582,7 @@ var createScheduleView = {
 
 
               toInput.datetimepicker({
-                inline: true,
+                inline: false,
                 format:'LT'
               });
 

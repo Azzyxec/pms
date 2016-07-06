@@ -6,7 +6,7 @@ function makeAppointmentController(){
 
   //  source: ['akhil','joseph','Agnelo','Ruban','Ronald','Sonia']
   //});
-
+ 
 
 $("#revalidate").on('click',function(){
      console.log("patientlist intialized")

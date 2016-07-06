@@ -9,6 +9,7 @@
  * Licensed under the MIT license:
  * http://www.opensource.org/licenses/MIT
  */
+ namespace Pms\utilities;
 
 class UploadHandler
 {
