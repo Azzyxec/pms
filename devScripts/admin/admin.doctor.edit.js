@@ -89,7 +89,6 @@ $(document).ready(function(){
               //doctorModel.recoveryContact = formView.recoveryContactControl.val();
               //doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
 
-
               if(formView.activeControl.is(":checked")){
                 doctorModel.isActive = 1;
               }else{

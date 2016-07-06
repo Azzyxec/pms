@@ -37,6 +37,8 @@ class Patient{
 
     //$patient->email = $dataAray[''];
     $patient->address = $dataAray['address'];
+    $patient->isActive = $dataAray['isActive'];
+    
     //$patient->isGuardian = $dataAray['isGuardian'];
     //$patient->guardianId = $dataAray['guardianId'];
     //$patient->medicalProgrammeId = $dataAray[''];

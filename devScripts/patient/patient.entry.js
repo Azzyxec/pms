@@ -18,7 +18,8 @@ $(document).ready(function(){
         contact1:"",
         contact2:"",
         address: "",
-        picUploadPath:""
+        picUploadPath:"",
+        isActive:1
       },
       guardianInfo:{
         name:"",
@@ -141,7 +142,7 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   model.patientInfo.height = patientDetailsView.height.val();
   model.patientInfo.gender  = patientDetailsView.rbMale.val();
   //model.patientInfo.picUploadPath  = "566"
-//  console.log(GlobalFilePath);
+  //console.log(GlobalFilePath);
   if(patientDetailsView.rbMale.is(":checked")){
     model.patientInfo.gender = 1;
   }else{
@@ -151,6 +152,12 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   model.patientInfo.contact1 = patientDetailsView.contact1.val();
   model.patientInfo.contact2 = patientDetailsView.contact2.val();
   model.patientInfo.address = patientDetailsView.address.val();
+
+  if(patientDetailsView.activeControl.is(":checked")){
+    model.patientInfo.isActive = 1;
+  }else{
+    model.patientInfo.isActive = 0;
+  }
 
   //model.patientInfo. = patientDetailsView.picUpload;
 };
@@ -332,7 +339,6 @@ MainController.prototype.init = function(){
 };
 
 
-
 var controller = {
   setAttachedProgrammeId: function(id){
     model.attachedProgrammeId = id;
@@ -382,9 +388,8 @@ var patientDetailsView = {
     this.address = $('#patient-address');
     this.picUpload =$('#patient-picture');
     this.imgBox = $('#patient-picture-container');
-
-
-
+    this.activeControl = $('#pactive');
+    this.inactiveControl = $('#pinactive');
 
     var process_url =  links.PatientUploadimage; //PHP script
     this.picUpload.fileupload({
@@ -500,13 +505,27 @@ var patientDetailsView = {
     //this.picUpload.val(model.);
 
 
-    if(lpatientInfo.gender == 1){
-      this.rbMale.prop('checked', true);
-      this.rbFemale.prop('checked', false);
-    } else{
-      this.rbMale.prop('checked', false);
-      this.rbFemale.prop('checked', true);
+    console.log('patient status' + lpatientInfo.gender);
 
+      $('#rb-male').prop('checked', true);
+
+
+    if(+lpatientInfo.gender == 1){
+      console.log('gender male');
+      //this.rbMale.prop('checked', true);
+    //  this.rbFemale.prop('checked', false);
+    } else{
+      console.log('gender female');
+      //this.rbMale.prop('checked', false);
+      //this.rbFemale.prop('checked', true);
+    }
+
+    if(lpatientInfo.isActive == 1){
+      this.activeControl.prop('checked', true);
+      this.inactiveControl.prop('checked', false);
+    }else{
+      this.activeControl.prop('checked', false);
+      this.inactiveControl.prop('checked', true);
     }
 
   }
