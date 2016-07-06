@@ -313,6 +313,13 @@ controller.prototype.getUserInfo = function () {
       this.dateInput = $('#appointment-list-date1');
       this.locationSelect = $('#appointment-list-locations-sel');
       this.locationSelect.hide();
+      this.appointmentFilterBtn = $(".all-appointments-filter-button");
+        
+        this.appointmentFilterBtn.on('click',function(){
+            console.log("toggle active");
+             $(".all-appointments-filter-button").removeClass("active");
+            $(this).addClass("active");
+        });
 
       //Selected location change event wiring
       this.locationSelect.on('change', function(){
