@@ -257,6 +257,7 @@ controller.prototype.getUserInfo = function () {
 
     $.get( this.getPatientsForAutoFillUrl , {})
     .done(function( response ) {
+      console.log('got patients');
       //console.log("patients: " + JSON.stringify(response));
       if(response.status == 1){
         model.appointmenListViewModel.patientList = response.data;
@@ -750,6 +751,14 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
           if(data.status == 1){
             console.log('appointmetn added success fully');
             todayAppointmentListView.newAppointmentModal.modal('hide');
+            //optimization check if a new patient was added
+            // and append his details
+            var patient = appController.getPatientModel();
+            console.log('patints Id ' + JSON.stringify(patient))
+            if(patient.id == 0){
+              console.log('reload the patients list when a new patients list');
+              cont.getPatients();
+            }
             //update the location list with new values
             cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
           }else if(data.status == 2){
