@@ -506,17 +506,6 @@ customizeViewForUser: function(){
 
   }else if(userInfo && userInfo.type == 'S'){
     //keep the location dropdown hidden
-
-  /*
-   var location =  _.find(model.appointmentList, function(item){
-
-     if( +item.locId == userInfo.locationId ){
-       return true;
-     }
-   };
-   */
-
-
   }
 
 
@@ -603,6 +592,17 @@ intilizeCancelledAppointmentTemplate: function(template, appointmentItem){
 
     template.find('.btn-cancel-remarks').popover(popoverSettings);
 
+    //patient history button
+    template.find('.patient_history_btn').on('click',(function(){
+      return function(){
+        console.log(cont.getPatientsHistoryUrl);
+        window.open(cont.getPatientsHistoryUrl+'?id='+appointmentItem.patientId,'_blank');
+        console.log(appointmentItem.patientId);
+      }
+
+
+    })(appointmentItem));
+
   }
 },
 intilizeClosedAppointmentTemplate: function(template, appointmentItem){
@@ -625,6 +625,17 @@ intilizeClosedAppointmentTemplate: function(template, appointmentItem){
     };
 
     template.find('.btn-close-appointment-remarks').popover(popoverSettings);
+
+
+    template.find('.patient_history_btn').on('click',(function(){
+      return function(){
+        console.log(cont.getPatientsHistoryUrl);
+        window.open(cont.getPatientsHistoryUrl+'?id='+appointmentItem.patientId,'_blank');
+        console.log(appointmentItem.patientId);
+      }
+
+
+    })(appointmentItem));
 
   }
 },
