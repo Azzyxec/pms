@@ -415,13 +415,37 @@ padding: 6px;
 }
 
 
+
+/* dashboard booking templates*/
+
+.booking-slot{
+  background-image:linear-gradient(to bottom, #FFF59D 0%, #FFF59D 100%) !important;
+  background-color: transparent !important;
+}
+
+.active-appointment{
+  background-image:linear-gradient(to bottom, #C5E1A5 0%, #C5E1A5 100%) !important;
+  background-color: transparent !important;
+}
+
+.closed-appointment{
+  background-image:linear-gradient(to bottom, #B0BEC5 0%, #B0BEC5 100%) !important;
+  background-color: transparent !important;
+}
+
+.cancelled-appointment{
+  background-image:linear-gradient(to bottom, #FFCCBC 0%, #FFCCBC 100%) !important;
+  background-color: transparent !important;
+}
+
+
 /**** schedule calendar selection style sheet ***********/
 
 
 @media screen and (min-width:768px){
 .schedule-form-time{
   width:90px !important;
-    
+
 }
 
 }
