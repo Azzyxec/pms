@@ -7,7 +7,7 @@ $(document).ready(function(){
     console.log('patient entry js loaded');
 
     var model = {
-      patientInfo: {
+      patientInfo: { 
         id:0,
         name:"",
         dateOfBirth: "",
@@ -390,6 +390,101 @@ var patientDetailsView = {
     this.imgBox = $('#patient-picture-container');
     this.activeControl = $('#pactive');
     this.inactiveControl = $('#pinactive');
+    
+      
+     this.validator =   $("#patientDetailsEntryForm").bootstrapValidator({
+        trigger:" focus blur",
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok ',
+          invalid: 'glyphicon glyphicon-remove ',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+          excluded: [':disabled'],
+        fields:{
+          P_username : {
+            validators : {
+              notEmpty : {
+                message : 'Please Enter your  Name!'
+              }
+            }
+
+          },
+          P_Dob : {
+            validators : {
+              notEmpty :{
+                message : 'Please select date'
+              }
+            }
+          }
+          , p_bloodgroup :{
+
+            validators : {
+              notEmpty :{
+                  message : 'Please Enter blood group'
+              }
+               
+            }
+          }
+
+          , p_weight :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please Select the duration'
+              }
+            }
+          }
+          ,  p_height :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please enter patients height'
+              }
+            }
+          }
+          , p_phnNo :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please enter Patients contact no'
+              }
+
+            }
+          }
+          ,  p_altPhnNo :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please enter patients alternate phone no'
+              }
+            }
+          },
+            
+            p_address :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please enter patients address'
+              }
+            }
+          }
+            
+            
+
+        }
+      }).on('success.form.bv',function(e){
+          e.preventDefault();
+
+            console.log('patient click');
+                cont.updateModelsFromViews();
+      console.log('save click' + JSON.stringify(model));
+      cont.persistModel();
+
+        
+        });
+      
+      
+      
 
     var process_url =  links.PatientUploadimage; //PHP script
     this.picUpload.fileupload({
@@ -472,14 +567,18 @@ var patientDetailsView = {
     });
 
 
-    $('#patient-save-button').click(function(){
-      console.log('patient click');
-
-      cont.updateModelsFromViews();
-      console.log('save click' + JSON.stringify(model));
-      cont.persistModel();
+    $('.patients-detail-form-submit').on('click',function(){
+        
+        console.log("form submit 1");
+       $('#patientDetailsEntryForm').submit(); 
+        
+      
+              
+          
+    
 
     });
+      
 
     //this.tab.hide();
   },

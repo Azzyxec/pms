@@ -144,7 +144,7 @@ var filesList = [
                                   objConfig.scriptsBasePath +"vendor/jquery.ui.widget.js",
                                   objConfig.scriptsBasePath +"vendor/jquery.iframe-transport.js",
                                   objConfig.scriptsBasePath +"vendor/jquery.fileupload.js",
-
+                                  objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                                   objConfig.scriptsBasePath +"patient/patient.entry.js",
                                 objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
                                 objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",

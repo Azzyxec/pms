@@ -5,7 +5,7 @@
   <div class="row">
 
 
-    <div>
+    <div> 
 
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
@@ -63,21 +63,21 @@
               <div class="content_bottom">
                 <hr class="invisible">
 
-                <form id="addCompanyForm"  class="form-horizontal">
+                <form id="patientDetailsEntryForm"    role="form" data-toggle="validator" class="form-horizontal">
 
                    <div class="form-group">
-                      <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Name:<span class="required">*</span></label>
-                      <div class=' col-lg-9 col-md-9'>
-                        <input  type="text" class="form-control" name="username" id="patient-name" placeholder="Full Name">
+                      <label for="focusedinput" class="col-lg-3 col-sm-3 col-md-3 control-label">Name:<span class="required">*</span></label>
+                      <div class=' col-lg-6 col-md-6 col-sm-6'>
+                        <input  type="text" class="form-control" name="P_username" id="patient-name" placeholder="Full Name">
                       </div>
 
                     </div>
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Date Of Birth:<span class="required">*</span></label>
-                      <div class='col-md-9 col-lg-9'>
+                      <label for="focusedinput" class="col-md-3  col-lg-3  col-sm-3  control-label">Date Of Birth:<span class="required">*</span></label>
+                      <div class='col-md-6 col-lg-6 col-sm-6'>
 
                         <div class='input-group date' >
-                          <input id="patient-date-of-birth" type='date' class="form-control" />
+                          <input id="patient-date-of-birth" name="P_Dob" type='date' class="form-control" />
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                           </span>
@@ -87,72 +87,72 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Gender:</label>
-                      <div class=" col-lg-9 col-md-9">
+                      <label for="focusedinput" class="col-lg-3 col-md-3 col-sm-3  control-label">Gender:</label>
+                      <div class=" col-lg-6 col-md-6 col-sm-6">
                         <label>
-                          <input type="radio" name="activeOptions" id="rb-male"  value="1" checked>
+                          <input type="radio" name="P_gender" id="rb-male"  value="1" checked>
                           Male
                         </label>
                         <label>
-                          <input type="radio" name="activeOptions" id="rb-female" value="0">
+                          <input type="radio" name="P_gender" id="rb-female" value="0">
                           Female
                         </label>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="" class="col-md-3 col-lg-3 control-label">Blood Group:</label>
-                      <div class="col-md-9 col-lg-9">
-                        <input type="text" class="form-control"  id="patient-blood-group" placeholder="Blood Group">
+                      <label for="" class="col-md-3 col-sm-3  col-lg-3 control-label">Blood Group:</label>
+                      <div class="col-md-6 col-lg-6 col-sm-6">
+                        <input type="text" class="form-control" name="p_bloodgroup"  id="patient-blood-group" placeholder="Blood Group">
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Weight:</label>
-                      <div class="col-md-9 col-lg-9 ">
-                        <input type="text" class="form-control"  id="patient-weight-input" placeholder="Weight">
-                      </div>
-
-                    </div>
-
-                    <div class="form-group">
-                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Height:</label>
-                      <div class="col-md-9 col-lg-9">
-                        <input type="text" class="form-control"  id="patient-height" placeholder="Height">
+                      <label for="focusedinput" class="col-md-3 col-lg-3 col-sm-3  control-label">Weight:</label>
+                      <div class="col-md-6 col-lg-6 col-sm-6 ">
+                        <input type="text" class="form-control" name="p_weight" id="patient-weight-input" placeholder="Weight">
                       </div>
 
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Phone No:<span class="required">*</span></label>
-                      <div class="col-md-9 col-lg-9">
-                        <input type="text" class="form-control"  id="patient-contact1" placeholder="Phone no">
+                      <label for="focusedinput" class="col-md-3 col-lg-3 col-sm-3  control-label">Height:</label>
+                      <div class="col-md-6 col-lg-6 col-sm-6">
+                        <input name="p_height" type="text" class="form-control"  id="patient-height" placeholder="Height">
                       </div>
 
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3  col-lg-3 control-label">Alternate Phone No:</label>
-                      <div class="col-md-9 col-lg-9">
-                        <input type="text" class="form-control"  id="patient-contact2" placeholder="Alternate Phone no">
+                      <label for="focusedinput" class="col-md-3  col-lg-3 col-sm-3  control-label">Phone No:<span class="required">*</span></label>
+                      <div class="col-md-6 col-lg-6 col-sm-6">
+                        <input type="text" class="form-control"  name="p_phnNo" id="patient-contact1" placeholder="Phone no">
                       </div>
 
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-md-3 col-lg-3 control-label">Address:</label>
-                      <div class="col-md-9 col-lg-9">
-                        <textarea class="form-control"  rows ="5" name="address" id="patient-address" ></textarea>
+                      <label for="focusedinput" class="col-md-3  col-lg-3 col-sm-3  control-label">Alternate Phone No:</label>
+                      <div class="col-md-6 col-lg-6 col-sm-6">
+                        <input type="text" class="form-control" name="p_altPhnNo"  id="patient-contact2" placeholder="Alternate Phone no">
+                      </div>
+
+                    </div>
+
+                    <div class="form-group">
+                      <label for="focusedinput" class="col-md-3 col-lg-3 col-sm-3  control-label">Address:</label>
+                      <div class="col-md-6 col-lg-6 col-sm-6">
+                        <textarea class="form-control"  rows ="5" name="p_address" id="patient-address" ></textarea>
                         <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label for="focusedinput" class="col-lg-3 col-md-3 control-label">Status:</label>
-                      <div class=" col-lg-9 col-md-9">
+                      <label for="focusedinput" class="col-lg-3 col-md-3 col-sm-3  control-label">Status:</label>
+                      <div class=" col-lg-6 col-md-6  col-sm-6">
                         <label>
-                          <input type="radio" name="activeOptions" id="pactive"  value="1" checked>
+                          <input type="radio" name="p_status" id="pactive"  value="1" checked>
                           Active
                         </label>
                         <label>
@@ -171,7 +171,7 @@
             <div class="panel-footer">
               <div class="row">
                 <div class="text-center">
-                  <input id="patient-save-button" type="button" class="btn-success btn" value="Save"/>
+                  <input  type="button" class=" patients-detail-form-submit btn-success btn" value="Save"/>
                 </div>
 
               </div>
@@ -290,7 +290,7 @@
             <div class="panel-footer">
               <div class="row">
                 <div class="text-center">
-                  <input type="button" id="btn-guardian-save" class="btn-success btn" name="submit" value="Save"/>
+                  <input type="button" class="btn-success btn patients-detail-form-submit" name="submit" value="Save"/>
                 </div>
 
               </div>
