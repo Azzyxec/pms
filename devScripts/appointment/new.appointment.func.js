@@ -6,7 +6,7 @@ function makeAppointmentController(){
 
   //  source: ['akhil','joseph','Agnelo','Ruban','Ronald','Sonia']
   //});
- 
+
 
 $("#revalidate").on('click',function(){
      console.log("patientlist intialized")
@@ -369,23 +369,6 @@ $("#revalidate").on('click',function(){
               }
             }
           }
-          , newApptHeight :{
-
-            validators : {
-              notEmpty :{
-                message : 'Please select patients height'
-              }
-            }
-          }
-          ,      newbookWeight :{
-
-            validators : {
-              notEmpty :{
-                message : 'Please select patients Weight'
-              }
-            }
-          }
-
           , newApptContact :{
 
             validators : {
@@ -395,12 +378,11 @@ $("#revalidate").on('click',function(){
 
             }
           }
-
           ,  newApptaddress :{
 
             validators : {
               notEmpty :{
-                message : 'Please enter the address'
+                message : 'Please enter some description'
               }
             }
           }
