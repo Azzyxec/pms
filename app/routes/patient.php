@@ -6,7 +6,7 @@ use Pms\Entities\BirthDetails;
 use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\PatientDB;
 use Pms\Datalayer\ProgrammeDB;
- 
+
 
 $app->group('/patient', function(){
 
@@ -194,6 +194,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $guardian->contact2 = $guardianArray['contact2'];
           $guardian->address =  $guardianArray['address'];
           $guardian->isActive = $patient->isActive;
+          //$guardian->picturePath =  $guardianArray['picUploadPath'];
 
           /*
           $birthDetails = new BirthDetails();

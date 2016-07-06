@@ -17,7 +17,8 @@ $(document).ready(function(){
         gender:"1",
         contact1:"",
         contact2:"",
-        address: ""
+        address: "",
+        picUploadPath:""
       },
       guardianInfo:{
         name:"",
@@ -138,7 +139,8 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   model.patientInfo.weight = patientDetailsView.weight.val();
   model.patientInfo.height = patientDetailsView.height.val();
   model.patientInfo.gender  = patientDetailsView.rbMale.val();
-
+  //model.patientInfo.picUploadPath  = "566"
+//  console.log(GlobalFilePath);
   if(patientDetailsView.rbMale.is(":checked")){
     model.patientInfo.gender = 1;
   }else{
@@ -392,6 +394,11 @@ var patientDetailsView = {
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|mp3)$/i,
         maxFileSize: 1048576, //1MB
         maxNumberOfFiles:'1',
+        add: function (e, data) {
+
+            data.submit();
+
+    },
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
         // send Blob objects via XHR requests:
@@ -406,7 +413,7 @@ var patientDetailsView = {
     var progressBar = $('<div/>').addClass('progress').append($('<div/>').addClass('progress-bar')); //create progress bar
     var uploadButton = $('<button/>').addClass('btn btn-info ').text('Upload');    //create upload button
 
-    uploadButton.on('click', function () {
+  /*  uploadButton.on('click', function () {
 
 
 
@@ -417,14 +424,14 @@ var patientDetailsView = {
         data.submit().always(function () { //upload the file
                 $this.remove(); //remove this button
         });
-    });
+    });*/
 
     this.picUpload.on('fileuploadadd', function (e, data) {
         $("#patient-picture").attr('disabled','disabled');
             data.context = $('<div/>').addClass('file-wrapper').appendTo('#files'); //create new DIV with "file-wrapper" class
             $.each(data.files, function (index, file){  //loop though each file
             var node = $('<div/>').addClass('file-row'); //create a new node with "file-row" class
-            var removeBtn  = $('<button/>').addClass('btn btn-info ').text('Remove'); //create new remove button
+            var removeBtn  = $('<button/>').addClass('btn btn-default btn-sm ').text('Remove'); //create new remove button
             removeBtn.on('click', function(e, data){ //remove button function
   $("#patient-picture").removeAttr('disabled');
                 $(this).parent().parent().remove(); //remove file's wrapper to remove queued file
@@ -433,8 +440,10 @@ var patientDetailsView = {
             //create file info text, name and file size
             var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
+            model.patientInfo.picUploadPath =file.name
+
             file_txt.append(removeBtn); //add remove button inside info text element
-            file_txt.prependTo(node).append(uploadButton.clone(true).data(data)); //add to node element
+            file_txt.prependTo(node); //add to node element
             progressBar.clone().appendTo(file_txt); //add progress bar
             if (!index){
                 node.prepend(file.preview); //add image preview

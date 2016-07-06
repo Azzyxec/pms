@@ -33,6 +33,8 @@ class Patient{
     $patient->gender = $dataAray['gender'];
     $patient->contact1 = $dataAray['contact1'];
     $patient->contact2 = $dataAray['contact2'];
+    $patient->picturePath = $dataAray['picUploadPath'];
+
     //$patient->email = $dataAray[''];
     $patient->address = $dataAray['address'];
     //$patient->isGuardian = $dataAray['isGuardian'];
