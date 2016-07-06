@@ -92,6 +92,7 @@ $("#revalidate").on('click',function(){
 
       model.patientList = initObj.patientList;
       //initilizing typeahead for patients name
+      appointmentView.patientsName.typeahead("destroy");
       appointmentView.patientsName.typeahead({
         name: 'patients-name',
         source: model.patientList,
@@ -232,6 +233,8 @@ $("#revalidate").on('click',function(){
         //todayAppointmentListView.newAppointmentModal.modal('hide');
         //update the location list with new values
         appointmentView.alertSuccess.removeClass('hidden');
+
+        //may be can return the id of the newly added patient, to update the patient model
 
       }else if(response.status == 2){
         appointmentView.alertNoScheduleOrTimingOustideWorkTiming.removeClass('hidden');

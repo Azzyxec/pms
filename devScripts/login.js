@@ -13,13 +13,18 @@ $(document).ready(function(){
       forgotPaswordUrl: links.forgotPasswordUrl,
       adminUrl: links.adminUrl,
       authenticate: function(pLoginId, pPassword){
+        loginView.loginBtn.attr('disabled','disbled');
+
         console.log('call authenticate');
         console.log(controller.authenticateUrl);
         $.post( controller.authenticateUrl , { loginId:  pLoginId, password:  pPassword })
         .done(function( response ) {
           console.log('response ' + JSON.stringify(response));
 
+
+
           if(response.data.type == "-1"){
+            loginView.loginBtn.removeAttr('disabled');
             console.log('invalid username or password');
             loginView.alertCredentialsInvalid.removeClass('hidden');
           }else if(+response.data.isActive == 0){
@@ -33,6 +38,8 @@ $(document).ready(function(){
           }else if(response.data.type == "S"){
             window.location.href = controller.successRedirectUrl;
             console.log('staff authenticated');
+          }else{
+            loginView.loginBtn.removeAttr('disabled');
           }
 
         });
@@ -80,9 +87,12 @@ $(document).ready(function(){
         });
 
 
+        this.loginBtn = $('#login-submit');
+
+
 
         //wiring events
-        $('#login-submit').on('click', function(){
+        this.loginBtn.on('click', function(){
             //console.log('handler exec : ' + cat.Id);
             console.log('click submit' + controls.loginId.val());
             console.log('url: ' + controller.authenticateUrl);
