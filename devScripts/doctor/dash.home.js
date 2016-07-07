@@ -13,6 +13,21 @@ $(document).ready(function(){
         locationList:[]
       }
     }
+    
+    /*AX  BOC *************/
+    
+    /* var backGroundColorList = [
+      '#337ab7', //blue
+      '#F44336', //red
+      '#4CAF50', //green
+      '#FB8C00', //orange
+      '#37474F', //gray
+      '#37474F', //gray
+      '#37474F', //gray
+      '#37474F' //gray
+    ]; */
+      
+    /*AX  EOC *************/
 
     function controller(){
       //initlize any url
@@ -152,6 +167,30 @@ $(document).ready(function(){
   controller.prototype.getLocationList = function () {
     return model.appointmenListViewModel.locationList;
   };
+      
+       /* AX BOC location change 
+      controller.prototype.assignColorCodesTolocationList = function(){
+
+        for(var i = 0; i < model.appointmenListViewModel.locationList.length; i++){
+          if(i < backGroundColorList.length){
+            model.appointmenListViewModel.locationList[i].colour = backGroundColorList[i];
+          }else{
+            model.appointmenListViewModel.locationList[i].colour =  backGroundColorList[0];
+          }
+
+        }
+
+      };
+      
+      controller.prototype.getLocationColour = function(id){
+        for(var i = 0; i < model.appointmenListViewModel.locationList.length; i++){
+          if(model.locationList[i].id == id){
+            return model.appointmenListViewModel.locationList[i].colour;
+          }
+        }
+      };
+      
+       AX EOC location change */
 
   controller.prototype.getAppointmentListInfo = function () {
 

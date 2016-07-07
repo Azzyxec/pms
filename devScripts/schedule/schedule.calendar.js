@@ -20,7 +20,7 @@ $(document).ready(function(){
       '#37474F', //gray
       '#37474F', //gray
       '#37474F' //gray
-    ];
+    ]; 
 
     var controller = {
       init: function(){
