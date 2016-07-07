@@ -8,7 +8,8 @@ function getCloseAppointmentController(){
     nextAppointmentTime:'',
     patientsName:'',
     remarks: '',
-    prescriptionList:[]
+    prescriptionList:[],
+    currentEntry:{}
   }
 
   var controller = {
@@ -21,7 +22,7 @@ function getCloseAppointmentController(){
         model.closingTime = initObj.closingTime;
         model.patientsName = initObj.patientsName;
       }
-
+      prescriptionListController.init();
       closeAppointmentView.init();
     },
     resetForm: function(){
@@ -56,6 +57,123 @@ function getCloseAppointmentController(){
          console.log('close response ' + JSON.stringify(response));
          //close in proper resonse, else dsplay messge the appoitmetn could not be compated
        });
+    }
+  }
+
+  var prescriptionListController = {
+    init: function(){
+      this.idCounter = 0;
+      prescriptionListView.init();
+    },
+    addEntry: function(med, lremarks){
+      this.idCounter = +this.idCounter + +model.prescriptionList.length;
+      model.prescriptionList.push({name:med, remarks: lremarks, id:this.idCounter});
+      console.log('prescription' + JSON.stringify(model.prescriptionList));
+    },
+    removeEntry: function(item){
+      var newList = _.remove(model.prescriptionList, function(prescription){
+        return prescription.id ==  item.id;
+      });
+    },
+    getPrescriptionList: function(){
+      return model.prescriptionList;
+    },
+    setPrescriptionList: function(newList){
+      model.prescriptionList = newList;
+    }
+  }
+
+  var prescriptionListView = {
+    init: function(){
+      this.prescriptionListBody = $('#prescription-list-table-body');
+      this.medicineText = $('#txt-medicine');
+      this.medicineRemarks = $('#txt-medicine-remark');
+      this.addEntry = $('#btn-add-row');
+
+      this.addEntry.on('click', function(){
+        var medicine = prescriptionListView.medicineText.val();
+        var remarks = prescriptionListView.medicineRemarks.val();
+        if(medicine){
+          prescriptionListController.addEntry(medicine, remarks);
+          prescriptionListView.clearFields();
+          prescriptionListView.render();
+        }else{
+          console.log('medicine name is empty');
+        }
+
+      });
+
+    },
+    render: function(){
+
+      $('.prescription-added-rows').remove();
+
+      var list = prescriptionListController.getPrescriptionList();
+
+      if(list){
+
+        for(var i = 0; i < list.length; i++){
+          var tr = $('<tr/>');
+          tr.addClass('prescription-added-rows')
+
+          var td = $('<td/>');
+          td.text(list[i].name);
+          tr.append(td);
+
+          var td = $('<td/>');
+          td.text(list[i].remarks);
+          tr.append(td);
+
+          var editLink = $('<a/>',{
+            text: 'Edit',
+            class: ""
+          });
+
+          editLink.click((function(prescription){
+            return function(){
+
+              console.log(JSON.stringify(prescription));
+              model.currentEntry = prescription;
+              prescriptionListView.medicineText.val(prescription.name);
+              prescriptionListView.medicineRemarks.val(prescription.remarks);
+
+            }
+          })(list[i]));
+
+          var td = $('<td/>');
+          td.append(editLink);
+          tr.append(td);
+
+          var removeLink = $('<a/>',{
+            text: 'Remove',
+            class: ""
+          });
+
+          removeLink.click((function(prescription){
+            return function(){
+              //console.log(JSON.stringify(prescription));
+              prescriptionListController.removeEntry(prescription);
+              prescriptionListView.render();
+
+            }
+          })(list[i]));
+
+          var td = $('<td/>');
+          td.append(removeLink);
+          tr.append(td);
+
+          this.prescriptionListBody.prepend(tr);
+
+        }
+
+      }
+
+
+
+    },
+    clearFields: function(){
+      this.medicineText.val('');
+      this.medicineRemarks.val('');
     }
   }
 

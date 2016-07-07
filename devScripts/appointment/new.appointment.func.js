@@ -1,4 +1,4 @@
- 
+
 function makeAppointmentController(){
 
   //initilizing the source typeahead
@@ -340,19 +340,6 @@ $("#revalidate").on('click',function(){
               }
             }
           }
-          , newBookusername :{
-
-            validators : {
-              notEmpty :{
-                message : 'Please Enter Patients name'
-              },
-                regexp: {
-                        regexp: /^[A-Za-z\s.\(\)0-9]{3,}$/,
-                        message: 'The full name can consist of alphabetical characters and spaces only'
-                    }
-            }
-          }
-
           , bookApptDob :{
 
             validators : {
@@ -369,7 +356,7 @@ $("#revalidate").on('click',function(){
               }
             }
           }
-          , newApptContact :{
+          ,newApptContact :{
 
             validators : {
               notEmpty :{
