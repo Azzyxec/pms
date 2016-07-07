@@ -1,39 +1,19 @@
 <div class="container">
-  <div  class="hidden alert alert-warning alert-dismissible doc-profile-before-submit-warning-error" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <div id="login-id-already-taken"  class="hidden alert alert-warning">
     <strong>oops!</strong> The login id is taken, please try another Id!.
   </div>
 
-
-  <div id="book-appointment-no-schedule" class="hidden alert alert-warning alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>Could'nt book!</strong> Either the timings are oustide the work timings or doctor is not available
-  </div>
-
-  <div id="book-appointment-timings-clash" class="hidden alert alert-warning alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>Could'nt book!</strong> Timings clash with an existing appointment
-  </div>
-
-  <div id="book-appointment-backdated" class="hidden alert alert-warning alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <strong>Could'nt book!</strong> on a previous date
-  </div>
-
-
-  <div id="doc-profile-before-submit-success" class="hidden alert alert-success alert-dismissible" role="alert">
-
+  <div id="doc-profile-before-submit-success" class="hidden alert alert-success">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   Thank you for registering with us, we have send you a email with your account info
   </div>
 
   <div id="doc-profile-before-modify-success" class="hidden alert alert-success alert-dismissible" role="alert">
-
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <strong>Success!</strong> modified successfully!
   </div>
 
-  <div  class="book-appointment-before-submit-other-error hidden Salert alert-info alert-dismissible" role="alert">
+  <div  class="book-appointment-before-submit-other-error hidden alert alert-info alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <strong>Sorry!</strong>Somethings not right.
   </div>
@@ -59,7 +39,7 @@
         </div>
     </div>
 
-    <div class="form-group 2">
+    <div class="form-group 2 hidden">
       <label  class="col-md-2 control-label" for="dalternate-contact">Alternate Contact</label>
         <div class="col-md-6">
           <input type="text" id="dalternate-contact" name="dalternatecontact" class="form-control" placeholder="Contact">

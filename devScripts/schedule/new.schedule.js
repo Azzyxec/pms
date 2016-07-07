@@ -2,9 +2,6 @@ $(document).ready(function(){
 
   $(function(){
 
-    //http://momentjs.com/ good help for date formatting and stuff
-
-
     var scheduleModel = {
       startDate: "",
       endDate: "",
@@ -18,7 +15,6 @@ $(document).ready(function(){
       init: function(){
         this.createUpdateScheduleUrl = links.createUpdateScheduleUrl;
         this.getLocationUrl = links.getLocationUrl;
-        //this.scheduleListingUrl =   links.listScheduleUrl;
         this.getScheduleCalendarUrl = links.getScheduleCalendarUrl;
 
         stepOneView.init();
@@ -51,11 +47,6 @@ $(document).ready(function(){
 
         var startTimeVal = stepOneView.fromTimeControl.val();
         var endTimeVal =  stepOneView.toTimeControl.val();
-
-        //var mStartTime = moment(startTimeVal, "hh:mm A");
-        //var mStartDate = moment({hours:0, minutes: 0});
-        //mStartDate.minutes(scheduleItem.startTime);
-        //console.log('start time: ' + startTimeVal + ' in minutes ' + mStartTime.duration());
 
         //date validations, cannot put previoous dates
         //cannot dates in revrese order
@@ -144,7 +135,6 @@ $(document).ready(function(){
 
         // remove schedues which are not active
 
-
         var activeSchedulesArray = [];
         for(var i = 0; i < scheduleModel.scheduleList.length; i++){
 
@@ -165,26 +155,15 @@ $(document).ready(function(){
         .done(function( response ) {
           console.log('response ' + JSON.stringify(response));
 
+          createScheduleView.overlappingDatesAlert.addClass('hidden');
+
           if(response.status == 1){
             window.location.href = controller.getScheduleCalendarUrl;
-          }else{
+          }else if(response.status == "-1"){
+            createScheduleView.overlappingDatesAlert.removeClass('hidden');
             console.log('something is not right');
           }
-
-          //on success redirect
-          // window.location.href = controller.scheduleListingUrl;
-          /*
-          if(response.data.status == "-1"){
-          console.log('could not add or update');
-        }else if(response.data.status == "1"){
-        console.log('schedules entry is added');
-      }else if(response.data.status == "2"){
-      console.log('schedules entry is updated');
-    }*/
-
   });
-
-
 
 }
 };
@@ -218,10 +197,6 @@ var stepOneView = {
         inline: false,
         format:'LT'
       });
-
-
-
-      //http://bootstrap-datepicker.readthedocs.io/en/latest/
 
       this.checkAllWeekDays = $('#chk-all-weekdays');
       this.chkMon = $('#chk-mon');
@@ -313,11 +288,14 @@ var createScheduleView = {
 
     this.tableDataTemplate = $('#table-data-template');
     this.appointmentLabel = $(".apptLabel");
-      
+
+    //alerts
+    this.overlappingDatesAlert = $('#alert-overlapping-schedule');
+
     this.appointmentLabel.on('click',function(){
         console.log("clicked");
         $(this).parent().addClass('red');
-    
+
     });
 
     $('#btn-schedule-create').on('click', (function(self){
@@ -327,6 +305,12 @@ var createScheduleView = {
       };
     })(this));
 
+    this.backButton = $('#btn-back');
+
+    this.backButton.on('click', function(){
+      stepOneView.panel.show();
+      createScheduleView.panel.hide();
+    });
 
   },
   makeTimePickersRow: function(idVal, fromInput, toInput){
@@ -389,6 +373,10 @@ var createScheduleView = {
       format:'LT'
     });
     */
+
+    //hide alerts
+    this.overlappingDatesAlert.addClass('hidden');
+
     this.panel.removeClass('hidden');
 
     var schedule = controller.getSchedule();
@@ -450,11 +438,11 @@ var createScheduleView = {
           var span1 =  $('<span/>',{class: 'schedule-timing-span font-10', text:time});
 
           span1.on('click', (function(passedOn){
-            
+
             return function(){
               console.log('span click');
-       
-             
+
+
               //$('#collapseExample1').collapse('toggle');
 
               //adding timepicker dynamically
@@ -552,6 +540,7 @@ var createScheduleView = {
 
         var isActive = schedule.scheduleList[indexCounter].active;
         if(isActive == 1){
+
           var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
           var span1 =  $('<span/>',{class: 'label font-16 apptLabel label-danger', text:time});
 

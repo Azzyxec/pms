@@ -26,7 +26,7 @@ class Doctor{
     $doctor->id = $dataAray['id'];
     $doctor->name = $dataAray['name'];
     $doctor->contact = $dataAray['contact'];
-    $doctor->alternateContact = $dataAray['alternateContact'];
+    //$doctor->alternateContact = $dataAray['alternateContact'];
     $doctor->email = $dataAray['email'];
     $doctor->qualifications = $dataAray['qualifications'];
     $doctor->address = $dataAray['address'];

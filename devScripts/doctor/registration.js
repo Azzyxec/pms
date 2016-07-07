@@ -5,7 +5,7 @@ $(document).ready(function(){
      id:0,
      name:"",
      contact:"",
-     alternateContact: "",
+     alternateContact: "0",
      email: "",
      qualifications: "",
      address:"",
@@ -23,12 +23,15 @@ $(document).ready(function(){
         this.loginCheckUrl = links.loginCheckUrl;
         this.doctorDashUrl = links.doctorDashUrl;
         this.logoutUrl = links.logoutUrl;
+
+        /*
         this.alertcontainer = $('.container');
         this.alert = function(msg,classnm,id){
           $('.pms-alerts').remove();
           var alert = $('<div  id = "'+id+'" class=" alert ' +classnm+' pms-alerts alert-dismissible doc-profile-before-submit-warning-error" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
           return alert;
         }
+        */
         formView.init();
 
         this.getDoctorInfo();
@@ -107,48 +110,41 @@ $(document).ready(function(){
               .done(function( response ) {
                 console.log('response ' + JSON.stringify(response));
                 formView.addSaveButtonAnimation(false);
+
+                //hide all alerts
+                formView.alertLoginIdTaken.addClass('hidden');
+                formView.alertSucess.addClass('hidden');
+
                 if(response.status == "-1"){
+                  formView.alertLoginIdTaken.removeClass('hidden');
                   console.log('Please select another login Id');
-                  controller.alertcontainer.prepend(controller.alert("Please select another login Id","alert-warning text-center",''));
+                  //controller.alertcontainer.prepend(controller.alert("Please select another login Id","alert-warning text-center",''));
 
                 }else if(response.status == "1"){
 
-                  if(response.user.id && response.user.type == 1){
+                  if(response.user && response.user.type == '-1'){
+
                     //the user is not logged in so its a new registration
-                  controller.alertcontainer.prepend(controller.alert("Thank you for registering with us, we have send you a email with your account info","alert-success text-center",''));
+                    //controller.alertcontainer.prepend(controller.alert("Thank you for registering with us, we have send you a email with your account info","alert-success text-center",''));
+                    formView.alertSucess.removeClass('hidden');
                     console.log('Thank you for registering with us, we have send you a email with your account info');
                     //window.location.href = controller.logoutUrl;
-                  }else if(response.user.id && response.user.type == '-1'){
+                  }else if(response.user.id && response.user.type != '-1'){
                     //logged in user, so its profile modifications
                     console.log('modifying');
-                    controller.alertcontainer.prepend(controller.alert("Doctor Info updated succesfully","alert-success text-center",''));
+                    //controller.alertcontainer.prepend(controller.alert("Doctor Info updated succesfully","alert-success text-center",''));
                   }
 
                 }
       });
     }
-      /*getURLParam: function(name: string){
-
-      var url = window.location.href;
-
-      name = name.replace(/[\[\]]/g, "\\$&");
-
-      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-      var results = regex.exec(url);
-
-      if (!results) return null;
-      if (!results[2]) return '';
-
-      return decodeURIComponent(results[2].replace(/\+/g, " "));
-
-    }*/
   };
 
 
   var formView = {
     init: function(){
       console.log('form view inti');
-
+      this.form = $("#doctor-profile-reg-form");
       this.idControl = $('#did');
       this.nameControl = $('#dname');
       this.contactControl = $('#dcontact');
@@ -167,7 +163,7 @@ $(document).ready(function(){
       this.activeControl = $('#dactive');
       this.inactiveControl = $('#dinactive');
 
-      this.validator = $("#doctor-profile-reg-form").bootstrapValidator({
+      this.validator = this.form.bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
@@ -190,14 +186,6 @@ $(document).ready(function(){
                 message : 'Please enter your contact No'
               }
             }
-          },
-          dalternatecontact :{
-
-            validators : {
-              notEmpty :{
-                message : 'Please enter your alternte contact no'
-              }
-            }
           }
           , email :{
 
@@ -207,9 +195,7 @@ $(document).ready(function(){
               }
             }
           }
-
           , qualifications :{
-
             validators : {
               notEmpty :{
                 message : 'Please enter qualification'
@@ -217,7 +203,6 @@ $(document).ready(function(){
             }
           }
           ,  address :{
-
             validators : {
               notEmpty :{
                 message : 'Please enter address'
@@ -232,45 +217,28 @@ $(document).ready(function(){
               }
             }
           }
-          ,      password :{
-
+          ,password :{
             validators : {
               notEmpty :{
                 message : 'Please enter your password'
               }
             }
           }
-
           , activeOptions :{
-
             validators : {
               notEmpty :{
                 message : 'please select an option'
               }
-
             }
           }
-
         }
+      }).on('success.form.bv',function(e){
+        e.preventDefault();
+
+        //console.log('model value' + JSON.stringify(doctorModel) );
+        controller.updateModelFromView();
+        controller.saveDoctorAndRedirect();
       });
-
-
-      //controls are passed, so that they are available to click function as closure variables
-      /*
-      this.controls = { idControl: this.idControl,
-                      nameControl: this.nameControl,
-                      contactControl: this.contactControl,
-                      alternatContactControl: this.alternatContactControl,
-                      emailControl: this.emailControl,
-                      qualificationControl: this.qualificationControl,
-                      addressControl: this.addressControl,
-                      userNameControl: this.userNameControl,
-                      passwordControl: this.passwordControl,
-                      activeControl: this.activeControl,
-                      //inactiveControl: this.inactiveControl
-                      };
-                      */
-      //wiring events
 
 
     this.saveButton.on('click', (function(controller){
@@ -278,35 +246,31 @@ $(document).ready(function(){
         return function(){
           //console.log('handler exec : ' + cat.Id);
 
+          formView.form.submit();
+
           //steps in saved
           //update mode with info from the view
           //persist the model i.e save update
+          /*
           formView.validator.on('success.form.bv',function(e){
             e.preventDefault();
 
             console.log('model value' + JSON.stringify(doctorModel) );
             controller.updateModelFromView();
-
-           controller.saveDoctorAndRedirect();
+            controller.saveDoctorAndRedirect();
 
           });
-
-
-
+          */
           //updates the model with info from the view
 
 
         };
       })(controller)); //submit click handler
-  
 
-/*
-        this.docProfclear.on('click',function(){
+      //alerts
+      this.alertLoginIdTaken = $('#login-id-already-taken');
+      this.alertSucess = $('#doc-profile-before-submit-success');
 
-                            $('#doctor-profile-reg-form').bootstrapValidator("resetForm",true);
-                    });
-
-*/
       this.render();
     },
     addSaveButtonAnimation: function(show){
@@ -321,6 +285,9 @@ $(document).ready(function(){
       }
     },
     render: function() {
+
+      this.alertLoginIdTaken.addClass('hidden');
+      this.alertSucess.addClass('hidden');
 
       var model = controller.getModel();
 

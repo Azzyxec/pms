@@ -13,9 +13,9 @@ $(document).ready(function(){
         locationList:[]
       }
     }
-    
+
     /*AX  BOC *************/
-    
+
     /* var backGroundColorList = [
       '#337ab7', //blue
       '#F44336', //red
@@ -26,7 +26,7 @@ $(document).ready(function(){
       '#37474F', //gray
       '#37474F' //gray
     ]; */
-      
+
     /*AX  EOC *************/
 
     function controller(){
@@ -69,6 +69,7 @@ $(document).ready(function(){
   controller.prototype.combineFreeSlots = function (list) {
     //updating the time of the freetime slot
     // and putting the extra freetime slots in remove item list
+    /*
     var returnList = [];
     var preItem = {};
     var add = true;
@@ -83,14 +84,18 @@ $(document).ready(function(){
         add = true;
       }
 
+      //time slots need not be combined
+
+      add = true;
+
       if(add){
         returnList.push(appointment);
       }
 
       preItem = appointment;
-    }
+    }*/
 
-   return returnList;
+   return list;
 
   };
 
@@ -167,8 +172,8 @@ $(document).ready(function(){
   controller.prototype.getLocationList = function () {
     return model.appointmenListViewModel.locationList;
   };
-      
-       /* AX BOC location change 
+
+       /* AX BOC location change
       controller.prototype.assignColorCodesTolocationList = function(){
 
         for(var i = 0; i < model.appointmenListViewModel.locationList.length; i++){
@@ -181,7 +186,7 @@ $(document).ready(function(){
         }
 
       };
-      
+
       controller.prototype.getLocationColour = function(id){
         for(var i = 0; i < model.appointmenListViewModel.locationList.length; i++){
           if(model.locationList[i].id == id){
@@ -189,7 +194,7 @@ $(document).ready(function(){
           }
         }
       };
-      
+
        AX EOC location change */
 
   controller.prototype.getAppointmentListInfo = function () {
@@ -353,7 +358,7 @@ controller.prototype.getUserInfo = function () {
       this.locationSelect = $('#appointment-list-locations-sel');
       this.locationSelect.hide();
       this.appointmentFilterBtn = $(".all-appointments-filter-button");
-        
+
         this.appointmentFilterBtn.on('click',function(){
             console.log("toggle active");
              $(".all-appointments-filter-button").removeClass("active");

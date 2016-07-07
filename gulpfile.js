@@ -27,6 +27,7 @@ var filesList = [
                       ], buildName: "login.all.js"},
   {build:true, files: [
                         objConfig.scriptsBasePath +"links.js",
+                        objConfig.scriptsBasePath +"vendor/bootstrap.min.js",
                         objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                         objConfig.scriptsBasePath +"validator.js",
                         objConfig.scriptsBasePath + "doctor/registration.js"
@@ -254,14 +255,13 @@ gulp.task('publish-build-js', function(){
       console.log('at ' + i);
       //console.log('lenght' + filesList.length);
       //console.log('error at ' + JSON.stringify(filesList[16]));
-
       //var i = 15;
       //error at 16, 24
       if(i != 16 && i != 24 && filesList[i].build == true){
         gulp.src(filesList[i].files)
             .pipe(concat(filesList[i].buildName))
             .pipe(uglify())
-            .pipe(stripDebug())
+            //.pipe(stripDebug())
             .pipe(gulp.dest(objConfig.scriptDestinationFolder));
       }
   }

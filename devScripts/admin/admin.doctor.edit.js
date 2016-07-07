@@ -7,7 +7,7 @@ $(document).ready(function(){
            id:0,
            name:"",
            contact:"",
-           alternateContact: "",
+           alternateContact: "0",
            email: "",
            qualifications: "",
            address:"",
@@ -61,7 +61,7 @@ $(document).ready(function(){
                  doctorModel.id = doctor.id;
                  doctorModel.name = doctor.name;
                  doctorModel.contact = doctor.contact;
-                 doctorModel.alternateContact = doctor.alternateContact;
+                 //doctorModel.alternateContact = doctor.alternateContact;
                  doctorModel.email = doctor.email;
                  doctorModel.qualifications = doctor.qualifications;
                  doctorModel.address = doctor.address;
@@ -77,10 +77,11 @@ $(document).ready(function(){
 
             },
             updateModelFromView: function(){
+              console.log('update from view');
               doctorModel.id = formView.idControl.val();
               doctorModel.name = formView.nameControl.val();
               doctorModel.contact = formView.contactControl.val();
-              doctorModel.alternateContact = formView.alternatContactControl.val();
+              //doctorModel.alternateContact = formView.alternatContactControl.val();
               doctorModel.email = formView.emailControl.val();
               doctorModel.qualifications = formView.qualificationControl.val();
               doctorModel.address = formView.addressControl.val();
@@ -119,11 +120,12 @@ $(document).ready(function(){
           var formView = {
             init: function(){
               console.log('form view inti');
+              this.form = $("#doctor-profile-reg-form");
               this.overLay = $('#dash-overlay');
               this.idControl = $('#did');
               this.nameControl = $('#dname');
               this.contactControl = $('#dcontact');
-              this.alternatContactControl = $('#dalternate-contact');
+              //this.alternatContactControl = $('#dalternate-contact');
               this.emailControl = $('#demail');
               this.qualificationControl = $('#dqualifications');
               this.addressControl = $('#daddress');
@@ -135,7 +137,7 @@ $(document).ready(function(){
               this.activeControl = $('#dactive');
               this.inactiveControl = $('#dinactive');
 
-              this.validator = $("#doctor-profile-reg-form").bootstrapValidator({
+              this.validator = this.form.bootstrapValidator({
                 trigger:" focus blur",
                 feedbackIcons: {
                   valid: 'glyphicon glyphicon-ok ',
@@ -156,14 +158,6 @@ $(document).ready(function(){
                     validators : {
                       notEmpty :{
                         message : 'Please enter your contact No'
-                      }
-                    }
-                  },
-                  dalternatecontact :{
-
-                    validators : {
-                      notEmpty :{
-                        message : 'Please enter your alternte contact no'
                       }
                     }
                   }
@@ -200,15 +194,6 @@ $(document).ready(function(){
                       }
                     }
                   }
-                  ,      password :{
-
-                    validators : {
-                      notEmpty :{
-                        message : 'Please enter your password'
-                      }
-                    }
-                  }
-
                   , activeOptions :{
 
                     validators : {
@@ -220,6 +205,13 @@ $(document).ready(function(){
                   }
 
                 }
+              }).on('success.form.bv',function(e){
+                e.preventDefault();
+
+                console.log('model value' + JSON.stringify(doctorModel) );
+                controller.updateModelFromView();
+                console.log('save');
+                controller.saveDoctorAndRedirect();
               });
 
 
@@ -228,19 +220,20 @@ $(document).ready(function(){
                 return function(){
                   //console.log('handler exec : ' + cat.Id);
                   console.log('doctor reg click submit');
+                  formView.form.submit();
                   //steps in saved
                   //update mode with info from the view
                   //persist the model i.e save update
-
+                  /*
                   formView.validator.on('success.form.bv',function(e){
                     e.preventDefault();
 
                     console.log('model value' + JSON.stringify(doctorModel) );
                     controller.updateModelFromView();
-
-                   controller.saveDoctorAndRedirect();
+                    controller.saveDoctorAndRedirect();
 
                   });
+                  */
                 };
               })(controller)); //submit click handler
 
@@ -257,7 +250,7 @@ $(document).ready(function(){
               this.idControl.val(model.id);
               this.nameControl.val(model.name);
               this.contactControl.val(model.contact);
-              this.alternatContactControl.val(model.alternateContact);
+              //this.alternatContactControl.val(model.alternateContact);
               this.emailControl.val(model.email);
               this.qualificationControl.val(model.qualifications);
               this.addressControl.val(model.address);

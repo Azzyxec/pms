@@ -17,10 +17,15 @@ $(document).ready(function(){
       '#4CAF50', //green
       '#FB8C00', //orange
       '#37474F', //gray
+      '#37AF4F', //gray
       '#37474F', //gray
-      '#37474F', //gray
-      '#37474F' //gray
-    ]; 
+      '#3747AF', //gray
+      '#AF474F',//gray
+      '#37FF4F', //gray
+      '#FF334F', //gray
+      '#33FF4F', //gray
+      '#3347FFF' //gray
+    ];
 
     var controller = {
       init: function(){
@@ -29,13 +34,21 @@ $(document).ready(function(){
         calendarView.init();
 
         var mTodaysDate = moment();
-        var day = mTodaysDate.day();
-        mTodaysDate.subtract(day); //go to the first of the month
+
+
+        var mstartDate = moment({ years:mTodaysDate.get('year'), months:mTodaysDate.get('month')})
+        var mendDate = moment(mstartDate).endOf('month');
 
         //month
-        var lstartDate = mTodaysDate.format('DD-MM-YYYY');
-        mTodaysDate.add(1, 'M');
-        var lendDate = mTodaysDate.format('DD-MM-YYYY');
+        var lstartDate = mstartDate.format('DD-MM-YYYY');
+        var lendDate = mendDate.format('DD-MM-YYYY');
+
+        //updating model
+        model.startDate = lstartDate;
+        model.endDate = lendDate;
+
+        console.log('start date ' + lstartDate + ' end date ' + lendDate);
+
         this.getDetailsFromServer(lstartDate, lendDate);
 
       },
@@ -217,36 +230,46 @@ $(document).ready(function(){
           e.preventDefault();
 
           var strDate = controller.getStartDate();
-          mStartDate = moment(strDate, "DD-MM-YYYY");
-          mStartDate.subtract(1, 'M');
+          mdate = moment(strDate, "DD-MM-YYYY");
 
-          var day = mStartDate.day();
-          mStartDate.subtract(day); //go to the first of the month
+          console.log('start date ' + mdate.format('DD-MM-YYYY'));
 
-          var newStartDate =mStartDate.format('DD-MM-YYYY');
-          mStartDate.add(1, 'M');
-          var newEndDate = mStartDate.format('DD-MM-YYYY');
+          var mstartDate = moment({ years:mdate.get('year'), months: +mdate.get('month') - 1});
 
-          console.log('start ' + newStartDate + ' end ' + newEndDate);
-          controller.getDetailsFromServer(newStartDate, newEndDate);
+          var lstartDate = mstartDate.format('DD-MM-YYYY');
+
+          var mendDate = mstartDate.endOf('month');
+          var lendDate = mendDate.format('DD-MM-YYYY');
+
+          //updating model
+          model.startDate = lstartDate;
+          model.endDate = lendDate;
+
+          controller.getDetailsFromServer(lstartDate, lendDate);
 
         });
 
         this.btnNextSchedule.click(function(e){
           e.preventDefault();
           var strDate = controller.getStartDate();
-          mStartDate = moment(strDate, "DD-MM-YYYY");
-          mStartDate.add(1, 'M');
+          mdate = moment(strDate, "DD-MM-YYYY");
 
-          var day = mStartDate.day();
-          mStartDate.subtract(day); //go to the first of the month
+          console.log('start date ' + mdate.format('DD-MM-YYYY'));
 
-          var newStartDate =mStartDate.format('DD-MM-YYYY');
-          mStartDate.add(1, 'M');
-          var newEndDate = mStartDate.format('DD-MM-YYYY');
+          var mstartDate = moment({ years:mdate.get('year'), months: +mdate.get('month') + 1});
 
-          console.log('start ' + newStartDate + ' end ' + newEndDate);
-          controller.getDetailsFromServer(newStartDate, newEndDate);
+          var lstartDate = mstartDate.format('DD-MM-YYYY');
+
+          var mendDate = mstartDate.endOf('month');
+          var lendDate = mendDate.format('DD-MM-YYYY');
+
+          //updating model
+          model.startDate = lstartDate;
+          model.endDate = lendDate;
+
+
+          console.log('start ' + lstartDate + ' end ' + lendDate);
+          controller.getDetailsFromServer(lstartDate, lendDate);
         })
 
       },
@@ -270,13 +293,13 @@ $(document).ready(function(){
             css: {
               "background-color" : backGroundColorList[i]
             },
-          }); 
+          });
 
           var span = $('<span/>', {
             class: 'invisible',
             text:'...'
           });
-            
+
              var span23 = $('<span/>', {
             class: 'invisible',
             text:'...'
@@ -289,7 +312,7 @@ $(document).ready(function(){
           var li = $('<li/>');
           li.append(label);
           label.append(span23);
-         
+
           li.append(span);
           li.append(label1);
           this.locationListTop.append(li);
@@ -335,7 +358,7 @@ $(document).ready(function(){
                   //get the start and end minutes
 
                   var spanLocation =  $('<span/>',{class: 'location-label-2 label label-info',
-                    css: { 
+                    css: {
                       "background-color" : controller.getLocationColour(list[listCounter].locationId)
                     }
                   });
@@ -353,7 +376,7 @@ $(document).ready(function(){
                 var time = mstartTime.format('hh:mm a') + ' - ' + mendTime.format('hh:mm a');
                 var span1 =  $('<span/>',{class: 'label font-16 label-custom'});
                 span1.text(time);
-               
+
                // td.append(spanLocation);
                 td.append(span1);
 

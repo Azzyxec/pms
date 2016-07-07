@@ -1,4 +1,4 @@
- 
+
 function makeAppointmentController(){
 
   //initilizing the source typeahead
@@ -137,11 +137,6 @@ $("#revalidate").on('click',function(){
 
     }
 
-
-
-
-
-
   }
 
   mainController.prototype.resetPatientModel = function () {
@@ -230,6 +225,7 @@ $("#revalidate").on('click',function(){
       console.log('response ' + JSON.stringify(response));
       if(response.status == 1){
         console.log('appointmetn added success fully');
+        controller.resetPatientModel();
         //todayAppointmentListView.newAppointmentModal.modal('hide');
         //update the location list with new values
         appointmentView.alertSuccess.removeClass('hidden');
@@ -256,6 +252,7 @@ $("#revalidate").on('click',function(){
 
   var appointmentView = {
     init: function(){
+      this.form = $("#book-Appointment-Form");
       this.locationSelect = $('#sel-locations');
       this.appointmentDate = $('#new-appointment-date');
       this.appointmentTime = $('#new-appointment-time');
@@ -290,9 +287,7 @@ $("#revalidate").on('click',function(){
       this.alertSuccess  = $('#book-appointment-before-submit-success');
       this.backdatedBooking  = $('#book-appointment-backdated');
 
-
       this.saveButton = $('#book-appointment-button');
-
 
       //unbinding events
       this.saveButton.off();
@@ -308,7 +303,7 @@ $("#revalidate").on('click',function(){
 
       });
 
-      this.validator =   $("#book-Appointment-Form").bootstrapValidator({
+      this.validator =   this.form.bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
@@ -388,7 +383,16 @@ $("#revalidate").on('click',function(){
           }
 
         }
+      }).on('success.form.bv',function(e){
+        e.preventDefault();
+
+        console.log('book appointment');
+        controller.updateModelFromview();
+        controller.bookAppointment();
+
+
       });
+
       //intilizing the date and time controls
       this.appointmentDate.datetimepicker({
         inline: false,
@@ -422,6 +426,8 @@ $("#revalidate").on('click',function(){
       })
 
       this.saveButton.click(function(){
+        appointmentView.form.submit();
+        /*
         appointmentView.validator.on('success.form.bv',function(e){
           e.preventDefault();
 
@@ -431,6 +437,7 @@ $("#revalidate").on('click',function(){
 
 
         });
+        */
 
       });
 
