@@ -29,11 +29,6 @@
     </div>
   </div>
 
-
-
-
-
-
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
     <div class="col-md-8">
@@ -41,6 +36,34 @@
     </div>
 
   </div>
+  <div class="form-group hidden">
+      <div class="table-responsive table-condensed">
+        <table class="table text-center table-bordered table-hover table-striped ">
+          <thead id="prescription-table-header">
+            <tr>
+              <th class="col-md-1">Medicine</th>
+              <th class="col-md-1">Dosage info</th>
+              <th class="col-md-1"></th>
+              <th class="col-md-1"></th>
+            </tr>
+          </thead>
+          <tbody id="prescription-list-table-body">
+            <tr>
+              <td>
+                <input id="txt-medicine" type="text" placeholder="Medicine" class="form-control input-sm">
+              </td>
+              <td>
+                <input id="txt-medicine-remark" type="text" placeholder="Dosage info" class="form-control input-sm">
+              </td>
+              <td>
+                <button id="btn-add-row" class="btn btn-default btn-sm">Save</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Prescription<span class="required">*</span></label>
     <div class="col-md-8 ">
@@ -59,8 +82,6 @@
 
     </div>
   </div>
-
-
 
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Scanned Document List:</label>

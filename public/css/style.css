@@ -20,6 +20,11 @@ body{
     margin-top: 10px;
 }
 
+.onhover-text:hover{
+  color: #d2d2d2 !important;
+}
+
+
 .form-group{
     margin-bottom:15px !important;
 }

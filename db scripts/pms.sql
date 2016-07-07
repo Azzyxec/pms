@@ -1245,8 +1245,8 @@ begin
 		   ,a.start_mins
 		   ,a.end_mins
 		   ,a.description
-		   ,case when a.`state` = 1 then cl.remarks 
-				 when a.`state` = 2 then ca.remarks 
+		   ,case when a.`state` = 1 then cl.remarks
+				 when a.`state` = 2 then ca.remarks
 									else '' end as remarks
 		   ,a.`state`
 		   ,a.is_rescheduled
@@ -1695,12 +1695,12 @@ INSERT INTO `appointment`(
 							,pstart_mins
 							,pend_mins
                             ,pdescription
-							,0  							
-							,0 							
+							,0
+							,0
 							,now()
 							,pcreated_by_id
 							,pcreated_by_type
-							,1 							
+							,1
 						 );
 
 commit;
@@ -1881,7 +1881,7 @@ end$$
 CREATE DEFINER=`root`@`localhost` FUNCTION `check_appointment_avalibility` (`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) NO SQL
 begin
 
-	
+
 
 
 	declare lnewAppointmentDate date;

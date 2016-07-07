@@ -252,7 +252,7 @@ gulp.task('publish-build-js', function(){
 
   for(var i = 0; i < filesList.length; i++){
     //console.log(JSON.stringify(filesList[i]));
-      console.log('at ' + i);
+      console.log('at ' + i + 'name' + filesList[i].buildName);
       //console.log('lenght' + filesList.length);
       //console.log('error at ' + JSON.stringify(filesList[16]));
       //var i = 15;
