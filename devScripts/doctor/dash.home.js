@@ -14,21 +14,6 @@ $(document).ready(function(){
       }
     }
 
-    /*AX  BOC *************/
-
-    /* var backGroundColorList = [
-      '#337ab7', //blue
-      '#F44336', //red
-      '#4CAF50', //green
-      '#FB8C00', //orange
-      '#37474F', //gray
-      '#37474F', //gray
-      '#37474F', //gray
-      '#37474F' //gray
-    ]; */
-
-    /*AX  EOC *************/
-
     function controller(){
       //initlize any url
       this.getLocationUrl =  links.getLocationUrl;
@@ -66,52 +51,51 @@ $(document).ready(function(){
     });
   };
 
-  controller.prototype.combineFreeSlots = function (list) {
-    //updating the time of the freetime slot
-    // and putting the extra freetime slots in remove item list
-    /*
-    var returnList = [];
-    var preItem = {};
-    var add = true;
-    for(var i = 0; i < list.length; i++){
-      var appointment = list[i];
-
-      if(appointment.type == "f" && preItem.type == "f" &&
-         +appointment.scheduleId == +preItem.scheduleId){
-        appointment.startMins = preItem.startMins;
-        add = false;
-      }else{
-        add = true;
-      }
-
-      //time slots need not be combined
-
-      add = true;
-
-      if(add){
-        returnList.push(appointment);
-      }
-
-      preItem = appointment;
-    }*/
-
-   return list;
-
-  };
-
   controller.prototype.getSortedAppointmentList = function (locationId) {
 
     console.log('sorting with location Id' + locationId);
 
-    //if locatoin id is 0 then all appointments are returneed and sorted
+    var intermediateList = [];
+    var cancelledList = [];
 
-    var lappointmentList =  _.filter(model.appointmentList, function(item){
-        if(locationId == 0 || +item.locId == locationId){
-          return true;
+    for(var i = 0; i < model.appointmentList.length; i++){
+      var item = model.appointmentList[i];
+
+      if(locationId == 0 || locationId == item.locId ){
+        //filter with respect to location when locationId != 0
+
+       if(item.state != 2){
+          intermediateList.push(item);
+        }else if(item.state == 2){
+          cancelledList.push(item);
         }
-      });
 
-      return _.orderBy(lappointmentList, ['state'], ['asc']);
+      }
+
+    }//loop ends
+
+
+    //consolidate free time slots
+    var removeList = [];
+    var prevItem = {};
+    for(var i = 0; i < intermediateList.length; i++){
+      var item = intermediateList[i];
+
+      if(item.type == 'f' && prevItem.type == "f" &&
+        prevItem.endMins == item.startMins &&
+         +item.scheduleId == +prevItem.scheduleId){
+        item.startMins = prevItem.startMins;
+        removeList.push(prevItem);
+      }
+
+      prevItem = item;
+    }
+
+    //adding the items that we dont want to remove
+    var returnList = _.difference(intermediateList, removeList)
+                      .concat(cancelledList);
+
+    return returnList;
 
   };
 
@@ -138,12 +122,7 @@ $(document).ready(function(){
       }
     });
 
-    if(freeSlots.length > 0){
-      return this.combineFreeSlots(freeSlots);
-    }else {
       return freeSlots;
-    }
-
 
   };
 
@@ -212,21 +191,6 @@ $(document).ready(function(){
       }
     });
 
-    /*
-    var completedCount = _.countBy(model.appointmentList, function(item){
-      if((+item.state == 1 && item.type === 'a')
-          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
-        return "count";
-      }
-    }).count;
-
-    var cancelledCount = _.countBy(model.appointmentList, function(item){
-      if((+item.state == 2 && item.type === 'a')
-          && (+cont.getSelectedLocId()  == 0 || +item.locId == cont.getSelectedLocId() ) ){
-        return "count";
-      }
-    }).count;
-    */
 
     console.log('array filer rsult' + JSON.stringify(stats));
 
@@ -291,7 +255,7 @@ controller.prototype.getUserInfo = function () {
     //get the appointment list for the user, i.e. doctor or staff for a location
     model.DefaultlocationId = model.userInfo.locationId == -1?0:model.userInfo.locationId;
     todayAppointmentListView.customizeViewForUser();
-    cont.getappointmentListForDate(model.appointmentDate, model.DefaultlocationId);
+    cont.getappointmentListForDate(model.appointmentDate);
 
   });
 
@@ -323,25 +287,14 @@ controller.prototype.getUserInfo = function () {
     });
   };
 
-  controller.prototype.getappointmentListForDate = function (pdate, locId) {
-    console.log('called with' +  pdate + ' ' + locId);
-    $.get( this.getAppointmentForTheDayUrl , {date:   pdate, locId: locId})
+  controller.prototype.getappointmentListForDate = function (pdate) {
+    console.log('called with' +  pdate);
+    $.get( this.getAppointmentForTheDayUrl , {date:   pdate, locId: 0})
     .done(function( response ) {
       console.log("today Appointment: " + JSON.stringify(response));
       model.appointmentList = response.data;
-      var appointmentList = cont.getSortedAppointmentList(locId);
-
-      var freeSlots = _.countBy(model.appointmentList, function(item){
-        if(item.type === 'f'){
-          return "count";
-        }
-      }).count;
-
-      if(freeSlots > 1){
-        appointmentList = cont.combineFreeSlots(appointmentList);
-      }
-
-
+      var appointmentList = cont.getSortedAppointmentList(0);
+      model.appointmentList = appointmentList;
       todayAppointmentListView.renderAppointmentist(appointmentList);
       cont.appointmentsLoaded = true;
       cont.removeOverLay();
@@ -368,7 +321,6 @@ controller.prototype.getUserInfo = function () {
       //Selected location change event wiring
       this.locationSelect.on('change', function(){
 
-
         var selectedOption = todayAppointmentListView.locationSelect.find(":selected");
         var selectedValue = selectedOption.attr('value');
         var name = selectedOption.text();
@@ -380,29 +332,11 @@ controller.prototype.getUserInfo = function () {
           cont.setSelectedLocationId(selectedValue);
           //var ldate = cont.getSelectedeDate();
           var appointments = cont.getSortedAppointmentList(selectedValue);
-
-          var freeSlots = _.countBy(appointments, function(item){
-            if(item.type === 'f'){
-              return "count";
-            }
-          }).count;
-
-          if(freeSlots > 1){
-              appointments = cont.combineFreeSlots(appointments);
-          }
-
-
           todayAppointmentListView.renderAppointmentist(appointments);
-          //cont.getappointmentListForDate(ldate, selectedValue);
+
         }
 
-        //model.DefaultlocationId
       })
-
-
-
-
-      //this.goButton = $('#appointment-list-go-btn');
 
       this.listHeadertText = $('#appointment-list-header');
 
@@ -430,18 +364,7 @@ controller.prototype.getUserInfo = function () {
         var list = cont.getSortedAppointmentList(locId);
         //console.log(JSON.stringify(list));
 
-
-      var freeSlots = _.countBy(list, function(item){
-        if(item.type === 'f'){
-          return "count";
-        }
-      }).count;
-
-      if(freeSlots > 1){
-          list = cont.combineFreeSlots(list);
-      }
-
-          todayAppointmentListView.renderAppointmentist(list);
+      todayAppointmentListView.renderAppointmentist(list);
       })
 
 
@@ -471,7 +394,6 @@ controller.prototype.getUserInfo = function () {
           todayAppointmentListView.renderAppointmentist(list);
       })
 
-
       //templates
       this.freeTimeSlotTemplate = $('#book-new-appointment-template');
       this.bookedAppointmentTemplate = $('#booked-appointment-template');
@@ -479,9 +401,7 @@ controller.prototype.getUserInfo = function () {
       this.closedAppointmentTemplate = $('#closed-appointment-template');
       this.noResultsFoundTemplate = $('#no-result-found-template');
 
-
       //modals
-
       this.newAppointmentModal = $('#book-appointment-modal');
       this.cancelAppointmentModal = $('#cancel-appointment-modal-window');
       this.closeAppointmentModal = $('#close-appointment-modal-window');
@@ -494,30 +414,11 @@ controller.prototype.getUserInfo = function () {
       this.dateInput.on('dp.change', function(){
         var date = todayAppointmentListView.dateInput.val();
         cont.setSelectedDate(date);
-        var locId = cont.getSelectedLocId();
-        cont.getappointmentListForDate(date, locId);
+        cont.getappointmentListForDate(date);
       });
-
-      /*
-      this.goButton.click(function(){
-      var date = todayAppointmentListView.dateInput.val();
-
-      var selectedOption = todayAppointmentListView.locationSelect.find(":selected");
-
-      var selectedValue = selectedOption.attr('value');
-      var name = selectedOption.text();
-      if(selectedValue){
-      todayAppointmentListView.listHeadertText.text('Location ' + name);
-      cont.setSelectedDate(date);
-      cont.setSelectedLocationId(selectedValue);
-      cont.getappointmentListForDate(date, selectedValue);
-    }
-
-  });*/
 
 },
 render: function(){
-  console.log('rendering appointment list');
 
   this.dateInput.val(cont.getSelectedeDate());
 
@@ -525,7 +426,6 @@ render: function(){
 
   //appointment statictics
   //this.rescheduledAppointmentCount.text(stats.rescheduledAppointmentCount);
-
 
   this.locationSelect.empty();
 
@@ -574,8 +474,8 @@ renderAppointmentist: function(appointmentList){
     console.log('appointemtn list with no entries');
     //adding the result found template
     this.appointmentListContainer.empty();
-    var template = this.noResultsFoundTemplate.clone();
-    this.appointmentListContainer.append(template);
+    //var template = this.noResultsFoundTemplate.clone();
+    this.appointmentListContainer.append(this.noResultsFoundTemplate);
   }else{
 
     console.log('render appointet list with entires');
@@ -740,7 +640,7 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
           console.log('call back in dash home, response' + JSON.stringify(response) );
           //refresh appointment
           console.log('selected date ' + cont.getSelectedeDate() + ' loc Id ' + cont.getSelectedLocId());
-          cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+          cont.getappointmentListForDate(cont.getSelectedeDate());
 
           todayAppointmentListView.closeAppointmentModal.modal('hide');
 
@@ -769,7 +669,7 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
           console.log('cancel callback ' + JSON.stringify(response));
           if(response.status == 1){
             todayAppointmentListView.cancelAppointmentModal.modal('hide');
-            cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+            cont.getappointmentListForDate(cont.getSelectedeDate());
           }
         });
         cancelAppointmentController.init(appointment);
@@ -822,7 +722,7 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
               cont.getPatients();
             }
             //update the location list with new values
-            cont.getappointmentListForDate(cont.getSelectedeDate(),  cont.getSelectedLocId());
+            cont.getappointmentListForDate(cont.getSelectedeDate());
           }else if(data.status == 2){
             console.log('schedule not added or timimgs dont match');
 
