@@ -140,10 +140,6 @@ function getCloseAppointmentController(){
             }
           })(list[i]));
 
-          var td = $('<td/>');
-          td.append(editLink);
-          tr.append(td);
-
           var removeLink = $('<a/>',{
             text: 'Remove',
             class: ""
@@ -159,8 +155,15 @@ function getCloseAppointmentController(){
           })(list[i]));
 
           var td = $('<td/>');
+          var separator = $('<span> / </span>');
+          td.append(editLink);
+          td.append(separator);
           td.append(removeLink);
           tr.append(td);
+
+
+
+
 
           this.prescriptionListBody.prepend(tr);
 

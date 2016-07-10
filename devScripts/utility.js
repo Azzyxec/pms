@@ -20,5 +20,14 @@ var utility = {
 
     return mdate.format('hh:mm A');
 
+  },
+
+  getAlerts : function(msg,classnm,id,container){
+    $('.pms-alerts').remove();
+
+    var alert = $('<div  id = "'+id+'" class=" alert ' +classnm+' pms-alerts alert-dismissible doc-profile-before-submit-warning-error" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+    $(container).prepend(alert);
+    console.log('alert created');
+
   }
 }
