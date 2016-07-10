@@ -97,7 +97,9 @@ $("#revalidate").on('click',function(){
         name: 'patients-name',
         source: model.patientList,
         updater: function(patient) {
+
           controller.TypeaheadSelectCallBack(patient);
+
           return patient;
         }
       });
@@ -140,6 +142,7 @@ $("#revalidate").on('click',function(){
   }
 
   mainController.prototype.resetPatientModel = function () {
+    console.log("model reset");
     model.patient = {
       id:0,
       name:'',
@@ -228,19 +231,21 @@ $("#revalidate").on('click',function(){
         controller.resetPatientModel();
         //todayAppointmentListView.newAppointmentModal.modal('hide');
         //update the location list with new values
-        appointmentView.alertSuccess.removeClass('hidden');
+        utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
 
         //may be can return the id of the newly added patient, to update the patient model
 
       }else if(response.status == 2){
-        appointmentView.alertNoScheduleOrTimingOustideWorkTiming.removeClass('hidden');
+        utility.getAlerts("Schedule not added or timimgs dont match!","alert-warning text-center",'','.book-app-alerts-container');
+
         console.log('schedule not added or timimgs dont match');
 
       }else if(response.status == 3){
-        appointmentView.alertTimingClash.removeClass('hidden');
+          utility.getAlerts("timimng clash with existign appointment","alert-warning text-center",'','.book-app-alerts-container');
+
         console.log('timimng clash with existign appointment');
       }else if(response.status == 4){
-        appointmentView.backdatedBooking.removeClass('hidden');
+        utility.getAlerts("cannot book a backdated appointment","alert-warning text-center",'','.book-app-alerts-container');
         console.log('cannot book a backdated appointment');
       }
 
@@ -269,6 +274,7 @@ $("#revalidate").on('click',function(){
       this.bookApptModal = $("#book-appointment-modal");
       this.bookApptclear = $("#book-appointment-clear");
 
+
       this.appointmentDate.val('');
       this.appointmentTime.val('');
       this.patientsName.val('');
@@ -293,7 +299,9 @@ $("#revalidate").on('click',function(){
       this.saveButton.off();
       this.patientsName.off("click change keyup select");
 
-      this.patientsName.on("click change keyup select", function (event) {
+      this.patientsName.on("click change keyup select blur", function (event) {
+
+
 
         var value = appointmentView.patientsName.val();
         if(!value || 0 === value.trim().length){
@@ -302,9 +310,13 @@ $("#revalidate").on('click',function(){
         }
 
       });
+      this.patientsName.on(" change keyup select blur", function (event) {
+  $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newBookusername');
+      });
+
 
       this.validator =   this.form.bootstrapValidator({
-        trigger:" focus blur",
+        trigger:" focus blur ",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
           invalid: 'glyphicon glyphicon-remove ',
@@ -327,11 +339,22 @@ $("#revalidate").on('click',function(){
               }
             }
           },
+
           newSelApptDuration :{
 
             validators : {
               notEmpty :{
                 message : 'Please Select the duration'
+              }
+            }
+          }
+          ,
+
+          newBookusername :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please enter your name'
               }
             }
           }

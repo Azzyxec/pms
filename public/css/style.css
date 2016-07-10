@@ -464,3 +464,14 @@ padding: 6px;
 .selectCell{
     background-color:darkgray;
 }
+
+
+
+/********** close appointment **********/
+
+
+
+.prescription-added-rows > td{
+
+  word-break:break-word;
+}
