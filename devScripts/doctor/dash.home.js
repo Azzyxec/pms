@@ -7,8 +7,10 @@ $(document).ready(function(){
       appointmentList:[],
       appointmentDate: moment().format('DD-MM-YYYY'),
       DefaultlocationId: 0,
+      currentFilter: 0,//0 - all, 1 - book, 2 - active,  3 -  cancelled, 4 - closed
       userInfo:{},
       appointmenListViewModel:{
+
         patientList:[],
         locationList:[]
       }
@@ -24,6 +26,14 @@ $(document).ready(function(){
       this.patientsLoaded = false;
       this.locationsLoaded = false;
       this.appointmentsLoaded = false;
+    };
+
+    controller.prototype.getCurrentFilter = function () {
+      return model.currentFilter;
+    };
+
+    controller.prototype.setCurrentFilter = function (filterId) {
+      model.currentFilter = filterId;
     };
 
     controller.prototype.getPatientList = function () {
@@ -254,7 +264,6 @@ controller.prototype.getUserInfo = function () {
 
     //get the appointment list for the user, i.e. doctor or staff for a location
     model.DefaultlocationId = model.userInfo.locationId == -1?0:model.userInfo.locationId;
-    todayAppointmentListView.customizeViewForUser();
     cont.getappointmentListForDate(model.appointmentDate);
 
   });
@@ -293,9 +302,30 @@ controller.prototype.getUserInfo = function () {
     .done(function( response ) {
       console.log("today Appointment: " + JSON.stringify(response));
       model.appointmentList = response.data;
+
       var appointmentList = cont.getSortedAppointmentList(0);
       model.appointmentList = appointmentList;
+
+      var locId = cont.getSelectedLocId();
+
+      if(locId != 0){
+        appointmentList = cont.getSortedAppointmentList(locId);
+      }
+
+      var filterId = cont.getCurrentFilter();
+
+      if(filterId == 1){
+        appointmentList = cont.getFreeTimeSlotsList();
+      }else if(filterId == 2){
+        appointmentList = cont.getActiveAppointmentsList();
+      }else if(filterId == 3){
+        appointmentList = cont.getCancelledList();
+      }else if(filterId == 4){
+        appointmentList = cont.getClosedAppointmentsList();
+      }
+
       todayAppointmentListView.renderAppointmentist(appointmentList);
+
       cont.appointmentsLoaded = true;
       cont.removeOverLay();
     });
@@ -308,17 +338,18 @@ controller.prototype.getUserInfo = function () {
       this.overlay = $('#dash-overlay');
 
       this.dateInput = $('#appointment-list-date1');
-      this.locationSelect = $('#appointment-list-locations-sel');
-      this.locationSelect.hide();
-      this.appointmentFilterBtn = $(".all-appointments-filter-button");
+      this.locationNavContainer = $('#loc-navs');
 
-        this.appointmentFilterBtn.on('click',function(){
-            console.log("toggle active");
-             $(".all-appointments-filter-button").removeClass("active");
-            $(this).addClass("active");
-        });
+      this.appointmentFilterButtons = $(".all-appointments-filter-button");
+
+     this.appointmentFilterButtons.on('click',function(){
+          console.log("toggle active");
+          $(this).siblings().removeClass("active");
+          $(this).addClass("active");
+      });
 
       //Selected location change event wiring
+      /*
       this.locationSelect.on('change', function(){
 
         var selectedOption = todayAppointmentListView.locationSelect.find(":selected");
@@ -337,6 +368,7 @@ controller.prototype.getUserInfo = function () {
         }
 
       })
+      */
 
       this.listHeadertText = $('#appointment-list-header');
 
@@ -354,6 +386,7 @@ controller.prototype.getUserInfo = function () {
       this.closeAppointmentFilerButton.on('click', function(){
         var list = cont.getCancelledList();
         console.log(JSON.stringify(list));
+        cont.setCurrentFilter(3);
           todayAppointmentListView.renderAppointmentist(list);
       })
 
@@ -363,25 +396,25 @@ controller.prototype.getUserInfo = function () {
         var locId = cont.getSelectedLocId();
         var list = cont.getSortedAppointmentList(locId);
         //console.log(JSON.stringify(list));
-
+        cont.setCurrentFilter(0);
       todayAppointmentListView.renderAppointmentist(list);
       })
-
 
       this.freeTimeSlotsFilterButton = $('#free-slots-filter-button');
 
       this.freeTimeSlotsFilterButton.on('click', function(){
         var list = cont.getFreeTimeSlotsList();
         console.log(JSON.stringify(list));
+        cont.setCurrentFilter(1);
           todayAppointmentListView.renderAppointmentist(list);
       })
-
 
       this.activeAppointmentsFilterButton = $('#active-appointments-filter-button');
 
       this.activeAppointmentsFilterButton.on('click', function(){
         var list = cont.getActiveAppointmentsList();
         console.log(JSON.stringify(list));
+        cont.setCurrentFilter(2);
           todayAppointmentListView.renderAppointmentist(list);
       })
 
@@ -391,6 +424,7 @@ controller.prototype.getUserInfo = function () {
         console.log('closed appointment filter');
         var list = cont.getClosedAppointmentsList();
         console.log(JSON.stringify(list));
+        cont.setCurrentFilter(4);
           todayAppointmentListView.renderAppointmentist(list);
       })
 
@@ -415,6 +449,7 @@ controller.prototype.getUserInfo = function () {
         var date = todayAppointmentListView.dateInput.val();
         cont.setSelectedDate(date);
         cont.getappointmentListForDate(date);
+
       });
 
 },
@@ -422,11 +457,69 @@ render: function(){
 
   this.dateInput.val(cont.getSelectedeDate());
 
-  todayAppointmentListView.listHeadertText.text('Location');
+  var userInfo = cont.getUserInfoModel();
 
-  //appointment statictics
-  //this.rescheduledAppointmentCount.text(stats.rescheduledAppointmentCount);
 
+  if(userInfo && userInfo.type == 'D'){
+
+    this.locationNavContainer.empty();
+
+
+
+    var locationList = cont.getLocationList();
+
+    cont.setSelectedLocationId(locationList[0].id);
+
+    for(var i = 0; i< locationList.length; i++ ){
+      //<li role="presentation" id="all-appointments-filter-button"  class="all-appointments-filter-button active "><a >Margaon</a></li>
+      var locationButton = $('<li/>', {
+        role:'presentation',
+        class: 'all-appointments-filter-button',
+      });
+
+      var defaultLocId = cont.getSelectedLocId();
+
+      if(defaultLocId == locationList[i].id){
+        locationButton.addClass('active');
+      }
+
+      locationButton.on('click', (function(locId, self){
+        return function(){
+        //filter locations for this id
+        console.log('filter locations for ' + locId);
+        self.siblings().removeClass('active');
+        self.addClass('active');
+
+        cont.setSelectedLocationId(locId);
+
+          var filterId = cont.getCurrentFilter();
+
+          var appointmentList = [];
+
+          if(filterId == 1){
+            appointmentList = cont.getFreeTimeSlotsList();
+          }else if(filterId == 2){
+            appointmentList = cont.getActiveAppointmentsList();
+          }else if(filterId == 3){
+            appointmentList = cont.getCancelledList();
+          }else if(filterId == 4){
+            appointmentList = cont.getClosedAppointmentsList();
+          }else{
+            appointments = cont.getSortedAppointmentList(locId);
+          }
+
+        todayAppointmentListView.renderAppointmentist(appointments);
+
+        }
+      })(locationList[i].id, locationButton));
+
+      locationButton.append($('<a>' + locationList[i].name + '</a>'));
+
+      this.locationNavContainer.append(locationButton);
+    }
+  }
+
+  /*
   this.locationSelect.empty();
 
   this.locationSelect.append($('<option/>', {
@@ -445,20 +538,7 @@ render: function(){
   }
 
   this.locationSelect.val(cont.getSelectedLocId());
-
-},
-customizeViewForUser: function(){
-  var userInfo = cont.getUserInfoModel();
-
-
- if(userInfo && userInfo.type == 'D'){
-   //show the location selector drop down
-    this.locationSelect.show();
-
-  }else if(userInfo && userInfo.type == 'S'){
-    //keep the location dropdown hidden
-  }
-
+  */
 
 },
 renderAppointmentist: function(appointmentList){
