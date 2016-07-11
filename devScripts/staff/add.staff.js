@@ -125,37 +125,139 @@ $(document).ready(function(){
         this.inActiveControl  = $('#sinactive');
         this.selectLocations = $('#sel-locations');
 
+        this.validator =   $("#staffFrm").bootstrapValidator({
+           trigger:" focus blur",
+           feedbackIcons: {
+             valid: 'glyphicon glyphicon-ok ',
+             invalid: 'glyphicon glyphicon-remove ',
+             validating: 'glyphicon glyphicon-refresh'
+           },
+             excluded: [':disabled'],
+           fields:{
+             fname : {
+               validators : {
+                 notEmpty : {
+                   message : 'Please enter staff member\'s  Name!'
+                 }
+               }
+
+             },
+
+                lname : {
+               validators : {
+                 notEmpty : {
+                   message : 'Please Enter staff member\'s last Name!'
+                 }
+               }
+
+             }
+
+
+             , s_email :{
+
+               validators : {
+                 notEmpty :{
+                   message : 'Please enter patients Email Id'
+                 }
+               }
+             }
+             ,  uname :{
+
+               validators : {
+                 notEmpty :{
+                   message : 'Please enter staff member\'s username'
+                 }
+               }
+             },
+
+             pswd :{
+
+              validators : {
+                notEmpty :{
+                  message : 'Please enter staff member\'s password'
+                }
+              }
+            },
+
+
+            s_location:{
+
+             validators : {
+               notEmpty :{
+                 message : 'Please enter staff member\'s password'
+               }
+             }
+           }
+             , phone1 :{
+
+               validators : {
+                 notEmpty :{
+                   message : 'Please enter staff member\'s contact no'
+                 }
+
+               }
+             }
+             ,  phone2 :{
+
+               validators : {
+                 notEmpty :{
+                   message : 'Please enter staff member\'s alternate phone no'
+                 }
+               }
+             },
+
+               Saddress :{
+
+               validators : {
+                 notEmpty :{
+                   message : 'Please enter patients address'
+                 }
+               }
+             }
+
+
+
+           }
+         }).on('success.form.bv',function(e){
+              e.preventDefault();
+
+                        console.log('save click');
+
+                        var staff = controller.getUpdateModelFromView();
+
+                        $.post(controller.createModifyStaffUrl , staff)
+                         .done(function( response ) {
+                           console.log('response ' + JSON.stringify(response));
+                           if(response.status == "1"){
+                               $('#man-staff-before-submit-success').removeClass('hidden');
+                               console.log("successfully edited");
+                                  window.location.href = links.doctorsStaffListingUr;
+
+                             console.log('Please select another login Id');
+                           }else if(response.data.status == "-1"){
+                             $('#man-staff-before-submit-success').removeClass('hidden');
+
+                             console.log('saved successfully, now you will receive a confirmation email, then you can login');
+
+                           }
+
+                           controller.resetModel();
+                           CreateUpdateView.render();
+                           //model.locations = response.data;
+                           //CreateUpdateView.render();
+                         });
+
+
+
+           });
+
         this.saveButton = $('#btn-save');
         this.cancelButton = $('#btn-staff-cancel');
 
 
 
         this.saveButton.click(function() {
-
-          console.log('save click');
-
-          var staff = controller.getUpdateModelFromView();
-
-          $.post(controller.createModifyStaffUrl , staff)
-           .done(function( response ) {
-             console.log('response ' + JSON.stringify(response));
-             if(response.data.status == "1"){
-                 $('#man-staff-before-submit-success').removeClass('hidden');
-
-               console.log('Please select another login Id');
-             }else if(response.data.status == "-1"){
-               $('#man-staff-before-submit-success').removeClass('hidden');
-
-               console.log('saved successfully, now you will receive a confirmation email, then you can login');
-
-             }
-
-             controller.resetModel();
-             CreateUpdateView.render();
-             //model.locations = response.data;
-             //CreateUpdateView.render();
-           });
-
+            $("#staffFrm").submit();
         });
 
         this.cancelButton .on('click', function(e){
@@ -201,7 +303,7 @@ $(document).ready(function(){
        CreateUpdateView.email.val(model.staff.email);
        CreateUpdateView.address.val(model.staff.address);
        CreateUpdateView.userName.val(model.staff.userName);
-       CreateUpdateView.pasword.val('');
+       CreateUpdateView.pasword.val(model.staff.pasword);
        CreateUpdateView.recoveryContact.val(model.staff.recoveryContact);
        CreateUpdateView.recoveryEmail.val(model.staff.recoveryEmail);
 

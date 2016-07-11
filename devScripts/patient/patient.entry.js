@@ -7,7 +7,7 @@ $(document).ready(function(){
     console.log('patient entry js loaded');
 
     var model = {
-      patientInfo: { 
+      patientInfo: {
         id:0,
         name:"",
         dateOfBirth: "",
@@ -158,6 +158,12 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   }else{
     model.patientInfo.isActive = 0;
   }
+  if($('#patient-picture-container').attr('src') !== undefined){
+    var str1 =$('#patient-picture-container').attr('src');
+    var n1 = str1.lastIndexOf('/');
+  var result1 = str1.substring(n1 + 1);
+    model.patientInfo.picUploadPath = result1;
+  }
 
   //model.patientInfo. = patientDetailsView.picUpload;
 };
@@ -186,6 +192,13 @@ MainController.prototype.updateGuardianInfoModelFromView = function () {
   model.guardianInfo.contact1 = patientGuardianDetailsView.contact1.val();
   model.guardianInfo.contact2 = patientGuardianDetailsView.contact2.val();
   model.guardianInfo.address = patientGuardianDetailsView.address.val();
+
+  if($('#guardian-profile-image').attr('src') !== undefined){
+    var str = $('#guardian-profile-image').attr('src');
+    var n = str.lastIndexOf('/');
+  var result = str.substring(n + 1);
+    model.guardianInfo.picUploadPath = result;
+  }
 
 };
 
@@ -390,8 +403,8 @@ var patientDetailsView = {
     this.imgBox = $('#patient-picture-container');
     this.activeControl = $('#pactive');
     this.inactiveControl = $('#pinactive');
-    
-      
+
+
      this.validator =   $("#patientDetailsEntryForm").bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
@@ -422,7 +435,7 @@ var patientDetailsView = {
               notEmpty :{
                   message : 'Please Enter blood group'
               }
-               
+
             }
           }
 
@@ -430,7 +443,7 @@ var patientDetailsView = {
 
             validators : {
               notEmpty :{
-                message : 'Please Select the duration'
+                message : 'Please enter patients weight'
               }
             }
           }
@@ -459,7 +472,7 @@ var patientDetailsView = {
               }
             }
           },
-            
+
             p_address :{
 
             validators : {
@@ -468,8 +481,8 @@ var patientDetailsView = {
               }
             }
           }
-            
-            
+
+
 
         }
       }).on('success.form.bv',function(e){
@@ -480,11 +493,11 @@ var patientDetailsView = {
       console.log('save click' + JSON.stringify(model));
       cont.persistModel();
 
-        
+
         });
-      
-      
-      
+
+
+
 
     var process_url =  links.PatientUploadimage; //PHP script
     this.picUpload.fileupload({
@@ -530,7 +543,9 @@ var patientDetailsView = {
             //create file info text, name and file size
             var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
-            model.patientInfo.picUploadPath =file.name
+            model.patientInfo.picUploadPath =file.name;
+            console.log(file.name);
+            $("#patient-picture-container").attr('src','images/patientUserImages/'+file.name);
 
             file_txt.append(removeBtn); //add remove button inside info text element
             file_txt.prependTo(node); //add to node element
@@ -568,13 +583,15 @@ var patientDetailsView = {
 
 
     $('.patients-detail-form-submit').on('click',function(){
-        
+
         console.log("form submit 1");
-       $('#patientDetailsEntryForm').submit(); 
-        
+       $('#patientDetailsEntryForm').submit();
+        $('#guardian-form').submit();
+
+
 
     });
-      
+
 
     //this.tab.hide();
   },
@@ -642,6 +659,75 @@ var patientGuardianDetailsView = {
     this.imgBox = $('#guardian-profile-image');
 
 
+         this.validator =   $("#guardian-form").bootstrapValidator({
+            trigger:" focus blur",
+            feedbackIcons: {
+              valid: 'glyphicon glyphicon-ok ',
+              invalid: 'glyphicon glyphicon-remove ',
+              validating: 'glyphicon glyphicon-refresh'
+            },
+              excluded: [':disabled'],
+            fields:{
+              guardianname : {
+                validators : {
+                  notEmpty : {
+                    message : 'Please Enter your  Name!'
+                  }
+                }
+
+              },
+              guardiandob : {
+                validators : {
+                  notEmpty :{
+                    message : 'Please select date'
+                  }
+                }
+              }
+
+
+
+              , guardiancontact1 :{
+
+                validators : {
+                  notEmpty :{
+                    message : 'Please enter guardians contact no'
+                  }
+
+                }
+              }
+              ,  guardianContact2 :{
+
+                validators : {
+                  notEmpty :{
+                    message : 'Please enter Guardians alternate phone no'
+                  }
+                }
+              },
+
+              guardianAddress :{
+
+                validators : {
+                  notEmpty :{
+                    message : 'Please enter guardians address'
+                  }
+                }
+              }
+
+
+
+            }
+          }).on('success.form.bv',function(e){
+              e.preventDefault();
+
+                console.log('patient click');
+                    cont.updateModelsFromViews();
+          console.log('save click' + JSON.stringify(model));
+          cont.persistModel();
+
+
+            });
+
+
 
         var Gprocess_url =  links.GaurdianUploadimage; //PHP script
         this.picUpload.fileupload({
@@ -688,7 +774,8 @@ var patientGuardianDetailsView = {
                 //create file info text, name and file size
                 var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
-                model.guardianInfo.picUploadPath =file.name
+                model.guardianInfo.picUploadPath =file.name;
+                $("#guardian-profile-image").attr('src','images/guardianUserImages/'+file.name);
 
                 file_txt.append(removeBtn); //add remove button inside info text element
                 file_txt.prependTo(node); //add to node element

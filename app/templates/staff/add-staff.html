@@ -58,11 +58,11 @@
         </div>
         <div class="form-group">
           <label for="email">Email:<span style="color:red;">*</span></label>
-          <input id="email" name="email" class="form-control" placeholder="Enter Email" value="">
+          <input id="email" name="s_email" class="form-control" placeholder="Enter Email" value="">
         </div>
         <div class="form-group">
           <label for="address">Address:<span style="color:red;">*</span></label>
-          <textarea id="address" name="address" class="form-control" placeholder="Enter Address" rows="3"></textarea>
+          <textarea id="address" name="Saddress" class="form-control" placeholder="Enter Address" rows="3"></textarea>
         </div>
      </div>
      <div class="col-md-6">
@@ -84,18 +84,18 @@
         </div>
         <div class="form-group">
           <label for="location">Work Locations:<span style="color:red;">*</span></label>
-          <select id="sel-locations" name="location" class="form-control">
+          <select id="sel-locations" name="s_location" class="form-control">
           </select>
         </div>
         <div class="from-group" style={% if showActiveContol == "true" %}"visibility:visible;" {% else %} "visibility:hidden;"  {%endif%}>
           <label class="col-md-2 control-label" for="">Status</label>
           <div class="radio col-md-6">
             <label>
-              <input type="radio" name="activeOptions" id="sactive"  value="1" checked>
+              <input type="radio" name="s_activeOptions" id="sactive"  value="1" checked>
               Active
             </label>
             <label>
-              <input type="radio" name="activeOptions" id="sinactive" value="0">
+              <input type="radio" name="s_activeOptions" id="sinactive" value="0">
               Inactive
             </label>
           </div>

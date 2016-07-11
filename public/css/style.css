@@ -475,3 +475,15 @@ padding: 6px;
 
   word-break:break-word;
 }
+
+
+
+
+/********** dashboard section *********/
+
+.patient_history_btn
+, .close-appointment-template-button ,
+.cancel-appointment-template-btn{
+  margin-left:5px;
+}
+/*******/

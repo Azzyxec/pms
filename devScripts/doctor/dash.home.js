@@ -730,6 +730,7 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
         todayAppointmentListView.closeAppointmentModal.on('hidden.bs.modal', function(){
           console.log('close appointment modal close');
           closeAppointmentController.resetForm();
+            $('.pms-alerts').remove();
         });
 
       }
@@ -848,15 +849,12 @@ cont.init();
 }());
 
 
-
-$(function () {
-//  $('body').$('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
-  $('body').tooltip({
-      placement:'top',
-      selector: '[data-tooltip="tooltip"]'
-  });
-
+$('body').tooltip({
+    placement:'top',
+    selector: '[data-tooltip="tooltip"]',
+    container: 'body'
 });
+
 $(function () {
   $('body').popover({
     trigger:'focus',
