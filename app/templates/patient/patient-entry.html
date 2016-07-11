@@ -222,13 +222,13 @@
               <div class="content_bottom">
                 <hr class="invisible">
                 <div class="">
-                  <form id="addCompanyForm"  class="form-horizontal">
+                  <form id="guardian-form"  class="form-horizontal">
 
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Name:<span class="required">*</span></label>
                       <div class='col-md-9'>
 
-                        <input type="text" class="form-control" name="" id="txt-guardian-name" placeholder="Name">
+                        <input type="text" class="form-control" name="guardianname" id="txt-guardian-name" placeholder="Name">
                       </div>
 
                     </div>
@@ -236,7 +236,7 @@
                     <div class="form-group">
                       <label for="from-date" class="col-sm-2 control-label">Birth date:<span class="required">*</span></label>
                       <div class="col-md-9">
-                        <input type="text" class="form-control" id="guardian-dob" >
+                        <input name="guardiandob" type="text" class="form-control" id="guardian-dob" >
                       </div>
                     </div>
 
@@ -244,11 +244,11 @@
                       <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Gender:</label>
                       <div class=" col-sm-9">
                         <label>
-                          <input type="radio" name="activeOptions" id="rb-male-guardian"  value="1" checked>
+                          <input type="radio" name="guardianGender" id="rb-male-guardian"  value="1" checked>
                           Male
                         </label>
                         <label>
-                          <input type="radio" name="activeOptions" id="rb-female-guardian" value="0">
+                          <input type="radio" name="guardianGender" id="rb-female-guardian" value="0">
                           Female
                         </label>
                       </div>
@@ -257,7 +257,7 @@
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-2 col-lg-2  control-label">Phone No:<span class="required">*</span></label>
                       <div class="col-md-9">
-                        <input type="text" class="form-control"  id="guardian-contact1" placeholder="Contact info">
+                        <input type="text" class="form-control" name="guardiancontact1" id="guardian-contact1" placeholder="Contact info">
                       </div>
 
 
@@ -266,7 +266,7 @@
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Alternate Phone No:</label>
                       <div class="col-md-9">
-                        <input type="text" class="form-control"  id="guardian-contact2" placeholder="Contact info">
+                        <input type="text" class="form-control" name="guardianContact2"  id="guardian-contact2" placeholder="Contact info">
                       </div>
 
 
@@ -276,7 +276,7 @@
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-2 col-lg-2 control-label">Address</label>
                       <div class="col-md-9">
-                        <textarea class="form-control"  rows ="5" name="address" id="guardian-address" ></textarea>
+                        <textarea class="form-control"  rows ="5" name="guardianAddress" id="guardian-address" ></textarea>
                         <p style="color:red;" id="dataSizeValidation" class="validation"></p>
 
                       </div>

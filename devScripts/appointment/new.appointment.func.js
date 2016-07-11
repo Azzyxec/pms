@@ -231,7 +231,7 @@ $("#revalidate").on('click',function(){
         controller.resetPatientModel();
         //todayAppointmentListView.newAppointmentModal.modal('hide');
         //update the location list with new values
-        utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
+        utility.getAlerts("Appointments added successfully","alert-success text-center",'','.book-app-alerts-container');
 
         //may be can return the id of the newly added patient, to update the patient model
 

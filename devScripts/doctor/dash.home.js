@@ -851,15 +851,12 @@ cont.init();
 }());
 
 
-
-$(function () {
-//  $('body').$('[data-tooltip="tooltip"]').tooltip({'placement':'top'});
-  $('body').tooltip({
-      placement:'top',
-      selector: '[data-tooltip="tooltip"]'
-  });
-
+$('body').tooltip({
+    placement:'top',
+    selector: '[data-tooltip="tooltip"]',
+    container: 'body'
 });
+
 $(function () {
   $('body').popover({
     trigger:'focus',
