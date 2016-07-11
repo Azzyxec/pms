@@ -255,8 +255,6 @@ $app->group('/appointment', function(){
           $appointment->patientId = $patientData['id'];
         }
 
-
-
         $appointmentDB->insertAppointmentEntry($appointment, $user->doctorId, $user->id, $user->type);
 
       }else if($status == 2){

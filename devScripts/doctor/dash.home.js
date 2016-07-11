@@ -464,8 +464,6 @@ render: function(){
 
     this.locationNavContainer.empty();
 
-
-
     var locationList = cont.getLocationList();
 
     cont.setSelectedLocationId(locationList[0].id);
