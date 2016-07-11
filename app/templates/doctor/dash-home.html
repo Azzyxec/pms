@@ -123,7 +123,7 @@
             <h3 class="panel-title">Appointments for the day &nbsp;&nbsp;&nbsp;</h3>
           </div>
           <div class="panel-body">
-            <form class="form-inline">
+            <form class="form-inline hidden">
 
               <div class="form-group">
                 <select id="appointment-list-locations-sel" class="form-control">
@@ -133,6 +133,10 @@
               <span class="invisible">...</span>
               <hr>
             </form>
+            <label class="form-label cadetblue">Locations</label>
+            <ul id="loc-navs" class="nav nav-pills">
+            </ul>
+            <hr>
 
             <label class="form-label cadetblue">Filters</label>
 
@@ -147,7 +151,7 @@
 
             <div class="row">
               <div style="padding:0px 30px 0px 15px">
-                <h3 id="appointment-list-header" class="timeline-h3 inline-imp"></h3>
+                <h3 id="appointment-list-header" class="hidden timeline-h3 inline-imp"></h3>
                 <div class="pull-right timeline-stats">
                   <span>Booked  <span id="total-appointment-count" class='badge'></span></span>   <span>Completed <span id="completed-appointment-count" class='badge'></span></span>  <span>Canceled <span id="cancelled-appointment-count" class='badge'></span></span>
                 </div>
