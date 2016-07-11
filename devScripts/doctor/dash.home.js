@@ -752,6 +752,7 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
         todayAppointmentListView.closeAppointmentModal.on('hidden.bs.modal', function(){
           console.log('close appointment modal close');
           closeAppointmentController.resetForm();
+            $('.pms-alerts').remove();
         });
 
       }

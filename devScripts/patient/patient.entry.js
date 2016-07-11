@@ -7,7 +7,7 @@ $(document).ready(function(){
     console.log('patient entry js loaded');
 
     var model = {
-      patientInfo: { 
+      patientInfo: {
         id:0,
         name:"",
         dateOfBirth: "",
@@ -390,8 +390,8 @@ var patientDetailsView = {
     this.imgBox = $('#patient-picture-container');
     this.activeControl = $('#pactive');
     this.inactiveControl = $('#pinactive');
-    
-      
+
+
      this.validator =   $("#patientDetailsEntryForm").bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
@@ -422,7 +422,7 @@ var patientDetailsView = {
               notEmpty :{
                   message : 'Please Enter blood group'
               }
-               
+
             }
           }
 
@@ -459,7 +459,7 @@ var patientDetailsView = {
               }
             }
           },
-            
+
             p_address :{
 
             validators : {
@@ -468,8 +468,8 @@ var patientDetailsView = {
               }
             }
           }
-            
-            
+
+
 
         }
       }).on('success.form.bv',function(e){
@@ -480,11 +480,11 @@ var patientDetailsView = {
       console.log('save click' + JSON.stringify(model));
       cont.persistModel();
 
-        
+
         });
-      
-      
-      
+
+
+
 
     var process_url =  links.PatientUploadimage; //PHP script
     this.picUpload.fileupload({
@@ -530,7 +530,9 @@ var patientDetailsView = {
             //create file info text, name and file size
             var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
-            model.patientInfo.picUploadPath =file.name
+            model.patientInfo.picUploadPath =file.name;
+            console.log(file.name);
+            $("#patient-picture-container").attr('src','images/patientUserImages/'+file.name);
 
             file_txt.append(removeBtn); //add remove button inside info text element
             file_txt.prependTo(node); //add to node element
@@ -568,13 +570,13 @@ var patientDetailsView = {
 
 
     $('.patients-detail-form-submit').on('click',function(){
-        
+
         console.log("form submit 1");
-       $('#patientDetailsEntryForm').submit(); 
-        
+       $('#patientDetailsEntryForm').submit();
+
 
     });
-      
+
 
     //this.tab.hide();
   },
@@ -688,7 +690,8 @@ var patientGuardianDetailsView = {
                 //create file info text, name and file size
                 var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
-                model.guardianInfo.picUploadPath =file.name
+                model.guardianInfo.picUploadPath =file.name;
+                $("#guardian-profile-image").attr('src','images/patientUserImages/'+file.name);
 
                 file_txt.append(removeBtn); //add remove button inside info text element
                 file_txt.prependTo(node); //add to node element
