@@ -427,9 +427,9 @@ $("#revalidate").on('click',function(){
       });
       this.bookApptModal.on('hidden.bs.modal', function () {
 
-            $(appointmentView.bookApptModal).find('form')[0].reset();
+          $(appointmentView.bookApptModal).find('form')[0].reset();
           $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
-
+          $('.pms-alerts').remove();
 
 
 
