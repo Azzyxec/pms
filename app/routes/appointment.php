@@ -6,6 +6,7 @@ use Pms\Entities\Patient;
 use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\AppointmentDB;
 use Pms\Datalayer\PatientDB;
+use Pms\Utilities\XMLHelper;
 
 $app->group('/appointment', function(){
 
@@ -23,16 +24,26 @@ $app->group('/appointment', function(){
 
 
         $appointment = $postedData['appointment'];
-        //$prescriptionList = $appointment['prescriptionList'];
+        $prescriptionList = array();
+        $prescriptionListXML ="";
+        if(isset($postedData['prescriptionList'])){
+          $prescriptionList = $postedData['prescriptionList'];
+          //converting schedule list to xml
+          $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
+          XMLHelper::array_to_xml($prescriptionList, $xml_data);
+          $prescriptionListXML = $xml_data->asXML();
 
-        $appointmentDB = new AppointmentDB();
-        $appointmentDB->closeAppointment($appointment, $user->id, $user->type);
+        }
+
+
+        //$appointmentDB = new AppointmentDB();
+        //$appointmentDB->closeAppointment($appointment, $user->id, $user->type);
 
       }else{
         $message = "user not logged in";
       }
 
-      $data = array('status' => $status, 'data' => $appointment, 'message' => $message);
+      $data = array('status' => $status, 'data' => $postedData, 'message' => $message, 'xml' => $prescriptionListXML);
       return $response->withJson($data);
 
 

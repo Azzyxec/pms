@@ -1,7 +1,7 @@
 <form id="close-appointment-form"  class="form-horizontal">
 
   <div class="form-group">
-    <label for="focusedinput" class="col-md-2 control-label">Closing date</label>
+    <label for="focusedinput" class="col-md-2 control-label">Closing date<span class="required">*</span></label>
     <div class='col-md-8'>
 
       <div class='input-group date' >
@@ -16,7 +16,7 @@
   </div>
 
   <div class="form-group">
-    <label for="focusedinput" class="col-md-2 control-label">Closing time</label>
+    <label for="focusedinput" class="col-md-2 control-label">Closing time<span class="required">*</span></label>
     <div class='col-md-8'>
 
       <div class='input-group date' >
@@ -37,7 +37,7 @@
 
   </div>
   <div class="form-group table-prescription-form">
-    <label for="focusedinput" class="col-md-2 control-label">Prescription<span class="required">*</span></label>
+    <label for="focusedinput" class="col-md-2 control-label">Prescription</label>
     <div class="col-md-8">
       <div class="table-responsive table-condensed ">
         <table class="table text-center table-bordered table-hover table-striped ">
@@ -47,7 +47,7 @@
           <tbody id="prescription-list-table-body">
             <tr>
               <td>
-                <input id="txt-medicine" type="text" placeholder="Medicine" class="form-control input-sm">
+                <input id="txt-medicine" type="text" placeholder="Medicine" class="form-control input-sm" autocomplete="off">
               </td>
               <td>
                 <input id="txt-medicine-remark" type="text" placeholder="Dosage info" class="form-control input-sm">
@@ -64,17 +64,7 @@
   </div>
 
   <div class="form-group">
-    <label for="focusedinput" class="col-md-2 control-label">Prescription<span class="required">*</span></label>
-    <div class="col-md-8 ">
-
-      <input name="closingPrescpList" type="text" placeholder="Enter Prescription" class="form-control" id="tokenfield" >
-
-    </div>
-
-  </div>
-
-  <div class="form-group">
-    <label for="focusedinput" class="col-md-2 control-label">Remarks:</label>
+    <label for="focusedinput" class="col-md-2 control-label">Remarks<span class="required">*</span></label>
     <div class="col-md-8">
       <textarea class="form-control"  rows ="5" name="closingRemarks" id="close-appointment-remarks" ></textarea>
       <p style="color:red;" id="dataSizeValidation" class="validation"></p>
@@ -83,7 +73,7 @@
   </div>
 
   <div class="form-group">
-    <label for="focusedinput" class="col-md-2 control-label">Scanned Document List:</label>
+    <label for="focusedinput" class="col-md-2 control-label">Uploaded Documents</label>
     <div class="col-md-8">
     <input id="fileupload" type="file" class="form-control" name="files[]" >
       <div id="files"></div>

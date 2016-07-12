@@ -47,8 +47,13 @@ function getCloseAppointmentController(){
 
       this.updateModelFromView();
 
+      model.prescriptionList = [{"name":"dsfads","remarks":"asdfasd","id":"1"},{"name":"asdfasd","remarks":"asdfads","id":"2"}];
+
       $.post( this.closeAppointmentUrl , {appointment: model})
        .done(function( response ) {
+
+         prescriptionListController.setPrescriptionList([]);
+         prescriptionListView.render();
 
          if(controller.cancelCallback){
            controller.cancelCallback(response);
@@ -62,7 +67,7 @@ function getCloseAppointmentController(){
 
   var prescriptionListController = {
     init: function(){
-      this.idCounter = 0;
+      this.idCounter = 1;
       prescriptionListView.init();
     },
     addEntry: function(med, lremarks){
@@ -80,6 +85,12 @@ function getCloseAppointmentController(){
     },
     setPrescriptionList: function(newList){
       model.prescriptionList = newList;
+    },
+    getCurrentEntry: function(){
+      return model.currentEntry;
+    },
+    setCurrentEntry: function(item) {
+      model.currentEntry = item;
     }
   }
 
@@ -90,11 +101,29 @@ function getCloseAppointmentController(){
       this.medicineRemarks = $('#txt-medicine-remark');
       this.addEntry = $('#btn-add-row');
 
+      this.medicineText.typeahead({
+      source: ['Avil', 'Bcosules', 'Cough syrup', 'Crosin', 'Koflets']
+       });
+
       this.addEntry.on('click', function(){
         var medicine = prescriptionListView.medicineText.val();
         var remarks = prescriptionListView.medicineRemarks.val();
-        if(medicine){
-          prescriptionListController.addEntry(medicine, remarks);
+        if(medicine && medicine.trim().length > 0){
+          var setItem = prescriptionListController.getCurrentEntry();
+
+          console.log(JSON.stringify(setItem));
+
+          if(setItem && setItem.id){
+            //update of an existing item
+            console.log('update');
+            setItem.name = medicine;
+            setItem.remarks = remarks;
+            prescriptionListController.setCurrentEntry({});
+          }else{
+            console.log('new entry');
+            prescriptionListController.addEntry(medicine.trim(), remarks);
+          }
+
           prescriptionListView.clearFields();
           prescriptionListView.render();
         }else{
@@ -133,7 +162,7 @@ function getCloseAppointmentController(){
             return function(){
 
               console.log(JSON.stringify(prescription));
-              model.currentEntry = prescription;
+              prescriptionListController.setCurrentEntry(prescription);
               prescriptionListView.medicineText.val(prescription.name);
               prescriptionListView.medicineRemarks.val(prescription.remarks);
 
@@ -161,11 +190,7 @@ function getCloseAppointmentController(){
           td.append(removeLink);
           tr.append(td);
 
-
-
-
-
-          this.prescriptionListBody.prepend(tr);
+          this.prescriptionListBody.append(tr);
 
         }
 
@@ -195,7 +220,6 @@ function getCloseAppointmentController(){
       this.nextAppointmentTimePicker = $('#next-appointment-time');
       this.nextAppointmentTimePickerIcon = $('#next-appointment-time-icon');
       this.patientsName = $('#close-appointment-patients-name');
-      this.prescriptionControl = $('#tokenfield');
       this.remarks = $('#close-appointment-remarks');
       this.closeAppointmentButton = $('#close-appointment-submit-btn');
 
@@ -239,23 +263,6 @@ function getCloseAppointmentController(){
         closeAppointmentView.nextAppointmentTimePicker.data('DateTimePicker').show();
       });
 
-      this.prescriptionControl.typeahead({
-      source: ['Avil', 'Bcosules', 'Cough syrup', 'Crosin', 'Koflets']
-       });
-
-      this.prescriptionControl.tokenfield();
-
-      this.prescriptionControl.on('tokenfield:createdtoken', function (e) {
-          e.preventDefault();
-
-          console.log('add prescription');
-        // Über-simplistic e-mail validation
-       // var re = /\S+@\S+\.\S+/
-        //var valid = re.test(e.attrs.value)
-        //if (!valid) {
-          //$(e.relatedTarget).addClass('invalid')
-        //}
-      });
 
       var validator = this.initValidators();
 
@@ -301,22 +308,7 @@ function getCloseAppointmentController(){
                 }
               }
             },
-            closeNextAppt : {
-              validators : {
-                notEmpty :{
-                  message : 'please select the date for the next appointment'
-                }
-              }
-            },
-            closingNextApptTime :{
-
-              validators : {
-                notEmpty :{
-                  message : 'Please Select the time for the next appointment'
-                }
-              }
-            }
-            , closingName :{
+            closingName :{
 
               validators : {
                 notEmpty :{
@@ -324,24 +316,15 @@ function getCloseAppointmentController(){
                 },
                   regexp: {
                           regexp: /^[A-Za-z\s.\(\)0-9]{3,}$/,
-                          message: 'The full name can consist of alphabetical characters and spaces only'
+                          message: 'The name can consist of alphabetical characters and spaces only'
                       }
               }
-            }
-
-      //      , closingPrescpList :{
-
-        //      validators : {
-          //      notEmpty :{
-            //      message : 'Please Enter the prescription'
-            //    }
-            //  }
-          //  }
-            ,  closingRemarks :{
+            },
+            closingRemarks :{
 
               validators : {
                 notEmpty :{
-                  message : 'Please leave a remark'
+                  message : 'Please enter a remark'
                 }
               }
             }

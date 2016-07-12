@@ -100,7 +100,6 @@ $("#revalidate").on('click',function(){
         source: model.patientList,
         updater: function(patientObj) {
           console.log('type ahead call back for ' + patientObj.id);
-          model.patientId = patientObj.id;
           controller.TypeaheadSelectCallBack(patientObj);
 
           return patientObj;
@@ -201,6 +200,7 @@ $("#revalidate").on('click',function(){
 
     //patient properties
     controller.setPatientId(appointmentView.hiddenInputId.val());
+
     model.patient.name = appointmentView.patientsName.val();
     model.patient.dateOfBirth = appointmentView.patientsDOB.val();
 
@@ -222,7 +222,7 @@ $("#revalidate").on('click',function(){
     //getting work locations for the doctor
 
     var patientModel  = this.getPatientModel();
-    patientModel.id = controller.getPatientId();
+    //patientModel.id = controller.getPatientId();
 
     console.log('posting patient data at ' + moment().format("HH:mm:ss SSS") +  ' ' +JSON.stringify(patientModel));
 
@@ -239,7 +239,7 @@ $("#revalidate").on('click',function(){
         controller.resetPatientModel();
         //todayAppointmentListView.newAppointmentModal.modal('hide');
         //update the location list with new values
-        utility.getAlerts("Appointments added successfully","alert-success text-center",'','.book-app-alerts-container');
+        utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
 
         //may be can return the id of the newly added patient, to update the patient model
 
@@ -434,9 +434,9 @@ $("#revalidate").on('click',function(){
       });
       this.bookApptModal.on('hidden.bs.modal', function () {
 
-          $(appointmentView.bookApptModal).find('form')[0].reset();
+            $(appointmentView.bookApptModal).find('form')[0].reset();
           $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
-          $('.pms-alerts').remove();
+
 
 
 
