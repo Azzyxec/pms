@@ -150,7 +150,7 @@ class AppointmentDB{
 
   }
 
-  public function closeAppointment($appointmentInfo, $loggedinUserId, $loggedinUserType){
+  public function closeAppointment($appointmentInfo, $prescriptionListXML, $prescriptionCount, $loggedinUserId, $loggedinUserType){
     try {
 
       $paramArray = array(
@@ -160,7 +160,8 @@ class AppointmentDB{
         'premarks' => $appointmentInfo['remarks'],
         'pclosed_by_id' => $loggedinUserId,
         'pclosed_by_type' => $loggedinUserType,
-        'pPrescriptionListXML' => ''
+        'pprescription_count' => $prescriptionCount,
+        'pprescription_xml' => $prescriptionListXML
       );
 
       $statement = DBHelper::generateStatement('close_appointment_proc',  $paramArray);
@@ -172,7 +173,7 @@ class AppointmentDB{
       return $result['status'];
 
     } catch (Exception $e) {
-      return 1;
+      return -1;
     }
 
   }

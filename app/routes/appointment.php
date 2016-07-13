@@ -10,6 +10,35 @@ use Pms\Utilities\XMLHelper;
 
 $app->group('/appointment', function(){
 
+
+  $this->get('/test', function ($request, $response) {
+
+
+      $appointment = array( "appointmentId" => 2,
+                            "closingDate" => "12-07-2016",
+                            "closingTime" => "09:00 AM",
+                            "nextAppointmentDate" => "",
+                            "nextAppointmentTime" => "",
+                            "patientsName" => "John",
+                            "remarks" =>   "xyz"
+                            );
+
+      $prescription = array();
+      $prescription[] = array("name"=>"one", "remarks"=>"ola");
+      $prescription[] = array("name"=>"two", "remarks"=>"obrigado");
+
+      $prescriptionCount = 2;
+
+      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
+      XMLHelper::array_to_xml($prescription, $xml_data);
+      $prescriptionListXml = $xml_data->asXML();
+
+      $appointmentDB = new AppointmentDB();
+      $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount, 1, 'D');
+
+      return $response->withJson(array("status" => $status));
+    });
+
   $this->post('/closeAppointment', function ($request, $response) {
     try {
 
@@ -22,28 +51,35 @@ $app->group('/appointment', function(){
 
         $postedData = $request->getParsedBody();
 
-
         $appointment = $postedData['appointment'];
-        $prescriptionList = array();
-        $prescriptionListXML ="";
-        if(isset($postedData['prescriptionList'])){
-          $prescriptionList = $postedData['prescriptionList'];
-          //converting schedule list to xml
+
+        //Test code
+
+
+        $prescription = array();
+        $prescriptionListXml = "";
+        $prescriptionCount = 0;
+
+        if(isset($appointment['prescriptionList'])){
+
+          $prescription = $appointment['prescriptionList'];
+
+          $prescriptionCount = count($prescription);
+
           $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
-          XMLHelper::array_to_xml($prescriptionList, $xml_data);
-          $prescriptionListXML = $xml_data->asXML();
+          XMLHelper::array_to_xml($prescription, $xml_data);
+          $prescriptionListXml = $xml_data->asXML();
 
         }
 
+        $appointmentDB = new AppointmentDB();
+        $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount,  $user->id, $user->type);
 
-        //$appointmentDB = new AppointmentDB();
-        //$appointmentDB->closeAppointment($appointment, $user->id, $user->type);
-
-      }else{
+      }else {
         $message = "user not logged in";
       }
 
-      $data = array('status' => $status, 'data' => $postedData, 'message' => $message, 'xml' => $prescriptionListXML);
+      $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
       return $response->withJson($data);
 
 

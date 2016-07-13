@@ -33,6 +33,7 @@ $("#revalidate").on('click',function(){
   };
 
   function mainController(){
+    this.allowSubmit = true;
     this.getLocationUrl = links.getLocationUrl;
     this.bookAppointmentUrl = links.bookAppointmentUrl;
     this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
@@ -78,9 +79,8 @@ $("#revalidate").on('click',function(){
 
   mainController.prototype.init = function (initObj) {
 
-    console.log('init Obj' + JSON.stringify(initObj));
+    //console.log('init Obj' + JSON.stringify(initObj));
     appointmentView.init();
-
 
     //getting work locations for the doctor
     if(initObj){
@@ -89,6 +89,8 @@ $("#revalidate").on('click',function(){
 
       model.locationList = initObj.locationList;
       model.appointment.locationId = initObj.locationId;
+
+      model.description = "";
 
       appointmentView.render();
 
@@ -156,6 +158,8 @@ $("#revalidate").on('click',function(){
     patientModel.bloodGroup='';
     patientModel.contact= '';
     appointmentView.renderPatientsView();
+    appointmentView.enablePatientEditing(true);
+
 
   };
 
@@ -219,46 +223,52 @@ $("#revalidate").on('click',function(){
   };
 
   mainController.prototype.bookAppointment = function(){
-    //getting work locations for the doctor
 
-    var patientModel  = this.getPatientModel();
-    //patientModel.id = controller.getPatientId();
+    if(controller.allowSubmit){
 
-    console.log('posting patient data at ' + moment().format("HH:mm:ss SSS") +  ' ' +JSON.stringify(patientModel));
+      controller.allowSubmit = false;
 
-      appointmentView.patientsName.off("click change keyup select blur");
+      var patientModel  = this.getPatientModel();
+      //patientModel.id = controller.getPatientId();
 
-    $.post(this.bookAppointmentUrl , {appointment: model.appointment, patient: patientModel})
-    .done(function( response ) {
-      console.log('response at ' + moment().format("HH:mm:ss SSS") +  ' ' + JSON.stringify(response));
+      console.log('posting patient data at ' + moment().format("HH:mm:ss SSS") +  ' ' +JSON.stringify(patientModel));
 
-      appointmentView.patientsName.on("click change keyup select blur", appointmentView.patientsNameCallback);
+        appointmentView.patientsName.off("click change keyup select blur");
 
-      if(response.status == 1){
-        console.log('appointmetn added success fully');
-        controller.resetPatientModel();
-        //todayAppointmentListView.newAppointmentModal.modal('hide');
-        //update the location list with new values
-        utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
+      $.post(this.bookAppointmentUrl , {appointment: model.appointment, patient: patientModel})
+      .done(function( response ) {
+        console.log('response at ' + moment().format("HH:mm:ss SSS") +  ' ' + JSON.stringify(response));
 
-        //may be can return the id of the newly added patient, to update the patient model
+        appointmentView.patientsName.on("click change keyup select blur", appointmentView.patientsNameCallback);
 
-      }else if(response.status == 2){
-        utility.getAlerts("Schedule not added or timimgs dont match!","alert-warning text-center",'','.book-app-alerts-container');
+        if(response.status == 1){
+          console.log('appointmetn added success fully');
+          controller.resetPatientModel();
+          //todayAppointmentListView.newAppointmentModal.modal('hide');
+          //update the location list with new values
+          utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
+          //may be can return the id of the newly added patient, to update the patient model
 
-        console.log('schedule not added or timimgs dont match');
+        }else if(response.status == 2){
+          utility.getAlerts("Schedule not added or timimgs dont match!","alert-warning text-center",'','.book-app-alerts-container');
 
-      }else if(response.status == 3){
-          utility.getAlerts("timimng clash with existign appointment","alert-warning text-center",'','.book-app-alerts-container');
+          console.log('schedule not added or timimgs dont match');
 
-        console.log('timimng clash with existign appointment');
-      }else if(response.status == 4){
-        utility.getAlerts("cannot book a backdated appointment","alert-warning text-center",'','.book-app-alerts-container');
-        console.log('cannot book a backdated appointment');
-      }
+        }else if(response.status == 3){
+            utility.getAlerts("timimng clash with existign appointment","alert-warning text-center",'','.book-app-alerts-container');
 
-      controller.completeCallback(response);
-    });
+          console.log('timimng clash with existign appointment');
+        }else if(response.status == 4){
+          utility.getAlerts("cannot book a backdated appointment","alert-warning text-center",'','.book-app-alerts-container');
+          console.log('cannot book a backdated appointment');
+        }
+
+        controller.allowSubmit = true;
+
+        controller.completeCallback(response);
+      });
+
+    }
   };
 
 
@@ -429,18 +439,15 @@ $("#revalidate").on('click',function(){
       this.bookApptclear.on('click',function(){
 
 
-           $(appointmentView.bookApptModal).find('form')[0].reset();
+      $(appointmentView.bookApptModal).find('form')[0].reset();
           $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
       });
       this.bookApptModal.on('hidden.bs.modal', function () {
 
-            $(appointmentView.bookApptModal).find('form')[0].reset();
+      $(appointmentView.bookApptModal).find('form')[0].reset();
           $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
 
-
-
-
-      })
+      });
 
       this.saveButton.click(function(){
         //appointmentView.patientsName.off("click change keyup select blur");
@@ -560,8 +567,36 @@ $("#revalidate").on('click',function(){
 
       appointmentView.patientsName.on("click change keyup select blur", appointmentView.patientsNameCallback);
 
+      this.enablePatientEditing(false);
 
+    },
+    enablePatientEditing: function(enable){
+      if(enable){
+
+        this.patientsDOB.removeAttr('disabled');
+
+        this.rbMale.removeAttr('disabled');
+        this.rbFemale.removeAttr('disabled');
+
+        this.patientsHeight.removeAttr('disabled');
+        this.patientsWeight.removeAttr('disabled');
+        this.patientsBloodGroup.removeAttr('disabled');
+        this.contact.removeAttr('disabled');
+
+      }else{
+        //disable patients controls to prevent editing
+        this.patientsDOB.attr('disabled', 'disabled');
+
+        this.rbMale.attr('disabled', 'disabled');
+        this.rbFemale.attr('disabled', 'disabled');
+
+        this.patientsHeight.attr('disabled', 'disabled');
+        this.patientsWeight.attr('disabled', 'disabled');
+        this.patientsBloodGroup.attr('disabled', 'disabled');
+        this.contact.attr('disabled', 'disabled');
+      }
     }
+
   };
 
   var controller = new mainController();

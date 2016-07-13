@@ -4,7 +4,7 @@ function getCancelAppointmentController(){
 
   var model = {
     appointmentId: 0
-  } 
+  }
 
   var controller = {
     init: function(appointmentInfo){
@@ -29,7 +29,7 @@ function getCancelAppointmentController(){
          }
 
          console.log('cancel response ' + JSON.stringify(response));
-         //close in proper resonse, else dsplay messge the appoitmetn could not be compated 
+         //close in proper resonse, else dsplay messge the appoitmetn could not be compated
        });
     }
 
@@ -40,7 +40,7 @@ function getCancelAppointmentController(){
     init: function(){
       this.cancelReason = $('#cancel-appointment-reason');
       this.cancelButton =  $('#cancel-appointment-btn');
-        
+
         this.validator =   $("#timeline-cancel-form").bootstrapValidator({
         trigger:" focus blur",
         feedbackIcons: {
@@ -58,7 +58,7 @@ function getCancelAppointmentController(){
             }
 
           }
-         
+
 
         }
       });
@@ -71,7 +71,7 @@ function getCancelAppointmentController(){
 
 
       });
-             
+
 
 
       this.cancelReason.val('');
@@ -87,7 +87,7 @@ function getCancelAppointmentController(){
 
         });
 
-       
+
       });
 
     },

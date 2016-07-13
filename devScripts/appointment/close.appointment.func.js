@@ -13,20 +13,21 @@ function getCloseAppointmentController(){
   }
 
   var controller = {
-    init: function(initObj){
-
+    init: function(){
+      this.allowSubmit = true;
       this.closeAppointmentUrl = links.closeAppointmentUrl;
 
-      if(initObj){
-        model.appointmentId = initObj.appointmentId;
-        model.closingTime = initObj.closingTime;
-        model.patientsName = initObj.patientsName;
-      }
-      prescriptionListController.init();
       closeAppointmentView.init();
+      prescriptionListController.init();
     },
-    resetForm: function(){
-      closeAppointmentView.resetForm();
+    setCloseInfo: function(closeInfo){
+      if(closeInfo){
+        console.log('set info');
+        model.appointmentId = closeInfo.appointmentId;
+        model.closingTime = closeInfo.closingTime;
+        model.patientsName = closeInfo.patientsName;
+        closeAppointmentView.render();
+      }
     },
     getModel: function(){
       return model;
@@ -43,25 +44,45 @@ function getCloseAppointmentController(){
       model.patientsName = closeAppointmentView.patientsName.val();
       model.remarks = closeAppointmentView.remarks.val();
     },
+    resetModel: function(){
+      prescriptionListController.setPrescriptionList([]);
+      model.appointmentId = 0;
+      model.closingDate =  moment().format('DD-MM-YYYY');
+      model.closingTime = '';
+      model.nextAppointmentDate = '';
+      model.nextAppointmentTime = '';
+      model.patientsName = '';
+      model.remarks = '';
+      model.currentEntry = {};
+    },
     closeAppointment: function(){
 
       this.updateModelFromView();
 
-      model.prescriptionList = [{"name":"dsfads","remarks":"asdfasd","id":"1"},{"name":"asdfasd","remarks":"asdfads","id":"2"}];
+      if(controller.allowSubmit){
 
-      $.post( this.closeAppointmentUrl , {appointment: model})
-       .done(function( response ) {
+        controller.allowSubmit = false;
 
-         prescriptionListController.setPrescriptionList([]);
-         prescriptionListView.render();
+        $.post( this.closeAppointmentUrl , {appointment: model})
+         .done(function( response ) {
 
-         if(controller.cancelCallback){
-           controller.cancelCallback(response);
-         }
+           if(controller.cancelCallback){
+             controller.cancelCallback(response);
+           }
 
-         console.log('close response ' + JSON.stringify(response));
-         //close in proper resonse, else dsplay messge the appoitmetn could not be compated
-       });
+           controller.allowSubmit = true;
+
+           console.log('close response ' + JSON.stringify(response));
+           //close in proper resonse, else dsplay messge the appoitmetn could not be compated
+         });
+       }
+    },
+    cleanup: function(){
+      this.resetModel();
+      closeAppointmentView.resetvalidator();
+
+      //update the prescription list in view
+      prescriptionListView.render();
     }
   }
 
@@ -72,7 +93,23 @@ function getCloseAppointmentController(){
     },
     addEntry: function(med, lremarks){
       this.idCounter = +this.idCounter + +model.prescriptionList.length;
-      model.prescriptionList.push({name:med, remarks: lremarks, id:this.idCounter});
+      console.log( 'add entry' + model.currentEntry.id);
+      if(model.currentEntry &&  model.currentEntry.id){
+        var lprescriptionList = model.prescriptionList;
+
+        for(var i = 0; i < lprescriptionList.length; i++){
+          if(+model.currentEntry.id == lprescriptionList[i].id){
+            lprescriptionList[i].name = med;
+            lprescriptionList[i].remarks = lremarks;
+            break;
+          }
+        }
+
+        model.currentEntry = {};
+
+      }else{
+        model.prescriptionList.push({name:med, remarks: lremarks, id:this.idCounter});
+      }
       console.log('prescription' + JSON.stringify(model.prescriptionList));
     },
     removeEntry: function(item){
@@ -85,12 +122,6 @@ function getCloseAppointmentController(){
     },
     setPrescriptionList: function(newList){
       model.prescriptionList = newList;
-    },
-    getCurrentEntry: function(){
-      return model.currentEntry;
-    },
-    setCurrentEntry: function(item) {
-      model.currentEntry = item;
     }
   }
 
@@ -108,22 +139,8 @@ function getCloseAppointmentController(){
       this.addEntry.on('click', function(){
         var medicine = prescriptionListView.medicineText.val();
         var remarks = prescriptionListView.medicineRemarks.val();
-        if(medicine && medicine.trim().length > 0){
-          var setItem = prescriptionListController.getCurrentEntry();
-
-          console.log(JSON.stringify(setItem));
-
-          if(setItem && setItem.id){
-            //update of an existing item
-            console.log('update');
-            setItem.name = medicine;
-            setItem.remarks = remarks;
-            prescriptionListController.setCurrentEntry({});
-          }else{
-            console.log('new entry');
-            prescriptionListController.addEntry(medicine.trim(), remarks);
-          }
-
+        if(medicine){
+          prescriptionListController.addEntry(medicine, remarks);
           prescriptionListView.clearFields();
           prescriptionListView.render();
         }else{
@@ -162,7 +179,7 @@ function getCloseAppointmentController(){
             return function(){
 
               console.log(JSON.stringify(prescription));
-              prescriptionListController.setCurrentEntry(prescription);
+              model.currentEntry = prescription;
               prescriptionListView.medicineText.val(prescription.name);
               prescriptionListView.medicineRemarks.val(prescription.remarks);
 
@@ -190,13 +207,11 @@ function getCloseAppointmentController(){
           td.append(removeLink);
           tr.append(td);
 
-          this.prescriptionListBody.append(tr);
+          this.prescriptionListBody.prepend(tr);
 
         }
 
       }
-
-
 
     },
     clearFields: function(){
@@ -216,10 +231,10 @@ function getCloseAppointmentController(){
       this.nextAppointmentDatePicker = $('#next-appointment-date');
       this.nextAppointmentDatePickerIcon = $('#next-appointment-date-icon');
 
-
       this.nextAppointmentTimePicker = $('#next-appointment-time');
       this.nextAppointmentTimePickerIcon = $('#next-appointment-time-icon');
       this.patientsName = $('#close-appointment-patients-name');
+      this.prescriptionControl = $('#tokenfield');
       this.remarks = $('#close-appointment-remarks');
       this.closeAppointmentButton = $('#close-appointment-submit-btn');
 
@@ -263,26 +278,19 @@ function getCloseAppointmentController(){
         closeAppointmentView.nextAppointmentTimePicker.data('DateTimePicker').show();
       });
 
+      this.closeAppointmentButton.on('click', function(){
 
-      var validator = this.initValidators();
+        console.log('click submit');
+        closeAppointmentView.form.submit();
 
-      validator.on('success.form.bv',function(e){
-          e.preventDefault();
+      });
 
-         console.log("validating close appt")
-
-        });
-
-        this.closeAppointmentButton.on('click', function(){
-          console.log('click submit');
-          controller.closeAppointment();
-        });
-
+      this.initValidators();
       this.render();
 
     },
     initValidators: function(){
-      var validatorObj = this.form.bootstrapValidator({
+      this.form.bootstrapValidator({
           trigger:" focus blur",
           feedbackIcons: {
             valid: 'glyphicon glyphicon-ok ',
@@ -297,9 +305,7 @@ function getCloseAppointmentController(){
                   message : 'Please enter closing date!'
                 }
               }
-
             },
-
             closingTime : {
 
               validators : {
@@ -316,12 +322,11 @@ function getCloseAppointmentController(){
                 },
                   regexp: {
                           regexp: /^[A-Za-z\s.\(\)0-9]{3,}$/,
-                          message: 'The name can consist of alphabetical characters and spaces only'
+                          message: 'The full name can consist of alphabetical characters and spaces only'
                       }
               }
-            },
-            closingRemarks :{
-
+            }
+            ,  closingRemarks :{
               validators : {
                 notEmpty :{
                   message : 'Please enter a remark'
@@ -330,14 +335,19 @@ function getCloseAppointmentController(){
             }
 
           }
+        }).on('success.form.bv',function(e){
+          e.preventDefault();
+
+          console.log('validation event success');
+          controller.closeAppointment();
+
         });
 
-        return validatorObj;
     },
-    resetForm: function(){
+    resetvalidator: function(){
      //this.form.reset();
      this.form.bootstrapValidator("resetForm", true);
-     this.closeAppointmentButton.off();
+     //this.closeAppointmentButton.off();
      //destroy typehad and token field
 
     },
