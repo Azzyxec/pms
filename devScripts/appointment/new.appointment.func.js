@@ -84,13 +84,18 @@ $("#revalidate").on('click',function(){
 
     //getting work locations for the doctor
     if(initObj){
+
+      console.log('init booking data');
+
       model.appointment.date = initObj.appointmetDate;
       model.appointment.startTimeMins = initObj.appointmentTime;
 
       model.locationList = initObj.locationList;
       model.appointment.locationId = initObj.locationId;
 
-      model.description = "";
+      //resetting fields
+      model.appointment.description = "";
+      controller.resetPatientInfo();
 
       appointmentView.render();
 
@@ -145,21 +150,22 @@ $("#revalidate").on('click',function(){
 
   }
 
-  mainController.prototype.resetPatientModel = function () {
+  mainController.prototype.resetPatientInfo = function () {
     console.log("model reset at " + moment().format("HH:mm:ss SSS"));
 
-    var patientModel  = this.getPatientModel();
-    controller.setPatientId(0);
-    patientModel.name='';
-    patientModel.dateOfBirth='';
-    patientModel.gender=1;
-    patientModel.height= '';
-    patientModel.weight='';
-    patientModel.bloodGroup='';
-    patientModel.contact= '';
+    //var patientModel  = this.getPatientModel();
+
+    model.patient.id = 0;
+    model.patient.name = '';
+    model.patient.dateOfBirth = '';
+    model.patient.gender = 1;
+    model.patient.height = '';
+    model.patient.weight = '';
+    model.patient.bloodGroup = '';
+    model.patient.contact = '';
+
     appointmentView.renderPatientsView();
     appointmentView.enablePatientEditing(true);
-
 
   };
 
@@ -243,7 +249,7 @@ $("#revalidate").on('click',function(){
 
         if(response.status == 1){
           console.log('appointmetn added success fully');
-          controller.resetPatientModel();
+          controller.resetPatientInfo();
           //todayAppointmentListView.newAppointmentModal.modal('hide');
           //update the location list with new values
           utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
@@ -325,7 +331,7 @@ $("#revalidate").on('click',function(){
         var value = appointmentView.patientsName.val();
         if(!value || 0 === value.trim().length){
             console.log('reset patient model');
-            controller.resetPatientModel();
+            controller.resetPatientInfo();
         }
         $('#book-Appointment-Form').bootstrapValidator('revalidateField', 'newBookusername');
       }
@@ -465,6 +471,8 @@ $("#revalidate").on('click',function(){
         */
 
       });
+
+       $('.pms-alerts').remove();
 
 
     },

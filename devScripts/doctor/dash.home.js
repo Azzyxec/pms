@@ -792,6 +792,7 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
 
         //var appController = makeAppointmentController();
         cont.bookingController.init(initValues);
+
         cont.bookingController.setCompleteEventHandler(function(data){
           console.log('got this' + JSON.stringify(data));
           if(data.status == 1){
@@ -799,7 +800,8 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
             todayAppointmentListView.newAppointmentModal.modal('hide');
             //optimization check if a new patient was added
             // and append his details
-            var patient = appController.getPatientModel();
+            cont.bookingController.init(initValues);
+            var patient = cont.bookingController.getPatientModel();
             console.log('patints Id ' + JSON.stringify(patient))
             if(patient.id == 0){
               console.log('reload the patients list when a new patients list');
@@ -815,6 +817,7 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
           }
 
         });
+
         todayAppointmentListView.newAppointmentModal.modal();
       }
     })(mStartTime.format("hh:mm A")));
