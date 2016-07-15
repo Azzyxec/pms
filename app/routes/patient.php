@@ -45,7 +45,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
     if($user->id != "-1"){
 
       $patientDB =  new PatientDB();
-      $resultArray = $patientDB->getPatienListForAutofill($user->id);
+      $resultArray = $patientDB->getPatienListForAutofill($user->doctorId);
 
       $message = "success";
       $data = $resultArray['data'];
@@ -76,7 +76,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
         if($user->id != "-1"){
 
           $patientDB =  new PatientDB();
-          $resultArray = $patientDB->getPatienList($user->id);
+          $resultArray = $patientDB->getPatienList($user->doctorId);
 
           $message = "success";
           $data = $resultArray['data'];

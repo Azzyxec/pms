@@ -95,7 +95,7 @@ class PatientDB{
        $patient['contact'] = $result['contact1'];
        $patient['address'] = $result['address'];
        $patient['picturePath'] = $result['picture_path'];
-       $patient['displayName'] = $result['display'];
+       $patient['oName'] = $result['name'];
 
        $patientList[] = $patient;
      }
