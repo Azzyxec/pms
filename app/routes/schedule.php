@@ -31,7 +31,7 @@ $app->group('/schedule', function(){
 
       $userId = $user->id;
       $userType = $user->type;
-*/
+    */
 
       $doctorId = $user->doctorId;
       $startDate = $postedData['startDate'];  //start date is going as null
@@ -53,7 +53,6 @@ $app->group('/schedule', function(){
 
       $data = array('status' => $result['status'], 'data' => $postedData, 'message' => 'success' );
       return $response->withJson($data);
-
 
 
     } catch (Exception $e) {

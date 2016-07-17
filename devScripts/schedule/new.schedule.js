@@ -149,8 +149,6 @@ $(document).ready(function(){
 
         //console.log(JSON.stringify(scheduleModel.scheduleList));
 
-
-
         $.post( controller.createUpdateScheduleUrl , scheduleModel)
         .done(function( response ) {
           console.log('response ' + JSON.stringify(response));
@@ -159,6 +157,9 @@ $(document).ready(function(){
 
           if(response.status == 1){
             window.location.href = controller.getScheduleCalendarUrl;
+          }else if(response.status == "-2"){
+            createScheduleView.overlappingDatesAlert.removeClass('hidden');
+            console.log('overlapping schedules');
           }else if(response.status == "-1"){
             createScheduleView.overlappingDatesAlert.removeClass('hidden');
             console.log('something is not right');
