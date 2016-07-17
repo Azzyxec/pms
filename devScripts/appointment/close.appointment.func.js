@@ -224,6 +224,8 @@ function getCloseAppointmentController(){
     init: function() {
       this.form = $('#close-appointment-form');
       this.closingDatePicker = $('#close-appointment-date');
+      this.closingDatePicker.prop('readonly', true);
+
       this.closeDatePickerIcon = $('#close-appointment-date-icon');
       this.closingTimePicker = $('#close-appointment-time');
       this.closeTimePickerIcon = $('#close-appointment-time-icon');
@@ -234,6 +236,8 @@ function getCloseAppointmentController(){
       this.nextAppointmentTimePicker = $('#next-appointment-time');
       this.nextAppointmentTimePickerIcon = $('#next-appointment-time-icon');
       this.patientsName = $('#close-appointment-patients-name');
+      this.patientsName.prop('readonly', true);
+
       this.prescriptionControl = $('#tokenfield');
       this.remarks = $('#close-appointment-remarks');
       this.closeAppointmentButton = $('#close-appointment-submit-btn');
@@ -291,7 +295,7 @@ function getCloseAppointmentController(){
     },
     initValidators: function(){
       this.form.bootstrapValidator({
-          trigger:" focus blur",
+          trigger:"focus click change keyup select blur",
           feedbackIcons: {
             valid: 'glyphicon glyphicon-ok ',
             invalid: 'glyphicon glyphicon-remove ',

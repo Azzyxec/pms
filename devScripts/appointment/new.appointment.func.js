@@ -27,6 +27,7 @@ $("#revalidate").on('click',function(){
       bloodGroup:'',
       contact: ''
     },
+    userInfo:{},
     patientList:[],
     locationList:[],
     appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
@@ -37,6 +38,10 @@ $("#revalidate").on('click',function(){
     this.getLocationUrl = links.getLocationUrl;
     this.bookAppointmentUrl = links.bookAppointmentUrl;
     this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
+  };
+
+  mainController.prototype.getUserInfo = function () {
+    return model.userInfo;
   };
 
   mainController.prototype.setPatientId = function (id) {
@@ -97,6 +102,10 @@ $("#revalidate").on('click',function(){
       model.locationList = initObj.locationList;
       model.appointment.locationId = initObj.locationId;
 
+      console.log('inti userInfo ' + JSON.stringify(initObj.userInfo));
+
+      model.userInfo = initObj.userInfo;
+
       //resetting fields
       model.appointment.description = "";
       controller.resetPatientInfo();
@@ -104,8 +113,11 @@ $("#revalidate").on('click',function(){
       appointmentView.render();
 
       model.patientList = initObj.patientList;
+
+      //focus click change keyup select blur
+
       //initilizing typeahead for patients name
-      appointmentView.patientsName.typeahead("destroy");
+      //appointmentView.patientsName.typeahead("destroy");
       appointmentView.patientsName.typeahead({
         name: 'patients-name',
         source: model.patientList,
@@ -117,7 +129,10 @@ $("#revalidate").on('click',function(){
         }
       });
 
-      //console.log('object passed ' + JSON.stringify(initObj));
+      appointmentView.initValidators();
+
+      //rewiring the events
+      appointmentView.patientsName.on("change click keyup select blur ", appointmentView.patientEventsCallback);
 
     }else{
       $.get(links.getLocationUrl , {})
@@ -154,6 +169,13 @@ $("#revalidate").on('click',function(){
 
   }
 
+  mainController.prototype.cleanup = function () {
+    appointmentView.patientsName.off("focus click change keyup select blur");
+    appointmentView.patientsName.typeahead("destroy");
+    //appointmentView.form.bootstrapValidator.destroy();
+
+  };
+
  mainController.prototype.resetPatientModel = function () {
 
        model.patient.id = 0;
@@ -188,6 +210,7 @@ $("#revalidate").on('click',function(){
     model.patient.weight = patientObj.weight;
     model.patient.bloodGroup = patientObj.bloodGroup;
     model.patient.contact = patientObj.contact;
+
     appointmentView.renderPatientsView();
 
   };
@@ -308,6 +331,13 @@ $("#revalidate").on('click',function(){
       this.bookApptModal = $("#book-appointment-modal");
       this.bookApptclear = $("#book-appointment-clear");
 
+      var userInfo = model.userInfo;
+      console.log('userInfo ' + JSON.stringify(model.userInfo));
+      if(userInfo && userInfo.type == 'S'){
+        this.locationSelect.attr('disabled', 'disabled');
+      }else{
+        this.locationSelect.removeAttr('disabled');
+      }
 
       this.appointmentDate.val('');
       this.appointmentTime.val('');
@@ -326,9 +356,7 @@ $("#revalidate").on('click',function(){
       //unbinding events from previous cancelledList
       //and binding events for validations
 
-
-      this.patientsName.on("click change keyup select blur",(function(){
-        return function(){
+      this.patientEventsCallback = function(){
 
           var name = appointmentView.patientsName.val();
           name = name.trim();
@@ -337,11 +365,9 @@ $("#revalidate").on('click',function(){
           if(!name || 0 === name.length){
               console.log('reset patient model');
               controller.resetPatientInfo();
-          }else{
+          }else if(name.length > 0) {
 
             var patientsList = controller.getPatientsList();
-
-            console.log('the person' + JSON.stringify(patientsList[0]));
 
             var containsName = false;
 
@@ -352,7 +378,7 @@ $("#revalidate").on('click',function(){
               }
             }
 
-            console.log('contains '  + containsName);
+            //console.log('contains '  + containsName);
             if(!containsName){
               //if there is name not contained in the list
               //make a new entry
@@ -364,12 +390,12 @@ $("#revalidate").on('click',function(){
 
           }
 
-          //revalidate gender radio buttons
-          //appointmentView.form.bootstrapValidator('revalidateField', 'newBookusername');
+          appointmentView.form.bootstrapValidator('revalidateField', 'bookApptDob');
+          appointmentView.form.bootstrapValidator('revalidateField', 'newApptContact');
           appointmentView.form.bootstrapValidator('revalidateField', 'newApptgender');
+          appointmentView.form.bootstrapValidator('revalidateField', 'newBookusername');
 
-        }
-      })());
+        };
 
 
 
@@ -402,7 +428,70 @@ $("#revalidate").on('click',function(){
       });
       */
 
-      this.validator =   this.form.bootstrapValidator({
+      //intilizing the date and time controls
+      this.appointmentDate.datetimepicker({
+        inline: false,
+        format:'DD-MM-YYYY'
+      });
+
+      this.appointmentTime.datetimepicker({
+        inline: false,
+        format : "LT"
+      });
+
+      this.patientsDOB.datetimepicker({
+        inline: false,
+        format:'DD-MM-YYYY'
+      });
+
+      this.bookApptclear.on('click',function(){
+
+        appointmentView.enablePatientEditing(true);
+        $(appointmentView.bookApptModal).find('form')[0].reset();
+
+        appointmentView.form.bootstrapValidator("resetForm",true);
+
+        //setting default values to controls after resetting
+        appointmentView.rbMale.prop('checked', true);
+        appointmentView.patientsBloodGroup.val('');
+
+        appointmentView.locationSelect.val(model.appointment.locationId);
+
+        console.log(JSON.stringify(model.appointment));
+
+      });
+
+      this.bookApptModal.on('hidden.bs.modal', function () {
+
+      $(appointmentView.bookApptModal).find('form')[0].reset();
+          $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
+
+      });
+
+      this.saveButton.click(function(){
+        //appointmentView.patientsName.off("click change keyup select blur");
+        appointmentView.form.submit();
+        /*
+        appointmentView.validator.on('success.form.bv',function(e){
+          e.preventDefault();
+
+          console.log('book appointment');
+          controller.updateModelFromview();
+          controller.bookAppointment();
+
+
+        });
+        */
+
+      });
+
+       $('.pms-alerts').remove();
+
+
+    },
+    initValidators: function(){
+
+      this.form.bootstrapValidator({
         trigger:" focus click change keyup select blur ",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
@@ -486,59 +575,6 @@ $("#revalidate").on('click',function(){
 
 
       });
-
-      //intilizing the date and time controls
-      this.appointmentDate.datetimepicker({
-        inline: false,
-        format:'DD-MM-YYYY'
-      });
-
-      this.appointmentTime.datetimepicker({
-        inline: false,
-        format : "LT"
-      });
-
-      this.patientsDOB.datetimepicker({
-        inline: false,
-        format:'DD-MM-YYYY'
-      });
-
-      this.bookApptclear.on('click',function(){
-
-
-        $(appointmentView.bookApptModal).find('form')[0].reset();
-
-          appointmentView.form.bootstrapValidator("resetForm",true);
-          appointmentView.locationSelect.val(model.appointment.locationId);
-          console.log(JSON.stringify(model.appointment));
-        });
-
-      this.bookApptModal.on('hidden.bs.modal', function () {
-
-      $(appointmentView.bookApptModal).find('form')[0].reset();
-          $('#book-Appointment-Form').bootstrapValidator("resetForm",true);
-
-      });
-
-      this.saveButton.click(function(){
-        //appointmentView.patientsName.off("click change keyup select blur");
-        appointmentView.form.submit();
-        /*
-        appointmentView.validator.on('success.form.bv',function(e){
-          e.preventDefault();
-
-          console.log('book appointment');
-          controller.updateModelFromview();
-          controller.bookAppointment();
-
-
-        });
-        */
-
-      });
-
-       $('.pms-alerts').remove();
-
 
     },
     render: function(){
@@ -625,6 +661,7 @@ $("#revalidate").on('click',function(){
       //this.patientsName.val(patient.name);
       this.patientsDOB.val(patient.dateOfBirth);
 
+
       console.log('gender ' + patient.gender);
       if(patient.gender == 1){
         this.rbMale.prop('checked', true);
@@ -647,6 +684,10 @@ $("#revalidate").on('click',function(){
       //  return appointmentView.patientsNameCallback(patientsList);
       //})(patientsList));
 
+      //revalidate patients before disabling controls
+      //appointmentView.form.bootstrapValidator('revalidateField', 'bookApptDob');
+      //appointmentView.form.bootstrapValidator('revalidateField', 'newApptContact');
+      //appointmentView.form.bootstrapValidator('revalidateField', 'newApptgender');
 
       this.enablePatientEditing(false);
 
@@ -654,26 +695,26 @@ $("#revalidate").on('click',function(){
     enablePatientEditing: function(enable){
       if(enable){
 
-        this.patientsDOB.removeAttr('disabled');
+        this.patientsDOB.removeAttr('readonly');
 
         this.rbMale.removeAttr('disabled');
         this.rbFemale.removeAttr('disabled');
 
-        this.patientsHeight.removeAttr('disabled');
-        this.patientsWeight.removeAttr('disabled');
-        this.patientsBloodGroup.removeAttr('disabled');
+        this.patientsHeight.removeAttr('readonly');
+        this.patientsWeight.removeAttr('readonly');
+        this.patientsBloodGroup.removeAttr('readonly');
         //this.contact.removeAttr('disabled');
 
       }else{
         //disable patients controls to prevent editing
-        this.patientsDOB.attr('disabled', 'disabled');
+        this.patientsDOB.prop('readonly', true);
 
-        this.rbMale.attr('disabled', 'disabled');
-        this.rbFemale.attr('disabled', 'disabled');
+        this.rbMale.prop('disabled', true);
+        this.rbFemale.prop('disabled', true);
 
-        this.patientsHeight.attr('disabled', 'disabled');
-        this.patientsWeight.attr('disabled', 'disabled');
-        this.patientsBloodGroup.attr('disabled', 'disabled');
+        this.patientsHeight.prop('readonly', true);
+        this.patientsWeight.prop('readonly', true);
+        this.patientsBloodGroup.prop('readonly', true);
         //this.contact.attr('disabled', 'disabled');
       }
     }

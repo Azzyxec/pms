@@ -6,8 +6,6 @@ var uglify = require('gulp-uglify');
 var stripDebug = require('gulp-strip-debug');
 var cssNano = require('gulp-cssnano');
 
-
-
 var watchify = require('watchify');
 //var browserSync = require('browser-sync').create();
 
@@ -132,6 +130,8 @@ var filesList = [
                 ], buildName: "list.staff.js"},
 {build:true, files: [
                     objConfig.scriptsBasePath +"links.js",
+                    objConfig.scriptsBasePath +"moment.js",
+                    objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                     objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
                     objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",

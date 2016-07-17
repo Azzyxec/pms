@@ -540,6 +540,13 @@ render: function(){
       $('.pms-alerts').remove();
   });
 
+  todayAppointmentListView.newAppointmentModal.on('hidden.bs.modal', function(){
+    console.log('book appointment modal close');
+    cont.bookingController.cleanup();
+
+      $('.pms-alerts').remove();
+  });
+
   /*
   this.locationSelect.empty();
 
@@ -782,12 +789,17 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
     template.find('.new-appintment-div').click((function(startTime){
       return function(){
         console.log('new appoinment click');
+
+        var luserInfo = cont.getUserInfoModel();
+        console.log('userInfo ' + JSON.stringify(luserInfo));
+
         var initValues = {
           locationList: cont.getLocationList(),
           locationId: cont.getSelectedLocId(),
           appointmetDate: cont.getSelectedeDate(),
           appointmentTime: startTime,
-          patientList: cont.getPatientList()
+          patientList: cont.getPatientList(),
+          userInfo: luserInfo
         }
 
         //var appController = makeAppointmentController();

@@ -11,7 +11,7 @@ fi.fileupload({
     dataType: 'json',
     autoUpload: false,
 
-    acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|mp3)$/i,
+    acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
     maxFileSize: 1048576, //1MB
     maxNumberOfFiles:'1',
     // Enable image resizing, except for Android and Opera,
@@ -48,7 +48,7 @@ fi.on('fileuploadadd', function (e, data) {
         });
 
         //create file info text, name and file size
-        var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
+        var file_txt = $('<div/>').addClass('file-row-text').append('<span>'+file.name  + '</span>');
 
         file_txt.append(removeBtn); //add remove button inside info text element
         file_txt.prependTo(node).append(uploadButton.clone(true).data(data)); //add to node element
@@ -60,6 +60,7 @@ fi.on('fileuploadadd', function (e, data) {
         node.appendTo(data.context); //attach node to data context
     });
 });
+
 fi.on('fileuploadprogress', function (e, data) {
     var progress = parseInt(data.loaded / data.total * 100, 10);
     if (data.context) {
