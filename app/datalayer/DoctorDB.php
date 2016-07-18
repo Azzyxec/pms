@@ -101,7 +101,7 @@ class DoctorDB
       $doctor->id = $doctorId;
       $doctor->name = $row['name'];
       $doctor->contact = $row['contact1'];
-      $doctor->alternateContact = $row['contact2'];
+      //$doctor->alternateContact = $row['contact2'];
       $doctor->email = $row['email'];
       $doctor->qualifications = $row['qualification'];
       $doctor->address = $row['address'];
@@ -124,12 +124,12 @@ class DoctorDB
                           'pid' => $doctor->id,
                           'pname' =>  $doctor->name,
                           'pcontact1' =>  $doctor->contact,
-                          'pcontact2' => $doctor->alternateContact,
+                          //'pcontact2' => $doctor->alternateContact,
                           'pemail' =>    $doctor->email ,
                           'pqualification' => $doctor->qualifications,
                           'paddress' => $doctor->address,
-                          'precovery_contact' =>  $doctor->recoveryContact,
-                          'precovery_email' => $doctor->recoveryEmail,
+                          //'precovery_contact' =>  $doctor->recoveryContact,
+                          //'precovery_email' => $doctor->recoveryEmail,
                           'plogin_id' => $doctor->userName,
                           'ppassword' => $doctor->password,
                           'pis_active' =>  $doctor->isActive

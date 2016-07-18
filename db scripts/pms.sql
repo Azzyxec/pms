@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2016 at 10:27 AM
+-- Generation Time: Jul 18, 2016 at 11:09 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `precovery_contact` VARCHAR(100), IN `precovery_email` VARCHAR(100), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -77,7 +77,6 @@ begin
 							(`fk_login_id`
 							, `name`
 							, `contact1`
-							, `contact2`
 							, `email`
 							, `qualification`
 							, `address`
@@ -86,7 +85,6 @@ begin
 					VALUES (@llogin_id
 							,pname
 							,pcontact1
-							,pcontact2
 							,pemail
 							,pqualification
 							,paddress
@@ -117,7 +115,6 @@ begin
 			UPDATE `doctor`
 						SET `name`= pname
 						,`contact1`= pcontact1
-						,`contact2`= pcontact2
 						,`email`= pemail
 						,`qualification`= pqualification
 						,`address`= paddress
@@ -1181,12 +1178,13 @@ begin
 			from schedule_day sd
 			where sd.fk_doctor_id = pdoctor_id
 				  and sd.is_active = 1
-				  and sd.`date` = STR_TO_DATE(@lscheduleDate, '%m-%d-%Y')
+				  and sd.`date` = STR_TO_DATE(@lscheduleDate, '%d-%m-%Y')
                   and 1 = is_timing_overlapping(@lstartTimeMins
 												, @lendTimeMins
                                                 , sd.start_time_mins
                                                 , sd.end_time_mins)
 				  and sd.location_id = plocation_id;
+				  
 				  
 			set @lscheduleExistCounter = @lscheduleExistCounter + @lscheduleExists;
 	
@@ -1267,6 +1265,8 @@ begin
 	
 	end if;
 
+    
+
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
@@ -1274,7 +1274,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
 SELECT
    d.name ,
    d.contact1 ,
-   d.contact2 ,
    d.email ,
    d.qualification ,
    d.address ,
@@ -2384,31 +2383,34 @@ CREATE TABLE IF NOT EXISTS `doctor` (
   `fk_login_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `contact1` varchar(50) NOT NULL,
-  `contact2` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `qualification` varchar(1000) NOT NULL,
   `address` varchar(2000) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
 
 --
 -- Dumping data for table `doctor`
 --
 
-INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `contact2`, `email`, `qualification`, `address`, `is_active`) VALUES
-(1, 33, 'Doc', '3412', '213412', 'fsdf@sdf.com', 'wqwer', 'wer', 1),
-(25, 58, 'savio', '94234234', 'dfasdfa', 'savio@dreamlogic.in', 'asdfasdf', 'asdf', 1),
-(29, 71, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(30, 72, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(31, 73, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(32, 74, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(33, 75, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(34, 76, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(35, 77, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(36, 78, 'Greg', '324234', '23423', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
-(37, 79, 'den', '234234', '2343', 'azzyxec@gmail.com', 'asdfdsf', 'adsfadsf', 0),
-(38, 80, 'den', '234234', '2343', 'azzyxec@gmail.com', 'asdfdsf', 'adsfadsf', 0);
+INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `email`, `qualification`, `address`, `is_active`) VALUES
+(1, 33, 'Doc', '3412', 'fsdf@sdf.com', 'wqwer', 'wer', 1),
+(25, 58, 'savio', '94234234', 'savio@dreamlogic.in', 'asdfasdf', 'asdf', 1),
+(29, 71, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(30, 72, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(31, 73, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(32, 74, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(33, 75, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(34, 76, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(35, 77, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(36, 78, 'Greg', '324234', 'azzyxec@gmail.com', 'dsfsda', 'asdfsadf', 0),
+(37, 79, 'den', '234234', 'azzyxec@gmail.com', 'asdfdsf', 'adsfadsf', 0),
+(38, 80, 'den', '234234', 'azzyxec@gmail.com', 'asdfdsf', 'adsfadsf', 0),
+(39, 81, 'minelli', '23423423423', 'azzyxec@gmail.com', '423423', 'Flat no AF 11, Haroon green fields, near Raj motors, St. Jose de areal, mugali, Margao Goa', 0),
+(40, 82, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0),
+(41, 83, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0),
+(42, 84, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0);
 
 -- --------------------------------------------------------
 
@@ -2452,7 +2454,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=81 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=85 ;
 
 --
 -- Dumping data for table `login`
@@ -2472,7 +2474,11 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (77, 'D', 'greg6', '$2y$12$/ERJExDQeYGGXsI7cX5GsuQbJGEXM6eTnPRRzlLzVsXfDHr30RIeK', '2016-07-01 13:16:46', NULL, 0),
 (78, 'D', 'greg7', '$2y$12$oNJNpJ94zwiqhR5nNOazaOFP8.5o9TGRkubsvmFRQY13l9K.IgrfG', '2016-07-01 13:17:18', NULL, 0),
 (79, 'D', 'den', '$2y$12$XT4aV3WuKLP4XVkLmvQKgecHiOjGG5wrf6Jzi8naiZ6T3eNyzeML.', '2016-07-01 13:24:57', NULL, 0),
-(80, 'D', 'den1', '$2y$12$br26T69j865Q03bYZxj4Ge//oasI8dV0ywoyyAyhFHTqx5Iiimlfy', '2016-07-01 13:25:09', NULL, 0);
+(80, 'D', 'den1', '$2y$12$br26T69j865Q03bYZxj4Ge//oasI8dV0ywoyyAyhFHTqx5Iiimlfy', '2016-07-01 13:25:09', NULL, 0),
+(81, 'D', 'minelli', '$2y$12$oZPgL1Ykg6xFiVYmM8F3neUa00ieN54KYm2YYFsYTsn71cPVOTqKO', '2016-07-17 18:42:22', NULL, 0),
+(82, 'D', 'darius', '$2y$12$mXQq3u1iCk9XTrG9.dML3O5NEBbv8/SDLOUZvvgQIDFgMRBtmiFQO', '2016-07-17 19:09:56', NULL, 0),
+(83, 'D', 'darius1', '$2y$12$CQsJ4KM3xHW7rJS6RSQ6BuuvMVE7xbT3wnLf5gi.aWoKBp2V9S7h.', '2016-07-17 19:13:21', NULL, 0),
+(84, 'D', 'darius2', '$2y$12$9K6ZrZdCasDUrY3N8/gudOUVQzrL8gBbBnYUbzs5AmUOQonSAqIda', '2016-07-17 19:13:59', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -2710,7 +2716,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=77 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=79 ;
 
 --
 -- Dumping data for table `schedule`
@@ -2718,8 +2724,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 
 INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created_date`, `created_by`, `created_by_type`, `is_active`) VALUES
 (74, 1, '2016-06-29', '2016-07-14', '2016-06-29 00:00:00', 1, 'D', 1),
-(75, 1, '2016-07-15', '2016-07-30', '2016-07-15 00:00:00', 1, 'D', 1),
-(76, 1, '2016-07-17', '2016-08-27', '2016-07-17 00:00:00', 2, 'S', 1);
+(75, 1, '2016-07-15', '2016-07-30', '2016-07-15 00:00:00', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2738,7 +2743,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `is_blocked` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229503 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229470 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -2767,49 +2772,7 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229457, 1, 75, 18, 20160726, 540, 720, 0, 1),
 (229458, 1, 75, 18, 20160727, 540, 720, 0, 1),
 (229459, 1, 75, 18, 20160728, 540, 720, 0, 1),
-(229460, 1, 75, 18, 20160729, 540, 720, 0, 1),
-(229461, 1, 76, 19, 20160717, 540, 720, 0, 1),
-(229462, 1, 76, 19, 20160718, 540, 720, 0, 1),
-(229463, 1, 76, 19, 20160719, 540, 720, 0, 1),
-(229464, 1, 76, 19, 20160720, 540, 720, 0, 1),
-(229465, 1, 76, 19, 20160721, 540, 720, 0, 1),
-(229466, 1, 76, 19, 20160722, 540, 720, 0, 1),
-(229467, 1, 76, 19, 20160723, 540, 720, 0, 1),
-(229468, 1, 76, 19, 20160724, 540, 720, 0, 1),
-(229469, 1, 76, 19, 20160725, 540, 720, 0, 1),
-(229470, 1, 76, 19, 20160726, 540, 720, 0, 1),
-(229471, 1, 76, 19, 20160727, 540, 720, 0, 1),
-(229472, 1, 76, 19, 20160728, 540, 720, 0, 1),
-(229473, 1, 76, 19, 20160729, 540, 720, 0, 1),
-(229474, 1, 76, 19, 20160730, 540, 720, 0, 1),
-(229475, 1, 76, 19, 20160731, 540, 720, 0, 1),
-(229476, 1, 76, 19, 20160801, 540, 720, 0, 1),
-(229477, 1, 76, 19, 20160802, 540, 720, 0, 1),
-(229478, 1, 76, 19, 20160803, 540, 720, 0, 1),
-(229479, 1, 76, 19, 20160804, 540, 720, 0, 1),
-(229480, 1, 76, 19, 20160805, 540, 720, 0, 1),
-(229481, 1, 76, 19, 20160806, 540, 720, 0, 1),
-(229482, 1, 76, 19, 20160807, 540, 720, 0, 1),
-(229483, 1, 76, 19, 20160808, 540, 720, 0, 1),
-(229484, 1, 76, 19, 20160809, 540, 720, 0, 1),
-(229485, 1, 76, 19, 20160810, 540, 720, 0, 1),
-(229486, 1, 76, 19, 20160811, 540, 720, 0, 1),
-(229487, 1, 76, 19, 20160812, 540, 720, 0, 1),
-(229488, 1, 76, 19, 20160813, 540, 720, 0, 1),
-(229489, 1, 76, 19, 20160814, 540, 720, 0, 1),
-(229490, 1, 76, 19, 20160815, 540, 720, 0, 1),
-(229491, 1, 76, 19, 20160816, 540, 720, 0, 1),
-(229492, 1, 76, 19, 20160817, 540, 720, 0, 1),
-(229493, 1, 76, 19, 20160818, 540, 720, 0, 1),
-(229494, 1, 76, 19, 20160819, 540, 720, 0, 1),
-(229495, 1, 76, 19, 20160820, 540, 720, 0, 1),
-(229496, 1, 76, 19, 20160821, 540, 720, 0, 1),
-(229497, 1, 76, 19, 20160822, 540, 720, 0, 1),
-(229498, 1, 76, 19, 20160823, 540, 720, 0, 1),
-(229499, 1, 76, 19, 20160824, 540, 720, 0, 1),
-(229500, 1, 76, 19, 20160825, 540, 720, 0, 1),
-(229501, 1, 76, 19, 20160826, 540, 720, 0, 1),
-(229502, 1, 76, 19, 20160827, 540, 720, 0, 1);
+(229460, 1, 75, 18, 20160729, 540, 720, 0, 1);
 
 -- --------------------------------------------------------
 

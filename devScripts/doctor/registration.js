@@ -1,20 +1,23 @@
 $(document).ready(function(){
   console.log('doctor registration in ');
 
+
+
   var doctorModel = {
      id:0,
      name:"",
      contact:"",
-     alternateContact: "0",
+     //alternateContact: "0",
      email: "",
      qualifications: "",
      address:"",
-     recoveryContact:"",
-     recoveryEmail:"",
+     //recoveryContact:"",
+     //recoveryEmail:"",
      userName:"",
      password:"",
      isActive:0
   };
+  
 
   var controller = {
       init: function(){
@@ -33,10 +36,27 @@ $(document).ready(function(){
         }
         */
         formView.init();
+        formView.render();
 
-        this.getDoctorInfo();
+        //this.getDoctorInfo();
         //if the doctor is logged in then fill the form with the doctors data
 
+      },
+      resetModel: function(){
+        doctorModel = {
+           id:0,
+           name:"",
+           contact:"",
+           //alternateContact: "0",
+           email: "",
+           qualifications: "",
+           address:"",
+           //recoveryContact:"",
+           //recoveryEmail:"",
+           userName:"",
+           password:"",
+           isActive:0
+        };
       },
       getModel: function(){
         return doctorModel;
@@ -63,14 +83,14 @@ $(document).ready(function(){
            doctorModel.id = doctor.id;
            doctorModel.name = doctor.name;
            doctorModel.contact = doctor.contact;
-           doctorModel.alternateContact = doctor.alternateContact;
+           //doctorModel.alternateContact = doctor.alternateContact;
            doctorModel.email = doctor.email;
            doctorModel.qualifications = doctor.qualifications;
            doctorModel.address = doctor.address;
            doctorModel.userName = doctor.userName;
            doctorModel.password = doctor.password;
-           doctorModel.recoveryContact = doctor.recoveryContact;
-           doctorModel.recoveryEmail = doctor.recoveryEmail;
+           //doctorModel.recoveryContact = doctor.recoveryContact;
+           //doctorModel.recoveryEmail = doctor.recoveryEmail;
            doctorModel.isActive = doctor.isActive;
 
            formView.render();
@@ -82,7 +102,7 @@ $(document).ready(function(){
         doctorModel.id = formView.idControl.val();
         doctorModel.name = formView.nameControl.val();
         doctorModel.contact = formView.contactControl.val();
-        doctorModel.alternateContact = formView.alternatContactControl.val();
+        //doctorModel.alternateContact = formView.alternatContactControl.val();
         doctorModel.email = formView.emailControl.val();
         doctorModel.qualifications = formView.qualificationControl.val();
         doctorModel.address = formView.addressControl.val();
@@ -91,8 +111,8 @@ $(document).ready(function(){
         if(!validator.isEmptyString(newPass)){
           doctorModel.password =  newPass
         }
-        doctorModel.recoveryContact = formView.recoveryContactControl.val();
-        doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
+        //doctorModel.recoveryContact = formView.recoveryContactControl.val();
+        //doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
 
 
         if(formView.activeControl.is(":checked")){
@@ -106,6 +126,7 @@ $(document).ready(function(){
 
       saveDoctorAndRedirect: function(){
              formView.addSaveButtonAnimation(true);
+             console.log('registergin doc info');
              $.post( controller.doctorUrl , doctorModel)
               .done(function( response ) {
                 console.log('response ' + JSON.stringify(response));
@@ -126,6 +147,10 @@ $(document).ready(function(){
 
                     //the user is not logged in so its a new registration
                     //controller.alertcontainer.prepend(controller.alert("Thank you for registering with us, we have send you a email with your account info","alert-success text-center",''));
+
+                    controller.resetModel();
+                    formView.render();
+                    formView.passwordControl.val('');
                     formView.alertSucess.removeClass('hidden');
                     console.log('Thank you for registering with us, we have send you a email with your account info');
                     //window.location.href = controller.logoutUrl;
@@ -148,14 +173,14 @@ $(document).ready(function(){
       this.idControl = $('#did');
       this.nameControl = $('#dname');
       this.contactControl = $('#dcontact');
-      this.alternatContactControl = $('#dalternate-contact');
+      //this.alternatContactControl = $('#dalternate-contact');
       this.emailControl = $('#demail');
       this.qualificationControl = $('#dqualifications');
       this.addressControl = $('#daddress');
       this.userNameControl = $('#duser-name');
       this.passwordControl = $('#dpassword');
-      this.recoveryContactControl = $('#drecovery-contact');
-      this.recoveryEmailControl = $('#drecovery-email');
+      //this.recoveryContactControl = $('#drecovery-contact');
+      //this.recoveryEmailControl = $('#drecovery-email');
       this.saveButton = $('#btn-doc-reg-sumit');
       this.docProfclear = $('#btn-doc-clear-btn');
 
@@ -164,7 +189,7 @@ $(document).ready(function(){
       this.inactiveControl = $('#dinactive');
 
       this.validator = this.form.bootstrapValidator({
-        trigger:" focus blur",
+        trigger:" focus click change keyup select blur",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
           invalid: 'glyphicon glyphicon-remove ',
@@ -224,27 +249,22 @@ $(document).ready(function(){
               }
             }
           }
-          , activeOptions :{
-            validators : {
-              notEmpty :{
-                message : 'please select an option'
-              }
-            }
-          }
         }
       }).on('success.form.bv',function(e){
         e.preventDefault();
-
+        console.log('validate click');
         //console.log('model value' + JSON.stringify(doctorModel) );
         controller.updateModelFromView();
         controller.saveDoctorAndRedirect();
       });
 
 
-    this.saveButton.on('click', (function(controller){
+    this.saveButton.on('click', function(){
         //console.log('handler added : ' + cat.Id);
-        return function(){
+
           //console.log('handler exec : ' + cat.Id);
+
+          console.log('save button click');
 
           formView.form.submit();
 
@@ -264,8 +284,7 @@ $(document).ready(function(){
           //updates the model with info from the view
 
 
-        };
-      })(controller)); //submit click handler
+        }); //submit click handler
 
       //alerts
       this.alertLoginIdTaken = $('#login-id-already-taken');
@@ -291,25 +310,27 @@ $(document).ready(function(){
 
       var model = controller.getModel();
 
+      console.log('render ' + JSON.stringify(model));
+
       this.idControl.val(model.id);
       this.nameControl.val(model.name);
       this.contactControl.val(model.contact);
-      this.alternatContactControl.val(model.alternateContact);
+      //this.alternatContactControl.val(model.alternateContact);
       this.emailControl.val(model.email);
       this.qualificationControl.val(model.qualifications);
       this.addressControl.val(model.address);
       this.userNameControl.val(model.userName);
       //this.passwordControl.val(model.password);
-      this.recoveryContactControl.val(model.recoveryContact);
-      this.recoveryEmailControl.val(model.recoveryEmail);
+      //this.recoveryContactControl.val(model.recoveryContact);
+      //this.recoveryEmailControl.val(model.recoveryEmail);
 
 
       if(model.isActive == 1){
         this.activeControl.prop('checked', true);
-        this.inactiveControl.prop('checked', false);
+        //this.inactiveControl.prop('checked', false);
       } else{
         this.activeControl.prop('checked', false);
-        this.inactiveControl.prop('checked', true);
+        //this.inactiveControl.prop('checked', true);
 
       }
 

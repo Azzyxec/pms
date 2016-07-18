@@ -43,7 +43,6 @@ class ScheduleDB
 
       $statement = DBHelper::generateStatement('create_schedule',  $paramArray);
 
-
       $statement->execute();
 
       $status = null;

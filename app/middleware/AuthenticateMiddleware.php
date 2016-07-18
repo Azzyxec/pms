@@ -31,6 +31,8 @@ class AuthenticateMiddleware {
 
 
   public function redirectDashboard($request, $response, $next){
+
+    
     $user = UserSessionManager::getUser();
 
     if($user->id == -1){
@@ -44,6 +46,7 @@ class AuthenticateMiddleware {
       $uri = $this->container->get('router')->pathFor('adminDashboard');
       return $response->withRedirect($uri);
     }
+
       return $next($request, $response);
 
 

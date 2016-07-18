@@ -125,7 +125,6 @@ class AppointmentDB{
   public function checkAppointmentAvailibility($appointment, $doctorId){
     try {
 
-
       $paramArray = array(
         'pdoctor_id' => $doctorId,
         'plocation_id' => $appointment->locationId,
