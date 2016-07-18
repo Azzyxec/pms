@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2016 at 11:09 AM
+-- Generation Time: Jul 18, 2016 at 07:05 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -1269,6 +1269,24 @@ begin
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deactivate_location_for_doctor`(in plocationId int)
+BEGIN
+
+  #TODO dont deactivate if there are appointmetns on a location
+  # add deactivated by info
+
+  update work_locations wl
+  set wl.is_active = 0
+  where wl.id = plocationId;
+  
+  # what else needs to be updated
+  #schedules
+  #staff login
+  # active appointments
+  
+
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
     READS SQL DATA
 SELECT
@@ -1321,7 +1339,8 @@ SELECT `id`
 		, `email`
 		, `qualification`
 		, `is_active`
-  FROM `doctor`;
+  FROM `doctor`
+  order by id desc;
 
 
 
@@ -1333,6 +1352,8 @@ begin
 
 select id
 	   ,name
+       ,is_active
+       ,case when is_active = 0 then 'inactive' else 'active' end as `status`
 from work_locations
 where fk_doctor_id = pdoctor_id;
 
@@ -2136,7 +2157,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=95 ;
 
 --
 -- Dumping data for table `appointment`
@@ -2227,7 +2248,11 @@ INSERT INTO `appointment` (`id`, `fk_schedule_id`, `fk_doctor_id`, `fk_location_
 (87, 0, 1, 18, 140, '3241234123', '2016-07-14', 585, 600, 'sdfasd', 0, 0, '2016-07-14 20:03:33', 1, 'D', 1),
 (88, 0, 1, 18, 143, '44543534', '2016-07-14', 600, 615, 'Criag list', 0, 0, '2016-07-14 20:04:58', 1, 'D', 1),
 (89, 0, 1, 18, 121, '5555555555', '2016-07-15', 540, 555, 'asdfasdf', 0, 0, '2016-07-15 00:22:32', 1, 'D', 1),
-(90, 0, 1, 18, 100, '14242341', '2016-07-18', 540, 555, 'asdf', 0, 0, '2016-07-16 18:09:59', 2, 'S', 1);
+(90, 0, 1, 18, 100, '14242341', '2016-07-18', 540, 555, 'asdf', 0, 0, '2016-07-16 18:09:59', 2, 'S', 1),
+(91, 0, 1, 18, 112, '34234', '2016-07-18', 555, 570, 'asdfdas', 2, 0, '2016-07-18 15:46:52', 1, 'D', 1),
+(92, 0, 1, 18, 100, '14242341', '2016-07-18', 570, 585, 'asdfasd', 2, 0, '2016-07-18 15:48:06', 1, 'D', 1),
+(93, 0, 1, 18, 136, '4134134', '2016-07-18', 675, 690, 'new appointment', 0, 0, '2016-07-18 16:50:44', 1, 'D', 1),
+(94, 0, 43, 21, 145, '2423423', '2016-07-18', 540, 555, 'test jamie', 0, 0, '2016-07-18 17:07:48', 43, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2276,7 +2301,9 @@ INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled
 (70, 'asdfasdf', '2016-07-13 23:57:06', 1, 'D'),
 (78, 'sdfasd', '2016-07-14 20:00:43', 1, 'D'),
 (79, 'sdf', '2016-07-14 20:02:42', 1, 'D'),
-(80, 'asdfasd', '2016-07-14 20:02:47', 1, 'D');
+(80, 'asdfasd', '2016-07-14 20:02:47', 1, 'D'),
+(92, 'erwer', '2016-07-18 16:48:42', 1, 'D'),
+(91, 'this is ', '2016-07-18 16:50:17', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -2388,7 +2415,7 @@ CREATE TABLE IF NOT EXISTS `doctor` (
   `address` varchar(2000) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=43 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=47 ;
 
 --
 -- Dumping data for table `doctor`
@@ -2410,7 +2437,11 @@ INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `email`, `qualifi
 (39, 81, 'minelli', '23423423423', 'azzyxec@gmail.com', '423423', 'Flat no AF 11, Haroon green fields, near Raj motors, St. Jose de areal, mugali, Margao Goa', 0),
 (40, 82, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0),
 (41, 83, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0),
-(42, 84, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0);
+(42, 84, 'dariuds', '4324234', 'azzyxec@gmail.com', 'sdfajksdfhlasd', 'asdfsdf', 0),
+(43, 85, 'newan', '4213423', 'azzyxec@gmail.com', 'sdfasdf', 'Flat no AF 11, Haroon green fields, near Raj motors, St. Jose de areal, mugali, Margao Goa', 1),
+(44, 86, 'Timmy', '+5', 'azzyxec@gmail', 'asdf ', 'Flat no AF 11, Haroon green fields, near Raj motors, St. Jose de areal, mugali, Margao Goa', 1),
+(45, 87, 'Dan', '3423423423423423', 'asdfasdf@dssad.com', 'sadfasdf', 'sadfasdf', 0),
+(46, 88, 'picolo', '2341234123', 'azzyxec@gmail.com', '2342342134', 'Flat no AF 11, Haroon green fields, near Raj motors, St. Jose de areal, mugali, Margao Goa', 0);
 
 -- --------------------------------------------------------
 
@@ -2454,7 +2485,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=85 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=89 ;
 
 --
 -- Dumping data for table `login`
@@ -2462,7 +2493,7 @@ CREATE TABLE IF NOT EXISTS `login` (
 
 INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modified`, `is_active`) VALUES
 (1, 'A', 'admin', '$2y$12$4exp7y9xOEJ4mJoryW/H0eEPA6VE5o.y3lVtnPYIh/lPfOW8rN9b2', '1899-11-30 00:00:00', '0000-00-00 00:00:00', 1),
-(33, 'D', 'doc', '$2y$12$x2dMd7yzOPlxWVCMMeqJm.Tzwrcz73vF3j956RhsfVUbQ/nUEdqcy', '2016-05-01 18:26:09', '2016-07-01 12:45:49', 1),
+(33, 'D', 'doc', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-05-01 18:26:09', '2016-07-18 18:57:52', 1),
 (58, 'D', 'savio', '$2y$12$/W.gLAwQ/i5/FnVeHnJBDOe.N.2MBLW/wZL7Ma30I33dT.C5J86y.', '2016-06-15 21:07:02', NULL, 1),
 (60, 'S', 'staff', '$2y$12$7OWYFWYvJRDie5vvf/O2NOus6bxNgV5hL/40UnxgHsYALhwfMsTMa', '2016-06-27 20:18:24', '2016-07-11 17:39:04', 1),
 (71, 'D', 'greg', '$2y$12$uChOxKAHGWGTNo.kL2ZeL.hLyn8V0A/ycFRx9txbJm3etSWmeWPn.', '2016-07-01 13:12:35', NULL, 0),
@@ -2478,7 +2509,11 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (81, 'D', 'minelli', '$2y$12$oZPgL1Ykg6xFiVYmM8F3neUa00ieN54KYm2YYFsYTsn71cPVOTqKO', '2016-07-17 18:42:22', NULL, 0),
 (82, 'D', 'darius', '$2y$12$mXQq3u1iCk9XTrG9.dML3O5NEBbv8/SDLOUZvvgQIDFgMRBtmiFQO', '2016-07-17 19:09:56', NULL, 0),
 (83, 'D', 'darius1', '$2y$12$CQsJ4KM3xHW7rJS6RSQ6BuuvMVE7xbT3wnLf5gi.aWoKBp2V9S7h.', '2016-07-17 19:13:21', NULL, 0),
-(84, 'D', 'darius2', '$2y$12$9K6ZrZdCasDUrY3N8/gudOUVQzrL8gBbBnYUbzs5AmUOQonSAqIda', '2016-07-17 19:13:59', NULL, 0);
+(84, 'D', 'darius2', '$2y$12$9K6ZrZdCasDUrY3N8/gudOUVQzrL8gBbBnYUbzs5AmUOQonSAqIda', '2016-07-17 19:13:59', NULL, 0),
+(85, 'D', 'newan', '$2y$12$3Zag1luAOeZ6CDYzoWzNl.gsJKB6REmO05h9iGumZRLGQtvHg1vJC', '2016-07-18 17:01:08', '2016-07-18 17:02:56', 1),
+(86, 'D', 'timmy', '$2y$12$9129aC9jd1VxSVRPLty27ebnGBwOMGseslZSA2p/HchCIfpI/6WOu', '2016-07-18 17:09:34', '2016-07-18 18:30:20', 1),
+(87, 'D', 'dan', '$2y$12$5E5VHzymTDr6MXcwrrYqFOhOqLAt0f3eOzcpbE8kv8xLEPh1j0NF6', '2016-07-18 21:25:39', NULL, 0),
+(88, 'D', 'picolo', '$2y$12$ra430g6xGWEE7/ub6fsT9uVzkcYgO9FBJ8P974q/M0GgbTKG6ZxhO', '2016-07-18 21:45:37', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -2493,14 +2528,15 @@ CREATE TABLE IF NOT EXISTS `medication_programme` (
   `created_date` date NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `medication_programme`
 --
 
 INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date`, `is_active`) VALUES
-(1, 1, 'polio', '2016-07-09', 1);
+(1, 1, 'polio', '2016-07-09', 1),
+(2, 1, 'test', '2016-07-18', 1);
 
 -- --------------------------------------------------------
 
@@ -2521,14 +2557,18 @@ CREATE TABLE IF NOT EXISTS `medication_programme_list` (
   `modified_date` datetime DEFAULT NULL,
   `update_marker` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `medication_programme_list`
 --
 
 INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `duration_days`, `duration_text`, `medicine`, `dose_no`, `created_date`, `is_active`, `fk_doctor_id`, `modified_date`, `update_marker`) VALUES
-(1, 1, 34444, 'sdafs', 'dfda', 34, '2016-07-09', 1, 1, NULL, 0);
+(1, 1, 34444, 'sdafs', 'dfda', 34, '2016-07-09', 1, 1, NULL, 0),
+(2, 1, 4, '1 month', 'Hepatitis B', 2, '0000-00-00', 1, 1, NULL, 0),
+(3, 2, 3, '3 weeks', 'zyx', 3, '2016-07-18', 1, 1, NULL, 0),
+(4, 2, 4, '4 weeks', 'zzz', 5, '2016-07-18', 1, 1, NULL, 0),
+(5, 2, 5, '5 w', 'eeks', 6, '2016-07-18', 1, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -2547,7 +2587,14 @@ CREATE TABLE IF NOT EXISTS `password_reset_request` (
   `modified_date` datetime DEFAULT NULL,
   `is_valid` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `password_reset_request`
+--
+
+INSERT INTO `password_reset_request` (`id`, `fk_login_id`, `old_password`, `reset_code`, `recovery_email`, `recovery_mobile`, `created_date_time`, `modified_date`, `is_valid`) VALUES
+(1, 33, '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', 'P1307436', 'fsdf@sdf.com', NULL, '2016-07-18 21:27:52', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -2577,7 +2624,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=144 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=146 ;
 
 --
 -- Dumping data for table `patient`
@@ -2631,7 +2678,9 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (140, 1, 'Charlie', '2016-07-13', '', '', '', 1, '3241234123', NULL, NULL, NULL, NULL, '2016-07-13 23:08:21', 1, 'D', NULL, NULL, NULL, 1),
 (141, 1, 'savio', '2016-07-05', 'B-', '33', '4', 1, '121235123', NULL, NULL, NULL, NULL, '2016-07-14 15:57:47', 1, 'D', NULL, NULL, NULL, 1),
 (142, 1, 'Chipla', '2016-07-14', 'B+', '33', '22', 1, '3423432', NULL, NULL, NULL, NULL, '2016-07-14 19:21:23', 1, 'D', NULL, NULL, NULL, 1),
-(143, 1, 'Taylor ', '2016-07-13', 'A+', '77', '66', 0, '44543534', NULL, NULL, NULL, NULL, '2016-07-14 20:04:58', 1, 'D', NULL, NULL, NULL, 1);
+(143, 1, 'Taylor ', '2016-07-13', 'A+', '77', '66', 0, '44543534', NULL, NULL, NULL, NULL, '2016-07-14 20:04:58', 1, 'D', NULL, NULL, NULL, 1),
+(144, 1, 'timmy', '2016-07-15', 'hgj', 'dsff', 'sdfsf', 1, '5435', 'e544', NULL, 'fddzvzc', '6.jpg', '2016-07-18 16:21:57', 1, 'D', NULL, 1, 'D', 1),
+(145, 43, 'Jamie', '2016-07-18', 'A+', '34', '43', 1, '2423423', NULL, NULL, NULL, NULL, '2016-07-18 17:07:48', 43, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -2716,7 +2765,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=79 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=80 ;
 
 --
 -- Dumping data for table `schedule`
@@ -2724,7 +2773,8 @@ CREATE TABLE IF NOT EXISTS `schedule` (
 
 INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created_date`, `created_by`, `created_by_type`, `is_active`) VALUES
 (74, 1, '2016-06-29', '2016-07-14', '2016-06-29 00:00:00', 1, 'D', 1),
-(75, 1, '2016-07-15', '2016-07-30', '2016-07-15 00:00:00', 1, 'D', 1);
+(75, 1, '2016-07-15', '2016-07-30', '2016-07-15 00:00:00', 1, 'D', 1),
+(79, 43, '2016-07-18', '2016-07-20', '2016-07-18 17:05:50', 43, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2743,7 +2793,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `is_blocked` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229470 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229473 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -2772,7 +2822,10 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229457, 1, 75, 18, 20160726, 540, 720, 0, 1),
 (229458, 1, 75, 18, 20160727, 540, 720, 0, 1),
 (229459, 1, 75, 18, 20160728, 540, 720, 0, 1),
-(229460, 1, 75, 18, 20160729, 540, 720, 0, 1);
+(229460, 1, 75, 18, 20160729, 540, 720, 0, 1),
+(229470, 43, 79, 21, 20160718, 540, 720, 0, 1),
+(229471, 43, 79, 21, 20160719, 540, 720, 0, 1),
+(229472, 43, 79, 21, 20160720, 540, 720, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -2819,17 +2872,20 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
   `fk_doctor_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` varchar(1000) NOT NULL,
+  `is_active` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
 -- Dumping data for table `work_locations`
 --
 
-INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`) VALUES
-(18, 1, 'Margaon', ''),
-(19, 1, 'Panjim', ''),
-(20, 1, 'Vasco', '');
+INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`) VALUES
+(18, 1, 'Margaon', '', 1),
+(19, 1, 'Panjim', '', 1),
+(20, 1, 'Vasco', '', 0),
+(21, 43, 'Cali', '', 1),
+(22, 43, 'Tex', '', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
