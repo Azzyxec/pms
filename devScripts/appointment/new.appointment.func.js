@@ -432,12 +432,18 @@ function makeAppointmentController(){
       //intilizing the date and time controls
       this.appointmentDate.datetimepicker({
         inline: false,
-        format:'DD-MM-YYYY'
+        format:'DD-MM-YYYY',
+         minDate: moment()
+
       });
 
       this.appointmentTime.datetimepicker({
         inline: false,
-        format : "LT"
+        format : "LT",
+
+        minDate: moment()
+
+
       });
 
       this.patientsDOB.datetimepicker({

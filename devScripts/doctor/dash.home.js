@@ -447,6 +447,8 @@ controller.prototype.getUserInfo = function () {
       this.dateInput.datetimepicker({
         inline:true,
         format: 'DD-MM-YYYY'
+
+
       });
 
       this.dateInput.on('dp.change', function(){
