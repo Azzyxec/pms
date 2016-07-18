@@ -7,12 +7,9 @@ $(document).ready(function(){
            id:0,
            name:"",
            contact:"",
-           alternateContact: "0",
            email: "",
            qualifications: "",
            address:"",
-           //recoveryContact:"",
-           //recoveryEmail:"",
            userName:"",
            password:"",
            isActive:1
@@ -23,11 +20,6 @@ $(document).ready(function(){
               this.doctorUrl = links.doctorUrl;
               this.doctorDetailsUrl =  links.doctorDetailsUrl;
               this.adminDoctorsListingUrl = links.doctorListingUrl;
-
-
-
-
-
 
               formView.init();
 
@@ -56,14 +48,11 @@ $(document).ready(function(){
                  doctorModel.id = doctor.id;
                  doctorModel.name = doctor.name;
                  doctorModel.contact = doctor.contact;
-                 //doctorModel.alternateContact = doctor.alternateContact;
                  doctorModel.email = doctor.email;
                  doctorModel.qualifications = doctor.qualifications;
                  doctorModel.address = doctor.address;
                  doctorModel.userName = doctor.userName;
                  doctorModel.password = ''; //doctor.password;
-                 //doctorModel.recoveryContact = doctor.recoveryContact;
-                 //doctorModel.recoveryEmail = doctor.recoveryEmail;
                  doctorModel.isActive = doctor.isActive;
 
                  formView.render();
@@ -76,14 +65,18 @@ $(document).ready(function(){
               doctorModel.id = formView.idControl.val();
               doctorModel.name = formView.nameControl.val();
               doctorModel.contact = formView.contactControl.val();
-              //doctorModel.alternateContact = formView.alternatContactControl.val();
               doctorModel.email = formView.emailControl.val();
               doctorModel.qualifications = formView.qualificationControl.val();
               doctorModel.address = formView.addressControl.val();
               doctorModel.userName = formView.userNameControl.val();
-              doctorModel.password = formView.passwordControl.val();
-              //doctorModel.recoveryContact = formView.recoveryContactControl.val();
-              //doctorModel.recoveryEmail = formView.recoveryEmailControl.val();
+              //doctorModel.password = formView.passwordControl.val();
+
+              var newPass = formView.passwordControl.val();
+              if(!validator.isEmptyString(newPass)){
+                doctorModel.password =  newPass.trim();
+              }else{
+                doctorModel.password = "";
+              }
 
               if(formView.activeControl.is(":checked")){
                 doctorModel.isActive = 1;
@@ -120,22 +113,18 @@ $(document).ready(function(){
               this.idControl = $('#did');
               this.nameControl = $('#dname');
               this.contactControl = $('#dcontact');
-              //this.alternatContactControl = $('#dalternate-contact');
               this.emailControl = $('#demail');
               this.qualificationControl = $('#dqualifications');
               this.addressControl = $('#daddress');
               this.userNameControl = $('#duser-name');
               this.passwordControl = $('#dpassword');
-              //this.recoveryContactControl = $('#drecovery-contact');
-              //this.recoveryEmailControl = $('#drecovery-email');
-              //doctor isactive/inactive radio controls
               this.activeControl = $('#dactive');
               this.inactiveControl = $('#dinactive');
 
 
 
               this.validator = this.form.bootstrapValidator({
-                trigger:" focus blur",
+                trigger:"focus click change keyup select blur",
                 feedbackIcons: {
                   valid: 'glyphicon glyphicon-ok ',
                   invalid: 'glyphicon glyphicon-remove ',
@@ -155,12 +144,19 @@ $(document).ready(function(){
                     validators : {
                       notEmpty :{
                         message : 'Please enter your contact No'
+                      },
+                      regexp: {
+                        regexp: /^\+?[0-9()-\s]+$/,
+                        message: 'The value is not valid phone number'
                       }
                     }
                   }
                   , email :{
 
                     validators : {
+                      emailAddress :{
+                        message : 'Please Enter valid email'
+                      },
                       notEmpty :{
                         message : 'Please Enter email'
                       }
@@ -247,22 +243,21 @@ $(document).ready(function(){
               this.idControl.val(model.id);
               this.nameControl.val(model.name);
               this.contactControl.val(model.contact);
-              //this.alternatContactControl.val(model.alternateContact);
+
               this.emailControl.val(model.email);
               this.qualificationControl.val(model.qualifications);
               this.addressControl.val(model.address);
               this.userNameControl.val(model.userName);
-              this.passwordControl.val(model.password);
-              //this.recoveryContactControl.val(model.recoveryContact);
-              //this.recoveryEmailControl.val(model.recoveryEmail);
+              this.passwordControl.val('');
+
 
 
               if(model.isActive == 1){
                 this.activeControl.prop('checked', true);
-                this.inactiveControl.prop('checked', false);
+                //this.inactiveControl.prop('checked', false);
               } else{
                 this.activeControl.prop('checked', false);
-                this.inactiveControl.prop('checked', true);
+                //this.inactiveControl.prop('checked', true);
 
               }
 

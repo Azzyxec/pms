@@ -44,7 +44,7 @@ var filesList = [
                        objConfig.scriptsBasePath +"vendor/loadash.js",
                        objConfig.scriptsBasePath +"vendor/moment.js",
                        objConfig.scriptsBasePath +"vendor/bootstrap-tokenfield.js",
-                       objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
+                        objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                        objConfig.scriptsBasePath +"doctor/dash.home.js",
                        objConfig.scriptsBasePath +"appointment/new.appointment.func.js",
                        objConfig.scriptsBasePath +"appointment/cancel.appointment.func.js",

@@ -78,7 +78,9 @@ $(document).ready(function(){
       doctorModel.userName = formView.userNameControl.val();
       var newPass = formView.passwordControl.val();
       if(!validator.isEmptyString(newPass)){
-        doctorModel.password =  newPass
+        doctorModel.password =  newPass.trim();
+      }else{
+        doctorModel.password = "";
       }
 
       return doctorModel;
@@ -242,6 +244,7 @@ $(document).ready(function(){
       this.qualificationControl.val(model.qualifications);
       this.addressControl.val(model.address);
       this.userNameControl.val(model.userName);
+      this.passwordControl.val('');
 
     }
   };
