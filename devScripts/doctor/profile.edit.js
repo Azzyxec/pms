@@ -60,7 +60,7 @@ $(document).ready(function(){
         doctorModel.qualifications = doctor.qualifications;
         doctorModel.address = doctor.address;
         doctorModel.userName = doctor.userName;
-        doctorModel.password = doctor.password;
+        doctorModel.password = "";
         doctorModel.isActive = doctor.isActive;
 
         formView.render();
