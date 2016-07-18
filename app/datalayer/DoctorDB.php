@@ -37,6 +37,25 @@ class DoctorDB
 
   }
 
+  public function deactivateLoction($id){
+    try {
+
+      $paramArray = array('pid' => $id,
+                          );
+
+      $statement = DBHelper::generateStatement('deactivate_location_for_doctor',  $paramArray);
+      $statement->execute();
+
+      //$statement->fetch();
+      return  array('status' => "1", 'data' => "1", 'message' => 'success');
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
+
+
   public function getAllLocations($doctorId){
     try {
 
@@ -49,6 +68,8 @@ class DoctorDB
           $location = array();
           $location['id'] =  $result['id'];
           $location['name'] = $result['name'];
+          $location['status'] = $result['status'];
+          //$location['name'] = $result['name'];
           $allLocaions[] = $location;
       }
 

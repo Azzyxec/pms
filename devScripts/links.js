@@ -77,6 +77,7 @@ var links = {
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
    locationListUrl:"index.php/locations/getDoctorLocations",
+   deactivateLocationUrl:"index.php/locations/deactivateLocation",
    deliveryMethodsUrl:"index.php/patient/getDeliveryMethods",
 
 

@@ -24,6 +24,25 @@ $app->group('/locations', function(){
 
   });
 
+  $this->post('/deactivateLocation', function ($request, $response) {
+    try {
+
+       $postedData = $request->getParsedBody();
+        $user = UserSessionManager::getUser();
+        $doctorDB = new DoctorDB();
+        $data = $doctorDB->deactivateLoction($postedData['id']);
+
+      $data = array('status' => "1", 'data' => "1", 'message' => 'success' );
+
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+      return $response->withJson($data);
+    }
+
+  });
+
 
   $this->get('/getDoctorLocations', function ($request, $response) {
     try {

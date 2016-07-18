@@ -12,6 +12,7 @@ $(document).ready(function(){
           init: function(){
             this.saveUpdateLocations = links.saveUpdateLocations;
             this.locationListUrl = links.locationListUrl;
+            this.deactivateLocationUrl = links.deactivateLocationUrl;
 
             LocationView.init();
             locationListView.init();
@@ -37,7 +38,7 @@ $(document).ready(function(){
           updateLocationFromServer: function(){
             $.get(controller.locationListUrl , {})
              .done(function( response ) {
-               console.log('save response ' + JSON.stringify(response));
+               console.log('get loc response ' + JSON.stringify(response));
                model.list = response.data;
                locationListView.render();
                LocationView.overLay.addClass('hidden');
@@ -47,6 +48,21 @@ $(document).ready(function(){
             model.loc.id = id;
             model.loc.name = name;
             LocationView.render();
+          },
+          deactivateLocation: function(locationId){
+
+            $.post(controller.deactivateLocationUrl , {id: locationId})
+             .done(function( response ) {
+               console.log('deactivate response ' + JSON.stringify(response));
+
+               controller.updateLocationFromServer();
+               locationListView.render();
+               LocationView.overLay.addClass('hidden');
+
+             });
+
+
+
           }
         };
 
@@ -99,16 +115,38 @@ $(document).ready(function(){
               td.text(locations[i].name);
               tr.append(td);
 
-              var td = $('<a/>',{
+              var td = $('<td/>');
+              td.text(locations[i].status);
+              tr.append(td);
+
+              var editLink = $('<a/>',{
                 text: 'Edit',
               });
 
-              td.click((function(location){
+              editLink.click((function(location){
                 return function(){
                   console.log('edit click ' + JSON.stringify(location));
                   controller.updateModel(location.id, location.name);
                 }
               })(locations[i]));
+
+
+              var deactivateLink = $('<a/>',{
+                text: 'Deactivate',
+              });
+
+              deactivateLink.click((function(location){
+                return function(){
+                  console.log('remove click ' + JSON.stringify(location));
+                  controller.deactivateLocation(location.id);
+                }
+              })(locations[i]));
+
+              var td = $('<span/>');
+              td.append(editLink);
+              td.append(" / ");
+              td.append(deactivateLink);
+
 
               tr.append(td);
 
