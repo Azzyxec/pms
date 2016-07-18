@@ -1,4 +1,9 @@
 {% extends "/doctor/doctor-dash-base.html" %}
+{% block addCss %}
+
+
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <section id="book-Appointments-Section">
   <!-- /.row -->
@@ -451,7 +456,7 @@
             <div class="panel-body">
               <div class="row">
                 <div class="col-md-12">
-                  <div class="table-responsive table-condensed">
+                  <div style="height: 63vh;" class="table-responsive table-condensed">
                     <table class="table text-center table-bordered table-hover table-striped " id="">
                       <thead >
                         <tr>

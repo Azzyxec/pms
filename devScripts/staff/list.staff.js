@@ -50,7 +50,11 @@ $(document).ready(function(){
               var tr = $('<tr/>');
 
               var td = $('<td/>');
-              td.text(staffList[i].firstName);
+              var a = $('<a/>',{
+                text: staffList[i].firstName,
+                href: controller.addStaffUrl + '?id=' +  staffList[i].id
+              });
+              td.append(a);
               tr.append(td);
 
               var td = $('<td/>');
@@ -74,11 +78,7 @@ $(document).ready(function(){
               tr.append(td);
 
 
-              var td = $('<a/>',{
-                text: 'Edit',
-                href: controller.addStaffUrl + '?id=' +  staffList[i].id
-              });
-              tr.append(td);
+          
 
               this.tablebody.append(tr);
             }
