@@ -208,8 +208,8 @@ $(document).ready(function(){
                 message : 'Please enter your contact No'
               },
               regexp: {
-                            regexp: /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/,
-                              message: 'The value is not valid phone number'
+                            regexp:  /^\+?[0-9()-\s]+$/,
+                              message: 'Please enter a valid phone no'
                           }
             }
           }
