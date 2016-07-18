@@ -351,7 +351,7 @@ MainController.prototype.init = function(){
 
 };
 
-
+//this needs to be removed
 var controller = {
   setAttachedProgrammeId: function(id){
     model.attachedProgrammeId = id;
@@ -406,7 +406,7 @@ var patientDetailsView = {
 
 
      this.validator =   $("#patientDetailsEntryForm").bootstrapValidator({
-        trigger:" focus blur",
+        trigger:"focus click change keyup select blur ",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
           invalid: 'glyphicon glyphicon-remove ',
@@ -489,10 +489,9 @@ var patientDetailsView = {
           e.preventDefault();
 
             console.log('patient click');
-                cont.updateModelsFromViews();
-      console.log('save click' + JSON.stringify(model));
-      cont.persistModel();
-
+            cont.updateModelsFromViews();
+            console.log('save click' + JSON.stringify(model));
+            cont.persistModel();
 
         });
 
@@ -660,7 +659,7 @@ var patientGuardianDetailsView = {
 
 
          this.validator =   $("#guardian-form").bootstrapValidator({
-            trigger:" focus blur",
+            trigger:"focus click change keyup select blur ",
             feedbackIcons: {
               valid: 'glyphicon glyphicon-ok ',
               invalid: 'glyphicon glyphicon-remove ',
@@ -671,7 +670,7 @@ var patientGuardianDetailsView = {
               guardianname : {
                 validators : {
                   notEmpty : {
-                    message : 'Please Enter your  Name!'
+                    message : 'Please Enter your  Name'
                   }
                 }
 
@@ -683,9 +682,6 @@ var patientGuardianDetailsView = {
                   }
                 }
               }
-
-
-
               , guardiancontact1 :{
 
                 validators : {
@@ -694,16 +690,7 @@ var patientGuardianDetailsView = {
                   }
 
                 }
-              }
-              ,  guardianContact2 :{
-
-                validators : {
-                  notEmpty :{
-                    message : 'Please enter Guardians alternate phone no'
-                  }
-                }
               },
-
               guardianAddress :{
 
                 validators : {
@@ -713,18 +700,14 @@ var patientGuardianDetailsView = {
                 }
               }
 
-
-
             }
           }).on('success.form.bv',function(e){
               e.preventDefault();
 
                 console.log('patient click');
-                    cont.updateModelsFromViews();
-          console.log('save click' + JSON.stringify(model));
-          cont.persistModel();
-
-
+                cont.updateModelsFromViews();
+                console.log('save click' + JSON.stringify(model));
+                cont.persistModel();
             });
 
 
@@ -814,7 +797,8 @@ var patientGuardianDetailsView = {
 
     this.dateOfBirth.datetimepicker({
       inline: false,
-      format:'DD-MM-YYYY'
+      format:'DD-MM-YYYY',
+      maxDate: new Date()
     });
 
   },

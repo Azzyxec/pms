@@ -30,7 +30,8 @@ $("#revalidate").on('click',function(){
     userInfo:{},
     patientList:[],
     locationList:[],
-    appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
+    appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}],
+    bloodGroups:['-','A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
   };
 
   function mainController(){
@@ -38,6 +39,10 @@ $("#revalidate").on('click',function(){
     this.getLocationUrl = links.getLocationUrl;
     this.bookAppointmentUrl = links.bookAppointmentUrl;
     this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
+  };
+
+  mainController.prototype.getBloodGroups = function () {
+    return model.bloodGroups;
   };
 
   mainController.prototype.getUserInfo = function () {
@@ -381,10 +386,11 @@ $("#revalidate").on('click',function(){
             //console.log('contains '  + containsName);
             if(!containsName){
               //if there is name not contained in the list
-              //make a new entry
+              //clear the fields except name
+              // to allow a new new entry
               controller.resetPatientModel();
               controller.setPatientName(name);
-              appointmentView.renderPatientsView();
+              appointmentView.renderPatientsView ();
               appointmentView.enablePatientEditing(true);
             }
 
@@ -441,7 +447,8 @@ $("#revalidate").on('click',function(){
 
       this.patientsDOB.datetimepicker({
         inline: false,
-        format:'DD-MM-YYYY'
+        format:'DD-MM-YYYY',
+        maxDate: new Date()
       });
 
       this.bookApptclear.on('click',function(){
@@ -453,7 +460,7 @@ $("#revalidate").on('click',function(){
 
         //setting default values to controls after resetting
         appointmentView.rbMale.prop('checked', true);
-        appointmentView.patientsBloodGroup.val('');
+        appointmentView.patientsBloodGroup.val('-');
 
         appointmentView.locationSelect.val(model.appointment.locationId);
 
@@ -469,19 +476,15 @@ $("#revalidate").on('click',function(){
       });
 
       this.saveButton.click(function(){
-        //appointmentView.patientsName.off("click change keyup select blur");
-        appointmentView.form.submit();
-        /*
-        appointmentView.validator.on('success.form.bv',function(e){
-          e.preventDefault();
 
-          console.log('book appointment');
+        appointmentView.form.data('bootstrapValidator').validate();
+        if(appointmentView.form.data('bootstrapValidator').isValid()){
+          console.log('validated');
           controller.updateModelFromview();
           controller.bookAppointment();
-
-
-        });
-        */
+        } else{
+          console.log('invalid');
+        }
 
       });
 
@@ -547,6 +550,24 @@ $("#revalidate").on('click',function(){
               }
             }
           },
+          newApptHeight :{
+
+            validators : {
+              numeric :{
+                message : 'Please enter numbers',
+                separator: ','
+              }
+            }
+          },
+          newbookWeight :{
+
+            validators : {
+              numeric :{
+                message : 'Please enter numbers',
+                separator: ','
+              }
+            }
+          },
           newApptContact :{
 
             validators : {
@@ -566,14 +587,6 @@ $("#revalidate").on('click',function(){
           }
 
         }
-      }).on('success.form.bv',function(e){
-        e.preventDefault();
-
-        //console.log('book appointment');
-        controller.updateModelFromview();
-        controller.bookAppointment();
-
-
       });
 
     },
@@ -623,7 +636,6 @@ $("#revalidate").on('click',function(){
 
       for(var i = 0; i < timeList.length; i++){
 
-
         //make 15 mins as default option
 
         var option = $('<option/>', {
@@ -633,6 +645,17 @@ $("#revalidate").on('click',function(){
 
         this.appointmentDurationSelect.append(option);
 
+      }
+
+      var bloodGroupList = controller.getBloodGroups();
+
+      for(var i = 0; i < bloodGroupList.length; i++ ){
+        var option = $('<option/>', {
+          value: bloodGroupList[i],
+          text: bloodGroupList[i]
+        });
+
+        this.patientsBloodGroup.append(option);
       }
 
       this.appointmentDurationSelect.val(15);
