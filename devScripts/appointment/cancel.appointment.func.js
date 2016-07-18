@@ -42,7 +42,7 @@ function getCancelAppointmentController(){
       this.cancelButton =  $('#cancel-appointment-btn');
 
         this.validator =   $("#timeline-cancel-form").bootstrapValidator({
-        trigger:" focus blur",
+        trigger:" focus click change keyup select blur",
         feedbackIcons: {
           valid: 'glyphicon glyphicon-ok ',
           invalid: 'glyphicon glyphicon-remove ',
