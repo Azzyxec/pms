@@ -176,6 +176,7 @@ var filesList = [
                 ], buildName: "admin.doctor.listings.js"},
 {build:true, files: [
                   objConfig.scriptsBasePath +"utility.js",
+                  objConfig.scriptsBasePath +"validator.js",
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                   objConfig.scriptsBasePath + "admin/adminDashboard.js",

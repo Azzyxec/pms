@@ -527,10 +527,11 @@ render: function(){
           }else if(filterId == 4){
             appointmentList = cont.getClosedAppointmentsList();
           }else{
-            appointments = cont.getSortedAppointmentList(locId);
+            appointmentList = cont.getSortedAppointmentList(locId);
           }
 
-        todayAppointmentListView.renderAppointmentist(appointments);
+          //error somtimes
+        todayAppointmentListView.renderAppointmentist(appointmentList);
 
         }
       })(locationList[i].id, locationButton));

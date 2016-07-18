@@ -1,5 +1,5 @@
 $(document).ready(function(){
- /*    
+ /*
  this.table = $('#dataTables-example').DataTable({
                 responsive: true,
       ajax: dataSet,
@@ -16,8 +16,8 @@ $(document).ready(function(){
         console.log('patient listings js loaded');
 
         var listModel = {};
-        
-      
+
+
         var controller = {
           init: function(){
             this.patientListingUrl = links.patientListingUrl;
@@ -37,15 +37,15 @@ $(document).ready(function(){
           getListModel: function(){
             return listModel;
           }
-       
-        }; 
+
+        };
 
 
         var listView = {
           init: function(){
             //this.tablebody = $('#patient-list-table-body');
             this.newPatientButton = $('#btn-new-patient');
-          
+
             this.newPatientButton.on('click', function(){
               window.location.href = links.patientsEntryUrl;
             });
@@ -56,35 +56,33 @@ $(document).ready(function(){
              var patientsList = controller.getListModel();
               //console.log(JSON.stringify(controller.getData()));
             console.log('model in view' + JSON.stringify(patientsList));
-              
-              
-          
-              
- 
 
- 
+
+
+
+
+
+
 
     var table = $('#example').DataTable( {
         "bProcessing": true,
     "data":  controller.getListModel(),
         "aoColumns": [
-           
-            { "mData": "name" },
+
+            { "mData": "name",
+              "mRender" : function (column, type, row ) {
+                                    return '<a href="' + controller.editPatientRedirect + '?id='+row.id+'">'+ column +'</a>';
+                          }
+            },
             { "mData": "dateOfBirth" },
             { "mData": "bloodGroup" },
             { "mData": "genderText" },
-            { "mData": "contact" },
-            { "mData": 'id',
-            
-                "mRender" : function ( data, type, full ) {
-    return '<a href="' + controller.editPatientRedirect + '?id='+data+'">EDIT</a>';}
-            }
-             
+            { "mData": "contact" }
         ],
         "order": [[1, 'asc']]
     } );
-     
-   
+
+
 
 
           /*  for(var i = 0; i < patientsList.length; i++){
@@ -117,7 +115,7 @@ $(document).ready(function(){
                 href: controller.editPatientRedirect + '?id=' +  patientsList[i].id
               });
               tr.append(td);
-               
+
               this.tablebody.append(tr);
             }*/
 

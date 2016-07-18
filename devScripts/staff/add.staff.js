@@ -89,9 +89,13 @@ $(document).ready(function(){
         model.staff.email = CreateUpdateView.email.val();
         model.staff.address = CreateUpdateView.address.val();
         model.staff.userName = CreateUpdateView.userName.val();
-        model.staff.pasword = CreateUpdateView.pasword.val();
-        model.staff.recoveryContact = CreateUpdateView.recoveryContact.val();
-        model.staff.recoveryEmail = CreateUpdateView.recoveryEmail.val();
+
+        var newPass =  CreateUpdateView.pasword.val();
+        if(!validator.isEmptyString(newPass)){
+            model.staff.pasword =  newPass.trim();
+        }else{
+            model.staff.pasword = "";
+        }
 
         var selectedValue = CreateUpdateView.selectLocations.find(":selected").attr('value');
         if(selectedValue){
@@ -303,9 +307,8 @@ $(document).ready(function(){
        CreateUpdateView.email.val(model.staff.email);
        CreateUpdateView.address.val(model.staff.address);
        CreateUpdateView.userName.val(model.staff.userName);
-       CreateUpdateView.pasword.val(model.staff.pasword);
-       CreateUpdateView.recoveryContact.val(model.staff.recoveryContact);
-       CreateUpdateView.recoveryEmail.val(model.staff.recoveryEmail);
+       CreateUpdateView.pasword.val('');
+
 
        //setting the locatio option
        CreateUpdateView.selectLocations.val(model.staff.locationId);
