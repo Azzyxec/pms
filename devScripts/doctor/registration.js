@@ -17,7 +17,7 @@ $(document).ready(function(){
      password:"",
      isActive:0
   };
-  
+
 
   var controller = {
       init: function(){
@@ -209,15 +209,24 @@ $(document).ready(function(){
             validators : {
               notEmpty :{
                 message : 'Please enter your contact No'
-              }
+              },
+              regexp: {
+                            regexp: /^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/,
+                              message: 'The value is not valid phone number'
+                          }
             }
           }
           , email :{
 
             validators : {
+
+              emailAddress :{
+                message : 'Please Enter valid email'
+              },
               notEmpty :{
                 message : 'Please Enter email'
               }
+
             }
           }
           , qualifications :{
