@@ -7,12 +7,9 @@ $(document).ready(function(){
      id:0,
      name:"",
      contact:"",
-     //alternateContact: "0",
      email: "",
      qualifications: "",
      address:"",
-     //recoveryContact:"",
-     //recoveryEmail:"",
      userName:"",
      password:"",
      isActive:0

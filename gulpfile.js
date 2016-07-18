@@ -57,7 +57,7 @@ var filesList = [
                       objConfig.scriptsBasePath +"validator.js",
                       objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                       objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
-                      objConfig.scriptsBasePath +"doctor/registration.js"
+                      objConfig.scriptsBasePath +"doctor/profile.edit.js"
                     ], buildName: "doctor.profile.js"},
   {build:true, files: [
                       objConfig.scriptsBasePath +"utility.js",

@@ -472,7 +472,9 @@ render: function(){
 
     var locationList = cont.getLocationList();
 
-    cont.setSelectedLocationId(locationList[0].id);
+    if(locationList.length > 0){
+        cont.setSelectedLocationId(locationList[0].id);
+    }
 
     for(var i = 0; i< locationList.length; i++ ){
       //<li role="presentation" id="all-appointments-filter-button"  class="all-appointments-filter-button active "><a >Margaon</a></li>
