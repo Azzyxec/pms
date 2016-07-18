@@ -21,6 +21,7 @@ var objConfig = {
 var filesList = [
   {build:true, files: [
                         objConfig.scriptsBasePath +"links.js",
+                        objConfig.scriptsBasePath +"utility.js",
                         objConfig.scriptsBasePath +"login.js"
                       ], buildName: "login.all.js"},
   {build:true, files: [

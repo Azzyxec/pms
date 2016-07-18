@@ -29,6 +29,9 @@ $(document).ready(function(){
     });
 
     },
+    resetScheduleList: function(){
+      scheduleModel.scheduleList = [];
+    },
     updateSelectedLocation: function(id, name){
     scheduleModel.selectedLocation.id = id;
     scheduleModel.selectedLocation.name = name;
@@ -209,13 +212,23 @@ var stepOneView = {
     this.toDateControl = $('#to-date');
     this.fromTimeControl = $('#from-time');
     this.toTimeControl = $('#to-time');
+    this.cancelButton = $('#btn-cancel');
+
+    this.cancelButton.on('click', function(){
+      window.location = links.getScheduleCalendarUrl;
+    })
+
+
     this.fromDateControl.datetimepicker({
     inline: false,
-    format:'DD-MM-YYYY'
+    format:'DD-MM-YYYY',
+    minDate: moment()
     });
+
     this.toDateControl.datetimepicker({
     inline: false,
-    format:'DD-MM-YYYY'
+    format:'DD-MM-YYYY',
+    minDate: moment()
     });
 
     this.fromTimeControl.val("09:00:AM");
@@ -266,6 +279,7 @@ var stepOneView = {
 
       controller.generateModel();
       self.panel.hide();
+      createScheduleView.panel.show();
       createScheduleView.render();
 
     };
@@ -343,6 +357,7 @@ var createScheduleView = {
   this.backButton.on('click', function(){
     stepOneView.panel.show();
     createScheduleView.panel.hide();
+    controller.resetScheduleList();
   });
 
   },
@@ -376,6 +391,8 @@ var createScheduleView = {
 
   },
   render: function() {
+
+    this.tableBody.empty();
 
   //hide alerts
   this.overlappingDatesAlert.addClass('hidden');

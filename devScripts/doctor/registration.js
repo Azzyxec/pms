@@ -22,7 +22,7 @@ $(document).ready(function(){
         this.doctorDetailsUrl =  links.doctorDetailsUrl;
         this.loginCheckUrl = links.loginCheckUrl;
         this.doctorDashUrl = links.doctorDashUrl;
-        this.logoutUrl = links.logoutUrl;
+        this.loginUrl = links.loginUrl;
 
         /*
         this.alertcontainer = $('.container');
@@ -150,7 +150,7 @@ $(document).ready(function(){
                     formView.passwordControl.val('');
                     formView.alertSucess.removeClass('hidden');
                     console.log('Thank you for registering with us, we have send you a email with your account info');
-                    //window.location.href = controller.logoutUrl;
+                    window.location.href = controller.loginUrl + '?registered=1';
                   }else if(response.user.id && response.user.type != '-1'){
                     //logged in user, so its profile modifications
                     console.log('modifying');

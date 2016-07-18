@@ -5,7 +5,16 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
+
         loginView.init();
+        loginView.hideAllAlerts();
+
+        var showRegisterSuccessAlert = utility.getURLParam('registered');
+
+        if(showRegisterSuccessAlert && +showRegisterSuccessAlert == 1){
+          loginView.showRegisterSucccessAlert();
+        }
+
       },
       authenticateUrl: links.authenticateUrl,
       successRedirectUrl: links.successRedirectUrl,
@@ -56,6 +65,8 @@ $(document).ready(function(){
         this.alertLoginIdNeeded = $('#alert-user-id-needed');
         this.alertPassNeeded = $('#alert-password-needed');
         this.alertCredentialsInvalid = $('#alert-creds-invalid');
+
+        this.alertRegisterSuccess = $('#doc-registered-success');
 
         var controls = {loginId: this.loginId, password: this.password};
 
@@ -125,7 +136,11 @@ $(document).ready(function(){
         this.alertLoginIdNeeded.addClass('hidden');
         this.alertPassNeeded.addClass('hidden');
         this.alertCredentialsInvalid.addClass('hidden');
-      }
+        this.alertRegisterSuccess.addClass('hidden');
+      },
+      showRegisterSucccessAlert: function(){
+        this.alertRegisterSuccess.removeClass('hidden');
+      },
     };
     controller.init();
 

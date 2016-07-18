@@ -405,6 +405,8 @@ var patientDetailsView = {
     this.inactiveControl = $('#pinactive');
 
 
+      this.contact1.prop('maxlength', 15);
+
      this.validator =   $("#patientDetailsEntryForm").bootstrapValidator({
         trigger:"focus click change keyup select blur ",
         feedbackIcons: {
@@ -460,20 +462,15 @@ var patientDetailsView = {
             validators : {
               notEmpty :{
                 message : 'Please enter Patients contact no'
+              },
+              regexp: {
+                regexp: /^\+?[0-9()-\s]+$/,
+                message: 'Please enter valid phone number'
               }
 
-            }
-          }
-          ,  p_altPhnNo :{
-
-            validators : {
-              notEmpty :{
-                message : 'Please enter patients alternate phone no'
-              }
             }
           },
-
-            p_address :{
+          p_address :{
 
             validators : {
               notEmpty :{
@@ -651,11 +648,16 @@ var patientGuardianDetailsView = {
     this.rbMale = $('#rb-male-guardian');
     this.rbFemale = $('#rb-female-guardian');
     this.contact1 = $('#guardian-contact1');
-    this.contact2 = $('#guardian-contact2');
+    //this.contact2 = $('#guardian-contact2');
     this.address = $('#guardian-address');
     this.save = $('#btn-guardian-save');
     this.picUpload =$('#guardian-picture');
     this.imgBox = $('#guardian-profile-image');
+
+
+
+    //maxlenght validation
+    this.contact1.prop('maxlength', 15);
 
 
          this.validator =   $("#guardian-form").bootstrapValidator({
@@ -675,31 +677,18 @@ var patientGuardianDetailsView = {
                 }
 
               },
-              guardiandob : {
+              guardiancontact1 :{
+
                 validators : {
                   notEmpty :{
-                    message : 'Please select date'
+                    message : 'Please enter a phone no.'
+                  },
+                  regexp: {
+                    regexp: /^\+?[0-9()-\s]+$/,
+                    message: 'Please enter a valid phone no.'
                   }
                 }
               }
-              , guardiancontact1 :{
-
-                validators : {
-                  notEmpty :{
-                    message : 'Please enter guardians contact no'
-                  }
-
-                }
-              },
-              guardianAddress :{
-
-                validators : {
-                  notEmpty :{
-                    message : 'Please enter guardians address'
-                  }
-                }
-              }
-
             }
           }).on('success.form.bv',function(e){
               e.preventDefault();
