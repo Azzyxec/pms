@@ -43,6 +43,7 @@ $(document).ready(function(){
              console.log(staffId);
              controller.updateStaffModelFromServer(staffId);
              CreateUpdateView.render();
+             CreateUpdateView.validator.bootstrapValidator('enableFieldValidators', 'pswd', false);
            }
 
 
@@ -160,6 +161,9 @@ $(document).ready(function(){
              , s_email :{
 
                validators : {
+                 emailAddress :{
+                   message : 'Please Enter valid email'
+                 },
                  notEmpty :{
                    message : 'Please enter patients Email Id'
                  }
@@ -197,7 +201,11 @@ $(document).ready(function(){
                validators : {
                  notEmpty :{
                    message : 'Please enter staff member\'s contact no'
-                 }
+                 },
+                 regexp: {
+                               regexp:  /^\+?[0-9()-\s]+$/,
+                                 message: 'Please enter a valid phone no'
+                             }
 
                }
              }
@@ -254,6 +262,7 @@ $(document).ready(function(){
 
 
            });
+
 
         this.saveButton = $('#btn-save');
         this.cancelButton = $('#btn-staff-cancel');
@@ -318,10 +327,15 @@ $(document).ready(function(){
        if(model.staff.isActive){
          CreateUpdateView.activeControl.prop('checked', true);
          CreateUpdateView.inActiveControl.prop('checked', false);
+
        }else{
          CreateUpdateView.activeControl.prop('checked', false);
          CreateUpdateView.inActiveControl.prop('checked', true);
        }
+
+         //
+
+
 
       }
     }

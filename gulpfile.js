@@ -118,6 +118,7 @@ var filesList = [
                   objConfig.scriptsBasePath +"patient/list.patient.js"
                 ], buildName: "list.patient.js"},
 {build:true, files: [
+                  objConfig.scriptsBasePath +"validator.js",
                   objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",

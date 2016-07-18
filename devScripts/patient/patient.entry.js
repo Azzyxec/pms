@@ -961,43 +961,96 @@ var patientProgrammesDetailsView = {
           tr.append(td);
 
           //due on
-          var input = $('<input/>', {
-            type: 'date'
+          var dateDiv = $('<div/>',{
+            class: 'input-group date',
+              style:'width:140px'
+          });
+          var spanDate = $('<span/>',{
+            class:'input-group-addon'
+          });
+          var dateGlyphicon = $('<span/>',{
+            class:"glyphicon glyphicon-calendar"
           });
 
+          var input = $('<input/>', {
+            type: 'text',
+            class:'form-control'
+
+
+          });
+          dateDiv.append(input);
+          spanDate.append(dateGlyphicon);
+          dateDiv.append(spanDate);
+
+
+          input.datetimepicker({
+            inline: false,
+            format:'YYYY-MM-DD'
+          });
+
+
+
           var date = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
-          input.val(date.format('YYYY-MM-DD'));
+          input.text(date.format('YYYY-MM-DD'));
 
           input.change((function(model, control){
             return  function() {
               var date = moment(control.val(), 'YYYY-MM-DD');
-              model.dueOn = date.format('DD-MM-YYYY');
+              model.dueOn = date.format('YYYY-MM-DD');
               console.log('change + ' + JSON.stringify(model));
             }
           })(programmeModel[i].list[j], input));
 
           td = $('<td/>');
-          td.append(input);
+          td.append(dateDiv);
           tr.append(td);
 
           //givenOn
-          var input = $('<input/>', {
-            type: 'date'
+          var dateDiv = $('<div/>',{
+            class: 'input-group date',
+              style:'width:140px'
+          });
+          var spanDate = $('<span/>',{
+            class:'input-group-addon'
+          });
+          var dateGlyphicon = $('<span/>',{
+            class:"glyphicon glyphicon-calendar"
           });
 
-          var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
-          input.val(date.format('YYYY-MM-DD'));
+          var input2 = $('<input/>', {
+            type: 'text',
+            class:'form-control'
 
-          input.change((function(model, control){
+
+
+          });
+          dateDiv.append(input2);
+          spanDate.append(dateGlyphicon);
+          dateDiv.append(spanDate);
+
+
+          input2.datetimepicker({
+            inline: false,
+            format:'YYYY-MM-DD'
+
+
+          });
+
+
+
+          var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
+          input2.text(date.format('YYYY-MM-DD'));
+
+          input2.change((function(model, control){
             return  function() {
               var date = moment(control.val(), 'YYYY-MM-DD');
-              model.givenOn = date.format('DD-MM-YYYY');
+              model.givenOn = date.format('YYYY-MM-DD');
               console.log('change + ' + JSON.stringify(model));
             }
-          })(programmeModel[i].list[j], input));
+          })(programmeModel[i].list[j], input2));
 
           td = $('<td/>');
-          td.append(input);
+          td.append(dateDiv);
           tr.append(td);
 
           //batchNo

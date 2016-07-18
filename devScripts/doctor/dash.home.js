@@ -259,6 +259,20 @@ $(document).ready(function(){
     }
 
   };
+  controller.prototype.addLocationsAlert = function(){
+if(  model.appointmenListViewModel.locationList.length <= 0)
+{
+  utility.getAlerts("To get started, please create a work locations!","alert-warning","","#page-wrapper");
+//  $("#manage-Doctors-Schedule-Section-Link-Btn").hide();
+  console.log('locations not loaded');
+  //$("#patients-Entry-Section-Link-Btn").hide();
+
+}else{
+    console.log('locations  loaded');
+   $('.pms-alerts').remove();
+}
+
+  };
 
 controller.prototype.getUserInfo = function () {
   $.post( this.getUserInfoUrl , {})
@@ -297,6 +311,7 @@ controller.prototype.getUserInfo = function () {
       todayAppointmentListView.render();
       cont.locationsLoaded = true;
       cont.removeOverLay();
+      cont.addLocationsAlert();
     });
   };
 
@@ -340,6 +355,7 @@ controller.prototype.getUserInfo = function () {
   var todayAppointmentListView = {
     init:function(){
       this.overlay = $('#dash-overlay');
+
 
       this.dateInput = $('#appointment-list-date1');
       this.locationNavContainer = $('#loc-navs');
