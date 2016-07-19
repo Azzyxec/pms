@@ -14,6 +14,7 @@ $(document).ready(function(){
       init: function(){
         this.createModifyProgrammeUrl = links.createModifyProgrammeUrl;
         this.getProgrammeUrl = links.getProgrammeUrl;
+        this.programmeListUrl = links.programmeListingsUrl;
 
         programmeView.init();
 
@@ -116,8 +117,14 @@ $(document).ready(function(){
         .done(function( response ) {
 
           console.log('save response ' + JSON.stringify(response));
-          controller.clearModel();
-          programmeView.refreshForm();
+          if(+response.status == 1){
+
+            controller.clearModel();
+            programmeView.refreshForm();
+            window.location = controller.programmeListUrl;
+
+          }
+
         });
       }
     };

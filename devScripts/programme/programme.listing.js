@@ -8,7 +8,7 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
-        this.programmeListUrl = links.programmeListUrl ;
+        this.programmeListUrl = links.doctorsProgramsUrl;
         this.programmeEditUrl = links.programmeEditUrl;
 
         ProgrammeListView.init();

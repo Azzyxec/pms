@@ -412,9 +412,6 @@ function makeAppointmentController(){
       this.appointmentTime.datetimepicker({
         inline: false,
         format : "LT"
-
-
-
       });
 
       this.patientsDOB.datetimepicker({
