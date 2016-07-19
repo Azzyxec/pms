@@ -281,7 +281,7 @@ $app->group('/appointment', function(){
           //save the patient
           $patient = new Patient();
           $patient->id = 0;
-          $patient->name = $patientData['name'];
+          $patient->name = trim($patientData['name']);
           $patient->dateOfBirth = $patientData['dateOfBirth'];
           $patient->bloodGroup = $patientData['bloodGroup'];
           $patient->weight = $patientData['weight'];

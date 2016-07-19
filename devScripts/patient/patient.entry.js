@@ -403,6 +403,14 @@ var patientDetailsView = {
     this.imgBox = $('#patient-picture-container');
     this.activeControl = $('#pactive');
     this.inactiveControl = $('#pinactive');
+    this.dateOfbirth.datetimepicker({
+      inline: false,
+      format:'DD-MM-YYYY',
+      maxDate: new Date(),
+      widgetPositioning:{
+        vertical:'bottom'
+      }
+    });
 
 
       this.contact1.prop('maxlength', 15);
@@ -431,29 +439,21 @@ var patientDetailsView = {
               }
             }
           }
-          , p_bloodgroup :{
-
-            validators : {
-              notEmpty :{
-                  message : 'Please Enter blood group'
-              }
-
-            }
-          }
-
           , p_weight :{
 
             validators : {
-              notEmpty :{
-                message : 'Please enter patients weight'
+              numeric :{
+                message : 'Please enter numbers',
+                separator: ','
               }
             }
           }
           ,  p_height :{
 
             validators : {
-              notEmpty :{
-                message : 'Please enter patients height'
+              numeric :{
+                message : 'Please enter numbers',
+                separator: ','
               }
             }
           }
@@ -963,7 +963,7 @@ var patientProgrammesDetailsView = {
           //due on
           var dateDiv = $('<div/>',{
             class: 'input-group date',
-              style:'min-width:140px'
+              style:'min-width:100px'
           });
           var spanDate = $('<span/>',{
             class:'input-group-addon'
@@ -1013,7 +1013,7 @@ var patientProgrammesDetailsView = {
           //givenOn
           var dateDiv = $('<div/>',{
             class: 'input-group date',
-              style:'min-width:140px'
+              style:'min-width:100px'
           });
           var spanDate = $('<span/>',{
             class:'input-group-addon'

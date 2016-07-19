@@ -244,6 +244,9 @@ function makeAppointmentController(){
     controller.setPatientId(appointmentView.hiddenInputId.val());
 
     model.patient.name = appointmentView.patientsName.val();
+
+
+
     model.patient.dateOfBirth = appointmentView.patientsDOB.val();
 
     if(appointmentView.rbMale.is(":checked")){
@@ -398,37 +401,6 @@ function makeAppointmentController(){
 
         };
 
-
-
-
-      /*
-      this.locationSelect.off('change');
-
-      this.locationSelect.on('change', function(){
-        appointmentView.form.bootstrapValidator('revalidateField', 'newBookSelLocations');
-      });
-
-
-      //
-      this.patientsDOB.off("click change keyup select blur");
-
-      this.patientsDOB.on("click change keyup select blur", function(){
-          appointmentView.form.bootstrapValidator('revalidateField', 'bookApptDob');
-      });
-
-      this.contact.off("click change keyup select blur");
-
-      this.contact.on("click change keyup select blur", function(){
-          appointmentView.form.bootstrapValidator('revalidateField', 'newApptContact');
-      });
-
-      this.descrip.off("click change keyup select blur");
-
-      this.descrip.on("click change keyup select blur", function(){
-          appointmentView.form.bootstrapValidator('revalidateField', 'newApptaddress');
-      });
-      */
-
       //intilizing the date and time controls
       this.appointmentDate.datetimepicker({
         inline: false,
@@ -439,9 +411,8 @@ function makeAppointmentController(){
 
       this.appointmentTime.datetimepicker({
         inline: false,
-        format : "LT",
+        format : "LT"
 
-        minDate: moment()
 
 
       });
@@ -495,6 +466,8 @@ function makeAppointmentController(){
     },
     initValidators: function(){
 
+      this.contact.prop('maxlength', 15);
+
       this.form.bootstrapValidator({
         trigger:" focus click change keyup select blur ",
         feedbackIcons: {
@@ -546,9 +519,7 @@ function makeAppointmentController(){
           newApptgender :{
 
             validators : {
-              notEmpty :{
-                message : 'Please select patients gender'
-              }
+
             }
           },
           newApptHeight :{
@@ -574,6 +545,10 @@ function makeAppointmentController(){
             validators : {
               notEmpty :{
                 message : 'Please enter Patients contact no'
+              },
+              regexp: {
+                regexp: /^\+?[0-9()-\s]+$/,
+                message: 'The value is not valid phone number'
               }
 
             }

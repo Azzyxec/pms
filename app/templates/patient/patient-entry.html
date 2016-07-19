@@ -82,7 +82,7 @@
                       <div class='col-md-6 col-lg-6 col-sm-6'>
 
                         <div class='input-group date' >
-                          <input id="patient-date-of-birth" name="P_Dob" type='date' class="form-control" />
+                          <input id="patient-date-of-birth" name="P_Dob" type='text' class="form-control" />
                           <span class="input-group-addon">
                             <span class="glyphicon glyphicon-time"></span>
                           </span>
@@ -108,14 +108,25 @@
                     <div class="form-group">
                       <label for="" class="col-md-3 col-sm-3  col-lg-3 control-label">Blood Group:</label>
                       <div class="col-md-6 col-lg-6 col-sm-6">
-                        <input type="text" class="form-control" name="p_bloodgroup"  id="patient-blood-group" placeholder="Blood Group">
+                        <select class="form-control" name="p_bloodgroup"  id="patient-blood-group"  placeholder="Blood Group">
+                          <option value="-">-</option>
+                          <option value="A+">A+</option>
+                          <option value="A-">A-</option>
+                          <option value="B+">B+</option>
+                          <option value="B-">B-</option>
+                          <option value="O+">O+</option>
+                          <option value="O-">O-</option>
+                          <option value="AB+">AB+</option>
+                          <option value="Ab-">Ab-</option>
+                        </select>
+
                       </div>
                     </div>
 
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-3 col-lg-3 col-sm-3  control-label">Weight:</label>
                       <div class="col-md-6 col-lg-6 col-sm-6 ">
-                        <input type="text" class="form-control" name="p_weight" id="patient-weight-input" placeholder="Weight">
+                        <input type="text" class="form-control" name="p_weight" id="patient-weight-input" placeholder="Weight in KG">
                       </div>
 
                     </div>
@@ -123,7 +134,7 @@
                     <div class="form-group">
                       <label for="focusedinput" class="col-md-3 col-lg-3 col-sm-3  control-label">Height:</label>
                       <div class="col-md-6 col-lg-6 col-sm-6">
-                        <input name="p_height" type="text" class="form-control"  id="patient-height" placeholder="Height">
+                        <input name="p_height" type="text" class="form-control"  id="patient-height" placeholder="Height in ft">
                       </div>
 
                     </div>
@@ -429,10 +440,10 @@
               </div>
             </div>
             <!-- /.panel-heading -->
-            <div class="panel-body">
+            <div class="panel-body table-responsive " >
               <div class="row">
                 <div class="col-md-12">
-                  <div style="height: 63vh;" class="table-responsive table-condensed">
+                  <div style="height: 63vh;" class="table-condensed">
                     <table class="table text-center table-bordered table-hover table-striped " id="">
                       <thead >
                         <tr>
