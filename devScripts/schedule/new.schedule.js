@@ -190,14 +190,14 @@ $(document).ready(function(){
     .done(function( response ) {
       console.log('response ' + JSON.stringify(response));
 
-      createScheduleView.overlappingDatesAlert.addClass('hidden');
+
 
       if(response.status == 1){
       window.location.href = controller.getScheduleCalendarUrl;
-      }else if(response.status == "-1"){
-      createScheduleView.overlappingDatesAlert.removeClass('hidden');
-      console.log('something is not right');
-      }
+      }else if(response.status == -2){
+        utility.getAlerts("There is a clash with an existing schedule, please try creating a schedule with different dates or timmings","alert-warning","",".container-fluid");
+    }
+
   });
 
 }
@@ -206,6 +206,7 @@ $(document).ready(function(){
 var stepOneView = {
 
   init: function(){
+    utility.removeAlerts();
     this.panel = $('#schedule-step-one');
     this.selectLocations = $('#sel-work-locations');
     this.fromDateControl = $('#from-date');
@@ -216,20 +217,40 @@ var stepOneView = {
 
     this.cancelButton.on('click', function(){
       window.location = links.getScheduleCalendarUrl;
-    })
+    });
+
+
+
+
+
+
+
+
 
 
     this.fromDateControl.datetimepicker({
     inline: false,
     format:'DD-MM-YYYY',
-    minDate: moment()
+    minDate: moment().subtract(1,'d')
     });
 
     this.toDateControl.datetimepicker({
     inline: false,
     format:'DD-MM-YYYY',
-    minDate: moment()
+    minDate: moment().subtract(1,'d')
+
     });
+    this.fromDateControl.on('dp.show dp.change',function(){
+
+        selectedDate = stepOneView.fromDateControl.val();
+        momentSeletDate = moment(selectedDate,'DD-MM-YYYY').add(60,'d');
+
+        stepOneView.toDateControl.data("DateTimePicker").maxDate(momentSeletDate.format('DD-MM-YYYY'));
+        console.log(momentSeletDate.format('DD-MM-YYYY'));
+    });
+
+
+
 
     this.fromTimeControl.val("09:00:AM");
     this.fromTimeControl.datetimepicker({
@@ -355,6 +376,8 @@ var createScheduleView = {
   this.backButton = $('#btn-back');
 
   this.backButton.on('click', function(){
+    utility.removeAlerts();
+    console.log("back btn init");
     stepOneView.panel.show();
     createScheduleView.panel.hide();
     controller.resetScheduleList();

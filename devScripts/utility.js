@@ -31,5 +31,9 @@ var utility = {
     $(container).prepend(alert);
     console.log('alert created');
 
+  },
+
+  removeAlerts:function(){
+    $('.pms-alerts').remove();
   }
 }
