@@ -54,6 +54,14 @@ $(document).ready(function(){
             { "mData": "loc_name" },
             { "mData": "appt_date" },
             { "mData": "appt_time" },
+            { "mData": "patient_Status",
+          "mRender" : function(data, type, full ){
+           if(data == 2){
+             return "<span>Canceled</span>";
+           }else{
+              return "<span>Closed</span>";
+           }
+          } },
             { "mData": "patient_desc",
             "mRender" : function ( data, type, full ) {
               return ' <span tabindex="0" class="" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="Description" data-content="'+data+'">'+data.slice(0,10)+'...</span>';}
