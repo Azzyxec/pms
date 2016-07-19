@@ -418,6 +418,8 @@ class PatientDB{
           $patientHistoryRow['loc_name'] = $result['location_name'];
           $patientHistoryRow['appt_time'] = $result['start_mins'];
           $patientHistoryRow['patient_desc'] = $result['description'];
+          $patientHistoryRow['patient_Status'] = $result['state'];
+
 
 
 

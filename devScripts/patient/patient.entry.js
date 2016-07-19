@@ -963,7 +963,7 @@ var patientProgrammesDetailsView = {
           //due on
           var dateDiv = $('<div/>',{
             class: 'input-group date',
-              style:'width:140px'
+              style:'min-width:140px'
           });
           var spanDate = $('<span/>',{
             class:'input-group-addon'
@@ -985,7 +985,12 @@ var patientProgrammesDetailsView = {
 
           input.datetimepicker({
             inline: false,
-            format:'YYYY-MM-DD'
+            format:'YYYY-MM-DD',
+            widgetPositioning:{
+              vertical:'bottom'
+            },
+            minDate: moment()
+
           });
 
 
@@ -1008,7 +1013,7 @@ var patientProgrammesDetailsView = {
           //givenOn
           var dateDiv = $('<div/>',{
             class: 'input-group date',
-              style:'width:140px'
+              style:'min-width:140px'
           });
           var spanDate = $('<span/>',{
             class:'input-group-addon'
@@ -1031,7 +1036,11 @@ var patientProgrammesDetailsView = {
 
           input2.datetimepicker({
             inline: false,
-            format:'YYYY-MM-DD'
+            format:'YYYY-MM-DD',
+            widgetPositioning:{
+                vertical:'bottom'
+              }
+
 
 
           });
@@ -1055,7 +1064,8 @@ var patientProgrammesDetailsView = {
 
           //batchNo
           var input = $('<input/>', {
-            type: 'input'
+            type: 'input',
+            class:'form-control'
           });
 
           input.val(programmeModel[i].list[j].batchNo);
