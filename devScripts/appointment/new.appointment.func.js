@@ -650,6 +650,8 @@ function makeAppointmentController(){
 
       var bloodGroupList = controller.getBloodGroups();
 
+      this.patientsBloodGroup.empty();
+
       for(var i = 0; i < bloodGroupList.length; i++ ){
         var option = $('<option/>', {
           value: bloodGroupList[i],

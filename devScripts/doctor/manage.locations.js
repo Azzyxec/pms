@@ -117,7 +117,7 @@ $(document).ready(function(){
 
               var td = $('<td/>');
               td.text(locations[i].status);
-              tr.append(td);
+              //tr.append(td);
 
               var editLink = $('<a/>',{
                 text: 'Edit',
@@ -144,8 +144,8 @@ $(document).ready(function(){
 
               var td = $('<span/>');
               td.append(editLink);
-              td.append(" / ");
-              td.append(deactivateLink);
+              //td.append(" / ");
+              //td.append(deactivateLink);
 
 
               tr.append(td);

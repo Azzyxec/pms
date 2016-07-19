@@ -256,8 +256,7 @@ $(document).ready(function(){
                 this.activeControl.prop('checked', true);
                 //this.inactiveControl.prop('checked', false);
               } else{
-                this.activeControl.prop('checked', false);
-                //this.inactiveControl.prop('checked', true);
+                this.inactiveControl.prop('checked', true);
 
               }
 
