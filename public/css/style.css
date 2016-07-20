@@ -462,8 +462,36 @@ padding: 6px;
 }
 
 .selectCell{
-    background-color:darkgray;
+background-color: #a9ceef;
+box-shadow: inset 5px 6px 9px -7px;
+
 }
+
+#collapsed-time-pickers:hover  {
+  background-color: #a9ceef !important;
+}
+
+
+#collapsed-time-pickers{
+  background-color: #a9ceef;
+
+
+}
+#collapsed-time-pickers > td{
+  box-shadow: inset 7px -8px 16px -11px;
+}
+
+
+
+.hovercollapse{
+  background-color:#dff0d8 !important;
+}
+.apptLabel{
+  cursor:pointer;
+}
+
+
+
 
 
 

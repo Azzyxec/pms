@@ -240,16 +240,17 @@ $(document).ready(function(){
                         $.post(controller.createModifyStaffUrl , staff)
                          .done(function( response ) {
                            console.log('response ' + JSON.stringify(response));
-                           if(response.status == "1"){
-                               $('#man-staff-before-submit-success').removeClass('hidden');
+                           if(response.status.status == "1"){
+
                                console.log("successfully edited");
-                                  window.location.href = links.doctorsStaffListingUr;
+                               window.location.href = links.doctorsStaffListingUr+"?status=1";
 
                              console.log('Please select another login Id');
-                           }else if(response.data.status == "-1"){
-                             $('#man-staff-before-submit-success').removeClass('hidden');
+                           }else if(response.status.status == "-1"){
 
-                             console.log('saved successfully, now you will receive a confirmation email, then you can login');
+                               utility.getAlerts(" <strong>oops!</strong> The login id is taken, please try another Id!.","alert-warning text-center",'','.container-fluid');
+
+                             console.log('The login id is taken, please try another Id!');
 
                            }
 

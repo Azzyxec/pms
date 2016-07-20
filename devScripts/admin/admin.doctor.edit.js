@@ -94,7 +94,7 @@ $(document).ready(function(){
 
 
                  if(response.status == "-1"){
-                    utility.getAlerts("Please select another login Id","alert-warning text-center",'login-error-msg','.container');
+                    utility.getAlerts(" <strong>oops!</strong> The login id is taken, please try another Id!.","alert-warning text-center",'login-error-msg','.container-fluid');
                    console.log('Please select another login Id');
                  }else if(response.status == "1"){
                       window.location.href = controller.adminDoctorsListingUrl;

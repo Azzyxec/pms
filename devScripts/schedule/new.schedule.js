@@ -386,7 +386,7 @@ var createScheduleView = {
   },
   makeTimePickersRow: function(idVal, fromInput, toInput){
 
-  var tr =  $('<tr/>',{class: 'collapse collapse-style',
+  var tr =  $('<tr/>',{class: 'collapse collapse-time-picker collapse-style',
   id: idVal});
 
   var td = $('<td/>',{colspan: "7"});
@@ -443,7 +443,7 @@ var createScheduleView = {
   //console.log('loopcpunt' + loopCount);
   for(var i = 0; i < loopCount ; i++){
 
-    var tr = $('<tr/>',{class: 'text-center'});
+    var tr = $('<tr/>',{class: 'text-center '});
 
     for(var j = 0; j < 7 && indexCounter < daysCount; j++){
 
@@ -460,12 +460,42 @@ var createScheduleView = {
       var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
       var span1 =  $('<span/>',{class: 'label font-16 apptLabel label-danger', text:time});
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       span1.on('click', (function(passedOn){
+
+
       return function(){
-        console.log('span click');
+
         $('td').removeClass('selectCell');
-        $('calendar-date').removeClass('calendar-date-white');
         $(this).parent().addClass('selectCell');
+        $(this).parent().css('border-bottom','1px solid #a9ceef');
+
+
+
+        console.log('span click');
+
+
+
+
+        $('.calendar-date').removeClass('calendar-date-white');
+
         $(this).parent().find('.calendar-date').addClass("calendar-date-white");
         //$('#collapseExample1').collapse('toggle');
 
@@ -473,11 +503,15 @@ var createScheduleView = {
         var fromInput = $('<input/>',{type: "text", class: ' form-control', value:passedOn.item.startTime});
         var toInput = $('<input/>',{type: "text", class: 'form-control ', value:passedOn.item.endTime});
         var id = 'collapsed-time-pickers';
+
         var tr = $('#collapsed-time-pickers');
         tr.remove();  //remove the previously added time pickers
         var timePickerTableRow = createScheduleView.makeTimePickersRow(id, fromInput, toInput);
         timePickerTableRow.insertAfter(passedOn.tableRow);
         timePickerTableRow.collapse('toggle');
+
+
+
 
         fromInput.datetimepicker({
         inline: false,
@@ -525,6 +559,40 @@ var createScheduleView = {
       var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
       td.append(span1);
     }
+
+
+      td.on('mouseover',(function(self){
+          return function(){
+          console.log("mouse over");
+
+          console.log('mouse over color');
+          if(self.hasClass('selectCell')){
+          self.removeClass('hovercollapse');
+
+          }else{
+          self.addClass('hovercollapse');
+          }
+
+
+          }
+        })(td));
+
+
+        td.on('mouseout',(function(self){
+            return function(){
+            console.log("mouse over");
+
+            console.log('mouse over color');
+            if(self.hasClass('selectCell')){
+            self.removeClass('hovercollapse');
+
+            }else{
+            self.removeClass('hovercollapse');
+            }
+
+
+            }
+          })(td));
 
     tr.append(td);
 

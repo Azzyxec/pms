@@ -26,6 +26,7 @@ var filesList = [
                       ], buildName: "login.all.js"},
   {build:true, files: [
                         objConfig.scriptsBasePath +"links.js",
+                        objConfig.scriptsBasePath +"utility.js",
                         objConfig.scriptsBasePath +"vendor/bootstrap.min.js",
                         objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                         objConfig.scriptsBasePath +"validator.js",
