@@ -156,16 +156,19 @@ class PatientDB{
 
      $statement->execute();
 
-     $row = $statement->fetch();
-
      $guardian = array();
-     $guardian['name'] = $row['name'];
-     $guardian['dateOfBirth'] = $row['date_of_birth'];
-     $guardian['gender'] = $row['gender'];
-     $guardian['contact1'] = $row['phone1'];
-     $guardian['contact2'] = $row['phone2'];
-     $guardian['address'] = $row['address'];
-     $guardian['picturePath'] = $row['picture_path'];
+
+     if($row = $statement->fetch()){
+
+       $guardian['name'] = $row['name'];
+       //$guardian['dateOfBirth'] = $row['date_of_birth'];
+       $guardian['gender'] = $row['gender'];
+       $guardian['contact1'] = $row['phone1'];
+      // $guardian['contact2'] = $row['phone2'];
+       $guardian['address'] = $row['address'];
+       $guardian['picturePath'] = $row['picture_path'];
+
+    }
 
     return $guardian;
 
@@ -174,8 +177,6 @@ class PatientDB{
     }
 
   }
-
-
 
   public function getPatientDetails($patientId){
     try {

@@ -168,7 +168,55 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $postedData = $request->getParsedBody();
 
           //getting patients  info details
-         $patient = Patient::getInsanceFromArray($postedData['patientInfo']);
+          $patient = Patient::getInsanceFromArray($postedData['patientInfo']);
+
+          $data = array('patient' => $patient);
+
+         //save patients info
+         $patientDB = new PatientDB();
+         //TODO save patient info
+         $savePatientResponse = $patientDB->saveUpdatePatientInfo($patient, $user->doctorId, $user->id, $user->type);
+         $savedPatientId = $savePatientResponse['data']['patientId'];
+         $patient->id = $savedPatientId;
+
+         if(isset($postedData['guardianInfo'])){
+
+           $guardianArray = $postedData['guardianInfo'];
+           $guardian =  new Patient();
+           $guardian->id = $savedPatientId;
+           $guardian->name = $guardianArray['name'];
+           $guardian->gender = $guardianArray['gender'];
+           $guardian->contact1 = $guardianArray['contact1'];
+           $guardian->address =  $guardianArray['address'];
+           $guardian->picturePath =  $guardianArray['picUploadPath'];
+           $guardian->isActive = $patient->isActive;
+
+           //TODO save guardian info
+           $saveGuardianResponse = $patientDB->saveUpdateGuardianInfo($guardian, $savedPatientId);
+
+           $data['guardian'] = $guardian;
+
+         }
+
+         $programeCount =  (int)$postedData['programmeCount'];
+
+         if($programeCount > 0 && isset($postedData['patientsPrograms'])){
+
+           $programList = array();
+           $programList = $postedData['patientsPrograms'];
+           $programList['doctorId'] = $user->doctorId;
+           $programList['patientId'] = $patient->id;
+           $programList['programmeCount'] = $postedData['programmeCount'];
+           $programmeDB = new ProgrammeDB();
+           $programmeResponse = $programmeDB->createUpdatePatientsProgramme($programList);
+
+           $data['programmes'] = $programList;
+
+         }
+
+        $resp = array('status' => "1", 'data' => $data, 'message' => 'success' );
+
+        return $response->withJson($resp);
 
           /*
           //collecting guardian details
@@ -182,21 +230,6 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $guardian->address = "Osaka";
           $guardian->isActive = $patient->isActive;
           */
-
-
-
-          $guardianArray = $postedData['guardianInfo'];
-          $guardian =  new Patient();
-          $guardian->name = $guardianArray['name'];
-          $guardian->dateOfBirth = $guardianArray['dateOfBirth'];
-          $guardian->gender = $guardianArray['gender'];
-          $guardian->contact1 = $guardianArray['contact1'];
-          $guardian->contact2 = $guardianArray['contact2'];
-          $guardian->address =  $guardianArray['address'];
-          $guardian->picturePath =  $guardianArray['picUploadPath'];
-
-          $guardian->isActive = $patient->isActive;
-          //$guardian->picturePath =  $guardianArray['picUploadPath'];
 
           /*
           $birthDetails = new BirthDetails();
@@ -214,6 +247,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $birthDetails->remarks = "Test Data";
           */
 
+          /*
           $birthInfoArray = $postedData['birthInfo'];
           $birthDetails = new BirthDetails();
           $birthDetails->deliveryMethodId = $birthInfoArray['deliveryMethodId'];
@@ -228,20 +262,14 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           $birthDetails->siblings = $birthInfoArray['siblings'];
           $birthDetails->isActive = $patient->isActive;
           $birthDetails->remarks = $birthInfoArray['remarks'];
+          */
 
 
-          //saving all the patients data
-          $patientDB = new PatientDB();
 
-          //save patients info
-          $savePatientResponse = $patientDB->saveUpdatePatientInfo($patient, $user->doctorId, $user->id, $user->type);
-          $savedPatientId =   $savePatientResponse['data']['patientId'];
-
-          $saveGuardianResponse = $patientDB->saveUpdateGuardianInfo($guardian, $savedPatientId);
-
-          $saveBirthInfoResponse = $patientDB->saveUpdateBirthDetails($birthDetails, $savedPatientId);
+          //$saveBirthInfoResponse = $patientDB->saveUpdateBirthDetails($birthDetails, $savedPatientId);
 
           //save update patients programme
+          /*
           $programList = array();
 
           if(isset($postedData['patientsPrograms'])){
@@ -254,14 +282,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
             $programmeResponse = $programmeDB->createUpdatePatientsProgramme($programList);
 
           }
-
-          $data = array('patientInfo' => $patient,
-                        'guardian' => $guardian,
-                        'birthDetails' => $birthDetails,
-                        'patientsPrograms' => $programList
-                       );
-          return $response->withJson($data);
-
+          */
 
           /*
           $moreInfoXMLArray = array();
@@ -312,14 +333,14 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
 
             $patient = $patientDB->getPatientDetails($allGetVars['id']);
             $guardian = $patientDB->getGuardianDetails($allGetVars['id']);
-            $birthDetails = $patientDB->getBirthDetails($allGetVars['id']);
+            //$birthDetails = $patientDB->getBirthDetails($allGetVars['id']);
             $patientsPrograme = $patientDB->getPatientsProgramme($allGetVars['id']);
 
 
 
             $resultArray = array('patient' => $patient,
                                  'guardian' => $guardian,
-                                 'birthDetails' => $birthDetails,
+                                 //'birthDetails' => $birthDetails,
                                  'programmeLists' => $patientsPrograme);
 
             $data = array('status' => 1, 'data' => $resultArray, 'message' => 'success');

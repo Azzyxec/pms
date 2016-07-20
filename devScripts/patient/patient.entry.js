@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
-
-      $('#patient-profile-image').attr('src','second.jpg');
+  //$('#patient-profile-image').attr('src','second.jpg');
 
   $(function(){
     console.log('patient entry js loaded');
@@ -11,16 +10,16 @@ $(document).ready(function(){
         id:0,
         name:"",
         dateOfBirth: "",
-        bloodGroup:"",
+        bloodGroup:"-",
         weight:"",
         height:"",
         gender:"1",
         contact1:"",
-        contact2:"",
         address: "",
         picUploadPath:"",
         isActive:1
       },
+      saveGuardianInfo: false,
       guardianInfo:{
         name:"",
         dateOfBirth: "",
@@ -30,6 +29,7 @@ $(document).ready(function(){
         address: "",
         picUploadPath:""
       },
+/*
       birthInfo:{
         deliveryMethodId:0,
         birthWeight:"",
@@ -44,6 +44,7 @@ $(document).ready(function(){
         remarks:"",
         isActive: 0
       },
+*/
       patientsProgramCount: 0,
       patientsPrograms: [],
       //View related properties,i.e. to fill drop downs
@@ -55,7 +56,7 @@ $(document).ready(function(){
     function MainController(){
       //initilizing the links
       this.doctorsProgramsUrl = links.doctorsProgramsUrl;
-      this.deliveryMethodsUrl = links.deliveryMethodsUrl;
+      //this.deliveryMethodsUrl = links.deliveryMethodsUrl;
 
       this.programmeListDetailsUrl = links.programmeListDetailsUrl;
 
@@ -63,13 +64,7 @@ $(document).ready(function(){
       this.patientsDetailsUrl = links.patientsDetailsUrl;
       this.patientsImageUrl = links.getpatientsImageUrl;
 
-
-
-
-
-
       //this.patientsProgrammesUrl = links.patientsProgrammesUrl;
-
     };
 
     //common methods
@@ -77,14 +72,14 @@ $(document).ready(function(){
       return model.programmeNameList;
     };
 
+    /*
     MainController.prototype.getDeliveryMethodsList = function () {
       return model.deliveryMethods;
     };
+    */
 
 
     MainController.prototype.getDoctorsProgrameNamesList = function(){
-
-
 
       $.get( this.doctorsProgramsUrl , {})
       .done(function( response ) {
@@ -95,9 +90,9 @@ $(document).ready(function(){
 
       });
 
-
     };
 
+    /*
     MainController.prototype.getDeliveryMethods = function() {
       //birth details
       $.get( this.deliveryMethodsUrl , {})
@@ -108,6 +103,7 @@ $(document).ready(function(){
         patientBirthDetailsView.render();
       });
     };
+    */
 
     /*
     MainController.prototype.getPatientsProgrameDetails = function (patientId) {
@@ -134,10 +130,15 @@ MainController.prototype.getPatientsInfoModel = function () {
 MainController.prototype.updatePatientInfoModelFromView = function () {
 
   model.patientInfo.name = patientDetailsView.name.val();
-  var dateOfBirth = moment(patientDetailsView.dateOfbirth.val(), "YYYY-MM-DD");
-  model.patientInfo.dateOfBirth = dateOfBirth.format('DD-MM-YYYY');
+  //var dateOfBirth = moment(patientDetailsView.dateOfbirth.val(), "YYYY-MM-DD");
+  model.patientInfo.dateOfBirth = patientDetailsView.dateOfbirth.val();
   console.log('getting date ' + model.patientInfo.dateOfBirth);
-  model.patientInfo.bloodGroup = patientDetailsView.bloodGroup.val();
+
+
+      var selectedOption = patientDetailsView.bloodGroup.find(":selected");
+      var bloodGrp = selectedOption.attr('value');
+
+  model.patientInfo.bloodGroup = bloodGrp;
   model.patientInfo.weight = patientDetailsView.weight.val();
   model.patientInfo.height = patientDetailsView.height.val();
   model.patientInfo.gender  = patientDetailsView.rbMale.val();
@@ -150,7 +151,7 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   }
 
   model.patientInfo.contact1 = patientDetailsView.contact1.val();
-  model.patientInfo.contact2 = patientDetailsView.contact2.val();
+  //model.patientInfo.contact2 = patientDetailsView.contact2.val();
   model.patientInfo.address = patientDetailsView.address.val();
 
   if(patientDetailsView.activeControl.is(":checked")){
@@ -158,10 +159,11 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   }else{
     model.patientInfo.isActive = 0;
   }
+
   if($('#patient-picture-container').attr('src') !== undefined){
     var str1 =$('#patient-picture-container').attr('src');
     var n1 = str1.lastIndexOf('/');
-  var result1 = str1.substring(n1 + 1);
+    var result1 = str1.substring(n1 + 1);
     model.patientInfo.picUploadPath = result1;
   }
 
@@ -177,8 +179,8 @@ MainController.prototype.updateGuardianInfoModelFromView = function () {
 
   model.guardianInfo.name = patientGuardianDetailsView.name.val();
 
-  var dateOfBirth = moment(patientGuardianDetailsView.dateOfBirth.val(), "YYYY-MM-DD");
-  model.guardianInfo.dateOfBirth = dateOfBirth.format('DD-MM-YYYY');
+  //var dateOfBirth = moment(patientGuardianDetailsView.dateOfBirth.val(), "YYYY-MM-DD");
+  model.guardianInfo.dateOfBirth =patientGuardianDetailsView.dateOfBirth.val();
 
 
   model.guardianInfo.gender  = patientGuardianDetailsView.rbMale.val();
@@ -190,7 +192,7 @@ MainController.prototype.updateGuardianInfoModelFromView = function () {
   }
 
   model.guardianInfo.contact1 = patientGuardianDetailsView.contact1.val();
-  model.guardianInfo.contact2 = patientGuardianDetailsView.contact2.val();
+  //model.guardianInfo.contact2 = patientGuardianDetailsView.contact2.val();
   model.guardianInfo.address = patientGuardianDetailsView.address.val();
 
   if($('#guardian-profile-image').attr('src') !== undefined){
@@ -204,6 +206,7 @@ MainController.prototype.updateGuardianInfoModelFromView = function () {
 
 
 //birth info realted functions
+/*
 MainController.prototype.getBirthInfoModel = function () {
   return model.birthInfo;
 };
@@ -224,6 +227,7 @@ MainController.prototype.updatebirthInfoFromView = function () {
   model.birthInfo.remarks = patientBirthDetailsView.birthRemarks.val();
 
 };
+*/
 
 //check up programe related function
 
@@ -244,6 +248,7 @@ console.log('program id to check' + programmeId);
     }
   }
 
+  //getting the doctors programme, and rendering the programmes view
   $.get( this.programmeListDetailsUrl , {id: programmeId})
   .done(function( response ) {
     console.log(' getting program details for patient' + JSON.stringify(response));
@@ -265,9 +270,9 @@ console.log('program id to check' + programmeId);
 
 //updating models with info from the views
 MainController.prototype.updateModelsFromViews = function () {
-  cont.updatePatientInfoModelFromView();
-  cont.updateGuardianInfoModelFromView();
-  cont.updatebirthInfoFromView();
+  controller.updatePatientInfoModelFromView();
+  controller.updateGuardianInfoModelFromView();
+  //controller.updatebirthInfoFromView();
 };
 
 //get all the info of the patient
@@ -278,14 +283,14 @@ MainController.prototype.getPatientsModelServer = function (patientId) {
     //assign the model the data retreived from the server
     model.patientInfo = response.data.patient;
     model.guardianInfo = response.data.guardian;
-    model.birthInfo = response.data.birthDetails;
+    //model.birthInfo = response.data.birthDetails;
     model.patientsPrograms = response.data.programmeLists;
     model.patientsProgramCount = model.patientsPrograms.length;
     //patients programme info
 
     patientDetailsView.render();
     patientGuardianDetailsView.render();
-    patientBirthDetailsView.render();
+    //patientBirthDetailsView.render();
     patientProgrammesDetailsView.render();
 
   });
@@ -293,16 +298,30 @@ MainController.prototype.getPatientsModelServer = function (patientId) {
 
 //save update the entire model on server
 MainController.prototype.persistModel = function () {
-  console.log('persisting ' + JSON.stringify(model));
-  var postData  = {patient: model.patientInfo,
-                   guardian: model.guardinaInfo,
-                   birthDetails: model.birthInfo,
+  //console.log('persisting ' + JSON.stringify(model));
+
+  var postData  = {patientInfo: model.patientInfo,
                    patientsPrograms: model.patientsPrograms,
-                   patientsProgramCount: model.patientsProgramCount
+                   programmeCount: model.patientsProgramCount
                   };
-  $.post( this.patientDetailPersistUrl , model)
+
+   if(model.saveGuardianInfo){
+     console.log('adding guardians info');
+
+     var postData  = {patientInfo: model.patientInfo,
+                      guardianInfo: model.guardianInfo,
+                      patientsPrograms: model.patientsPrograms,
+                      programmeCount: model.patientsProgramCount
+                     };
+   }
+
+   console.log('posting ' + JSON.stringify(postData));
+
+
+  $.post( this.patientDetailPersistUrl , postData)
   .done(function( response ) {
     console.log('save response' + JSON.stringify(response));
+    //redirect to patient listing
   });
 };
 
@@ -313,14 +332,14 @@ MainController.prototype.init = function(){
   //initilizing the views
   patientDetailsView.init();
   patientGuardianDetailsView.init();
-  patientBirthDetailsView.init();
+  //patientBirthDetailsView.init();
   patientProgrammeView.init();
   patientProgrammesDetailsView.init();
 
   //getting data from the server, and building the model for rendering
 
   //getting the data for the select options
-  this.getDeliveryMethods();
+  //this.getDeliveryMethods();
   this.getDoctorsProgrameNamesList();
 
   var patientId = utility.getURLParam('id');
@@ -336,14 +355,7 @@ MainController.prototype.init = function(){
 
   console.log('patient Id ' + patientId);
 
-
-  //for info in patients info tab
   this.getPatientsModelServer(patientId);
-
-  //for info in patients programme tab
-  //might want to remove this as getPatientsModelServer will get all the data in one call
-  //this.getPatientsProgrameDetails(patientId);
-
 
   //select the patients info tab
   patientDetailsView.tab.trigger('click');
@@ -351,44 +363,10 @@ MainController.prototype.init = function(){
 
 };
 
-//this needs to be removed
-var controller = {
-  setAttachedProgrammeId: function(id){
-    model.attachedProgrammeId = id;
-    //console.log('model: ' + JSON.stringify(model));
-  },
-  setProgrammeFromServer: function(programmeId, programmeName){
-
-    $.get( controller.programmeListDetailsUrl , {id: programmeId})
-    .done(function( response ) {
-      //console.log(JSON.stringify(response));
-      if(response.status == 1){
-        for(var i = 0; i < model.programmeLists.length; i++ ){
-          if(model.programmeLists[i].id == programmeId){
-            return;
-          }
-        }
-        var programme = {
-          id: programmeId,
-          name: programmeName,
-          count: response.data.length,
-          list: response.data
-        };
-        model.programmeLists.push(programme);
-        model.programmeCount = model.programmeLists.length;
-        patientProgrammesDetailsView.render();
-        //model.programmeList = response.data;
-      }
-    });
-  },
-  getProgrammeModel: function(){
-    return model.programmeLists;
-  },
-};
-
 var patientDetailsView = {
   init: function(){
     this.tab = $('#patients-entry-link');
+    this.patientForm = $("#patientDetailsEntryForm");
     this.name = $('#patient-name');
     this.dateOfbirth = $('#patient-date-of-birth');
     this.bloodGroup = $('#patient-blood-group');
@@ -397,103 +375,77 @@ var patientDetailsView = {
     this.rbMale = $('#rb-male');
     this.rbFemale = $('#rb-female');
     this.contact1 = $('#patient-contact1');
-    this.contact2 = $('#patient-contact2');
+    //this.contact2 = $('#patient-contact2');
     this.address = $('#patient-address');
     this.picUpload =$('#patient-picture');
     this.imgBox = $('#patient-picture-container');
     this.activeControl = $('#pactive');
     this.inactiveControl = $('#pinactive');
+    this.submitBtn =  $('.patients-detail-form-submit');
+
+
+    this.initValidators();
+
     this.dateOfbirth.datetimepicker({
       inline: false,
       format:'DD-MM-YYYY',
       maxDate: new Date(),
       widgetPositioning:{
-        vertical:'bottom'
+      vertical:'bottom'
       }
     });
 
 
-      this.contact1.prop('maxlength', 15);
+    this.submitBtn.on('click',function(){
 
-     this.validator =   $("#patientDetailsEntryForm").bootstrapValidator({
-        trigger:"focus click change keyup select blur ",
-        feedbackIcons: {
-          valid: 'glyphicon glyphicon-ok ',
-          invalid: 'glyphicon glyphicon-remove ',
-          validating: 'glyphicon glyphicon-refresh'
-        },
-          excluded: [':disabled'],
-        fields:{
-          P_username : {
-            validators : {
-              notEmpty : {
-                message : 'Please Enter your  Name!'
-              }
-            }
+      console.log("save click common");
 
-          },
-          P_Dob : {
-            validators : {
-              notEmpty :{
-                message : 'Please select date'
-              }
-            }
-          }
-          , p_weight :{
+      //validate Patient info form
+      patientDetailsView.formValidator.data('bootstrapValidator').validate();
 
-            validators : {
-              numeric :{
-                message : 'Please enter numbers',
-                separator: ','
-              }
-            }
-          }
-          ,  p_height :{
+      var isPatientformValid = patientDetailsView.formValidator.data('bootstrapValidator').isValid();
 
-            validators : {
-              numeric :{
-                message : 'Please enter numbers',
-                separator: ','
-              }
-            }
-          }
-          , p_phnNo :{
+      if(!isPatientformValid){
 
-            validators : {
-              notEmpty :{
-                message : 'Please enter Patients contact no'
-              },
-              regexp: {
-                regexp: /^\+?[0-9()-\s]+$/,
-                message: 'Please enter valid phone number'
-              }
+        console.log('patient form invalid');
+        patientDetailsView.tab.trigger('click');
+        return;
+      }
 
-            }
-          },
-          p_address :{
+      //patient form is valid, check guardian form validate only if its dirty
 
-            validators : {
-              notEmpty :{
-                message : 'Please enter patients address'
-              }
-            }
-          }
+      var guardianFormDirty = patientGuardianDetailsView.isFormdirty();
 
+      if(guardianFormDirty){
 
+        patientGuardianDetailsView.formValidator.data('bootstrapValidator').validate();
+        var isGuardianFormValid = patientGuardianDetailsView.formValidator.data('bootstrapValidator').isValid();
+
+        if(!isGuardianFormValid){
+
+          console.log('guardian form invalid');
+          patientGuardianDetailsView.tab.trigger('click');
+          return;
 
         }
-      }).on('success.form.bv',function(e){
-          e.preventDefault();
 
-            console.log('patient click');
-            cont.updateModelsFromViews();
-            console.log('save click' + JSON.stringify(model));
-            cont.persistModel();
+      }
 
-        });
+        //at this point guardian form is either valid or totally blank
+        //if its dirty then save guardian info
+
+        if(guardianFormDirty){
+          console.log('save guardian info');
+          model.saveGuardianInfo = true;
+        }
+
+        console.log('submit data');
+        //console.log('save click' + JSON.stringify(model));
+        controller.updateModelsFromViews();
+        controller.persistModel();
 
 
-
+    });
 
     var process_url =  links.PatientUploadimage; //PHP script
     this.picUpload.fileupload({
@@ -576,38 +528,89 @@ var patientDetailsView = {
             }
         });
     });
-
-
-    $('.patients-detail-form-submit').on('click',function(){
-
-        console.log("form submit 1");
-       $('#patientDetailsEntryForm').submit();
-        $('#guardian-form').submit();
-
-
-
-    });
-
-
     //this.tab.hide();
+  },
+  initValidators: function(){
+
+    //setting up validations
+    this.contact1.prop('maxlength', 15);
+
+    this.formValidator = this.patientForm.bootstrapValidator({
+        trigger:"focus click change keyup select blur ",
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok ',
+          invalid: 'glyphicon glyphicon-remove ',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        excluded: [':disabled'],
+        fields:{
+          P_username : {
+            validators : {
+              notEmpty : {
+                message : 'Please Enter your  Name!'
+              }
+            }
+
+          },
+          P_Dob : {
+            validators : {
+              notEmpty :{
+                message : 'Please select date'
+              }
+            }
+          },
+          p_weight :{
+
+            validators : {
+              numeric :{
+                message : 'Please enter numbers',
+                separator: ','
+              }
+            }
+          },
+          p_height :{
+
+            validators : {
+              numeric :{
+                message : 'Please enter numbers',
+                separator: ','
+              }
+            }
+          },
+          p_phnNo :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please enter Patients contact no'
+              },
+              regexp: {
+                regexp: /^\+?[0-9()-\s]+$/,
+                message: 'Please enter valid phone number'
+              }
+
+            }
+          }
+        }
+      });
+
   },
   render: function(){
 
     //var model = controller.getPatientModel();
-    var lpatientInfo = cont.getPatientsInfoModel();
+    var lpatientInfo = controller.getPatientsInfoModel();
 
     //  console.log('render patients info' + JSON.stringify(lpatientInfo));
 
     this.name.val(lpatientInfo.name);
-    var dateOfBirth = moment(lpatientInfo.dateOfBirth, 'DD-MM-YYYY');
+    //var dateOfBirth = moment(lpatientInfo.dateOfBirth, 'DD-MM-YYYY');
     //console.log('dob model' + lpatientInfo.dateOfBirth);
-    this.dateOfbirth.val(dateOfBirth.format('YYYY-MM-DD'));
+    this.dateOfbirth.val(lpatientInfo.dateOfBirth);
     //console.log('dob' + dateOfBirth.format('YYYY-MM-DD'));
     this.bloodGroup.val(lpatientInfo.bloodGroup);
     this.weight.val(lpatientInfo.weight);
     this.height.val(lpatientInfo.height);
     this.contact1.val(lpatientInfo.contact1);
-    this.contact2.val(lpatientInfo.contact2);
+    //this.contact2.val(lpatientInfo.contact2);
     this.address.val(lpatientInfo.address);
     this.imgBox.attr('src','images/patientUserImages/'+lpatientInfo.picturePath);
     //this.picUpload.val(model.);
@@ -615,24 +618,24 @@ var patientDetailsView = {
 
     console.log('patient status' + lpatientInfo.gender);
 
-      $('#rb-male').prop('checked', true);
+    //$('#rb-male').prop('checked', true);
 
 
     if(+lpatientInfo.gender == 1){
       console.log('gender male');
-      //this.rbMale.prop('checked', true);
+      this.rbMale.prop('checked', true);
     //  this.rbFemale.prop('checked', false);
     } else{
       console.log('gender female');
       //this.rbMale.prop('checked', false);
-      //this.rbFemale.prop('checked', true);
+      this.rbFemale.prop('checked', true);
     }
 
     if(lpatientInfo.isActive == 1){
       this.activeControl.prop('checked', true);
-      this.inactiveControl.prop('checked', false);
+      //this.inactiveControl.prop('checked', false);
     }else{
-      this.activeControl.prop('checked', false);
+      //this.activeControl.prop('checked', false);
       this.inactiveControl.prop('checked', true);
     }
 
@@ -643,6 +646,7 @@ var patientDetailsView = {
 var patientGuardianDetailsView = {
   init: function(){
     this.tab = $('#guardian-entry-link');
+    this.form = $("#guardian-form");
     this.name = $('#txt-guardian-name');
     this.dateOfBirth = $('#guardian-dob');
     this.rbMale = $('#rb-male-guardian');
@@ -654,52 +658,7 @@ var patientGuardianDetailsView = {
     this.picUpload =$('#guardian-picture');
     this.imgBox = $('#guardian-profile-image');
 
-
-
-    //maxlenght validation
-    this.contact1.prop('maxlength', 15);
-
-
-         this.validator =   $("#guardian-form").bootstrapValidator({
-            trigger:"focus click change keyup select blur ",
-            feedbackIcons: {
-              valid: 'glyphicon glyphicon-ok ',
-              invalid: 'glyphicon glyphicon-remove ',
-              validating: 'glyphicon glyphicon-refresh'
-            },
-              excluded: [':disabled'],
-            fields:{
-              guardianname : {
-                validators : {
-                  notEmpty : {
-                    message : 'Please Enter your  Name'
-                  }
-                }
-
-              },
-              guardiancontact1 :{
-
-                validators : {
-                  notEmpty :{
-                    message : 'Please enter a phone no.'
-                  },
-                  regexp: {
-                    regexp: /^\+?[0-9()-\s]+$/,
-                    message: 'Please enter a valid phone no.'
-                  }
-                }
-              }
-            }
-          }).on('success.form.bv',function(e){
-              e.preventDefault();
-
-                console.log('patient click');
-                cont.updateModelsFromViews();
-                console.log('save click' + JSON.stringify(model));
-                cont.persistModel();
-            });
-
-
+    this.initValidators();
 
         var Gprocess_url =  links.GaurdianUploadimage; //PHP script
         this.picUpload.fileupload({
@@ -791,9 +750,57 @@ var patientGuardianDetailsView = {
     });
 
   },
+  initValidators: function(){
+
+    //maxlenght validation
+    this.contact1.prop('maxlength', 15);
+
+    this.formValidator = this.form.bootstrapValidator({
+            trigger:"focus click change keyup select blur ",
+            feedbackIcons: {
+              valid: 'glyphicon glyphicon-ok ',
+              invalid: 'glyphicon glyphicon-remove ',
+              validating: 'glyphicon glyphicon-refresh'
+            },
+              excluded: [':disabled'],
+            fields:{
+              guardianname : {
+                validators : {
+                  notEmpty : {
+                    message : 'Please Enter your  Name'
+                  }
+                }
+
+              },
+              guardiancontact1 :{
+
+                validators : {
+                  notEmpty :{
+                    message : 'Please enter a phone no.'
+                  },
+                  regexp: {
+                    regexp: /^\+?[0-9()-\s]+$/,
+                    message: 'Please enter a valid phone no.'
+                  }
+                }
+              }
+            }
+          });
+
+  },
+  isFormdirty: function(){
+
+    if( (this.name.val() && this.name.val().trim().length > 0) ||
+        (this.name.val() && this.name.val().trim().length > 0)  ){
+      return true;
+    }
+
+    return false;
+
+  },
   render: function(){
 
-    var lguardianInfo = cont.getGuardianInfoModel();
+    var lguardianInfo = controller.getGuardianInfoModel();
 
     this.name.val(lguardianInfo.name);
 
@@ -801,7 +808,7 @@ var patientGuardianDetailsView = {
     //console.log('dob' + dateOfBirth.format('YYYY-MM-DD'));
 
     this.contact1.val(lguardianInfo.contact1);
-    this.contact2.val(lguardianInfo.contact2);
+    //this.contact2.val(lguardianInfo.contact2);
     this.address.val(lguardianInfo.address);
     this.imgBox.attr('src','images/guardianUserImages/'+lguardianInfo.picturePath);
     //this.picUpload.val(model.);
@@ -809,71 +816,13 @@ var patientGuardianDetailsView = {
 
     if(lguardianInfo.gender == 1){
       this.rbMale.prop('checked', true);
-      this.rbFemale.prop('checked', false);
+      //this.rbFemale.prop('checked', false);
     } else{
-      this.rbMale.prop('checked', false);
+      //this.rbMale.prop('checked', false);
       this.rbFemale.prop('checked', true);
 
     }
   }
-}
-
-var patientBirthDetailsView = {
-  init: function(){
-    this.tab = $('#birth-entry-link');
-    this.selectDeliveryMethods = $('#delivery-method');
-    this.birthWeight = $('#birth-weight');
-    this.birthLenght = $('#birth-length');
-    this.birthHead = $('#birth-head');
-    this.bloodGroup = $('#birth-blood-group');
-    this.mothersName = $('#mother-name');
-    this.mothersBloodGroup = $('#mother-blood-group');
-    this.fathersName = $('#father-name');
-    this.fathersBloodGroup = $('#father-blood-group');
-    this.siblings = $('#siblings');
-    this.birthRemarks = $('#birth-remarks');
-
-  },
-  render: function(){
-
-    this.selectDeliveryMethods.empty();
-
-    //adding the select option to the list
-    var option = $('<option/>',{
-      value: 0,
-      text: 'Select...',
-      selected: 'selected'
-    }
-  );
-  this.selectDeliveryMethods.append(option);
-
-  var deliveryMethods = cont.getDeliveryMethodsList();
-
-  for(var i = 0; i < deliveryMethods.length; i++){
-    var option = $('<option/>',{
-      value: deliveryMethods[i].id,
-      text: deliveryMethods[i].name
-    }
-  );
-  this.selectDeliveryMethods.append(option);
-
-}//
-
-var lbirthInfo = cont.getBirthInfoModel();
-
-this.selectDeliveryMethods.val(lbirthInfo.deliveryMethodId);
-this.birthWeight.val(lbirthInfo.birthWeight);
-this.birthLenght.val(lbirthInfo.length);
-this.birthHead.val(lbirthInfo.head);
-this.bloodGroup.val(lbirthInfo.bloodGroup);
-this.mothersName.val(lbirthInfo.mothersName);
-this.mothersBloodGroup.val(lbirthInfo.mothersBloodGroup);
-this.fathersName.val(lbirthInfo.fathersName);
-this.fathersBloodGroup.val(lbirthInfo.fathersBloodGroup);
-this.siblings.val(lbirthInfo.siblings);
-this.birthRemarks.val(lbirthInfo.remarks);
-
-}
 }
 
 var patientProgrammeView = {
@@ -891,7 +840,7 @@ var patientProgrammeView = {
       var name = selectedOption.text();
       if(selectedValue){
         //controller.setAttachedProgrammeId(selectedValue);
-        cont.addDoctorsProgramToPatient(selectedValue, name);
+        controller.addDoctorsProgramToPatient(selectedValue, name);
 
       }
       console.log('programme attach click selected id, name: ' + selectedValue + name);
@@ -899,7 +848,7 @@ var patientProgrammeView = {
 
   },
   render: function(){
-    var programmelist =  cont.getProgrameNameList();
+    var programmelist =  controller.getProgrameNameList();
 
     console.log('render programme view' + JSON.stringify(programmelist));
     this.doctorsProgramsSel.empty();
@@ -917,18 +866,18 @@ var patientProgrammesDetailsView = {
     this.tableParentPanel = $('#programme-table-parent'); //this node contains the table panels
     this.tablePanelNode = $('#programme-table-panel');  //this node contains the table inside it
     this.tablePanelNode.hide();//used to make clones, its hidden in html but this is just a double setProgrammeFromServer
-
-
     //cloneNode(true);  clone the children too, when true is passed
   },
   render: function() {
 
     //this.tableParentPanel.empty();
 
-    var programmeModel = cont.getPatientsProgramsModel();
+    var programmeModel = controller.getPatientsProgramsModel();
     console.log('program details view render ' + JSON.stringify(programmeModel));
 
     if(programmeModel) {
+
+      this.tableParentPanel.empty();
 
       for(var i = 0; i < programmeModel.length; i++){
         console.log('building programme table for ' + JSON.stringify(programmeModel[i]));
@@ -1093,15 +1042,73 @@ var patientProgrammesDetailsView = {
 
     //adding the table panel
 
-
-
   }
 }
 
+/*
+var patientBirthDetailsView = {
+  init: function(){
+    this.tab = $('#birth-entry-link');
+    this.selectDeliveryMethods = $('#delivery-method');
+    this.birthWeight = $('#birth-weight');
+    this.birthLenght = $('#birth-length');
+    this.birthHead = $('#birth-head');
+    this.bloodGroup = $('#birth-blood-group');
+    this.mothersName = $('#mother-name');
+    this.mothersBloodGroup = $('#mother-blood-group');
+    this.fathersName = $('#father-name');
+    this.fathersBloodGroup = $('#father-blood-group');
+    this.siblings = $('#siblings');
+    this.birthRemarks = $('#birth-remarks');
+
+  },
+  render: function(){
+
+    this.selectDeliveryMethods.empty();
+
+    //adding the select option to the list
+    var option = $('<option/>',{
+      value: 0,
+      text: 'Select...',
+      selected: 'selected'
+    }
+  );
+  this.selectDeliveryMethods.append(option);
+
+  var deliveryMethods = controller.getDeliveryMethodsList();
+
+  for(var i = 0; i < deliveryMethods.length; i++){
+    var option = $('<option/>',{
+      value: deliveryMethods[i].id,
+      text: deliveryMethods[i].name
+    }
+  );
+  this.selectDeliveryMethods.append(option);
+
+}//
+
+var lbirthInfo = controller.getBirthInfoModel();
+
+this.selectDeliveryMethods.val(lbirthInfo.deliveryMethodId);
+this.birthWeight.val(lbirthInfo.birthWeight);
+this.birthLenght.val(lbirthInfo.length);
+this.birthHead.val(lbirthInfo.head);
+this.bloodGroup.val(lbirthInfo.bloodGroup);
+this.mothersName.val(lbirthInfo.mothersName);
+this.mothersBloodGroup.val(lbirthInfo.mothersBloodGroup);
+this.fathersName.val(lbirthInfo.fathersName);
+this.fathersBloodGroup.val(lbirthInfo.fathersBloodGroup);
+this.siblings.val(lbirthInfo.siblings);
+this.birthRemarks.val(lbirthInfo.remarks);
+
+}
+}
+*/
+
 //controller.init();
 
-cont = new MainController();
-cont.init();
+controller = new MainController();
+controller.init();
 
 }());
 
