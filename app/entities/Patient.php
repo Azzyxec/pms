@@ -32,16 +32,10 @@ class Patient{
     $patient->height = $dataAray['height'];
     $patient->gender = $dataAray['gender'];
     $patient->contact1 = $dataAray['contact1'];
-    $patient->contact2 = $dataAray['contact2'];
+    //$patient->contact2 = $dataAray['contact2'];
     $patient->picturePath = $dataAray['picUploadPath'];
-
-    //$patient->email = $dataAray[''];
     $patient->address = $dataAray['address'];
     $patient->isActive = $dataAray['isActive'];
-    
-    //$patient->isGuardian = $dataAray['isGuardian'];
-    //$patient->guardianId = $dataAray['guardianId'];
-    //$patient->medicalProgrammeId = $dataAray[''];
 
     return $patient;
 
