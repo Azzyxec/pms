@@ -102,9 +102,10 @@ $app->group('/staff', function(){
 
 
       $staffDB = new StaffDB();
-      $result = $staffDB->creatUpdateStaff($staff, $doctorId, $loggedInUserId, $loggedInUserType);
+      $status = $staffDB->creatUpdateStaff($staff, $doctorId, $loggedInUserId, $loggedInUserType);
 
-      $data = array('status' => "1", 'data' => $result['data'], 'message' => "success" );
+
+      $data = array('status' => $status, 'data' => '', 'message' => "success" );
       return $response->withJson($data);
 
     } catch (Exception $e) {

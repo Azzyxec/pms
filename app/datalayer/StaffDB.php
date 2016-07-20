@@ -31,7 +31,7 @@ class StaffDB{
         $staffList[] = $staff;
       }
 
-      return array('status' => 1, 'data' => $staffList , 'message' => 'success');
+      return array('status' => "1", 'data' => $staffList , 'message' => 'success');
 
     } catch (Exception $e) {
       return array('status' => "-1", 'data' => "", 'message' => "exception in Datalayer " . $e->getMessage());

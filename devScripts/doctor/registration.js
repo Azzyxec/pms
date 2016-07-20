@@ -129,12 +129,10 @@ $(document).ready(function(){
                 console.log('response ' + JSON.stringify(response));
                 formView.addSaveButtonAnimation(false);
 
-                //hide all alerts
-                formView.alertLoginIdTaken.addClass('hidden');
-                formView.alertSucess.addClass('hidden');
+
 
                 if(response.status == "-1"){
-                  formView.alertLoginIdTaken.removeClass('hidden');
+                utility.getAlerts("<strong>oops!</strong> The login id is taken, please try another Id!.","alert-warning","",".container-fluid");
                   console.log('Please select another login Id');
                   //controller.alertcontainer.prepend(controller.alert("Please select another login Id","alert-warning text-center",''));
 
@@ -148,11 +146,14 @@ $(document).ready(function(){
                     controller.resetModel();
                     formView.render();
                     formView.passwordControl.val('');
-                    formView.alertSucess.removeClass('hidden');
+
                     console.log('Thank you for registering with us, we have send you a email with your account info');
                     window.location.href = controller.loginUrl + '?registered=1';
                   }else if(response.user.id && response.user.type != '-1'){
                     //logged in user, so its profile modifications
+
+
+
                     console.log('modifying');
                     //controller.alertcontainer.prepend(controller.alert("Doctor Info updated succesfully","alert-success text-center",''));
                   }
