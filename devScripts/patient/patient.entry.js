@@ -934,23 +934,22 @@ var patientProgrammesDetailsView = {
 
           input.datetimepicker({
             inline: false,
-            format:'YYYY-MM-DD',
+            format:'DD-MM-YYYY',
             widgetPositioning:{
               vertical:'bottom'
-            },
-            minDate: moment()
-
+            }
+            //minDate: moment()
           });
 
 
 
-          var date = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
-          input.text(date.format('YYYY-MM-DD'));
+          //var date = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
+          input.text(programmeModel[i].list[j].dueOn);
 
           input.change((function(model, control){
             return  function() {
-              var date = moment(control.val(), 'YYYY-MM-DD');
-              model.dueOn = date.format('YYYY-MM-DD');
+              //var date = moment(control.val(), 'YYYY-MM-DD');
+              model.dueOn = control.val();
               console.log('change + ' + JSON.stringify(model));
             }
           })(programmeModel[i].list[j], input));
@@ -985,24 +984,21 @@ var patientProgrammesDetailsView = {
 
           input2.datetimepicker({
             inline: false,
-            format:'YYYY-MM-DD',
+            format:'DD-MM-YYYY',
             widgetPositioning:{
                 vertical:'bottom'
               }
-
-
-
           });
 
 
 
-          var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
-          input2.text(date.format('YYYY-MM-DD'));
+          //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
+          input2.text(programmeModel[i].list[j].givenOn);
 
           input2.change((function(model, control){
             return  function() {
-              var date = moment(control.val(), 'YYYY-MM-DD');
-              model.givenOn = date.format('YYYY-MM-DD');
+              //var date = moment(control.val(), 'YYYY-MM-DD');
+              model.givenOn = control.val();
               console.log('change + ' + JSON.stringify(model));
             }
           })(programmeModel[i].list[j], input2));
