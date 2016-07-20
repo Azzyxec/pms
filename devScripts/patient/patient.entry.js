@@ -832,6 +832,7 @@ var patientProgrammeView = {
     this.doctorsProgramsSel = $('#sel-program-list');
     this.attachCheckupProgram = $('#btn-attach-programme');
 
+
     this.attachCheckupProgram.click(function(){
 
       var selectedOption = patientProgrammeView.doctorsProgramsSel.find(":selected");
@@ -865,8 +866,10 @@ var patientProgrammesDetailsView = {
   init: function () {
     this.tableParentPanel = $('#programme-table-parent'); //this node contains the table panels
     this.tablePanelNode = $('#programme-table-panel');  //this node contains the table inside it
-    this.tablePanelNode.hide();//used to make clones, its hidden in html but this is just a double setProgrammeFromServer
+    //this.tablePanelNode.hide();//used to make clones, its hidden in html but this is just a double setProgrammeFromServer
     //cloneNode(true);  clone the children too, when true is passed
+    this.tableTemplate = $('.table-container');
+    this.tablePanelNode.hide();
   },
   render: function() {
 
@@ -877,20 +880,28 @@ var patientProgrammesDetailsView = {
 
     if(programmeModel) {
 
-      this.tableParentPanel.empty();
+      //var cloneTablePanel = this.tablePanelNode;
+      var panelBody =  this.tablePanelNode.find('.panel-body');
+
+      panelBody.empty();
 
       for(var i = 0; i < programmeModel.length; i++){
         console.log('building programme table for ' + JSON.stringify(programmeModel[i]));
 
-        var cloneTablePanel = this.tablePanelNode.clone();
+        var cloneTable =  this.tableTemplate.find('.clone-table').clone();
+        cloneTable.removeClass('clone-table');
+        cloneTable.removeClass('hidden');
 
-        var cloneTablebody = cloneTablePanel.find('table').find('tbody');
+        var cloneTablebody = cloneTable.find('tbody');
 
-        var label = cloneTablePanel.find('.programme-name');
+        //var label = cloneTablePanel.find('.programme-name');
 
-        console.log('name ' + programmeModel[i].name);
-
+        //console.log('name ' + programmeModel[i].name);
+        var label = cloneTable.find('.header');
         label.text(programmeModel[i].name);
+
+
+        //cloneTablePanel.find('table').prepend('<h1>Header</h1>')
 
 
         for(var j = 0; j <  programmeModel[i].list.length; j++ ){
@@ -921,18 +932,17 @@ var patientProgrammesDetailsView = {
             class:"glyphicon glyphicon-calendar"
           });
 
-          var input = $('<input/>', {
+          var dueOn = $('<input/>', {
             type: 'text',
             class:'form-control'
 
 
           });
-          dateDiv.append(input);
+          dateDiv.append(dueOn);
           spanDate.append(dateGlyphicon);
           dateDiv.append(spanDate);
 
-
-          input.datetimepicker({
+          dueOn.datetimepicker({
             inline: false,
             format:'DD-MM-YYYY',
             widgetPositioning:{
@@ -941,18 +951,7 @@ var patientProgrammesDetailsView = {
             //minDate: moment()
           });
 
-
-
-          //var date = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
-          input.text(programmeModel[i].list[j].dueOn);
-
-          input.change((function(model, control){
-            return  function() {
-              //var date = moment(control.val(), 'YYYY-MM-DD');
-              model.dueOn = control.val();
-              console.log('change + ' + JSON.stringify(model));
-            }
-          })(programmeModel[i].list[j], input));
+          dueOn.val(programmeModel[i].list[j].dueOn);
 
           td = $('<td/>');
           td.append(dateDiv);
@@ -963,26 +962,25 @@ var patientProgrammesDetailsView = {
             class: 'input-group date',
               style:'min-width:100px'
           });
+
           var spanDate = $('<span/>',{
             class:'input-group-addon'
           });
+
           var dateGlyphicon = $('<span/>',{
             class:"glyphicon glyphicon-calendar"
           });
 
-          var input2 = $('<input/>', {
+          var givenOn = $('<input/>', {
             type: 'text',
             class:'form-control'
-
-
-
           });
-          dateDiv.append(input2);
+
+          dateDiv.append(givenOn);
           spanDate.append(dateGlyphicon);
           dateDiv.append(spanDate);
 
-
-          input2.datetimepicker({
+          givenOn.datetimepicker({
             inline: false,
             format:'DD-MM-YYYY',
             widgetPositioning:{
@@ -990,16 +988,53 @@ var patientProgrammesDetailsView = {
               }
           });
 
-          //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
-          input2.text(programmeModel[i].list[j].givenOn);
+          if(programmeModel[i].list[j].dueOn){
+            //var mdueDate = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
+            givenOn.data("DateTimePicker").minDate(programmeModel[i].list[j].dueOn);
+          }
 
-          input2.change((function(model, control){
+          //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
+          givenOn.val(programmeModel[i].list[j].givenOn);
+
+          givenOn.on('dp.change', (function(model, givenOnControl, dueOnControl){
             return  function() {
-              //var date = moment(control.val(), 'YYYY-MM-DD');
-              model.givenOn = control.val();
+              //var dueDate = moment(model.dueOn, 'YYYY-MM-DD');
+              //var givenOn = moment(control.val(), 'YYYY-MM-DD');
+
+              //set min date of givenon to one day less then due date
+
+              model.givenOn = givenOnControl.val();
+
               console.log('change + ' + JSON.stringify(model));
             }
-          })(programmeModel[i].list[j], input2));
+          })(programmeModel[i].list[j], givenOn, dueOn));
+
+
+          //event controller for dueon date picker
+          dueOn.on('dp.change', (function(model, dueOnControl, givenOnControl){
+            return  function() {
+
+              var dueOnStr = dueOnControl.val();
+
+              if(dueOnStr &&  model.givenOn){
+
+                var dueOn = moment(dueOnControl.val(), 'DD-MM-YYYY');
+                var givenOn = moment(model.givenOn, 'DD-MM-YYYY');
+
+                givenOnControl.data("DateTimePicker").minDate(dueOnStr);
+
+                if(dueOn > givenOn){
+                  model.givenOn = dueOnStr;
+                  givenOnControl.val(dueOnStr);
+                }
+
+              }
+
+              model.dueOn = dueOnStr;
+              console.log('change + ' + JSON.stringify(model));
+
+            }
+          })(programmeModel[i].list[j], dueOn, givenOn));
 
           td = $('<td/>');
           td.append(dateDiv);
@@ -1027,10 +1062,16 @@ var patientProgrammesDetailsView = {
           cloneTablebody.append(tr);
         } //inner for loop
 
-        this.tableParentPanel.append(cloneTablePanel);
-        cloneTablePanel.show();
+        panelBody.append(cloneTable);
+        cloneTable.show();
+        //cloneTablePanel.show();
 
       }//outer for loop
+
+
+      this.tableParentPanel.append(this.tablePanelNode);
+      this.tableParentPanel.removeClass('hidden');
+      this.tablePanelNode.show();
 
     }
 

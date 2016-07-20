@@ -424,9 +424,9 @@
 
           <!-- /.panel -->
           <hr>
-          <div id="programme-table-parent" class="col-xs-12">
+          <div id="programme-table-parent" style="min-width:562px" class="col-xs-12">
           </div>
-          <div class="panel panel-default" hidden  id="programme-table-panel">
+          <div class="panel panel-default "  id="programme-table-panel">
 
             <div class="panel-heading">
               <i class="fa fa-clock-o fa-fw"></i><i id="info-prog" class="programme-name">Program Schedule</i>
@@ -434,13 +434,24 @@
               </div>
             </div>
             <!-- /.panel-heading -->
-            <div class="panel-body table-responsive " >
+            <div class="panel-body " >
               <div class="row">
                 <div class="col-md-12">
                   <div style="height: 63vh;" class="table-condensed">
-                    <table class="table text-center table-bordered table-hover table-striped " id="">
+                  </div>
+                  <!-- /.table-responsive -->
+                  <div class="row table-container">
+
+                    <table class="clone-table hidden table text-center table-bordered table-hover table-striped " id="">
+
+
                       <thead >
                         <tr>
+                          <th colspan="6" class="text-center " style="height:40px"><h3 style="margin:0px" class="header"></h3></th>
+                        </tr>
+
+                        <tr>
+
                           <th >Duration</th>
                           <th >Vaccine</th>
                           <th >Dose No</th>
@@ -453,7 +464,8 @@
                       </tbody>
                     </table>
                   </div>
-                  <!-- /.table-responsive -->
+
+
                 </div>
                 <!-- /.col-lg-4 (nested) -->
                 <!-- /.col-lg-8 (nested) -->
@@ -473,6 +485,7 @@
 
           </div>
           <!-- /.panel -->
+
         </div>  <!--  programme tab ends -->
 
 
