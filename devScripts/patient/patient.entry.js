@@ -990,8 +990,6 @@ var patientProgrammesDetailsView = {
               }
           });
 
-
-
           //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
           input2.text(programmeModel[i].list[j].givenOn);
 
