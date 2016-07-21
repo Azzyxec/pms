@@ -557,6 +557,8 @@ render: function(){
 
       if(nextBookAppointmentStats == 1){
         console.log('show message that next appointment had been booked successfully');
+      }else if(nextBookAppointmentStats == -1){
+        console.log('default value nothing to do');
       }else{
         console.log('show message that next appointment could not be booked');
       }
