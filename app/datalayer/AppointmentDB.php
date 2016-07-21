@@ -149,6 +149,33 @@ class AppointmentDB{
 
   }
 
+  public function checkNextAppointmentAvailibility($appointmentId, $ppDate, $appStartTime, $appEndTime){
+    try {
+
+      $paramArray = array(
+        'pappointment_id' => $appointmentId,
+        'pappointment_date' => $ppDate,
+        'pstart_time' => $appStartTime,
+        'pend_time' => $appEndTime
+      );
+
+      $statmentType = "select"; //for a function call
+
+      $statement = DBHelper::generateStatement('check_next_appointment_avilibility',  $paramArray, $statmentType);
+
+      $statement->execute();
+
+      $row = $statement->fetch();
+
+      return $row[0];
+
+
+    } catch (Exception $e) {
+      return -1;
+    }
+
+  }
+
   public function closeAppointment($appointmentInfo, $prescriptionListXML, $prescriptionCount, $loggedinUserId, $loggedinUserType){
     try {
 
@@ -223,6 +250,27 @@ class AppointmentDB{
 
 
 
+
+    } catch (Exception $e) {
+      return  -1;
+    }
+  }
+
+  public function insertNextAppointmentEntry($appointmentId, $appointmentdate, $startMins, $endMins, $loggedinUserId, $loggedinUserType){
+    try {
+
+      $paramArray = array(
+        'pappointment_id' => $appointmentId,
+        'pappointment_date' => $appointmentdate,
+        'pstart_mins' => $startMins,
+        'pend_mins' => $endMins,
+        'pcreated_by_id' => $loggedinUserId,
+        'pcreated_by_type' => $loggedinUserType
+      );
+
+      $statement = DBHelper::generateStatement('insert_next_appointment',  $paramArray);
+
+      return $statement->execute();
 
     } catch (Exception $e) {
       return  -1;

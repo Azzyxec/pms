@@ -44,6 +44,7 @@ $app->group('/appointment', function(){
 
       $message = "success";
       $status = "-1";
+      $nextAppointmentStatus = -1;
 
       $user = UserSessionManager::getUser();
 
@@ -52,9 +53,6 @@ $app->group('/appointment', function(){
         $postedData = $request->getParsedBody();
 
         $appointment = $postedData['appointment'];
-
-        //Test code
-
 
         $prescription = array();
         $prescriptionListXml = "";
@@ -75,11 +73,51 @@ $app->group('/appointment', function(){
         $appointmentDB = new AppointmentDB();
         $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount,  $user->id, $user->type);
 
+
+        //booking the next appointment
+        $bookNextAppointment = $appointment['bookNextAppointment'];
+
+
+        if($status == 1 && $bookNextAppointment){
+          //info to check if next appointment is available
+          $appointmentId = $appointment['appointmentId'];
+          //contact get using appointment id
+          $appointmentDate = $appointment['nextAppointmentDate'];
+          $appointmentStartTime = $appointment['nextAppointmentStartTime'];
+          $appointmentEndTime = $appointment['nextAppointmentEndTime'];
+          //description set as booking through close appointment
+          //last close descripton: "xyz"
+
+          $nextAppointmentStatus = $appointmentDB->checkNextAppointmentAvailibility($appointmentId,
+                                                                                   $appointmentDate,
+                                                                                   $appointmentStartTime,
+                                                                                   $appointmentEndTime
+                                                                                   );
+
+          if($nextAppointmentStatus == 1){
+            //can book appointment/ make and new appointment entry
+
+                   $appointmentDB->insertNextAppointmentEntry(
+                                                              $appointmentId,
+                                                              $appointmentDate,
+                                                              $appointmentStartTime,
+                                                              $appointmentEndTime,
+                                                              $user->id,
+                                                              $user->type
+                                                             );
+
+
+
+          }
+          //and get patient info using patient key
+        }
+
+
       }else {
         $message = "user not logged in";
       }
 
-      $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
+      $data = array('status' => $status, 'nextAppointmentStatus' => $nextAppointmentStatus, 'data' => $postedData, 'message' => $message);
       return $response->withJson($data);
 
 

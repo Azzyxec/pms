@@ -4,13 +4,19 @@ function getCloseAppointmentController(){
     appointmentId: 0,
     closingDate: moment().format('DD-MM-YYYY'),
     closingTime: '',
+    bookNextAppointment:false,
     nextAppointmentDate:'',
-    nextAppointmentTime:'',
+    nextAppointmentStartTime:'',
+    nextAppointmentEndTime:15,
     patientsName:'',
     remarks: '',
     prescriptionList:[],
     currentEntry:{}
   }
+
+  var ViewModel = {
+                    appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
+                  };
 
   var controller = {
     init: function(){
@@ -39,10 +45,28 @@ function getCloseAppointmentController(){
 
       model.closingDate = closeAppointmentView.closingDatePicker.val();
       model.closingTime = closeAppointmentView.closingTimePicker.val();
-      model.nextAppointmentDate = closeAppointmentView.nextAppointmentDatePicker.val();
-      model.nextAppointmentTime = closeAppointmentView.nextAppointmentTimePicker.val();
+
       model.patientsName = closeAppointmentView.patientsName.val();
       model.remarks = closeAppointmentView.remarks.val();
+
+
+      model.nextAppointmentDate = closeAppointmentView.nextAppointmentDatePicker.val();
+
+      //model.bookNextAppointment is updated on checkbox change event, so no need to updated it here
+      if(model.bookNextAppointment){
+        var nextApptStartTime = closeAppointmentView.nextAppointmentTimePicker.val();
+        var mStartTime = moment(nextApptStartTime, "hh:mm A");
+        model.nextAppointmentStartTime =  mStartTime.hours()*60 + mStartTime.minutes();
+
+        //setting end minutes
+        var durationOption = closeAppointmentView.nextAppointmentDuration.find(":selected");
+        var endMins = durationOption.attr('value');
+
+        model.nextAppointmentEndTime = +model.nextAppointmentStartTime + +endMins;
+
+      }
+
+
     },
     resetModel: function(){
       prescriptionListController.setPrescriptionList([]);
@@ -50,14 +74,15 @@ function getCloseAppointmentController(){
       model.closingDate =  moment().format('DD-MM-YYYY');
       model.closingTime = '';
       model.nextAppointmentDate = '';
-      model.nextAppointmentTime = '';
+      model.nextAppointmentStartTime = '';
+      model.nextAppointmentEndTime = 15;
       model.patientsName = '';
       model.remarks = '';
       model.currentEntry = {};
     },
     closeAppointment: function(){
 
-      this.updateModelFromView();
+
 
       if(controller.allowSubmit){
 
@@ -80,6 +105,7 @@ function getCloseAppointmentController(){
     cleanup: function(){
       this.resetModel();
       closeAppointmentView.resetvalidator();
+      closeAppointmentView.resetFields();
 
       //update the prescription list in view
       prescriptionListView.render();
@@ -230,11 +256,16 @@ function getCloseAppointmentController(){
       this.closingTimePicker = $('#close-appointment-time');
       this.closeTimePickerIcon = $('#close-appointment-time-icon');
 
+      this.bookNextAppointment = $('#book-next-appointment');
+
       this.nextAppointmentDatePicker = $('#next-appointment-date');
       this.nextAppointmentDatePickerIcon = $('#next-appointment-date-icon');
 
       this.nextAppointmentTimePicker = $('#next-appointment-time');
       this.nextAppointmentTimePickerIcon = $('#next-appointment-time-icon');
+
+      this.nextAppointmentDuration = $('#duration-sel');
+
       this.patientsName = $('#close-appointment-patients-name');
       this.patientsName.prop('readonly', true);
 
@@ -262,6 +293,21 @@ function getCloseAppointmentController(){
         closeAppointmentView.closingTimePicker.data('DateTimePicker').show();
       });
 
+
+      this.bookNextAppointment.on('change', function(){
+
+
+
+        if(this.checked){
+          model.bookNextAppointment = true;
+        }else{
+          model.bookNextAppointment = false;
+        }
+
+        console.log('book appointment' + model.bookNextAppointment);
+
+      });
+
       this.nextAppointmentDatePicker.datetimepicker({
         inline:false,
         format:'DD-MM-YYYY'
@@ -285,7 +331,30 @@ function getCloseAppointmentController(){
       this.closeAppointmentButton.on('click', function(){
 
         console.log('click submit');
-        closeAppointmentView.form.submit();
+
+        controller.updateModelFromView();
+
+        console.log('model ' + JSON.stringify(model));
+
+        closeAppointmentView.form.data('bootstrapValidator').validate();
+        if(closeAppointmentView.form.data('bootstrapValidator').isValid()){
+
+          if(model.bookNextAppointment){
+
+            if(!model.nextAppointmentDate){
+              console.log('next appointment date is empty');
+              return;
+            }else if(!model.nextAppointmentStartTime && model.nextAppointmentStartTime != 0){
+              console.log('next appointment time is empty');
+              return;
+            }
+
+          }
+
+          console.log('validation success');
+          controller.closeAppointment();
+
+        }
 
       });
 
@@ -339,12 +408,6 @@ function getCloseAppointmentController(){
             }
 
           }
-        }).on('success.form.bv',function(e){
-          e.preventDefault();
-
-          console.log('validation event success');
-          controller.closeAppointment();
-
         });
 
     },
@@ -355,12 +418,42 @@ function getCloseAppointmentController(){
      //destroy typehad and token field
 
     },
-    render: function(){
-      var viewModel = controller.getModel();
+    resetFields: function(){
 
-      this.closingDatePicker.val(viewModel.closingDate);
-      this.closingTimePicker.val( utility.getTimeFromMinutes(viewModel.closingTime));
-      this.patientsName.val(viewModel.patientsName);
+      this.bookNextAppointment.attr('checked', false);
+      this.nextAppointmentDatePicker.val('');
+      this.nextAppointmentTimePicker.val('');
+
+    },
+    render: function(){
+
+      var times = ViewModel.appointmentTimes;
+
+
+     this.nextAppointmentDuration.empty();
+
+
+      for(var i = 0; i < times.length; i++){
+
+        console.log('loop');
+
+        var option = $('<option/>', {
+          value: times[i].id,
+          text: times[i].name
+        });
+
+        this.nextAppointmentDuration.append(option);
+
+      }
+
+
+      var vModel = controller.getModel();
+
+      this.nextAppointmentDuration.val(vModel.nextAppointmentEndTime);
+
+      this.closingDatePicker.val(vModel.closingDate);
+      this.closingTimePicker.val( utility.getTimeFromMinutes(vModel.closingTime));
+      this.patientsName.val(vModel.patientsName);
 
     }
   }

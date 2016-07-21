@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2016 at 09:29 PM
+-- Generation Time: Jul 21, 2016 at 08:23 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -1859,6 +1859,81 @@ commit;
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_next_appointment`(
+IN `pappointment_id` INT
+, IN `pappointment_date` VARCHAR(10)
+, IN `pstart_mins` INT
+, IN `pend_mins` INT
+, IN `pcreated_by_id` INT
+, IN `pcreated_by_type` VARCHAR(5)
+)
+    MODIFIES SQL DATA
+BEGIN
+
+	declare lDoctorId int;
+    declare lLocationId int;
+    declare lPatientId int;
+    declare lcontact varchar(20);
+    declare ldecription VARCHAR(2000);
+    
+    select  fk_doctor_id
+		   ,fk_location_id
+		   ,fk_patient_id
+           ,contact
+	into    @lDoctorId
+		   ,@lLocationId
+           ,@lPatientId
+           ,@lcontact
+    from appointment a 
+    where a.id = pappointment_id;
+    
+    
+    
+    
+    if COALESCE(@lDoctorId, 0) > 0 then
+    
+		set @ldecription = 'booked when closing appointment';
+
+		INSERT INTO `appointment`(
+									`fk_doctor_id`
+									, `fk_location_id`
+									, `fk_patient_id`
+									, contact
+									, `appointment_date`
+									, `start_mins`
+									, `end_mins`
+									, description
+									, `state`
+									, `is_rescheduled`
+									, `created_date_time`
+									, `fk_created_by_pk`
+									, `created_by_type`
+									, `is_active`
+									) VALUES (
+									 @lDoctorId
+									,@lLocationId
+									,@lPatientId
+									,@lcontact
+									,STR_TO_DATE(pappointment_date, '%d-%m-%Y')
+									,pstart_mins
+									,pend_mins
+									,@ldecription
+									,0
+									,0
+									,now()
+									,pcreated_by_id
+									,pcreated_by_type
+									,1
+								 );
+
+		commit;
+		
+    
+    end if;
+    
+
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
     MODIFIES SQL DATA
 begin
@@ -2086,6 +2161,41 @@ begin
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_next_appointment_avilibility`(`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT ) RETURNS int(11)
+BEGIN
+
+	declare lDoctorId int;
+    declare lLocationId int;
+    declare lAvalibilityStatus int;
+    
+    select fk_doctor_id
+		   ,fk_location_id
+	into   @lDoctorId
+		   ,@lLocationId
+    from appointment a
+    where a.id = pappointment_id;
+    
+    if COALESCE(@lDoctorId, 0) > 0 then
+    
+		set @lAvalibilityStatus = check_appointment_avalibility(@lDoctorId
+																, @lLocationId
+																, pappointment_date
+																, pstart_time
+																, pend_time
+															   );
+    
+    
+		return @lAvalibilityStatus;
+    
+    else
+		#there is no appointment for this id
+		return 5;
+    
+    end if;
+
+RETURN 1;
+END$$
+
 CREATE DEFINER=`root`@`localhost` FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
     NO SQL
 begin
@@ -2162,7 +2272,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=105 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=108 ;
 
 --
 -- Dumping data for table `appointment`
@@ -2267,7 +2377,10 @@ INSERT INTO `appointment` (`id`, `fk_schedule_id`, `fk_doctor_id`, `fk_location_
 (101, 0, 1, 18, 150, '97934324242', '2016-07-19', 585, 600, 'safd', 0, 0, '2016-07-19 14:12:29', 1, 'D', 1),
 (102, 0, 1, 18, 150, '979', '2016-07-19', 600, 615, 'asdfsf', 0, 0, '2016-07-19 15:14:33', 1, 'D', 1),
 (103, 0, 1, 18, 151, '435', '2016-07-19', 615, 630, 'xv', 0, 0, '2016-07-19 15:38:53', 1, 'D', 1),
-(104, 0, 1, 18, 150, '979', '2016-07-19', 630, 645, 'asdfsaf', 0, 0, '2016-07-19 15:52:49', 1, 'D', 1);
+(104, 0, 1, 18, 150, '979', '2016-07-19', 630, 645, 'asdfsaf', 0, 0, '2016-07-19 15:52:49', 1, 'D', 1),
+(105, 0, 1, 18, 169, '324234234234', '2016-07-21', 540, 555, 'Jamie needs a appointment\n', 0, 0, '2016-07-21 16:25:00', 1, 'D', 1),
+(106, 0, 1, 18, 169, '324234234234', '2016-07-21', 600, 615, 'booked when closing appointment', 1, 0, '2016-07-21 23:28:49', 1, 'D', 1),
+(107, 0, 1, 18, 169, '324234234234', '2016-07-21', 600, 615, 'booked when closing appointment', 1, 0, '2016-07-21 23:29:19', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -2349,7 +2462,9 @@ INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_t
 (68, '2016-07-13', 10, 139, 'cool man', '2016-07-13 18:10:35', 1, 'D'),
 (69, '2016-07-13', 10, 118, 'Tim is happy', '2016-07-13 22:59:15', 1, 'D'),
 (76, '2016-07-14', 9, 112, 'clsedo', '2016-07-14 15:56:39', 1, 'D'),
-(77, '2016-07-14', 9, 141, 'asd', '2016-07-14 15:58:48', 1, 'D');
+(77, '2016-07-14', 9, 141, 'asd', '2016-07-14 15:58:48', 1, 'D'),
+(106, '2016-07-21', 10, 169, 'sdfasdfasd', '2016-07-21 23:29:19', 1, 'D'),
+(107, '2016-07-21', 10, 169, 'just close and dont book', '2016-07-21 23:38:47', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -2647,7 +2762,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=169 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=170 ;
 
 --
 -- Dumping data for table `patient`
@@ -2726,7 +2841,8 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (165, 1, 'scooby', '2016-07-20', '-', '', '', 1, '23423423', NULL, NULL, '', 'undefined', '2016-07-20 14:08:18', 1, 'D', NULL, NULL, NULL, 1),
 (166, 1, 'scooby', '2016-07-20', '-', '', '', 1, '23423423', NULL, NULL, '', 'undefined', '2016-07-20 14:32:46', 1, 'D', NULL, NULL, NULL, 1),
 (167, 1, 'scooby', '2016-07-20', '-', '', '', 1, '23423423', NULL, NULL, '', 'undefined', '2016-07-20 14:34:48', 1, 'D', NULL, NULL, NULL, 1),
-(168, 1, 'Dan', '2016-07-20', '-', '', '', 1, '423423432', NULL, NULL, '', 'undefined', '2016-07-20 18:30:30', 1, 'D', NULL, 1, 'D', 1);
+(168, 1, 'Dan', '2016-07-20', '-', '', '', 1, '423423432', NULL, NULL, '', 'undefined', '2016-07-20 18:30:30', 1, 'D', NULL, 1, 'D', 1),
+(169, 1, 'Jamie', '2016-07-21', '', '', '', 1, '324234234234', NULL, NULL, NULL, NULL, '2016-07-21 16:25:00', 1, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 

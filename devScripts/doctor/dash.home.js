@@ -549,8 +549,19 @@ render: function(){
     //refresh appointment
     console.log('selected date ' + cont.getSelectedeDate() + ' loc Id ' + cont.getSelectedLocId());
 
-    cont.getappointmentListForDate(cont.getSelectedeDate());
-    todayAppointmentListView.closeAppointmentModal.modal('hide');
+
+
+    if(response.status == 1){
+      cont.getappointmentListForDate(cont.getSelectedeDate());
+      todayAppointmentListView.closeAppointmentModal.modal('hide');
+    }else if(response.status == 2){
+      console.log('either the appointment id already closed or there is no corresponding appointment');
+      todayAppointmentListView.closeAppointmentModal.modal('hide');
+    }else if(response.status == 5){
+      console.log('appointment closed but next appointmetn could not be booked');
+    }
+
+
 
   });
 
