@@ -30,12 +30,64 @@
   </div>
 
   <div class="form-group">
+    <label for="focusedinput" class="col-md-2  col-sm-2 control-label"></label>
+    <div class="col-md-8 col-sm-8 ">
+      <div class="checkbox">
+        <label>
+          <input id="book-next-appointment" type="checkbox">Book next appointment
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="focusedinput" class="col-md-2 control-label">Appt. date</label>
+    <div class='col-md-8'>
+
+      <div class='input-group date' >
+        <input id="next-appointment-date" type='text' class="form-control" />
+        <span id="next-appointment-date-icon" class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <label for="focusedinput" class="col-md-2 control-label">Appt. time</label>
+    <div class='col-md-8'>
+
+      <div class='input-group date' >
+        <input id="next-appointment-time" type="text" class="form-control">
+        <span id="next-appointment-time-icon" class="input-group-addon">
+          <span class="glyphicon glyphicon-time"></span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="form-group has-feedback">
+    <label for="focusedinput" class="col-md-2  col-sm-2 control-label">Appt. duration</label>
+    <div class="col-md-8 col-sm-8">
+      <select  id="duration-sel" class="form-control">
+      </select>
+    </div>
+  </div>
+
+
+
+  <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
     <div class="col-md-8">
       <input type="text" class="form-control" name="closingName" id="close-appointment-patients-name" placeholder="Patients name">
     </div>
 
   </div>
+
+
   <div class="form-group table-prescription-form">
     <label for="focusedinput" class="col-md-2 control-label">Prescription</label>
     <div class="col-md-8">
