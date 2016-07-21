@@ -12,7 +12,7 @@ $app->group('/Upload',function(){
                         'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
                         'upload_dir' => $upload_dir,
                         'upload_url' => 'index.php/Upload/upload',
-                        'thumbnail' => array('max_width' => 80,'max_height' => 80)
+                        'thumbnail' => array('max_width' => 180,'max_height' => 180)
                         ));
             $data = array('status' => "1", 'data' => $upload_handler, 'message' => "success" );
             return $response->withJson($data);
@@ -32,7 +32,7 @@ $app->group('/Upload',function(){
                         'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
                         'upload_dir' => $upload_dir,
                         'upload_url' => 'index.php/Upload/upload',
-                        'thumbnail' => array('max_width' => 80,'max_height' => 80)
+                        'thumbnail' => array('max_width' => 180,'max_height' => 180)
                         ));
             $data = array('status' => "1", 'data' => $upload_handler, 'message' => "success" );
             return $response->withJson($data);

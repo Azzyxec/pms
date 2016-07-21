@@ -63,6 +63,7 @@ $(document).ready(function(){
       this.patientDetailPersistUrl = links.patientDetailPersistUrl;
       this.patientsDetailsUrl = links.patientsDetailsUrl;
       this.patientsImageUrl = links.getpatientsImageUrl;
+      this.redirectPatientsListingUrl = links.patientsListingUrl;
 
       //this.patientsProgrammesUrl = links.patientsProgrammesUrl;
     };
@@ -321,6 +322,10 @@ MainController.prototype.persistModel = function () {
   $.post( this.patientDetailPersistUrl , postData)
   .done(function( response ) {
     console.log('save response' + JSON.stringify(response));
+
+    if(response.status == 1){
+      window.location.href = links.patientsListingUrl+'?status=1';
+    }
     //redirect to patient listing
   });
 };
@@ -443,6 +448,8 @@ var patientDetailsView = {
         //console.log('save click' + JSON.stringify(model));
         controller.updateModelsFromViews();
         controller.persistModel();
+
+
 
 
     });

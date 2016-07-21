@@ -50,8 +50,17 @@ $(document).ready(function(){
               window.location.href = links.patientsEntryUrl;
             });
 
+            this.alertStatus = utility.getURLParam('status');
+
           },
           render:  function(){
+
+            if(this.alertStatus == 1){
+              utility.getAlerts("Patient details successfully updated!","alert-success","",".container-fluid");
+
+            }
+
+
 
              var patientsList = controller.getListModel();
               //console.log(JSON.stringify(controller.getData()));
