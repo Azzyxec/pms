@@ -241,6 +241,9 @@ $(document).ready(function(){
 
     this.bookingController = makeAppointmentController();
 
+    this.rescheduleController = getRescheduleAppointmentController();
+    this.rescheduleController.init();
+
   };
 
   controller.prototype.removeOverLay = function () {
@@ -459,6 +462,7 @@ controller.prototype.getUserInfo = function () {
       this.newAppointmentModal = $('#book-appointment-modal');
       this.cancelAppointmentModal = $('#cancel-appointment-modal-window');
       this.closeAppointmentModal = $('#close-appointment-modal-window');
+      this.rescheduleModal = $('#reschedule-appointment-modal');
 
       this.dateInput.datetimepicker({
         inline:true,
@@ -572,6 +576,21 @@ render: function(){
 
   });
 
+
+  cont.rescheduleController.setCallback(function(response){
+
+    console.log('callback resp ' +JSON.stringify(response));
+
+    if(response.status == 1){
+      console.log('hide the modal');
+      todayAppointmentListView.rescheduleModal.modal('hide');
+
+    }else if(response.status == 2){
+      console.log('show message that appointment could not be rescheduled');
+    }
+
+  });
+
   todayAppointmentListView.closeAppointmentModal.on('hidden.bs.modal', function(){
     console.log('close appointment modal close');
     cont.closeAppointmentController.cleanup();
@@ -584,6 +603,13 @@ render: function(){
     cont.bookingController.cleanup();
 
       $('.pms-alerts').remove();
+  });
+
+  this.rescheduleModal.on('hidden.bs.modal', function(){
+    console.log('reschedule appointment modal close');
+    cont.rescheduleController.reset();
+
+    $('.pms-alerts').remove();
   });
 
   /*
@@ -746,6 +772,25 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
     template.find('.aa').text(mStartTime.format(" A"));
 
     template.find('.patient-name').text(appointmentItem.name);
+
+    template.find('.reschedule-appointment-template-button').on('click',(function(appointment){
+
+      return function(){
+          console.log('reschedule button click');
+
+          var info = {
+            appointmentId: appointment.id,
+            patientName: appointment.name
+          }
+
+          cont.rescheduleController.setInitInfo(info);
+
+          todayAppointmentListView.rescheduleModal.modal();
+      }
+
+    })(appointmentItem));
+
+    //wiring the history button
     template.find('.patient_history_btn').on('click',(function(){
       return function(){
         console.log(cont.getPatientsHistoryUrl);

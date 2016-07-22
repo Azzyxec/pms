@@ -185,9 +185,7 @@ MainController.prototype.updateGuardianInfoModelFromView = function () {
   //var dateOfBirth = moment(patientGuardianDetailsView.dateOfBirth.val(), "YYYY-MM-DD");
   model.guardianInfo.dateOfBirth =patientGuardianDetailsView.dateOfBirth.val();
 
-
   //model.guardianInfo.gender  = patientGuardianDetailsView.rbMale.val();
-
   if(patientGuardianDetailsView.rbMale.is(":checked")){
     model.guardianInfo.gender = 1;
   }else{
@@ -210,7 +208,6 @@ MainController.prototype.updateGuardianInfoModelFromView = function () {
   }
 
 };
-
 
 //birth info realted functions
 /*
@@ -1037,6 +1034,7 @@ var patientProgrammesDetailsView = {
 
               var dueOnStr = dueOnControl.val();
 
+              /*
               if(dueOnStr &&  model.givenOn){
 
                 var dueOn = moment(dueOnControl.val(), 'DD-MM-YYYY');
@@ -1050,6 +1048,7 @@ var patientProgrammesDetailsView = {
                 }
 
               }
+              */
 
               model.dueOn = dueOnStr;
               console.log('change + ' + JSON.stringify(model));

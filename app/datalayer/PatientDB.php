@@ -35,7 +35,8 @@ class PatientDB{
     try {
 
     $paramArray = array(
-                          'pdoctor_id' => $doctorId
+                          'pdoctor_id' => $doctorId,
+                          'pfetch_inactive' => 1
                         );
 
      $statement = DBHelper::generateStatement('get_patients_list',  $paramArray);
@@ -53,12 +54,11 @@ class PatientDB{
        $patient['height'] = $result['height'];
        $patient['gender'] = $result['gender'];
        $patient['genderText'] = $result['gender'] == 0 ? 'Female' : 'Male';
-
-
        $patient['contact'] = $result['contact1'];
        $patient['address'] = $result['address'];
        $patient['picturePath'] = $result['picture_path'];
        $patient['displayName'] = $result['display'];
+       $patient['isActive'] = $result['is_active'];
 
        $patientList[] = $patient;
      }
@@ -75,7 +75,8 @@ class PatientDB{
     try {
 
     $paramArray = array(
-                          'pdoctor_id' => $doctorId
+                          'pdoctor_id' => $doctorId,
+                          'pfetch_inactive' => 0
                         );
 
      $statement = DBHelper::generateStatement('get_patients_list',  $paramArray);
