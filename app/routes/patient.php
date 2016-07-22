@@ -179,7 +179,11 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
          $savedPatientId = $savePatientResponse['data']['patientId'];
          $patient->id = $savedPatientId;
 
+         $guardianInfoProcessed = false;
+
          if(isset($postedData['guardianInfo'])){
+
+           $guardianInfoProcessed = true;
 
            $guardianArray = $postedData['guardianInfo'];
            $guardian =  new Patient();
@@ -214,7 +218,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
 
          }
 
-        $resp = array('status' => "1", 'data' => $data, 'message' => 'success' );
+        $resp = array('status' => "1", 'data' => $data, 'guardianInfoProcessed' => $guardianInfoProcessed, 'message' => 'success' );
 
         return $response->withJson($resp);
 

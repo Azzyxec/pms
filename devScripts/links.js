@@ -73,6 +73,7 @@ var links = {
    getAllAppointmentsUrl: "index.php/appointment/getAllAppointments",
    cancelAppointmentUrl: "index.php/appointment/cancelAppointment",
    closeAppointmentUrl: "index.php/appointment/closeAppointment",
+   rescheduleAppointmentUrl: "index.php/appointment/rescheduleAppointment",
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
    locationListUrl:"index.php/locations/getDoctorLocations",
@@ -93,7 +94,6 @@ var links = {
 
 
     //upload
-
     closeApptUploadFiles:"index.php/Upload/CloseApptUpload",
     PatientUploadimage:"index.php/Upload/PatientImageUpload",
     GaurdianUploadimage:"index.php/Upload/GuardianImageUpload"

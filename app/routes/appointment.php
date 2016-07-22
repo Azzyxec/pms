@@ -10,35 +10,6 @@ use Pms\Utilities\XMLHelper;
 
 $app->group('/appointment', function(){
 
-
-  $this->get('/test', function ($request, $response) {
-
-
-      $appointment = array( "appointmentId" => 2,
-                            "closingDate" => "12-07-2016",
-                            "closingTime" => "09:00 AM",
-                            "nextAppointmentDate" => "",
-                            "nextAppointmentTime" => "",
-                            "patientsName" => "John",
-                            "remarks" =>   "xyz"
-                            );
-
-      $prescription = array();
-      $prescription[] = array("name"=>"one", "remarks"=>"ola");
-      $prescription[] = array("name"=>"two", "remarks"=>"obrigado");
-
-      $prescriptionCount = 2;
-
-      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
-      XMLHelper::array_to_xml($prescription, $xml_data);
-      $prescriptionListXml = $xml_data->asXML();
-
-      $appointmentDB = new AppointmentDB();
-      $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount, 1, 'D');
-
-      return $response->withJson(array("status" => $status));
-    });
-
   $this->post('/closeAppointment', function ($request, $response) {
     try {
 
@@ -152,6 +123,71 @@ $app->group('/appointment', function(){
 
       $data = array('status' => $status, 'data' => "", 'message' => $message);
       return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+      return $response->withJson($data);
+    }
+
+  });
+
+
+  $this->post('/rescheduleAppointment', function ($request, $response) {
+    try {
+
+      $message = "success";
+      $status = "-1"; //appointment timing clasing or no schedule added
+      $nextAppointmentStatus = -1;
+
+      $user = UserSessionManager::getUser();
+
+      if($user->id != -1){
+
+        $postedData = $request->getParsedBody();
+
+        $rescheduleInfo = $postedData['rescheduleInfo'];
+
+        $appointmentId = $rescheduleInfo['appointmentId'];
+        $date = $rescheduleInfo['date'];
+        $startTimeMins = $rescheduleInfo['startTimeMins'];
+        $endTimeMins = $rescheduleInfo['endTimeMins'];
+        $remarks = $rescheduleInfo['remarks'];
+
+        $appointmentDB = new AppointmentDB();
+
+        $status = $appointmentDB->checkNextAppointmentAvailibility(
+                                                                         $appointmentId,
+                                                                         $date,
+                                                                         $startTimeMins,
+                                                                         $endTimeMins
+                                                                       );
+
+        if($status == 1){
+
+          /*
+          $status = $appointmentDB->rescheduleAppointment(
+                                                          $appointmentId,
+                                                          $date,
+                                                          $startTimeMins,
+                                                          $endTimeMins,
+                                                          $remarks,
+                                                          $user->id,
+                                                          $user->type
+                                                         );
+          */
+
+        }
+
+
+
+
+      }else {
+        $message = "user not logged in";
+      }
+
+      $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
+      return $response->withJson($data);
+
 
     } catch (Exception $e) {
       $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());

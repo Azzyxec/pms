@@ -1,0 +1,59 @@
+<form class="form-horizontal">
+
+  <div class="form-group">
+    <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
+    <div class="col-md-8">
+      <input type="text" readonly="true" class="form-control" name="closingName" id="modal-reschedule-patients-name" placeholder="Patients name">
+    </div>
+  </div>
+
+  <div class="form-group book-next-controls">
+    <label for="focusedinput" class="col-md-2 control-label">Appt. Date</label>
+    <div class='col-md-8'>
+
+      <div class='input-group date' >
+        <input id="modal-reschedule-appt-date" type='text' class="form-control" />
+        <span id="modal-reschedule-appt-date-icon" class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="form-group book-next-controls">
+    <label for="focusedinput" class="col-md-2 control-label">Appt. time</label>
+    <div class='col-md-8'>
+
+      <div class='input-group date' >
+        <input id="modal-reschedule-appt-time" type="text" class="form-control">
+        <span id="modal-reschedule-appt-time-icon" class="input-group-addon">
+          <span class="glyphicon glyphicon-time"></span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="form-group has-feedback book-next-controls">
+    <label for="focusedinput" class="col-md-2 control-label">Appt. duration</label>
+    <div class="col-md-8">
+      <select  id="modal-reschedule-duration-sel" class="form-control">
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="focusedinput" class="col-md-2 control-label">Remarks<span class="required">*</span></label>
+    <div class="col-md-8">
+      <textarea class="form-control" maxlength="1500" rows ="5" name="closingRemarks" id="modal-reschedule-remarks" ></textarea>
+      <p style="color:red;" id="dataSizeValidation" class="validation"></p>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <input type="button" class="btn-success btn" id="btn-modal-reschedule-appt" name="submit" value="Reschedule"/>
+</div>
+</form>

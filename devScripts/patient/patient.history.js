@@ -45,7 +45,7 @@ $(document).ready(function(){
         //console.log(JSON.stringify(controller.getData()));
         console.log('model in view' + JSON.stringify(patientsList));
 
-
+        if(patientsList && patientsList != -1 && patientsList.length > 0){
 
         var table = $('#example').DataTable( {
           "bProcessing": true,
@@ -69,6 +69,8 @@ $(document).ready(function(){
           ],
           "order": [[1, 'asc']]
         } );
+
+      }
 
         $(function () {
           $('[data-toggle="popover"]').popover({'trigger':'focus','placement':'left'})

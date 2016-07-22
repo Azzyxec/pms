@@ -19,7 +19,7 @@ function makeAppointmentController(){
       gender:0,
       height: '',
       weight:'',
-      bloodGroup:'',
+      bloodGroup:'-',
       contact: ''
     },
     userInfo:{},
@@ -184,7 +184,7 @@ function makeAppointmentController(){
        model.patient.gender = 1;
        model.patient.height = '';
        model.patient.weight = '';
-       model.patient.bloodGroup = '';
+       model.patient.bloodGroup = '-';
        model.patient.contact = '';
  };
 
@@ -700,7 +700,7 @@ function makeAppointmentController(){
 
         this.patientsHeight.removeAttr('readonly');
         this.patientsWeight.removeAttr('readonly');
-        this.patientsBloodGroup.removeAttr('readonly');
+        this.patientsBloodGroup.removeAttr('disabled');
         //this.contact.removeAttr('disabled');
 
       }else{
@@ -712,7 +712,7 @@ function makeAppointmentController(){
 
         this.patientsHeight.prop('readonly', true);
         this.patientsWeight.prop('readonly', true);
-        this.patientsBloodGroup.prop('readonly', true);
+        this.patientsBloodGroup.prop('disabled', true);
         //this.contact.attr('disabled', 'disabled');
       }
     }
