@@ -1,13 +1,21 @@
 <?php
 use Pms\utilities\UploadHandler;
 
+class CustomUploadHandler extends UploadHandler {
+  /*  protected function trim_file_name($file_path, $name, $size, $type, $error, $index, $content_range) {
+            $name = 'First_' . microtime(true);
+            $name = str_replace('.', '', $name);
+            return $name;
+        }*/
+}
 
+//$upload_handler = new CustomUploadHandler();
 
 $app->group('/Upload',function(){
     $this->post('/CloseApptUpload',function($request, $response){
         try{
            $upload_dir = 'images/scannedDoc/';
-           $upload_handler = new UploadHandler(array(
+           $upload_handler = new CustomUploadHandler(array(
                         'max_file_size' => 1048576, //1MB file size
                         'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
                         'upload_dir' => $upload_dir,
@@ -27,7 +35,7 @@ $app->group('/Upload',function(){
     $this->post('/PatientImageUpload',function($request, $response){
         try{
            $upload_dir = 'images/patientUserImages/';
-           $upload_handler = new UploadHandler(array(
+           $upload_handler = new CustomUploadHandler(array(
                         'max_file_size' => 1048576, //1MB file size
                         'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
                         'upload_dir' => $upload_dir,
@@ -48,7 +56,7 @@ $app->group('/Upload',function(){
     $this->post('/GuardianImageUpload',function($request, $response){
         try{
            $upload_dir = 'images/guardianUserImages/';
-           $upload_handler = new UploadHandler(array(
+           $upload_handler = new CustomUploadHandlerr(array(
                         'max_file_size' => 1048576, //1MB file size
                         'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
                         'upload_dir' => $upload_dir,

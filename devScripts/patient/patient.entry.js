@@ -500,7 +500,7 @@ var patientDetailsView = {
 
             model.patientInfo.picUploadPath =file.name;
             console.log(file.name);
-            $("#patient-picture-container").attr('src','images/patientUserImages/'+file.name);
+            $("#patient-picture-container").attr('src','images/patientUserImages/'+model.patientInfo.picUploadPath);
 
             file_txt.append(removeBtn); //add remove button inside info text element
             file_txt.prependTo(node); //add to node element
