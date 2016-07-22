@@ -23,7 +23,7 @@ $(document).ready(function(){
       guardianInfo:{
         name:"",
         dateOfBirth: "",
-        gender:"1",
+        gender:1,
         contact1:"",
         contact2:"",
         address: "",
@@ -142,7 +142,7 @@ MainController.prototype.updatePatientInfoModelFromView = function () {
   model.patientInfo.bloodGroup = bloodGrp;
   model.patientInfo.weight = patientDetailsView.weight.val();
   model.patientInfo.height = patientDetailsView.height.val();
-  model.patientInfo.gender  = patientDetailsView.rbMale.val();
+  //model.patientInfo.gender  = patientDetailsView.rbMale.val();
   //model.patientInfo.picUploadPath  = "566"
   //console.log(GlobalFilePath);
   if(patientDetailsView.rbMale.is(":checked")){
@@ -178,23 +178,29 @@ MainController.prototype.getGuardianInfoModel = function () {
 
 MainController.prototype.updateGuardianInfoModelFromView = function () {
 
+  console.log( 'before update' + JSON.stringify(model.guardianInfo));
+
   model.guardianInfo.name = patientGuardianDetailsView.name.val();
 
   //var dateOfBirth = moment(patientGuardianDetailsView.dateOfBirth.val(), "YYYY-MM-DD");
   model.guardianInfo.dateOfBirth =patientGuardianDetailsView.dateOfBirth.val();
 
 
-  model.guardianInfo.gender  = patientGuardianDetailsView.rbMale.val();
+  //model.guardianInfo.gender  = patientGuardianDetailsView.rbMale.val();
 
-  if(patientDetailsView.rbMale.is(":checked")){
+  if(patientGuardianDetailsView.rbMale.is(":checked")){
     model.guardianInfo.gender = 1;
   }else{
     model.guardianInfo.gender = 0;
   }
 
+  console.log('guardian ' + model.guardianInfo.gender);
+
   model.guardianInfo.contact1 = patientGuardianDetailsView.contact1.val();
   //model.guardianInfo.contact2 = patientGuardianDetailsView.contact2.val();
   model.guardianInfo.address = patientGuardianDetailsView.address.val();
+
+  console.log( 'after update' + JSON.stringify(model.guardianInfo));
 
   if($('#guardian-profile-image').attr('src') !== undefined){
     var str = $('#guardian-profile-image').attr('src');
@@ -239,7 +245,7 @@ MainController.prototype.getPatientsProgramsModel = function () {
 MainController.prototype.addDoctorsProgramToPatient = function (programmeId, programmeName) {
 
 
-  var lpatientsPrograms = this.getPatientsProgramsModel();
+var lpatientsPrograms = this.getPatientsProgramsModel();
 
 console.log('program id to check' + programmeId);
   for(var i = 0; i < lpatientsPrograms.length; i++ ){
@@ -252,7 +258,7 @@ console.log('program id to check' + programmeId);
   //getting the doctors programme, and rendering the programmes view
   $.get( this.programmeListDetailsUrl , {id: programmeId})
   .done(function( response ) {
-    console.log(' getting program details for patient' + JSON.stringify(response));
+    console.log('getting program details for patient' + JSON.stringify(response));
     if(response.status == 1){
       var programme = {
         id: programmeId,
@@ -280,10 +286,18 @@ MainController.prototype.updateModelsFromViews = function () {
 MainController.prototype.getPatientsModelServer = function (patientId) {
   $.get( this.patientsDetailsUrl , {id:patientId})
   .done(function( response ) {
-    console.log(JSON.stringify(response));
+    console.log('model server' + JSON.stringify(response));
     //assign the model the data retreived from the server
     model.patientInfo = response.data.patient;
-    model.guardianInfo = response.data.guardian;
+
+    if(response.data.guardian && response.data.guardian.empty == false){
+    //if(!$.isEmptyObject(response.data.patient)){
+      console.log('setting model' + response.data.guardian);
+      model.guardianInfo = response.data.guardian;
+    }
+
+    console.log('model page' + JSON.stringify(model.guardianInfo));
+
     //model.birthInfo = response.data.birthDetails;
     model.patientsPrograms = response.data.programmeLists;
     model.patientsProgramCount = model.patientsPrograms.length;
@@ -301,7 +315,8 @@ MainController.prototype.getPatientsModelServer = function (patientId) {
 MainController.prototype.persistModel = function () {
   //console.log('persisting ' + JSON.stringify(model));
 
-  var postData  = {patientInfo: model.patientInfo,
+  var postData  = {
+                   patientInfo: model.patientInfo,
                    patientsPrograms: model.patientsPrograms,
                    programmeCount: model.patientsProgramCount
                   };
@@ -309,7 +324,8 @@ MainController.prototype.persistModel = function () {
    if(model.saveGuardianInfo){
      console.log('adding guardians info');
 
-     var postData  = {patientInfo: model.patientInfo,
+     var postData  = {
+                      patientInfo: model.patientInfo,
                       guardianInfo: model.guardianInfo,
                       patientsPrograms: model.patientsPrograms,
                       programmeCount: model.patientsProgramCount
@@ -317,7 +333,6 @@ MainController.prototype.persistModel = function () {
    }
 
    console.log('posting ' + JSON.stringify(postData));
-
 
   $.post( this.patientDetailPersistUrl , postData)
   .done(function( response ) {
@@ -421,6 +436,8 @@ var patientDetailsView = {
 
       var guardianFormDirty = patientGuardianDetailsView.isFormdirty();
 
+      console.log('guardian form dirty' + guardianFormDirty);
+
       if(guardianFormDirty){
 
         patientGuardianDetailsView.formValidator.data('bootstrapValidator').validate();
@@ -431,26 +448,23 @@ var patientDetailsView = {
           console.log('guardian form invalid');
           patientGuardianDetailsView.tab.trigger('click');
           return;
-
         }
 
       }
 
-        //at this point guardian form is either valid or totally blank
-        //if its dirty then save guardian info
+      //at this point guardian form is either valid or totally blank
+      //if its dirty then save guardian info
 
         if(guardianFormDirty){
-          console.log('save guardian info');
           model.saveGuardianInfo = true;
+          console.log('save guardian info' + model.saveGuardianInfo);
         }
 
         console.log('submit data');
         //console.log('save click' + JSON.stringify(model));
         controller.updateModelsFromViews();
+
         controller.persistModel();
-
-
-
 
     });
 

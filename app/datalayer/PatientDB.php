@@ -164,11 +164,14 @@ class PatientDB{
        //$guardian['dateOfBirth'] = $row['date_of_birth'];
        $guardian['gender'] = $row['gender'];
        $guardian['contact1'] = $row['phone1'];
-      // $guardian['contact2'] = $row['phone2'];
+       //$guardian['contact2'] = $row['phone2'];
        $guardian['address'] = $row['address'];
        $guardian['picturePath'] = $row['picture_path'];
+       $guardian['empty'] = false;
 
-    }
+     }else{
+       $guardian['empty'] = true;
+     }
 
     return $guardian;
 

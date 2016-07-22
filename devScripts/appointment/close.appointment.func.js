@@ -300,8 +300,10 @@ function getCloseAppointmentController(){
 
         if(this.checked){
           model.bookNextAppointment = true;
+          $('.book-next-controls').removeClass('hidden');
         }else{
           model.bookNextAppointment = false;
+          $('.book-next-controls').addClass('hidden');
         }
 
         console.log('book appointment' + model.bookNextAppointment);
