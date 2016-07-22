@@ -712,8 +712,8 @@ var patientGuardianDetailsView = {
                 //create file info text, name and file size
                 var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
-                model.guardianInfo.picUploadPath =file.name;
-                $("#guardian-profile-image").attr('src','images/guardianUserImages/'+file.name);
+                model.guardianInfo.picUploadPath = file.name;
+                $("#guardian-profile-image").attr('src','images/guardianUserImages/'+model.guardianInfo.picUploadPath);
 
                 file_txt.append(removeBtn); //add remove button inside info text element
                 file_txt.prependTo(node); //add to node element

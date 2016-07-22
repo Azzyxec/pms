@@ -9,7 +9,7 @@ $(document).ready(function(){
     workLocations: [],
     selectedLocation:{id:0, name:""},
     scheduleList:[]
-  };
+  }; 
 
   var controller = {
     init: function(){

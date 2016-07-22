@@ -9,7 +9,35 @@ class CustomUploadHandler extends UploadHandler {
         }*/
 }
 
-//$upload_handler = new CustomUploadHandler();
+/*
+
+class UploadHandler
+{
+    public $file_name;
+    protected $options;
+and then add that to the function that creates the name
+
+protected function get_file_name($name,
+        $type = null, $index = null, $content_range = null) {
+
+    $this->file_name = $this->get_unique_filename(
+        $this->trim_file_name($name, $type, $index, $content_range),
+        $type,
+        $index,
+        $content_range
+    );
+    return $this->file_name;
+}
+then under index.php you could do something like this
+
+$upload_handler = new UploadHandler();
+echo "\r\n [" . $upload_handler->fileName . "]\r\n";
+
+*/
+
+
+
+
 
 $app->group('/Upload',function(){
     $this->post('/CloseApptUpload',function($request, $response){
