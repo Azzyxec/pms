@@ -156,25 +156,25 @@ $app->group('/appointment', function(){
         $appointmentDB = new AppointmentDB();
 
         $status = $appointmentDB->checkNextAppointmentAvailibility(
-                                                                         $appointmentId,
-                                                                         $date,
-                                                                         $startTimeMins,
-                                                                         $endTimeMins
-                                                                       );
+                                                                   $appointmentId,
+                                                                   $date,
+                                                                   $startTimeMins,
+                                                                   $endTimeMins
+                                                                 );
 
         if($status == 1){
 
-          /*
+
           $status = $appointmentDB->rescheduleAppointment(
                                                           $appointmentId,
                                                           $date,
                                                           $startTimeMins,
                                                           $endTimeMins,
-                                                          $remarks,
                                                           $user->id,
-                                                          $user->type
+                                                          $user->type,
+                                                          $remarks
                                                          );
-          */
+
 
         }
 

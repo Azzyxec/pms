@@ -1008,7 +1008,7 @@ var patientProgrammesDetailsView = {
 
           if(programmeModel[i].list[j].dueOn){
             //var mdueDate = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
-            givenOn.data("DateTimePicker").minDate(programmeModel[i].list[j].dueOn);
+            //givenOn.data("DateTimePicker").minDate(programmeModel[i].list[j].dueOn);
           }
 
           //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
