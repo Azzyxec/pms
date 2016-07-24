@@ -67,6 +67,7 @@ $(document).ready(function(){
 
     var intermediateList = [];
     var cancelledList = [];
+    var rescheduledList = [];
 
     for(var i = 0; i < model.appointmentList.length; i++){
       var item = model.appointmentList[i];
@@ -74,10 +75,13 @@ $(document).ready(function(){
       if(locationId == 0 || locationId == item.locId ){
         //filter with respect to location when locationId != 0
 
-       if(item.state != 2){
+       if(item.state == 0 || item.state == 1){
           intermediateList.push(item);
         }else if(item.state == 2){
           cancelledList.push(item);
+        }else if(item.state == 3){
+
+          rescheduledList.push(item);
         }
 
       }
@@ -103,7 +107,8 @@ $(document).ready(function(){
 
     //adding the items that we dont want to remove
     var returnList = _.difference(intermediateList, removeList)
-                      .concat(cancelledList);
+                      .concat(cancelledList)
+                      .concat(rescheduledList);
 
     return returnList;
 
@@ -322,11 +327,13 @@ controller.prototype.getUserInfo = function () {
     //console.log('called with' +  pdate);
     $.get( this.getAppointmentForTheDayUrl , {date:   pdate, locId: 0})
     .done(function( response ) {
-      //console.log("today Appointment: " + JSON.stringify(response));
+
       model.appointmentList = response.data;
 
       var appointmentList = cont.getSortedAppointmentList(0);
       model.appointmentList = appointmentList;
+
+      console.log("after sorting: " + JSON.stringify(model.appointmentList));
 
       var locId = cont.getSelectedLocId();
 
@@ -457,6 +464,7 @@ controller.prototype.getUserInfo = function () {
       this.cancelledAppointmentTemplate = $('#cancelled-appointment-template');
       this.closedAppointmentTemplate = $('#closed-appointment-template');
       this.noResultsFoundTemplate = $('#no-result-found-template');
+      this.rescheduledAppointmentTemplate = $('#rescheduled-appt-template');
 
       //modals
       this.newAppointmentModal = $('#book-appointment-modal');
@@ -583,6 +591,7 @@ render: function(){
 
     if(response.status == 1){
       console.log('hide the modal');
+      cont.getappointmentListForDate(cont.getSelectedeDate());
       todayAppointmentListView.rescheduleModal.modal('hide');
 
     }else if(response.status == 2){
@@ -683,6 +692,10 @@ renderAppointmentist: function(appointmentList){
           var template = this.cancelledAppointmentTemplate.clone();
           this.intilizeCancelledAppointmentTemplate(template, item );
           //cancelled
+        }else  if(item.state == 3){
+          var template = this.rescheduledAppointmentTemplate.clone();
+          this.intilizeRescheduledAppointmentTemplate(template, item );
+          //cancelled
         }
 
       }
@@ -714,6 +727,41 @@ intilizeCancelledAppointmentTemplate: function(template, appointmentItem){
     };
 
     template.find('.btn-cancel-remarks').popover(popoverSettings);
+
+    //patient history button
+    template.find('.patient_history_btn').on('click',(function(){
+      return function(){
+        console.log(cont.getPatientsHistoryUrl);
+        window.open(cont.getPatientsHistoryUrl+'?id='+appointmentItem.patientId,'_blank');
+        console.log(appointmentItem.patientId);
+      }
+
+
+    })(appointmentItem));
+
+  }
+},
+intilizeRescheduledAppointmentTemplate: function(template, appointmentItem){
+  if(template && appointmentItem){
+    var mStartTime = moment({hours: appointmentItem.startMins/60 , minutes: appointmentItem.startMins%60});
+    var mEndTime = moment({hours: appointmentItem.endMins/60 , minutes: appointmentItem.endMins%60});
+
+    template.find('.time').text(mStartTime.format("hh:mm"));
+    template.find('.aa').text(mStartTime.format(" A"));
+
+    template.find('.patient-name').text(appointmentItem.name);
+
+
+    //setting info popover
+    var popoverSettings = {
+      placement:'left',
+      container: 'body',
+      trigger: 'focus',
+      html: true,
+      content: this.getCancelClosePopoverContent(appointmentItem.contact, appointmentItem.description, appointmentItem.remarks)
+    };
+
+    template.find('.btn-reschedule-remarks').popover(popoverSettings);
 
     //patient history button
     template.find('.patient_history_btn').on('click',(function(){
@@ -773,6 +821,7 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
 
     template.find('.patient-name').text(appointmentItem.name);
 
+    //wiring reschedule button
     template.find('.reschedule-appointment-template-button').on('click',(function(appointment){
 
       return function(){

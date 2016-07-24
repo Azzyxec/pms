@@ -9,7 +9,7 @@ $(document).ready(function(){
     workLocations: [],
     selectedLocation:{id:0, name:""},
     scheduleList:[]
-  }; 
+  };
 
   var controller = {
     init: function(){
@@ -252,17 +252,19 @@ var stepOneView = {
 
 
 
-    this.fromTimeControl.val("09:00:AM");
+
     this.fromTimeControl.datetimepicker({
     inline: false,
     format:'LT'
     });
+    this.fromTimeControl.val("09:00:AM");
 
-    this.toTimeControl.val("12:00:PM");
+
     this.toTimeControl.datetimepicker({
     inline: false,
     format:'LT'
     });
+    this.toTimeControl.val("12:00:PM");
 
     this.checkAllWeekDays = $('#chk-all-weekdays');
     this.chkMon = $('#chk-mon');

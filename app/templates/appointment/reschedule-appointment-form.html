@@ -1,9 +1,9 @@
-<form class="form-horizontal">
+<form id="modal-reschedule-form" class="form-horizontal">
 
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Patient Name<span class="required">*</span></label>
     <div class="col-md-8">
-      <input type="text" readonly="true" class="form-control" name="closingName" id="modal-reschedule-patients-name" placeholder="Patients name">
+      <input type="text" readonly="true" class="form-control"  id="modal-reschedule-patients-name" placeholder="Patients name">
     </div>
   </div>
 
@@ -12,7 +12,7 @@
     <div class='col-md-8'>
 
       <div class='input-group date' >
-        <input id="modal-reschedule-appt-date" type='text' class="form-control" />
+        <input id="modal-reschedule-appt-date" name="rescheduleDate" type='text' class="form-control" />
         <span id="modal-reschedule-appt-date-icon" class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -27,7 +27,7 @@
     <div class='col-md-8'>
 
       <div class='input-group date' >
-        <input id="modal-reschedule-appt-time" type="text" class="form-control">
+        <input id="modal-reschedule-appt-time" name="rescheduleTime" type="text" class="form-control">
         <span id="modal-reschedule-appt-time-icon" class="input-group-addon">
           <span class="glyphicon glyphicon-time"></span>
         </span>
@@ -47,7 +47,7 @@
   <div class="form-group">
     <label for="focusedinput" class="col-md-2 control-label">Remarks<span class="required">*</span></label>
     <div class="col-md-8">
-      <textarea class="form-control" maxlength="1500" rows ="5" name="closingRemarks" id="modal-reschedule-remarks" ></textarea>
+      <textarea class="form-control" maxlength="1500" rows ="5" name="rescheduleRemarks" id="modal-reschedule-remarks" ></textarea>
       <p style="color:red;" id="dataSizeValidation" class="validation"></p>
     </div>
   </div>
