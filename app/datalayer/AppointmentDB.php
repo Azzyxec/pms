@@ -275,4 +275,26 @@ class AppointmentDB{
     }
   }
 
+  public function rescheduleAppointment($appointmentId, $appointmentdate, $startMins, $endMins, $loggedinUserId, $loggedinUserType, $remarks){
+    try {
+
+      $paramArray = array(
+        'pappointment_id' => $appointmentId,
+        'pappointment_date' => $appointmentdate,
+        'pstart_mins' => $startMins,
+        'pend_mins' => $endMins,
+        'pcreated_by_id' => $loggedinUserId,
+        'pcreated_by_type' => $loggedinUserType,
+        'premarks' => $remarks
+      );
+
+      $statement = DBHelper::generateStatement('reschedule_appointment',  $paramArray);
+
+      return $statement->execute();
+
+    } catch (Exception $e) {
+      return  -1;
+    }
+  }
+
 }

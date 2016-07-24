@@ -19,7 +19,7 @@ $(document).ready(function(){
 
           if(listModel){
             for(var i = 0; i < listModel.length; i++){
-                listModel[i].appt_time = utility.getTimeFromMinutes(listModel[i].appt_time);
+                listModel[i].time = utility.getTimeFromMinutes(listModel[i].time);
             }
           }
 
@@ -51,20 +51,17 @@ $(document).ready(function(){
           "bProcessing": true,
           "data":  controller.getListModel(),
           "aoColumns": [
-            { "mData": "loc_name" },
-            { "mData": "appt_date" },
-            { "mData": "appt_time" },
-            { "mData": "patient_Status",
-          "mRender" : function(data, type, full ){
-           if(data == 2){
-             return "<span>Canceled</span>";
-           }else{
-              return "<span>Closed</span>";
-           }
-          } },
-            { "mData": "patient_desc",
-            "mRender" : function ( data, type, full ) {
-              return ' <span tabindex="0" class="" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" title="Description" data-content="'+data+'">'+data.slice(0,10)+'...</span>';}
+            { "mData": "locName" },
+            { "mData": "date" },
+            { "mData": "time" },
+            { "mData": "stateText",
+              "mRender" : function(column, type, row){
+                return listView.getDescriptionTemplate(column, type, row );
+              }
+            },
+            { "mData": "description",
+            "mRender" : function ( column, type, full ) {
+              return ' <span tabindex="0" class="" role="button" data-toggle="popover" data-html="true" data-trigger="focus"  data-placement="bottom" title="Description" data-content="'+ column +'">'+ column.slice(0,10)+'...</span>';}
             }
           ],
           "order": [[1, 'asc']]
@@ -77,41 +74,32 @@ $(document).ready(function(){
 
         });
 
+  },
+  getDescriptionTemplate: function( column, type, row ){
 
-        /*  for(var i = 0; i < patientsList.length; i++){
-        //console.log('looping ' +  JSON.stringify (patientsList[i]));
+    var modalHtml = "<dl class='dl-horizontal'>" +
+                    "<dt>Description&nbsp;:&nbsp;</dt>" +
+                    "<dd>" + row.description + "</dd>" +
+                    "</dl>";
 
-        var tr = $('<tr/>');
+   if(+row.state != 0){
+        modalHtml = modalHtml +  "<dl class='dl-horizontal'>" +
+                                    "<dt>Remarks&nbsp;:&nbsp;</dt>" +
+                                    "<dd>"+ row.remarks +"</dd>" +
+                                  "</dl>";
+   }
+   var color;
 
-        var td = $('<td/>');
-        td.text(patientsList[i].name);
-        tr.append(td);
+   if(row.state == 0){
+      color = "green";
+   }else if (row.state == 1) {
+       color = "yellow";
+   }else if (row.state == 2) {
+       color = "red";
+   }
 
-        var td = $('<td/>');
-        td.text(patientsList[i].dateOfBirth);
-        tr.append(td);
 
-        var td = $('<td/>');
-        td.text(patientsList[i].bloodGroup);
-        tr.append(td);
-
-        var td = $('<td/>');
-        td.text( patientsList[i].gender == 1 ? 'Male' : 'Female');
-        tr.append(td);
-
-        var td = $('<td/>');
-        td.text(patientsList[i].contact);
-        tr.append(td);
-
-        var td = $('<a/>',{
-        text: 'Edit',
-        href: controller.editPatientRedirect + '?id=' +  patientsList[i].id
-      });
-      tr.append(td);
-
-      this.tablebody.append(tr);
-    }*/
-
+    return ' <span tabindex="0" class="'+color+'" role="button" data-toggle="popover" data-html="true" data-trigger="focus" data-placement="bottom" data-content=" '+ modalHtml  + '">'+ column + '</span>';
   }
 };
 

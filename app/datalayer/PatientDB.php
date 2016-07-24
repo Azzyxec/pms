@@ -58,7 +58,9 @@ class PatientDB{
        $patient['address'] = $result['address'];
        $patient['picturePath'] = $result['picture_path'];
        $patient['displayName'] = $result['display'];
-       $patient['isActive'] = $result['is_active'];
+       $isActive =  $result['is_active'];
+       $patient['isActive'] = $isActive;
+       $patient['status'] =  $isActive == 1?'Active':'Inactive';
 
        $patientList[] = $patient;
      }
@@ -419,16 +421,13 @@ class PatientDB{
 
 
           $patientHistoryRow['name'] = $result['name'];
-          $patientHistoryRow['appt_date'] = $result['appointment_date'];
-          $patientHistoryRow['loc_name'] = $result['location_name'];
-          $patientHistoryRow['appt_time'] = $result['start_mins'];
-          $patientHistoryRow['patient_desc'] = $result['description'];
-          $patientHistoryRow['patient_Status'] = $result['state'];
-
-
-
-
-
+          $patientHistoryRow['date'] = $result['appointment_date'];
+          $patientHistoryRow['locName'] = $result['location_name'];
+          $patientHistoryRow['time'] = $result['start_mins'];
+          $patientHistoryRow['description'] = $result['description'];
+          $patientHistoryRow['state'] = $result['state'];
+          $patientHistoryRow['stateText'] = $result['state_text'];
+            $patientHistoryRow['remarks'] = $result['remarks'];
 
           $patientHistory[] = $patientHistoryRow;
 

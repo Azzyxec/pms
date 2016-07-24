@@ -156,25 +156,25 @@ $app->group('/appointment', function(){
         $appointmentDB = new AppointmentDB();
 
         $status = $appointmentDB->checkNextAppointmentAvailibility(
-                                                                         $appointmentId,
-                                                                         $date,
-                                                                         $startTimeMins,
-                                                                         $endTimeMins
-                                                                       );
+                                                                   $appointmentId,
+                                                                   $date,
+                                                                   $startTimeMins,
+                                                                   $endTimeMins
+                                                                 );
 
         if($status == 1){
 
-          /*
+
           $status = $appointmentDB->rescheduleAppointment(
                                                           $appointmentId,
                                                           $date,
                                                           $startTimeMins,
                                                           $endTimeMins,
-                                                          $remarks,
                                                           $user->id,
-                                                          $user->type
+                                                          $user->type,
+                                                          $remarks
                                                          );
-          */
+
 
         }
 
@@ -236,6 +236,11 @@ $app->group('/appointment', function(){
           $schedule['endMins'] >=  $appointment['endMins']){
 
           //each appointmetn has a start mins and end mins
+          //check the start time of appointment
+          //if there is a free time between start of an appointment and end time of previous appointment
+          //its considered as free time slot to book appointments
+          //initial case: when there is no booking at the start of a day, schedule start time is considered
+          // as start time
           $endMins = $appointment['startMins'];
 
             $differenceMins = $endMins - $startMins;
@@ -243,6 +248,7 @@ $app->group('/appointment', function(){
 
             if($differenceMins >= $minTimeMins){
               if($allowBooking){
+                //this allowBooking flag check is booking date is today or greater than today
                 $freeTimeSlot = array('type' => 'f',
                                       'state' => 0,
                                       'scheduleId' => $schedule['scheduleId'],
@@ -259,8 +265,12 @@ $app->group('/appointment', function(){
             $appointment['type'] = 'a';
             $todaysSchedule[] = $appointment;
 
-            if($appointment['state'] == 2){
-              //if appointment is cancelled it will be considered as free time
+            //since we take the end time of the current appointment
+            // to determine if there is a free time betwwen the next appointment
+            // we take the start time as end time of active and closed booking, active state = 0, closed state = 1
+            // we dont conside cancelled and rescheduled appointmetns , cancelled state = 2, rescheduled state = 3
+            if($appointment['state'] == 2 || $appointment['state'] == 3){
+              //if appointment is cancelled or rescheduled it will be considered as free time
                $startMins = $appointment['startMins'];
             }else{
             $startMins = $appointment['endMins'];

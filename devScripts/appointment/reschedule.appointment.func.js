@@ -46,6 +46,9 @@ function getRescheduleAppointmentController(){
       rescheduleView.selectApptDuration.val(ViewModel.duration);
       rescheduleView.rescheduleRemarks.val('');
 
+      //reset validator
+      rescheduleView.form.bootstrapValidator("resetForm", true);
+
     },
     setCallback: function(callbackFunction){
       this.callback = callbackFunction;
@@ -77,6 +80,10 @@ function getRescheduleAppointmentController(){
            controller.callback(response);
          }
 
+         if(response.status == 2){
+           console.log('message that appointment could not be rescheduled');
+         }
+
          console.log('reschedule response ' + JSON.stringify(response));
        });
     }
@@ -86,7 +93,7 @@ function getRescheduleAppointmentController(){
   var rescheduleView = {
 
     init: function(){
-
+      this.form =$('#modal-reschedule-form');
       this.patientName = $('#modal-reschedule-patients-name');
       this.appointmentDate = $('#modal-reschedule-appt-date');
       this.appointmentTime = $('#modal-reschedule-appt-time');
@@ -109,11 +116,58 @@ function getRescheduleAppointmentController(){
       this.rescheduleButton.on('click', function(){
         console.log('reschedule button click');
 
-        controller.updateModelFromView();
-        console.log('model ' + JSON.stringify(model));
-        controller.rescheduleAppointment();
+        rescheduleView.form.data('bootstrapValidator').validate();
+        if(rescheduleView.form.data('bootstrapValidator').isValid()){
+
+          controller.updateModelFromView();
+          console.log('model ' + JSON.stringify(model));
+          controller.rescheduleAppointment();
+
+        }
+
+
 
       });
+
+      this.initValidators();
+
+    },
+    initValidators: function(){
+      this.form.bootstrapValidator({
+          trigger:"focus click change keyup select blur",
+          feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok ',
+            invalid: 'glyphicon glyphicon-remove ',
+            validating: 'glyphicon glyphicon-refresh'
+          },
+            excluded: [':disabled'],
+          fields:{
+            rescheduleDate : {
+              validators : {
+                notEmpty : {
+                  message : 'Please select a date'
+                }
+              }
+            },
+            rescheduleTime : {
+
+              validators : {
+                notEmpty : {
+                  message : 'please select time'
+                }
+              }
+            },
+            rescheduleRemarks :{
+              validators : {
+                notEmpty :{
+                  message : 'Please enter a remark'
+                }
+              }
+            }
+
+          }
+        });
+
 
     },
     render: function(){
