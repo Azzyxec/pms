@@ -70,6 +70,9 @@ var links = {
    getPatientHistoryUrl:'index.php/patient/getPatientHistory',
    getpatientsImageUrl:'index.php/patient/getPatientImage',
 
+   //Prescription
+   getPrescriptionDetail:'index.php/patient/getPrescriptionDetail',
+
 
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
    getAppointmentForTheDayUrl: "index.php/appointment/getAppointmentsForTheDay",
