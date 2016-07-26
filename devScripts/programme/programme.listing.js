@@ -18,7 +18,7 @@ $(document).ready(function(){
            console.log('response ' + JSON.stringify(response));
            programmeListModel = response.data;
            ProgrammeListView.render();
-         });
+         }); 
 
 
       },
