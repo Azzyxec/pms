@@ -1,0 +1,144 @@
+{% extends "/doctor/doctor-dash-base.html" %}
+{% block addCss %}
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block content %}
+<!-- Appointment step one  -->
+<div class="row">
+  <hr class="invisible">
+  <div id="alert-schedule-not-found" class="hidden alert alert-warning" role="alert">
+    <strong>Cannot find schedule!</strong> please try searching on different dates.
+  </div>
+  <div class="col-md-10 col-lg-8">
+    <div id="schedule-step-one" class="panel panel-green">
+      <div class="panel-heading">
+        Deactivate Schedule
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal">
+
+          <div class="form-group">
+            <label for="" class="col-sm-2 control-label">Location</label>
+            <div class="col-sm-6">
+              <select id="sel-work-locations" class="form-control" name="">
+              </select>
+            </div>
+
+          </div>
+
+          <div class="form-group has-feedback">
+
+            <label for="from-date" class="col-sm-2 control-label">From</label>
+            <div class='col-md-6 col-sm-6'>
+
+              <div class='input-group date'>
+                <input type="text" class="form-control" name="from-date" id="from-date" >
+
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-group has-feedback">
+
+            <label for="to-date" class="col-md-2  col-sm-2 control-label">To</label>
+            <div class='col-md-6 col-sm-6'>
+
+
+              <div class='input-group date'>
+                <input type="text" class="form-control" name="to-date" id="to-date" >
+
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+      <div class="panel-footer">
+        <div class="row">
+          <div class="text-center">
+            <button type="button" class="btn btn-success " id="btn-schedule-next">Next</button>
+            <button type="button" class="btn btn-success " id="btn-cancel">Cancel</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Appointment step two  -->
+
+  <div id="schedule-step-two" class=" panel panel-green hidden">
+    <div class="panel-tittle">
+      <h2 class="text-center">Deactivate Schedule</h2>
+    </div>
+
+    <div class="panel-body table-responsive">
+      <div class="col-lg-12">
+        <h3 class="text-left">Location : <span id="calendar-location-name"></span></h3>
+        <h3 id="calander-date" class="text-center"></h3>
+
+        <div class="">
+          <table class="calendarTable table table-bordered table-hover ">
+            <thead >
+              <tr>
+                <th class="text-center">Mon</th>
+                <th class="text-center">Tue</th>
+                <th class="text-center">Wed</th>
+                <th class="text-center">Thu</th>
+                <th class="text-center">Fri</th>
+                <th class="text-center">Sat</th>
+                <th class="text-center">Sun</th>
+
+              </tr>
+            </thead>
+            <tbody id="table-body-schedule-calander">
+              <!---------- collapse section----------->
+            </tbody>
+          </table>
+
+        </div>
+
+        <!-- /.table-responsive -->
+      </div>
+
+
+
+
+
+    </div>
+    <div class="panel-footer">
+      <div class="row">
+        <div class="text-center">
+
+          <button type="  button" class="btn btn-success   " id="btn-deactivate-schedule">Deactivate Schedule</button>
+          <button type="button" class="btn btn-success " id="btn-back">Back</button>
+        </div>
+     </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+{% endblock %}
+{% block addScripts %}
+<script src="js/deactivate.schedule.js"></script>
+{% endblock %}

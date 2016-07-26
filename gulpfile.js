@@ -105,6 +105,14 @@ var filesList = [
                     objConfig.scriptsBasePath +"schedule/new.schedule.js"
                   ], buildName: "new.schedule.js"},
 {build:true, files: [
+                   objConfig.scriptsBasePath +"moment.js",
+                   objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
+                   objConfig.scriptsBasePath +"utility.js",
+                   objConfig.scriptsBasePath +"links.js",
+                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
+                   objConfig.scriptsBasePath +"schedule/deactivate.schedule.js"
+                 ], buildName: "deactivate.schedule.js"},
+{build:true, files: [
                    objConfig.scriptsBasePath +"utility.js",
                    objConfig.scriptsBasePath +"links.js",
                    objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
@@ -261,8 +269,8 @@ gulp.task('publish-build-js', function(){
       //console.log('lenght' + filesList.length);
       //console.log('error at ' + JSON.stringify(filesList[16]));
       //var i = 15;
-      //error at 16, 24
-      if(i != 16 && i != 24 && filesList[i].build == true){
+      //error at 17, 26
+      if(i != 17 && i != 26 && filesList[i].build == true){
         gulp.src(filesList[i].files)
             .pipe(concat(filesList[i].buildName))
             .pipe(uglify())

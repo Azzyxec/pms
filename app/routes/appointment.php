@@ -252,6 +252,7 @@ $app->group('/appointment', function(){
                 $freeTimeSlot = array('type' => 'f',
                                       'state' => 0,
                                       'scheduleId' => $schedule['scheduleId'],
+                                      'scheduleDayId' => $schedule['scheduleDayId'],
                                       'locId' => $schedule['locId'],
                                       'diff' => $differenceMins,
                                       'startMins' => $startMins,
@@ -287,6 +288,7 @@ $app->group('/appointment', function(){
             $todaysSchedule[] = array('type' => 'f',
                                       'state' => 0,
                                       'scheduleId' => $schedule['scheduleId'],
+                                      'scheduleDayId' => $schedule['scheduleDayId'],
                                       'locId' => $schedule['locId'],
                                       'diff' => $differenceMins,
                                       'startMins' => $startMins,
@@ -344,13 +346,13 @@ $app->group('/appointment', function(){
       $appointmentData = $postedData['appointment'];
 
       $appointment = new Appointment();
+      $appointment->scheduleDayId = $appointmentData['scheduleDayId'];
       $appointment->locationId = $appointmentData['locationId'];
       $appointment->contact = $appointmentData['contact'];
       $appointment->appointmentDate = $appointmentData['date'];
       $appointment->startMins = $appointmentData['startTimeMins'];
       $appointment->endMins = $appointmentData['endTimeMins'];
       $appointment->description = $appointmentData['description'];
-
 
       //check if the appointment is available
       $appointmentDB = new AppointmentDB();

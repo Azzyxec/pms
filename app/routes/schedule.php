@@ -60,30 +60,42 @@ $app->group('/schedule', function(){
       return $response->withJson($data);
     }
 
+  });
 
+  $this->post('/deactivateScheduleDays', function ($request, $response) {
 
-    /*
-    $user = UserSessionManager::getUser();
+    try {
 
-    if($user->id != "-1"){
+      $user = UserSessionManager::getUser();
 
       $postedData = $request->getParsedBody();
 
+      $locId = $postedData['locationId'];
+      $scheduleList = $postedData['scheduleList'];
+      $scheduleCount = $postedData['scheduleCount'];
+      $doctorId = $user->doctorId;
+
+      //converting schedule list to xml
+      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><schedules></schedules>');
+      XMLHelper::array_to_xml($scheduleList, $xml_data);
+      $scheduleListXML = $xml_data->asXML();
+
+      $userId = $user->id;
+      $userType = $user->type;
+
       $scheduleDB = new ScheduleDB();
-      $arrayCopy = $postedData;
-      $arrayCopy['userId'] =  $user->id;
-      $resultArray = $scheduleDB->persistSchedule($arrayCopy);
+      $result = $scheduleDB->deactivateScheduleDays($doctorId, $locId, $scheduleCount, $scheduleListXML, $userId, $userType);
 
-      return $response->withJson($resultArray);
-
-    }else{
-
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+      $data = array('status' => $result['status'], 'data' => $postedData, 'message' => 'success' );
       return $response->withJson($data);
 
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'something is not right in controller' . $e->getMessage() );
+      return $response->withJson($data);
     }
-    */
+
   });
+
 
   $this->get('/getScheduleList', function ($request, $response) {
 
@@ -124,6 +136,35 @@ $app->group('/schedule', function(){
 
         $scheduleDB = new ScheduleDB();
         $scheduleResponse = $scheduleDB->getCalanderDetails($doctorId, $startDate, $endDate);
+
+        $data = array('status' => "1", 'data' => $scheduleResponse['data'], 'message' => 'success' );
+        return $response->withJson($data);
+
+      }
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'something is not right in controller' );
+      return $response->withJson($data);
+    }
+
+  });
+
+  $this->get('/getSchedulesForDeactivation', function ($request, $response) {
+    try {
+
+      $user = UserSessionManager::getUser();
+
+      if($user->id != "-1"){
+
+        $allGetVars = $request->getQueryParams();
+
+        $doctorId = $user->doctorId;
+        $startDate = $allGetVars['startDate']; //'01-05-2016';
+        $endDate = $allGetVars['endDate']; //'30-06-2016';
+        $locationId = $allGetVars['locationId']; //'30-06-2016';
+
+        $scheduleDB = new ScheduleDB();
+        $scheduleResponse = $scheduleDB->getSchedulesForDeactivation($doctorId, $locationId, $startDate, $endDate);
 
         $data = array('status' => "1", 'data' => $scheduleResponse['data'], 'message' => 'success' );
         return $response->withJson($data);
