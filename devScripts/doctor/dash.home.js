@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   $(function(){
-    console.log('doctor dash js');
+    console.log('doctor dash js'); 
 
     var model = {
       appointmentList:[],

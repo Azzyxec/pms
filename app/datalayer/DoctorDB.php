@@ -225,6 +225,7 @@ class DoctorDB
           $product['id'] =  $result['id'];
           $product['name'] = $result['name'];
           $product['stock'] = $result['current_stock'];
+          $product['locationId'] = $result['fk_location_id'];
           $allProducts[] = $product;
       }
 

@@ -71,15 +71,30 @@
                 </div>
               </div>
               <!-- /.panel -->
+
+
+
+
               <form id="stock-inventory-form"  role="form"  class="form-horizontal">
                 <input type="hidden" id="default-location-id"  value="{{defaultLoctionId}}">
                 <input type="hidden" id="user-type"  value="{{userType}}">
+                <div class="form-group">
+                  <label class="col-md-4 col-sm-4 control-label">Locations</label>
+                  <div class="col-md-6 col-sm-6">
+                    <select id="loc-Select" class="form-control"  style="width:140px">
+
+                  
+                    </select>
+                  </div>
+
+                </div>
+
                 <div class="form-group ">
                   <label for="focusedinput" class="col-md-4 col-sm-4 control-label">Product Name </label>
                   <div class='col-md-6 col-sm-6'>
 
                     <div class="input-group">
-                      <input type='text' name="ProductName" id="txt-product-name" class="form-control" placeholder="Search product name" required/>
+                      <input type='text' name="ProductName" id="txt-product-name" class="form-control" autocomplete="off" placeholder="Search product name" required/>
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-search"></span>
                       </span>

@@ -6,6 +6,9 @@ $(document).ready(function(){
     var Model = {
       selectedProduct: {id:0, name:'', stock: 0},
       productList: [],
+      locationList:[],
+      DefaultlocationId:0,
+      userType: '',
       SelectedLocationId:1,
       StockList : [{medicineName:'crosin',UpdatedOn:'26-07-2016',UpdatedBy:'26-07-2016',stock:'4'}]
     }
@@ -13,49 +16,114 @@ $(document).ready(function(){
       init:function(){
         this.saveUpdateProductStock = links.saveUpdateProductStock;
         this.getAllProductListUrl =   links.getAllProducts;
+        this.locationListUrl = links.locationListUrl;
+        this.DefaultLocationInit = false;
+
+        //setting user info
+        Model.userType = $('#user-type').val();
+        Model.DefaultlocationId = $('#default-location-id').val();
+
+        console.log('controller init, model ' + JSON.stringify(Model));
 
         StockView.init();
-
+        StockView.renderProductView();
+        this.getLocations();
         this.getAllProductsServer();
 
       },
       getStockList:function(){
         return Model.StockList;
       },
+      getLocationList : function () {
+        return model.locationList;
+      },
+      getProductListforLocation: function(locationId){
+        console.log("getProductListLocation " +locationId);
+        var list = [];
+        var productList = Model.productList;
+
+        for(var i = 0; i < productList.length; i++){
+          if(+productList[i].locationId == +locationId){
+            list.push(productList[i]);
+          }
+        }
+
+        return list;
+
+      },
+      getUserInfoModel : function () {
+        return model.userInfo;
+      },
+      setSelectedLocationId : function (locId) {
+        model.DefaultlocationId = locId;
+      },
+
+
+      setProductName:function(){
+        return Model.selectedProduct.name;
+      },
       getSelectedProduct: function(){
         return Model.selectedProduct;
+      },
+      getLocations: function(){
+
+        $.get(this.locationListUrl, { })
+        .done(function(response){
+
+          console.log('locations '  + JSON.stringify(response));
+
+          if(response.status == 1){
+            Model.locationList = response.data;
+            StockView.renderLocations();
+            if(Model.userType == 'D'){
+              Model.DefaultlocationId = Model.locationList[0];
+            }
+            StockView.initTypeahead();
+          }
+
+        });
+
       },
       getAllProductsServer: function () {
 
 
-          $.get(this.getAllProductListUrl, { locationId: Model.SelectedLocationId})
-           .done(function(response){
+        $.get(this.getAllProductListUrl, {})
+        .done(function(response){
 
-             console.log('response '  + JSON.stringify(response));
+          console.log('response '  + JSON.stringify(response));
 
-             if(response.status == 1){
+          if(response.status == 1){
 
-               Model.productList = response.data;
-               StockView.initTypeahead();
-             }
+            Model.productList = response.data;
+            if(Model.userType == 'D'
+                && Model.locationList
+                && Model.locationList.length > 0
+                && !controller.DefaultLocationInit){
+                  controller.DefaultLocationInit = true;
+            Model.DefaultlocationId = Model.locationList[0];
+            }
 
-          });
+              StockView.initTypeahead();
+
+          }
+
+        });
 
       },
       updateProductFromView: function(){
-
-        Model.selectedProduct.name = StockView.productName.val();
+        var name1 = StockView.productName.val();
+        Model.selectedProduct.name = name1.trim()
         Model.selectedProduct.stock = StockView.stockQuantity.val();
 
       },
       resetProductModel:function(){
         Model.selectedProduct = {id:0, name:'', stock: 0};
-        StockView.reset();
+
       },
       AddUpdateToServer: function(opernType){
 
         var data = {
-          locationId: 1,
+          locationId: Model.DefaultlocationId,
           id: Model.selectedProduct.id,
           name: Model.selectedProduct.name,
           stock: Model.selectedProduct.stock,
@@ -63,15 +131,18 @@ $(document).ready(function(){
         }
 
         $.post( controller.saveUpdateProductStock , data)
-         .done(function( response ) {
+        .done(function( response ) {
 
-           console.log(' response ' + JSON.stringify(response));
-           if(response.status == 1){
-             controller.resetProductModel();
-             utility.getAlerts('Stock updated Successfully!','alert-success ','','.container-fluid');
-           }else{
-              utility.getAlerts('Something is wrong!','alert-warning ','','.container-fluid');
-           }
+          console.log(' response ' + JSON.stringify(response));
+          if(response.status == 1){
+            controller.resetProductModel();
+            utility.getAlerts('Stock updated Successfully!','alert-success ','','.container-fluid');
+            StockView.reset();
+            controller.getAllProductsServer();
+          }else{
+            utility.getAlerts('Something is wrong!','alert-warning ','','.container-fluid');
+            StockView.reset();
+          }
 
         });
 
@@ -86,7 +157,23 @@ $(document).ready(function(){
         this.btnAddStock = $('#btn-add-stock');
         this.btnSubstrsctStock = $('#btn-substract-stock');
         this.linkViewStockHistory = $('#link-stock-history');
+        this.locationSelect = $('#loc-Select');
+
+
         this.form = $('#stock-inventory-form');
+
+        this.locationSelect.on('change',function(){
+          Model.DefaultlocationId =  $(this).val();
+          controller.resetProductModel();
+          StockView.renderProductView();
+          StockView.reset();
+
+          StockView.initTypeahead();
+
+
+        });
+
+
 
         this.form.bootstrapValidator({
           trigger:" focus click change keyup select blur ",
@@ -95,7 +182,7 @@ $(document).ready(function(){
             invalid: 'glyphicon glyphicon-remove ',
             validating: 'glyphicon glyphicon-refresh'
           },
-            excluded: [':disabled'],
+          excluded: [':disabled'],
           fields:{
             ProductName : {
               validators : {
@@ -105,21 +192,65 @@ $(document).ready(function(){
               }
 
             },  stockQuantityTxt : {
-                validators : {
-                  notEmpty : {
-                    message : 'Please enter the stock!'
-                  },
-                  regexp :{
-                    regexp: /^[0-9]+$/,
-                    message: 'Please enter a valid number'
+              validators : {
+                notEmpty : {
+                  message : 'Please enter the stock!'
+                },
+                regexp :{
+                  regexp: /^[0-9]+$/,
+                  message: 'Please enter a valid number'
 
-                  }
                 }
-
               }
+
+            }
 
           }
         });
+        this.ProductNameHandler =  function(){
+          console.log('reset patient model1');
+          var name = StockView.productName.val();
+          name = name.trim();
+
+          //if the product name is not found in the product list, then enable editing of the controls
+          if(!name || 0 === name.length){
+            console.log('reset patient model');
+            controller.resetProductModel();
+              StockView.stockLabel.text('0');
+
+          }else if(name.length > 0) {
+
+
+            var list = Model.productList;
+
+            var containsName = false;
+
+            for(var i = 0; i < list.length; i++){
+              if(list[i].name === name){
+                containsName = true;
+                break;
+              }
+            }
+
+            console.log('contains '  + containsName);
+            if(!containsName){
+              //if there is name not contained in the list
+              //clear the fields except name
+              // to allow a new new entry
+
+
+              controller.resetProductModel();
+              StockView.stockLabel.text('0');
+              console.log('reset model');
+            }
+          }
+        };
+
+
+        this.productName.on("change click keyup select blur ",this.ProductNameHandler);
+
+
+
 
         this.btnAddStock.on('click', function(){
           console.log('add stock');
@@ -145,10 +276,14 @@ $(document).ready(function(){
 
       },
       initTypeahead: function(){
+        var ProductList = controller.getProductListforLocation(Model.DefaultlocationId);
 
+ console.log('iniit typeahead product list' + JSON.stringify(ProductList));
+       this.productName.typeahead("destroy");
+       this.productName.on("change click keyup select blur ",this.ProductNameHandler);
         this.productName.typeahead({
           name: 'all-products',
-          source: Model.productList,
+          source: ProductList,
           updater: function(productObj) {
             console.log('type ahead call back for ' + JSON.stringify(productObj));
             Model.selectedProduct = productObj;
@@ -161,23 +296,55 @@ $(document).ready(function(){
       reset:function(){
         //this.form.reset();
         this.form.bootstrapValidator("resetForm",true);
-
-
       },
       renderProductView: function(){
+        console.log('render product view');
 
         var prod = controller.getSelectedProduct();
-
+        console.log(JSON.stringify(prod));
         this.productName.val(prod.name);
         this.stockLabel.text(prod.stock);
-        this.stockQuantity.val('');
+        //this.stockQuantity.val('');
 
       },
       renderLocations:function(){
 
+        var list = Model.locationList;
+
+        this.locationSelect.empty();
 
 
+          for(var i = 0; i< list.length; i++ ){
+            //<li role="presentation" id="all-appointments-filter-button"  class="all-appointments-filter-button active "><a >Margaon</a></li>
+            var option = $('<option/>', {
+              value:list[i].id,
+              text:list[i].name
+            });
 
+            var defaultLocId = Model.DefaultlocationId;
+
+            if(defaultLocId == list[i].id){
+              option.addClass('select');
+            }
+
+            this.locationSelect.append(option);
+
+          }
+
+          //disable select for staff
+          if(Model.userType == 'S'){
+            this.locationSelect.attr('disabled', true);
+
+          }
+      }
+
+    }
+
+    var modelView = {
+      init:function(){
+
+      },
+      render:function () {
         //move to modal view
         $('#example').DataTable( {
 

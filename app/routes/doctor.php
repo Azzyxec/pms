@@ -213,7 +213,7 @@ $app->group('/doctor', function(){
 
         $allGetVars = $request->getQueryParams();
 
-        $locationId = $allGetVars['locationId'];
+        $locationId = 0;
         $doctorId = $user->doctorId;
         $doctorDB = new DoctorDB();
 
