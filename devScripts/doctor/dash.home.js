@@ -309,7 +309,7 @@ controller.prototype.getUserInfo = function () {
       }
     });
 
-  };
+  }; 
 
   controller.prototype.getLocations = function () {
     $.get( this.getLocationUrl , {})
