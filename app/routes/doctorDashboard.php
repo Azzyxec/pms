@@ -50,6 +50,15 @@ $app->group('/doctorDashboard', function(){
     return $this->view->render($response, '/schedule/new-schedule.html', $viewData);
   });
 
+  $this->get('/deactivateSchedule', function ($request, $response) {
+    $user = UserSessionManager::getUser();
+    $viewData = array('basePath' => AppConfig::$basePath,
+                      'active' => "schedule",
+                      'name' => $user->name,
+                      'userType' => $user->type);
+    return $this->view->render($response, '/schedule/deactivate-schedule.html', $viewData);
+  });
+
   $this->get('/ScheduleCalenderView', function ($request, $response) {
     $user = UserSessionManager::getUser();
     $viewData = array('basePath' => AppConfig::$basePath,

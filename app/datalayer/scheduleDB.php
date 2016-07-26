@@ -59,6 +59,37 @@ class ScheduleDB
     }
   }
 
+  public function deactivateScheduleDays($doctorId, $locId, $scheduleCount, $scheduleListXML, $userId, $userType){
+
+    try {
+
+      $paramArray = array(
+        'pdoctor_id' => $doctorId,
+        'pschedule_count' => $scheduleCount,
+        'plocation_id' =>  $locId,
+        'puser_id' =>  $userId,
+        'puser_type' =>  $userType,
+        'pschedule_days_xml' => $scheduleListXML
+      );
+
+      $statement = DBHelper::generateStatement('deactivate_schedule_days',  $paramArray);
+
+      $statement->execute();
+
+      $status = null;
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+        $status = $result['status'];
+      }
+
+      return array('status' => $status, 'data' => $status, 'message' => 'success' );
+
+    } catch (Exception $e) {
+
+      return array('status' => "-1", 'data' => "-1", 'message' => 'something is not right with database access' );
+
+    }
+  }
+
 
   public function getScheduleList($doctorId){
     try {
@@ -180,5 +211,50 @@ class ScheduleDB
     }
 
   }
+
+  public function getSchedulesForDeactivation($doctorId, $locationId,  $startDate, $endDate){
+    try {
+
+
+
+
+        $paramArray = array(
+          'pdoctor_id' => $doctorId,
+          'plocation_id' => $locationId,
+          'pstart_date' => $startDate,
+          'pend_date' => $endDate
+        );
+
+        $statement = DBHelper::generateStatement('get_schedule_calander_details',  $paramArray);
+
+        $statement->execute();
+
+
+        $ScheduleArray = array();
+
+
+        while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+
+          $item = array();
+          $item['date'] = $result['schedule_date'];
+          $item['startTimeMinutes'] = $result['start_time_mins'];
+          $item['endTimeMinutes'] = $result['end_time_mins'];
+          $item['scheduleId'] = $result['fk_schedule_id'];
+          $item['scheduleDayId'] = $result['schedule_day_id'];
+          $item['activeAppointments'] = $result['appointment_count'];
+
+          $ScheduleArray[] = $item;
+
+        }
+
+
+      return array('status' => "1", 'data' => $ScheduleArray, 'message' => 'success' );
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
+    }
+
+  }
+
 
 }

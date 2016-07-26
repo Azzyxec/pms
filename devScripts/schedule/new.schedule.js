@@ -249,10 +249,6 @@ var stepOneView = {
         console.log(momentSeletDate.format('DD-MM-YYYY'));
     });
 
-
-
-
-
     this.fromTimeControl.datetimepicker({
     inline: false,
     format:'LT'

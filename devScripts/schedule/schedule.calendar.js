@@ -214,6 +214,7 @@ $(document).ready(function(){
     var calendarView = {
       init: function(){
         this.newScheduleButton = $("#btn-new-schedule");
+        this.deactivateScheduleButton = $("#btn-deactivate-schedule");
         this.txtMonthHeader = $('#txt-month-header');
         this.locationListTop = $('#location-list-top');
         this.calendarTableBody = $('#calendar-body');
@@ -225,6 +226,15 @@ $(document).ready(function(){
           e.preventDefault();
           window.location.href = links.newScheduleUrl;
         });
+
+        this.deactivateScheduleButton.click(function(e){
+          e.preventDefault();
+          window.location.href = links.deactivateScheduleUrl;
+        });
+
+
+
+
 
         this.btnPreviousSchedule.click(function(e){
           e.preventDefault();

@@ -314,12 +314,13 @@ controller.prototype.getUserInfo = function () {
   controller.prototype.getLocations = function () {
     $.get( this.getLocationUrl , {})
     .done(function( response ) {
-      //console.log("locations: " + JSON.stringify(response));
+      console.log("locations: " + JSON.stringify(response));
       model.appointmenListViewModel.locationList = response.data;
-      todayAppointmentListView.render();
+
       cont.locationsLoaded = true;
       cont.removeOverLay();
       cont.addLocationsAlert();
+      todayAppointmentListView.render();
     });
   };
 
@@ -581,9 +582,7 @@ render: function(){
       todayAppointmentListView.closeAppointmentModal.modal('hide');
     }
 
-
   });
-
 
   cont.rescheduleController.setCallback(function(response){
 
@@ -932,7 +931,8 @@ initilizeFreeTimeSlotTemplate: function(template, appointmentItem){
           appointmetDate: cont.getSelectedeDate(),
           appointmentTime: startTime,
           patientList: cont.getPatientList(),
-          userInfo: luserInfo
+          userInfo: luserInfo,
+          scheduleDayId: appointmentItem.scheduleDayId
         }
 
         //var appController = makeAppointmentController();

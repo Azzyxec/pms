@@ -30,6 +30,7 @@ var links = {
    closeAppointmentUrl : "index.php/doctorDashboard/closeAppointment",
    doctorsAppointmentsListUrl : "index.php/doctorDashboard/listAppointment",
    newScheduleUrl : "index.php/doctorDashboard/newSchedule",
+   deactivateScheduleUrl: "index.php/doctorDashboard/deactivateSchedule",
    listScheduleUrl : "index.php/doctorDashboard/scheduleList",
    getScheduleCalendarUrl: "index.php/doctorDashboard/ScheduleCalenderView",
    addStaffUrl : "index.php/doctorDashboard/staffEntry",
@@ -47,6 +48,8 @@ var links = {
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
    getSechduleCalendarDetailsUrl: "index.php/schedule/getCalanderDetails",
+   getSechduleforDeactivation: "index.php/schedule/getSchedulesForDeactivation",
+   deactivateScheduleDays: "index.php/schedule/deactivateScheduleDays",
 
    //programme
    doctorsProgramsUrl:"index.php/programme/getDoctorsCheckupPrograms",

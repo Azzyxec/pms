@@ -5,6 +5,7 @@ function makeAppointmentController(){
 
   var model = {
     appointment:{
+      scheduleDayId: 0,
       locationId: 0,
       date:moment().format('DD-MM-YYYY'),
       startTimeMins: '09:00 AM',
@@ -96,6 +97,9 @@ function makeAppointmentController(){
 
       console.log('init booking data');
 
+
+      model.appointment.scheduleDayId = initObj.scheduleDayId;
+
       model.appointment.date = initObj.appointmetDate;
       model.appointment.startTimeMins = initObj.appointmentTime;
 
@@ -166,7 +170,6 @@ function makeAppointmentController(){
       });
 
     }
-
   }
 
   mainController.prototype.cleanup = function () {
@@ -245,8 +248,6 @@ function makeAppointmentController(){
 
     model.patient.name = appointmentView.patientsName.val();
 
-
-
     model.patient.dateOfBirth = appointmentView.patientsDOB.val();
 
     if(appointmentView.rbMale.is(":checked")){
@@ -254,7 +255,6 @@ function makeAppointmentController(){
     }else{
       model.patient.gender = 0;
     }
-
 
     model.patient.height = appointmentView.patientsHeight.val();
     model.patient.weight = appointmentView.patientsWeight.val();

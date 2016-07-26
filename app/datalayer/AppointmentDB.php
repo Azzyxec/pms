@@ -108,6 +108,7 @@ class AppointmentDB{
         $timing['endMins'] = $result['end_time_mins'];
         $timing['locId'] = $result['loc_id'];
         $timing['scheduleId'] = $result['schedule_id'];
+        $timing['scheduleDayId'] = $result['id'];
 
         $timingList[] = $timing;
       }
@@ -232,6 +233,7 @@ class AppointmentDB{
       $paramArray = array(
         'pdoctor_id' => $doctorId,
         'plocation_id' => $appointment->locationId,
+        'pfk_schedule_day_id' => $appointment->scheduleDayId,
         'ppatient_id' => $appointment->patientId,
         'pappointment_date' => $appointment->appointmentDate,
         'pstart_mins' => $appointment->startMins,

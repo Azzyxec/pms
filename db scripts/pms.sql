@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 23, 2016 at 11:51 AM
+-- Generation Time: Jul 25, 2016 at 11:54 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -24,7 +24,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
+CREATE  PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -68,9 +68,13 @@ begin
                                 ,pis_active
 								);
 
+			set @llogin_id = last_insert_id();
+
+			 /*
 			 select max(id)
 			 into @llogin_id
 			 from login;
+             */
 
 
 			INSERT INTO `doctor`
@@ -91,9 +95,12 @@ begin
 							,pis_active
 							);
 
+             set @ldoctor_id = last_insert_id();
+			 /*
 		     select max(id)
 			 into @ldoctor_id
 			 from doctor;
+             */
 
 		else
 
@@ -124,6 +131,7 @@ begin
 	end if;
 
         commit;
+
 		select '1' as status
 			   ,@ldoctor_id as id
 			   ,pname as name
@@ -140,7 +148,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+CREATE  PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
     MODIFIES SQL DATA
 begin
 
@@ -166,7 +174,7 @@ begin
 	end if;
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
+CREATE  PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -233,7 +241,7 @@ select 1 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
+CREATE  PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
     READS SQL DATA
 begin
 
@@ -329,37 +337,7 @@ end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `book_appointment`(IN `pdoctor_id` INT, IN `ppatient_id` INT, IN `pappointment_date_time` DATETIME, IN `ppatient_contact` VARCHAR(50), IN `ppatient_email` VARCHAR(50), IN `ppatient_gender` INT, IN `ppatient_DOB` DATE, IN `pdescription` VARCHAR(2000))
-    NO SQL
-begin
-
-
-	INSERT INTO `appointment`(
-								`fk_doctor_id`
-								, `fk_patient_id`
-								, `appointment_date`
-								, `appointment_time_minutes`
-								, `description`
-								, `appointment_state`
-								, `created_date`
-								, `is_active`
-								)
-						 VALUES (
-								  pdoctor_id
-								 ,ppatient_id
-								 ,pappointment_date_time
-								 ,0
-								 ,0
-								 ,pdescription
-								 ,1
-								 );
-
-	select 1 as state;
-
-
-end$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `cancel_appointment`(IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))
+CREATE  PROCEDURE `cancel_appointment`(IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))
     MODIFIES SQL DATA
 begin
 
@@ -374,7 +352,15 @@ where a.id = pappointment_id
 	  and a.state = 0
 	  and a.is_active = 1;
 
-if @lcanCancelAppointment > 0 then
+if @lcanCancelAppointment = 1 then
+
+ /*
+ appointmentt states
+ 0 - active
+ 1 - closed
+ 2 - cancelled
+ 3 - rescheduled
+ */
 
 update appointment a
 	set a.state = 2
@@ -406,7 +392,7 @@ select 2 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN pprescription_count INT, IN `pprescription_xml` VARCHAR(65535))
+CREATE  PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN pprescription_count INT, IN `pprescription_xml` VARCHAR(65535))
     NO SQL
 begin
 
@@ -418,12 +404,12 @@ DECLARE lremarks varchar(1000);
 
 select count(fk_appointment_id)
 into  @lexsitingEntry
-from close_appointment 
+from close_appointment
 where fk_appointment_id = pappointment_id;
 
 if COALESCE(@lexsitingEntry, 0) = 0 then
 
-	select fk_patient_id	
+	select fk_patient_id
 	into @lpatientId
 	from appointment
 	where id = pappointment_id;
@@ -455,7 +441,7 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 									   ,pclosed_by_id
 									   ,pclosed_by_type
 									  );
-									  
+
 
 		#insert into prescription list
 
@@ -467,8 +453,8 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 				   ,ExtractValue(pprescription_xml, 'list/item[$@lcounter]/remarks')
 			into 	@lmedName
 				   ,@lremarks;
-				   
-			insert into close_appointment_prescriptions 
+
+			insert into close_appointment_prescriptions
 												(
 												 fk_appointment_id
 												 ,medicine
@@ -480,9 +466,9 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 												,@lmedName
 												,@lremarks
 												);
-			
+
 			SET @lcounter = @lcounter + 1;
-			
+
 		END WHILE;
 
 		select 1 as status;
@@ -496,7 +482,7 @@ select 2 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
+CREATE  PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
     MODIFIES SQL DATA
 begin
 
@@ -554,7 +540,7 @@ select 1 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
+CREATE  PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 
@@ -582,9 +568,13 @@ begin
 											,1
 										   );
 
+		set @lmaxProgrammeId = last_insert_id();
+
+		/*
 		select max(id)
 		into @lmaxProgrammeId
 		from medication_programme;
+        */
 
 		set @lcounter = 1;
 
@@ -673,7 +663,7 @@ begin
 												  );
 			else
 
-			    				UPDATE `medication_programme_list`
+				   UPDATE `medication_programme_list`
 				   SET  `duration_days`= @lprogrammeDuration
 						,`duration_text`= @ldurationText
 						,`medicine`= @lvaccine
@@ -689,19 +679,18 @@ begin
 			SET @lcounter = @lcounter + 1;
 		END WHILE;
 
+		/*
 		UPDATE `medication_programme_list`
 		   SET  is_active = 0
 		WHERE  fk_medication_programme_id  = pprogramme_id
 			  and update_marker = 0
 			  and is_active = 1;
 
-				UPDATE `medication_programme_list`
+		UPDATE `medication_programme_list`
 		   SET  `update_marker` = 0
 		WHERE fk_medication_programme_id  = pprogramme_id
 			  and is_active = 1;
-
-
-
+	   */
 
 
 
@@ -713,7 +702,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
+CREATE  PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
 begin
 
 declare lmaxPatientId int;
@@ -753,9 +742,14 @@ INSERT INTO `patient`
 					,plogged_in_user_type
 					,pis_active
 					);
+
+	set @lmaxPatientId = last_insert_id();
+
+    /*
 	select max(id)
 	into @lmaxPatientId
 	from patient;
+    */
 
 	select 1 as status
 		   ,@lmaxPatientId as patient_id;
@@ -788,7 +782,7 @@ commit;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
+CREATE  PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 	declare lprogrammeExists int;
@@ -807,8 +801,8 @@ begin
 	declare ldueOn varchar(20);
 	declare lgivenOn varchar(20);
 	declare lbatchNo varchar(100);
-    
-    
+
+
     # adding program header only if it alerady does not exist
 	set @lcounter1 = 1;
 
@@ -926,7 +920,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
+CREATE  PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
     NO SQL
 begin
 
@@ -957,9 +951,14 @@ begin
 							,CURDATE()
 							,1 							,1
 							);
+
+    set @lmaxScheduleId = last_insert_id();
+
+    /*
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
+    */
 
 
 	set @lcounter = 1;
@@ -1013,7 +1012,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
+CREATE  PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -1056,9 +1055,13 @@ begin
 						,pis_active
 						);
 
+             set @llogin_id = last_insert_id();
+
+			/*
 			 select max(id)
 			 into @llogin_id
 			 from login;
+             */
 
 			INSERT INTO `staff`(
 								`first_name`,
@@ -1089,9 +1092,12 @@ begin
 							   pis_active
 							   );
 
+			 set @lstaff_id = last_insert_id();
+			/*
 			 select max(id)
 			 into @lstaff_id
 			 from staff;
+             */
 
 		else
 
@@ -1142,7 +1148,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
+CREATE  PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
     MODIFIES SQL DATA
     DETERMINISTIC
 begin
@@ -1150,7 +1156,7 @@ begin
 
 	declare lscheduleExists int;
 	declare lscheduleExistCounter int;
-	
+
     DECLARE lmaxScheduleId INT;
 	DECLARE lcounter INT DEFAULT 1;
 
@@ -1159,14 +1165,14 @@ begin
 	DECLARE lendTimeMins varchar(20);
 	DECLARE lisBlocked INT;
 	DECLARE lisActive INT;
-	
+
 	set @lscheduleExists = 0;
 	set @lscheduleExistCounter = 0;
-	
+
 	set @lcounter = 1;
 
 	while @lcounter <= pschedule_count do
-		
+
 			SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/date')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/startTimeMinutes')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/endTimeMinutes')
@@ -1189,13 +1195,13 @@ begin
                                                 , sd.start_time_mins
                                                 , sd.end_time_mins)
 				  and sd.location_id = plocation_id;
-				  
-				  
+
+
 			set @lscheduleExistCounter = @lscheduleExistCounter + @lscheduleExists;
-	
+
 		SET @lcounter = @lcounter + 1;
 	END WHILE;
-	
+
 	if @lscheduleExistCounter = 0 then
 
 
@@ -1216,9 +1222,15 @@ begin
 							,puser_type
 							,1
 							);
+
+
+	set @lmaxScheduleId = last_insert_id();
+
+    /*
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
+    */
 
 	set @lcounter = 1;
 
@@ -1263,18 +1275,16 @@ begin
 	commit;
 
 	SELECT 1 as status;
-	
-		else
-	
-	SELECT -2 as status;
-	
-	end if;
 
-    
+		else
+
+	SELECT -2 as status;
+
+	end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deactivate_location_for_doctor`(in plocationId int)
+CREATE  PROCEDURE `deactivate_location_for_doctor`(in plocationId int)
 BEGIN
 
   #TODO dont deactivate if there are appointmetns on a location
@@ -1283,16 +1293,76 @@ BEGIN
   update work_locations wl
   set wl.is_active = 0
   where wl.id = plocationId;
-  
+
   # what else needs to be updated
   #schedules
   #staff login
   # active appointments
-  
+
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
+CREATE  PROCEDURE `deactivate_schedule_days`(
+in pdoctor_id int
+,in plocation_id int
+,in pschedule_count int
+,in puser_id int
+,in puser_type varchar(5)
+,pschedule_days_xml varchar(65535)
+)
+BEGIN
+
+	DECLARE lcounter INT DEFAULT 1;
+
+    DECLARE lscheduleDayId INT;
+    DECLARE lactiveAppointmentCount INT;
+
+    DECLARE lnotDeactivated INT;
+
+    set @lnotDeactivated = 0;
+
+	set @lcounter = 1;
+
+    while @lcounter <= pschedule_count do
+
+			SELECT ExtractValue(pschedule_days_xml, 'schedules/item[$@lcounter]/scheduleDayId')
+			into @lscheduleDayId;
+
+            set @lactiveAppointmentCount = 0;
+
+
+            select count(*)
+            into @lactiveAppointmentCount
+            from appointment a
+            where a.state = 0
+				  and a.is_active = 1
+                  and a.fk_schedule_day_id = @lscheduleDayId
+                  and a.fk_doctor_id = pdoctor_id;
+
+
+		   if @lactiveAppointmentCount = 0 then
+
+		    update schedule_day sd
+			   set sd.is_active = 0
+				   ,sd.modified_by_id = puser_id
+                   ,sd.modified_by_type = puser_type
+                   ,sd.modified_date = now()
+             where sd.id = @lscheduleDayId
+				   and sd.fk_doctor_id = pdoctor_id;
+
+		   else
+
+			set @lnotDeactivated = @lnotDeactivated + 1;
+
+           end if;
+		set @lcounter = @lcounter + 1;
+    END WHILE;
+
+    select 1 status;
+
+END$$
+
+CREATE  PROCEDURE `getDoctorInfo`(IN `pid` INT)
     READS SQL DATA
 SELECT
    d.name ,
@@ -1307,7 +1377,7 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_appointments`(IN `pdoctor_id` INT)
+CREATE  PROCEDURE `get_all_appointments`(IN `pdoctor_id` INT)
     READS SQL DATA
 begin
 
@@ -1324,7 +1394,6 @@ begin
      ,a.description
      ,a.`state`
      ,0 as is_rescheduled
-     #,case when COALESCE(a.fk_rescheduled_id, 0) = 0 then 0 else 1 end as is_rescheduled
  from appointment a
  inner join patient p on a.fk_patient_id = p.id
     inner join work_locations l on a.fk_location_id = l.id
@@ -1335,7 +1404,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
+CREATE  PROCEDURE `get_all_doctors`()
     NO SQL
 begin
 
@@ -1352,7 +1421,7 @@ SELECT `id`
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+CREATE  PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1366,11 +1435,12 @@ where fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_appointments_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+CREATE  PROCEDURE `get_appointments_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
     NO SQL
 begin
 
-
+	declare lappointmentDate date;
+    set @lappointmentDate = STR_TO_DATE(pdate, '%d-%m-%Y');
 
 	select  a.id
 		   ,a.contact
@@ -1381,6 +1451,7 @@ begin
 		   ,a.description
 		   ,case when a.`state` = 1 then cl.remarks
 				 when a.`state` = 2 then ca.remarks
+                 when a.`state` = 3 then ra.remarks
 									else '' end as remarks
 		   ,a.`state`
            ,a.fk_location_id as loc
@@ -1388,17 +1459,17 @@ begin
 	inner join patient p on a.fk_patient_id = p.id
 	left join cancelled_appointments ca on ca.fk_appointment_id = a.id
 	left join close_appointment cl on cl.fk_appointment_id = a.id
+    left join rescheduled_appointments ra on ra.fk_appointment_id = a.id
 	where a.fk_doctor_id = pdoctor_id
 		  and a.fk_location_id = case when plocation_id > 0 then  plocation_id else a.fk_location_id end
-		  and DATE(a.appointment_date) =  DATE(STR_TO_DATE(pdate, '%d-%m-%Y'))
+		  and a.appointment_date =  @lappointmentDate
 		  and a.is_active = 1
-		  and a.fk_location_id in ( select id from work_locations where fk_doctor_id = pdoctor_id)
 	order by a.start_mins asc;
 
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
+CREATE  PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
     READS SQL DATA
 begin
 
@@ -1421,13 +1492,13 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods`()
+CREATE  PROCEDURE `get_delivery_methods`()
     READS SQL DATA
 select id
 	   ,name
 from delivery_methods$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
+CREATE  PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1435,7 +1506,7 @@ select id
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
+CREATE  PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1452,7 +1523,7 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
+CREATE  PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1461,7 +1532,7 @@ from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT, IN pfetch_inactive INT)
+CREATE  PROCEDURE `get_patients_list`(IN `pdoctor_id` INT, IN pfetch_inactive INT)
     READS SQL DATA
 SELECT `id`
 		,`name`
@@ -1479,7 +1550,7 @@ FROM `patient`
 WHERE fk_doctor_id = pdoctor_id
 	  and is_active = case when COALESCE(pfetch_inactive, 0) = 0 then 1 else is_active end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
+CREATE  PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
     NO SQL
 SELECT 	 id
 		,fk_medication_pogramme_id
@@ -1487,7 +1558,7 @@ SELECT 	 id
 FROM patient_medication_programme
 WHERE fk_patient_id = ppatient_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
+CREATE  PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
     NO SQL
 SELECT 	id
 		, fk_medication_programme_id
@@ -1502,7 +1573,7 @@ FROM  patient_medication_programme_list
 WHERE fk_patient_id = ppatient_id
 	  and fk_medication_programme_id = pmedication_programme_id$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_all_appointments_history`(IN `patient_id` INT)
+CREATE  PROCEDURE `get_patient_all_appointments_history`(IN `patient_id` INT)
     NO SQL
 begin
 
@@ -1510,16 +1581,27 @@ begin
 
 	select  a.id
 		   ,a.contact
-           ,a.appointment_date
+           ,date_format(a.appointment_date, '%d-%m-%Y') as appointment_date
 		   ,p.name
            ,l.name as location_name
 		   ,a.start_mins
 		   ,a.end_mins
 		   ,a.description
-		   ,a.`state`
+           ,a.`state`
+		   ,case when a.`state` = 0 then 'active'
+				 when a.`state` = 1 then 'closed'
+                 when a.`state` = 2 then 'cancelled'
+                 when a.`state` = 3 then 'rescheduled' end as state_text
+		  ,case when a.`state` = 1 then cl.remarks
+				 when a.`state` = 2 then ca.remarks
+                 when a.`state` = 3 then ra.remarks
+									else '' end as remarks
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
     inner join work_locations l on a.fk_location_id = l.id
+    left join cancelled_appointments ca on ca.fk_appointment_id = a.id
+	left join close_appointment cl on cl.fk_appointment_id = a.id
+    left join rescheduled_appointments ra on ra.fk_appointment_id = a.id
 	where a.fk_patient_id = patient_id
 		  and a.is_active = 1
 	order by a.start_mins asc;
@@ -1527,7 +1609,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
+CREATE  PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1550,7 +1632,7 @@ WHERE id = ppatient_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
+CREATE  PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
     READS SQL DATA
 select `duration_days`
 	  , duration_text
@@ -1561,43 +1643,94 @@ from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
 	  and is_active = 1$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_timings_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+CREATE  PROCEDURE `get_schedules_for_deactivation`(
+IN `pdoctor_id` INT
+, IN `plocation_id` INT
+, IN `pstart_date` VARCHAR(10)
+, IN `pend_date` VARCHAR(10)
+)
     READS SQL DATA
-begin
+BEGIN
 
-	select sd.start_time_mins
-		   ,sd.end_time_mins
-           ,sd.location_id as loc_id
-           ,sd.fk_schedule_id as schedule_id
-	from schedule_day sd
-	where sd.fk_doctor_id = pdoctor_id
-		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
-		  and sd.date = STR_TO_DATE(pdate, '%d-%m-%Y')
-		  and sd.is_active = 1;
+	declare lstartDate date;
+    declare lendDate date;
 
-
-end$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
-    READS SQL DATA
-begin
+    set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
+    set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
 
 
 SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
 	   ,start_time_mins
 	   ,end_time_mins
 	   ,fk_schedule_id
+       ,id
   FROM schedule_day
   WHERE fk_doctor_id = pdoctor_id
 		and location_id = plocation_id
-		and `date` >= STR_TO_DATE(pstart_date, '%d-%m-%Y')
-		and `date` <= STR_TO_DATE(pend_date, '%d-%m-%Y')
+		and `date` >= @lstartDate
+		and `date` <= @lendDate
+        and is_active = 1
   group by `date`, start_time_mins, end_time_mins
   order by `date` asc, start_time_mins asc;
 
+END$$
+
+CREATE  PROCEDURE `get_schedules_timings_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+    READS SQL DATA
+begin
+
+	declare ldate date;
+
+    set @ldate = STR_TO_DATE(pdate, '%d-%m-%Y');
+
+	select sd.start_time_mins
+		   ,sd.end_time_mins
+           ,sd.location_id as loc_id
+           ,sd.fk_schedule_id as schedule_id
+           ,id
+	from schedule_day sd
+	where sd.fk_doctor_id = pdoctor_id
+		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
+		  and sd.date = @ldate
+		  and sd.is_active = 1;
+
+
+end$$
+
+CREATE  PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+    READS SQL DATA
+begin
+
+	declare lstartDate date;
+    declare lendDate date;
+
+    set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
+    set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
+
+	SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
+		   ,start_time_mins
+		   ,end_time_mins
+		   ,fk_schedule_id
+           ,id as schedule_day_id
+           ,(
+			  select count(*)
+              from appointment a
+              where a.fk_schedule_day_id = sd.id
+				    and a.is_active = 1
+                    and a.state = 0
+			) as appointment_count
+	  FROM schedule_day sd
+	  WHERE fk_doctor_id = pdoctor_id
+			and location_id = plocation_id
+			and `date` >= @lstartDate
+			and `date` <= @lendDate
+			and is_active = 1
+	  group by `date`, start_time_mins, end_time_mins
+	  order by `date` asc, start_time_mins asc;
+
  end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
+CREATE  PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1611,7 +1744,7 @@ where s.fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
+CREATE  PROCEDURE `get_staff_details`(IN `pid` INT)
     READS SQL DATA
 begin
 
@@ -1646,7 +1779,7 @@ WHERE id = pid;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
+CREATE  PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1665,7 +1798,7 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
+CREATE  PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
     READS SQL DATA
 begin
 
@@ -1749,7 +1882,7 @@ end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
+CREATE  PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
     READS SQL DATA
 begin
 
@@ -1817,7 +1950,19 @@ end if;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_appointment`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `ppatient_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `pcontact` VARCHAR(20), IN `pdescription` VARCHAR(2000))
+CREATE  PROCEDURE `insert_new_appointment`(
+IN `pdoctor_id` INT
+, IN `plocation_id` INT
+, IN pfk_schedule_day_id INT
+, IN `ppatient_id` INT
+, IN `pappointment_date` VARCHAR(10)
+, IN `pstart_mins` INT
+, IN `pend_mins` INT
+, IN `pcreated_by_id` INT
+, IN `pcreated_by_type` VARCHAR(5)
+, IN `pcontact` VARCHAR(20)
+, IN `pdescription` VARCHAR(2000)
+)
     MODIFIES SQL DATA
 begin
 
@@ -1836,6 +1981,7 @@ INSERT INTO `appointment`(
 							, `fk_created_by_pk`
 							, `created_by_type`
 							, `is_active`
+                            , fk_schedule_day_id
 							) VALUES (
 							 pdoctor_id
 							,plocation_id
@@ -1850,13 +1996,14 @@ INSERT INTO `appointment`(
 							,pcreated_by_id
 							,pcreated_by_type
 							,1
+                            ,pfk_schedule_day_id
 						 );
 
 commit;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_next_appointment`(
+CREATE  PROCEDURE `insert_next_appointment`(
 IN `pappointment_id` INT
 , IN `pappointment_date` VARCHAR(10)
 , IN `pstart_mins` INT
@@ -1872,7 +2019,9 @@ BEGIN
     declare lPatientId int;
     declare lcontact varchar(20);
     declare ldecription VARCHAR(2000);
-    
+
+    declare lscheduleDayId int;
+
     select  fk_doctor_id
 		   ,fk_location_id
 		   ,fk_patient_id
@@ -1881,57 +2030,70 @@ BEGIN
 		   ,@lLocationId
            ,@lPatientId
            ,@lcontact
-    from appointment a 
+    from appointment a
     where a.id = pappointment_id;
-    
-    
-    
-    
-    if COALESCE(@lDoctorId, 0) > 0 then
-    
-		set @ldecription = 'booked when closing appointment';
 
-		INSERT INTO `appointment`(
-									`fk_doctor_id`
-									, `fk_location_id`
-									, `fk_patient_id`
-									, contact
-									, `appointment_date`
-									, `start_mins`
-									, `end_mins`
-									, description
-									, `state`
-									, `is_rescheduled`
-									, `created_date_time`
-									, `fk_created_by_pk`
-									, `created_by_type`
-									, `is_active`
-									) VALUES (
-									 @lDoctorId
-									,@lLocationId
-									,@lPatientId
-									,@lcontact
-									,STR_TO_DATE(pappointment_date, '%d-%m-%Y')
-									,pstart_mins
-									,pend_mins
-									,@ldecription
-									,0
-									,0
-									,now()
-									,pcreated_by_id
-									,pcreated_by_type
-									,1
-								 );
 
-		commit;
-		
-    
-    end if;
-    
+	set @lscheduleDayId = get_schedule_day_id(
+											  @lDoctorId
+											  ,@lLocationId
+											  ,pappointment_date
+											  ,pstart_mins
+											  ,pend_mins
+											 );
+
+    if @lscheduleDayId > 0 then
+
+
+		if COALESCE(@lDoctorId, 0) > 0 then
+
+			set @ldecription = 'booked when closing appointment';
+
+			INSERT INTO `appointment`(
+										`fk_doctor_id`
+										, `fk_location_id`
+										, `fk_patient_id`
+										, contact
+										, `appointment_date`
+										, `start_mins`
+										, `end_mins`
+										, description
+										, `state`
+										, `is_rescheduled`
+										, `created_date_time`
+										, `fk_created_by_pk`
+										, `created_by_type`
+										, `is_active`
+                                        , fk_schedule_day_id
+										) VALUES (
+										 @lDoctorId
+										,@lLocationId
+										,@lPatientId
+										,@lcontact
+										,STR_TO_DATE(pappointment_date, '%d-%m-%Y')
+										,pstart_mins
+										,pend_mins
+										,@ldecription
+										,0
+										,0
+										,now()
+										,pcreated_by_id
+										,pcreated_by_type
+										,1
+                                        ,@lscheduleDayId
+									 );
+
+			commit;
+
+
+		end if; #if COALESCE(@lDoctorId, 0) > 0 then
+
+    end if; #if @lscheduleDayId > 0 then
+
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
+CREATE  PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
     MODIFIES SQL DATA
 begin
 
@@ -1954,7 +2116,7 @@ begin
 	set @lmaxNo = 11350;
 	set @lminNo = 1350;
 
-		SELECT `password`
+	SELECT `password`
 		   ,`type`
 		   ,id
 	into  @lpassword
@@ -2052,7 +2214,7 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reschedule_appointment`(
+CREATE  PROCEDURE `reschedule_appointment`(
  IN `pappointment_id` INT
 ,IN `pappointment_date` VARCHAR(10)
 ,IN `pstart_mins` INT
@@ -2068,9 +2230,11 @@ BEGIN
     declare lPatientId int;
     declare lcontact varchar(20);
     declare ldecription VARCHAR(2000);
-    
+    declare lscheduleDayId int;
+
     declare lnewAppointmentId int;
-    
+
+
     select  fk_doctor_id
 		   ,fk_location_id
 		   ,fk_patient_id
@@ -2079,86 +2243,100 @@ BEGIN
 		   ,@lLocationId
            ,@lPatientId
            ,@lcontact
-    from appointment a 
+    from appointment a
     where a.id = pappointment_id
 		  and a.is_active = 1;
-    
+
+	set @lscheduleDayId = get_schedule_day_id(
+											  @lDoctorId
+											  ,@lLocationId
+											  ,pappointment_date
+											  ,pstart_mins
+											  ,pend_mins
+											 );
+
+    if @lscheduleDayId > 0 then
+
     if COALESCE(@lDoctorId, 0) > 0 then
-    
-		#make a new appointment entry
-		
-		set @ldecription = 'rescheduled appointment';
-		
-		INSERT INTO `appointment`(
-									`fk_doctor_id`
-									, `fk_location_id`
-									, `fk_patient_id`
-									, contact
-									, `appointment_date`
-									, `start_mins`
-									, `end_mins`
-									, description
-									, `state`
-									, `created_date_time`
-									, `fk_created_by_pk`
-									, `created_by_type`
-									, `is_active`
-									) 
-							 VALUES (
-									 @lDoctorId
-									,@lLocationId
-									,@lPatientId
-									,@lcontact
-									,STR_TO_DATE(pappointment_date, '%d-%m-%Y')
-									,pstart_mins
-									,pend_mins
-									,@ldecription
-									,0
-									,now()
-									,pcreated_by_id
-									,pcreated_by_type
-									,1
-								    );
 
-		#update the current appointment state to rescheduled
-        
-        set @lnewAppointmentId = last_insert_id();
-        
-        update appointment a
-        set state = 4
-			,fk_rescheduled_id = @lnewAppointmentId
-        where a.id = pappointment_id
-			  and a.is_active = 1;
-        
-    
-    
-		#make an entry in the rescheduled table
-        
-        insert into rescheduled_appointments (
-											  fk_appointment_id
-											  ,fk_appointment_id_next
-                                              ,created_date
-                                              ,fk_created_by_id
-                                              ,fk_created_by_type
-                                              ,remarks
-											)
-										values
-                                            (
-											 pappointment_id
-                                             ,@lnewAppointmentId
-                                             ,now()
-                                             ,pcreated_by_id
-                                             ,pcreated_by_type
-                                             ,premarks
-                                            );
-                                            										
-		commit;
+			#make a new appointment entry
 
-    end if;
+			set @ldecription = 'rescheduled appointment';
+
+			INSERT INTO `appointment`(
+										`fk_doctor_id`
+										, `fk_location_id`
+										, `fk_patient_id`
+										, contact
+										, `appointment_date`
+										, `start_mins`
+										, `end_mins`
+										, description
+										, `state`
+										, `created_date_time`
+										, `fk_created_by_pk`
+										, `created_by_type`
+										, `is_active`
+                                        , fk_schedule_day_id
+										)
+								 VALUES (
+										 @lDoctorId
+										,@lLocationId
+										,@lPatientId
+										,@lcontact
+										,STR_TO_DATE(pappointment_date, '%d-%m-%Y')
+										,pstart_mins
+										,pend_mins
+										,@ldecription
+										,0
+										,now()
+										,pcreated_by_id
+										,pcreated_by_type
+										,1
+                                        , @lscheduleDayId
+										);
+
+			#update the current appointment state to rescheduled
+
+			set @lnewAppointmentId = last_insert_id();
+
+			update appointment a
+			set state = 3
+				,fk_rescheduled_id = @lnewAppointmentId
+			where a.id = pappointment_id
+				  and a.is_active = 1;
+
+
+
+			#make an entry in the rescheduled table
+
+			insert into rescheduled_appointments (
+												  fk_appointment_id
+												  ,fk_appointment_id_next
+												  ,created_date
+												  ,fk_created_by_id
+												  ,fk_created_by_type
+												  ,remarks
+												)
+											values
+												(
+												 pappointment_id
+												 ,@lnewAppointmentId
+												 ,now()
+												 ,pcreated_by_id
+												 ,pcreated_by_type
+												 ,premarks
+												);
+
+			commit;
+
+		end if; # if COALESCE(@lDoctorId, 0) > 0 then
+
+	end if; #if @lscheduleDayId > 0 then
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
+CREATE  PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
     NO SQL
 begin
 
@@ -2210,7 +2388,13 @@ end$$
 --
 -- Functions
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `check_appointment_avalibility`(`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS int(11)
+CREATE  FUNCTION `check_appointment_avalibility`(
+  `pdoctor_id` INT
+, `plocation_id` INT
+, `pappointment_date` VARCHAR(20)
+, `pstart_time` INT
+, `pend_time` INT
+) RETURNS int(11)
     NO SQL
 begin
 
@@ -2235,7 +2419,6 @@ begin
 		return 4;
 			end if;
 
-
 	select count(sc.id)
 	into   @lscheduleCount
 	from schedule_day sc
@@ -2244,31 +2427,35 @@ begin
 		  and date(sc.`date`) = date(@lnewAppointmentDate)
 		  and sc.start_time_mins <= pstart_time
 		  and sc.end_time_mins >= pend_time
-		  and sc.is_blocked = 0
 		  and sc.is_active = 1;
 
 	if COALESCE(@lscheduleCount, 0) = 0 then
 		return 2;  	end if;
+
+	/*
+     appointmetn states
+     0 - active
+     1 - closed
+     2 - cancelled
+     3 - rescheduled
+    */
 
 	 select sum(is_timing_overlapping(pstart_time, pend_time, a.start_mins, a.end_mins))
 	 into  @lappointmentSum
 	 from appointment a
 	 where  a.fk_doctor_id = pdoctor_id
 			and a.fk_location_id  = plocation_id
-			and date(a.appointment_date) = date(@lnewAppointmentDate)
-			and a.state = 0
+			and a.appointment_date = @lnewAppointmentDate
+			and a.state in (0, 1)
 			and a.is_active = 1;
 
 	if COALESCE(@lappointmentSum, 0) > 0 then
 		return 3; 	else
 		return 1; 	end if;
 
-
-
-
 end$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `check_next_appointment_avilibility`(`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT ) RETURNS int(11)
+CREATE  FUNCTION `check_next_appointment_avilibility`(`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT ) RETURNS int(11)
 BEGIN
 
 	/*
@@ -2282,37 +2469,73 @@ BEGIN
 	declare lDoctorId int;
     declare lLocationId int;
     declare lAvalibilityStatus int;
-    
+
     select fk_doctor_id
 		   ,fk_location_id
 	into   @lDoctorId
 		   ,@lLocationId
     from appointment a
     where a.id = pappointment_id;
-    
+
     if COALESCE(@lDoctorId, 0) > 0 then
-    
-    
+
+
 		set @lAvalibilityStatus = check_appointment_avalibility(@lDoctorId
 																, @lLocationId
 																, pappointment_date
 																, pstart_time
 																, pend_time
 															   );
-    
-    
+
+
 		return @lAvalibilityStatus;
-    
+
     else
 		#there is no appointment for this id
 		return 5;
-    
+
     end if;
 
 RETURN 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
+CREATE  FUNCTION `get_schedule_day_id`(
+   `pdoctor_id` INT
+ , `plocation_id` INT
+ , `pappointment_date` VARCHAR(20)
+ , `pstart_time` INT
+ , `pend_time` INT
+) RETURNS int(11)
+    NO SQL
+BEGIN
+
+	/*
+     0 when there is no schedule available on that day
+     < 0 i.e. schedule day id when a schedule id available on that day
+    */
+
+	declare lnewAppointmentDate date;
+    declare lscheduleDayId date;
+
+    set @lscheduleDayId = 0;
+
+	set @lnewAppointmentDate = STR_TO_DATE(pappointment_date, '%d-%m-%Y');
+
+    select COALESCE(sc.id, 0)
+	into   @lscheduleDayId
+	from schedule_day sc
+	where sc.fk_doctor_id = pdoctor_id
+		  and sc.location_id = plocation_id
+		  and sc.`date` = @lnewAppointmentDate
+		  and sc.start_time_mins <= pstart_time
+		  and sc.end_time_mins >= pend_time
+		  and sc.is_active = 1;
+
+
+RETURN  @lscheduleDayId;
+END$$
+
+CREATE  FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
     NO SQL
 begin
 
@@ -2337,7 +2560,7 @@ if @dotProduct > @lenghtSsuare then
 return 1;
 end$$
 
-CREATE DEFINER=`root`@`localhost` FUNCTION `is_timing_overlapping`(`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS int(11)
+CREATE  FUNCTION `is_timing_overlapping`(`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS int(11)
     NO SQL
 begin
 
@@ -2347,13 +2570,13 @@ begin
 		or  pAppointStartTime >= pAppointEndTime then
 		return 1;
 	end if;
-    
+
     #its assumed cases for boundry conditions are take care by the calling proc/function
-    
-    
+
+
 	# test for starttime after the  endtime of an existing appointment
     # and for endtime before the start time of an existing appointment
-	if pnewStartTime >= pAppointEndTime 
+	if pnewStartTime >= pAppointEndTime
 		or pnewEndTime <= pAppointStartTime then
 		  return 0;
 	else
@@ -2372,7 +2595,6 @@ DELIMITER ;
 
 CREATE TABLE IF NOT EXISTS `appointment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fk_schedule_id` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_location_id` int(11) NOT NULL,
   `fk_patient_id` int(11) NOT NULL,
@@ -2387,119 +2609,131 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `fk_created_by_pk` int(11) NOT NULL,
   `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL,
+  `fk_schedule_day_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=111 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=122 ;
 
 --
 -- Dumping data for table `appointment`
 --
 
-INSERT INTO `appointment` (`id`, `fk_schedule_id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `description`, `state`, `fk_rescheduled_id`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`) VALUES
-(1, 0, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 1, NULL, '2016-06-09 15:23:49', 1, 'D', 1),
-(7, 0, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 1, NULL, '2016-06-11 16:41:13', 1, 'D', 1),
-(8, 0, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 2, NULL, '2016-06-12 00:01:08', 1, 'D', 1),
-(9, 0, 1, 14, 107, '7038348822', '2016-06-14', 540, 555, 'test problem', 1, NULL, '2016-06-14 12:11:46', 1, 'D', 1),
-(10, 0, 1, 14, 108, '7038348822', '2016-06-14', 555, 570, 'qwerqew', 0, NULL, '2016-06-14 12:21:12', 1, 'D', 1),
-(11, 0, 1, 14, 109, '323423', '2016-06-14', 570, 585, 'dsdsfdasf', 0, NULL, '2016-06-14 12:28:31', 1, 'D', 1),
-(12, 0, 1, 14, 110, '323423', '2016-06-14', 585, 600, 'asdfasd', 0, NULL, '2016-06-14 12:28:48', 1, 'D', 1),
-(13, 0, 1, 14, 111, '3243', '2016-06-14', 600, 615, 'just a lil test', 0, NULL, '2016-06-14 12:54:43', 1, 'D', 1),
-(14, 0, 1, 14, 112, '34234', '2016-06-14', 615, 630, 'dfdasf', 0, NULL, '2016-06-14 13:19:41', 1, 'D', 1),
-(15, 0, 1, 14, 113, '23414', '2016-06-14', 630, 645, 'this is good', 2, NULL, '2016-06-14 13:21:10', 1, 'D', 1),
-(16, 0, 1, 14, 100, '14242341', '2016-06-15', 540, 555, 'New Appointment', 2, NULL, '2016-06-15 09:06:28', 1, 'D', 1),
-(17, 0, 1, 14, 100, '14242341', '2016-06-15', 555, 570, 'sdfasd', 2, NULL, '2016-06-15 10:59:30', 1, 'D', 1),
-(18, 0, 1, 14, 114, '9049035958', '2016-06-15', 555, 570, 'guygu', 2, NULL, '2016-06-15 11:54:49', 1, 'D', 1),
-(19, 0, 1, 14, 93, '14242341', '2016-06-15', 540, 555, 'temp', 0, NULL, '2016-06-15 16:10:28', 1, 'D', 1),
-(20, 0, 1, 14, 106, '4352', '2016-06-15', 660, 675, 'test jay', 0, NULL, '2016-06-15 16:12:10', 1, 'D', 1),
-(21, 0, 1, 14, 108, '7038348822', '2016-06-15', 615, 630, 'Tim ', 0, NULL, '2016-06-15 16:12:57', 1, 'D', 1),
-(22, 0, 1, 14, 115, '23414', '2016-06-15', 555, 565, 'asda', 0, NULL, '2016-06-15 18:02:56', 1, 'D', 1),
-(23, 0, 1, 18, 116, '14242341', '2016-06-29', 540, 555, 'sdfasdf', 1, NULL, '2016-06-29 12:31:26', 1, 'D', 1),
-(24, 0, 1, 18, 104, '4444444', '2016-06-30', 540, 555, 'test appointment', 1, NULL, '2016-06-30 14:13:40', 1, 'D', 1),
-(25, 0, 1, 18, 108, '7038348822', '2016-06-30', 555, 570, 'test', 1, NULL, '2016-06-30 14:15:10', 1, 'D', 1),
-(26, 0, 1, 18, 108, '7038348822', '2016-06-30', 570, 585, 'dfasd', 1, NULL, '2016-06-30 14:19:24', 1, 'D', 1),
-(27, 0, 1, 18, 108, '7038348822', '2016-06-30', 585, 600, 'test', 1, NULL, '2016-06-30 14:25:03', 1, 'D', 1),
-(28, 0, 1, 18, 117, '14242341', '2016-06-30', 600, 615, 'test', 0, NULL, '2016-06-30 14:29:14', 1, 'D', 1),
-(29, 0, 1, 18, 100, '14242341', '2016-07-04', 540, 555, 'sdfasdf', 2, NULL, '2016-07-04 18:57:32', 1, 'D', 1),
-(30, 0, 1, 18, 100, '14242341', '2016-07-04', 570, 585, 'sdfsdf', 2, NULL, '2016-07-04 18:58:14', 1, 'D', 1),
-(31, 0, 1, 18, 100, '14242341', '2016-07-04', 600, 615, 'asdfasd', 2, NULL, '2016-07-04 19:27:31', 1, 'D', 1),
-(32, 0, 1, 18, 93, '14242341', '2016-07-04', 540, 555, 'asdfasd', 0, NULL, '2016-07-04 21:36:20', 1, 'D', 1),
-(33, 0, 1, 18, 104, '4444444', '2016-07-04', 555, 570, 'new appp', 1, NULL, '2016-07-04 22:21:59', 1, 'D', 1),
-(34, 0, 1, 18, 118, 'asdfasdfasd', '2016-07-06', 540, 555, 'asdfasdf', 1, NULL, '2016-07-06 16:10:37', 1, 'D', 1),
-(35, 0, 1, 18, 118, '5235245', '2016-07-06', 555, 570, 'Tims appointment', 2, NULL, '2016-07-06 16:15:46', 1, 'D', 1),
-(36, 0, 1, 18, 119, '12412341234', '2016-07-06', 570, 585, 'To see the doc', 1, NULL, '2016-07-06 16:17:20', 1, 'D', 1),
-(37, 0, 1, 18, 101, '14242341', '2016-07-06', 555, 570, 'asdfasdf', 0, NULL, '2016-07-06 21:52:22', 1, 'D', 1),
-(38, 0, 1, 18, 101, '123423', '2016-07-06', 585, 600, 'fadsfasd', 0, NULL, '2016-07-06 21:52:49', 1, 'D', 1),
-(39, 0, 1, 18, 120, '41243123', '2016-07-06', 600, 615, 'dasdfads', 0, NULL, '2016-07-06 21:59:15', 1, 'D', 1),
-(40, 0, 1, 18, 100, '14242341', '2016-07-07', 540, 555, 'sdf', 0, NULL, '2016-07-07 20:21:33', 1, 'D', 1),
-(41, 0, 1, 18, 100, '14242341', '2016-07-09', 540, 555, 'sfsdf', 0, NULL, '2016-07-09 09:34:37', 1, 'D', 1),
-(42, 0, 1, 18, 121, '142423413434', '2016-07-09', 555, 570, 'dfdgf', 0, NULL, '2016-07-09 09:35:25', 1, 'D', 1),
-(43, 0, 1, 18, 100, '14242341', '2016-07-09', 570, 585, 'sdf', 0, NULL, '2016-07-09 09:36:24', 1, 'D', 1),
-(44, 0, 1, 18, 122, '14242341', '2016-07-09', 585, 600, 'sdfsf', 0, NULL, '2016-07-09 09:50:59', 1, 'D', 1),
-(45, 0, 1, 18, 100, '34234', '2016-07-09', 600, 615, 'SFS', 0, NULL, '2016-07-09 09:51:28', 1, 'D', 1),
-(46, 0, 1, 18, 123, '34234', '2016-07-09', 615, 630, 'SDFSDF', 0, NULL, '2016-07-09 09:52:06', 1, 'D', 1),
-(47, 0, 1, 18, 124, '3434343', '2016-07-09', 630, 645, 'sdfsdf', 2, NULL, '2016-07-09 09:53:22', 1, 'D', 1),
-(48, 0, 1, 18, 100, '32234243', '2016-07-09', 645, 660, 'sdfsadf', 2, NULL, '2016-07-09 10:11:40', 1, 'D', 1),
-(49, 0, 1, 18, 125, '432423', '2016-07-09', 645, 660, 'sadfsdf', 2, NULL, '2016-07-09 10:13:12', 1, 'D', 1),
-(50, 0, 1, 18, 126, '4324234435345', '2016-07-09', 660, 675, 'sdfsaf', 2, NULL, '2016-07-09 10:14:43', 1, 'D', 1),
-(51, 0, 1, 18, 127, '43242334535345', '2016-07-09', 675, 690, 'sdfasf', 2, NULL, '2016-07-09 10:15:22', 1, 'D', 1),
-(52, 0, 1, 18, 128, '432423', '2016-07-09', 690, 705, 'sdfsad', 2, NULL, '2016-07-09 10:15:57', 1, 'D', 1),
-(53, 0, 1, 18, 129, '323423', '2016-07-09', 690, 705, 'sdfsadfaf', 0, NULL, '2016-07-09 15:27:26', 1, 'D', 1),
-(54, 0, 1, 18, 130, '323423', '2016-07-09', 705, 720, 'asdfaf', 0, NULL, '2016-07-09 15:27:51', 1, 'D', 1),
-(55, 0, 1, 18, 131, '323423', '2016-07-09', 675, 690, 'sad', 0, NULL, '2016-07-09 15:33:04', 1, 'D', 1),
-(56, 0, 1, 18, 132, '2222', '2016-07-09', 660, 675, 'sdfadf', 0, NULL, '2016-07-09 15:33:34', 1, 'D', 1),
-(57, 0, 1, 18, 109, '432413', '2016-07-09', 630, 645, 'dsfa', 0, NULL, '2016-07-09 17:21:48', 1, 'D', 1),
-(58, 0, 1, 18, 133, '4324233', '2016-07-09', 645, 660, 'dfgd', 2, NULL, '2016-07-09 17:22:26', 1, 'D', 1),
-(59, 0, 1, 18, 134, '4324233', '2016-07-09', 645, 660, 'asdfsaf', 2, NULL, '2016-07-09 17:23:45', 1, 'D', 1),
-(60, 0, 1, 18, 135, '4324233', '2016-07-09', 645, 660, 'asdfsdf', 2, NULL, '2016-07-09 17:24:13', 1, 'D', 1),
-(61, 0, 1, 18, 133, '4324233', '2016-07-09', 645, 660, 'asdf', 0, NULL, '2016-07-09 17:28:09', 1, 'D', 1),
-(62, 0, 1, 18, 136, '4134134', '2016-07-12', 540, 555, 'hahaha', 1, NULL, '2016-07-12 15:34:12', 1, 'D', 1),
-(63, 0, 1, 18, 137, '3241234132', '2016-07-13', 540, 555, 'TYT', 1, NULL, '2016-07-13 15:47:45', 1, 'D', 1),
-(64, 0, 1, 18, 137, '3241234132', '2016-07-13', 555, 570, 'the host', 1, NULL, '2016-07-13 16:40:38', 1, 'D', 1),
-(65, 0, 1, 18, 138, '3413241324', '2016-07-13', 570, 585, 'host at tyt', 1, NULL, '2016-07-13 17:06:56', 1, 'D', 1),
-(66, 0, 1, 18, 138, '3413241324', '2016-07-13', 585, 600, 'just a test', 1, NULL, '2016-07-13 17:58:17', 1, 'D', 1),
-(67, 0, 1, 18, 139, '523452345', '2016-07-13', 600, 615, 'Lavine', 1, NULL, '2016-07-13 18:08:54', 1, 'D', 1),
-(68, 0, 1, 18, 139, '523452345', '2016-07-13', 615, 630, 'Sugar', 1, NULL, '2016-07-13 18:10:04', 1, 'D', 1),
-(69, 0, 1, 18, 118, 'asdfasdfasd', '2016-07-13', 630, 645, 'asdafsdfasdf', 1, NULL, '2016-07-13 22:51:15', 1, 'D', 1),
-(70, 0, 1, 18, 140, '3241234123', '2016-07-13', 645, 660, 'hello', 2, NULL, '2016-07-13 23:08:21', 1, 'D', 1),
-(71, 0, 1, 18, 140, '3241234123', '2016-07-13', 660, 675, 'asdfasdf', 0, NULL, '2016-07-13 23:21:55', 1, 'D', 1),
-(72, 0, 1, 18, 140, '3241234123', '2016-07-13', 675, 690, 'asdfasdf', 0, NULL, '2016-07-13 23:23:03', 1, 'D', 1),
-(73, 0, 1, 18, 118, 'asdfasdfasd', '2016-07-13', 690, 705, 'Cant edit once the patient info had been added', 0, NULL, '2016-07-13 23:51:20', 1, 'D', 1),
-(74, 0, 1, 18, 114, '9049035958', '2016-07-13', 705, 720, 'aasdf', 0, NULL, '2016-07-13 23:55:22', 1, 'D', 1),
-(75, 0, 1, 18, 100, '14242341', '2016-07-14', 540, 555, 'aa', 0, NULL, '2016-07-14 15:54:44', 1, 'D', 1),
-(76, 0, 1, 18, 112, '7845612332', '2016-07-14', 555, 570, 'aa', 1, NULL, '2016-07-14 15:55:34', 1, 'D', 1),
-(77, 0, 1, 18, 141, '121235123', '2016-07-14', 570, 585, '123', 1, NULL, '2016-07-14 15:57:47', 1, 'D', 1),
-(78, 0, 1, 18, 141, '121235123', '2016-07-14', 585, 600, 'asd', 2, NULL, '2016-07-14 15:59:37', 1, 'D', 1),
-(79, 0, 1, 18, 141, '111242323', '2016-07-14', 600, 615, 'asd', 2, NULL, '2016-07-14 16:00:08', 1, 'D', 1),
-(80, 0, 1, 18, 142, '3423432', '2016-07-14', 615, 630, 'test this thing', 2, NULL, '2016-07-14 19:21:23', 1, 'D', 1),
-(81, 0, 1, 18, 116, '14242341', '2016-07-14', 630, 645, 'test this thing', 0, NULL, '2016-07-14 19:23:12', 1, 'D', 1),
-(82, 0, 1, 18, 116, '23423423', '2016-07-14', 645, 660, 'this did not rest it', 0, NULL, '2016-07-14 19:24:50', 1, 'D', 1),
-(83, 0, 1, 18, 114, '9049035958', '2016-07-14', 660, 675, 'description for Amanda lee', 0, NULL, '2016-07-14 19:31:18', 1, 'D', 1),
-(84, 0, 1, 18, 114, '3423423', '2016-07-14', 675, 690, 'Description for the new person', 0, NULL, '2016-07-14 19:32:30', 1, 'D', 1),
-(85, 0, 1, 18, 140, '3241234123', '2016-07-14', 690, 705, 'Hebo', 0, NULL, '2016-07-14 19:59:25', 1, 'D', 1),
-(86, 0, 1, 18, 140, '97898709', '2016-07-14', 705, 720, 'Bennoit', 0, NULL, '2016-07-14 20:00:04', 1, 'D', 1),
-(87, 0, 1, 18, 140, '3241234123', '2016-07-14', 585, 600, 'sdfasd', 0, NULL, '2016-07-14 20:03:33', 1, 'D', 1),
-(88, 0, 1, 18, 143, '44543534', '2016-07-14', 600, 615, 'Criag list', 0, NULL, '2016-07-14 20:04:58', 1, 'D', 1),
-(89, 0, 1, 18, 121, '5555555555', '2016-07-15', 540, 555, 'asdfasdf', 0, NULL, '2016-07-15 00:22:32', 1, 'D', 1),
-(90, 0, 1, 18, 100, '14242341', '2016-07-18', 540, 555, 'asdf', 0, NULL, '2016-07-16 18:09:59', 2, 'S', 1),
-(91, 0, 1, 18, 112, '34234', '2016-07-18', 555, 570, 'asdfdas', 2, NULL, '2016-07-18 15:46:52', 1, 'D', 1),
-(92, 0, 1, 18, 100, '14242341', '2016-07-18', 570, 585, 'asdfasd', 2, NULL, '2016-07-18 15:48:06', 1, 'D', 1),
-(93, 0, 1, 18, 136, '4134134', '2016-07-18', 675, 690, 'new appointment', 0, NULL, '2016-07-18 16:50:44', 1, 'D', 1),
-(94, 0, 43, 21, 145, '2423423', '2016-07-18', 540, 555, 'test jamie', 0, NULL, '2016-07-18 17:07:48', 43, 'D', 1),
-(95, 0, 1, 18, 146, 'asdfasd', '2016-07-18', 690, 705, 'sdf', 0, NULL, '2016-07-18 23:21:21', 1, 'D', 1),
-(96, 0, 1, 18, 147, '433423', '2016-07-18', 705, 720, 'dfasdfasd', 0, NULL, '2016-07-18 23:22:00', 1, 'D', 1),
-(97, 0, 47, 23, 148, '3421341234', '2016-07-18', 540, 555, 'hello', 0, NULL, '2016-07-18 23:29:05', 47, 'D', 1),
-(98, 0, 1, 18, 149, '904903595', '2016-07-19', 540, 555, 'sdf', 0, NULL, '2016-07-19 14:10:46', 1, 'D', 1),
-(99, 0, 1, 18, 150, '979', '2016-07-19', 555, 570, 'asdfs', 0, NULL, '2016-07-19 14:11:52', 1, 'D', 1),
-(100, 0, 1, 18, 150, '97943', '2016-07-19', 570, 585, 'sdf', 0, NULL, '2016-07-19 14:12:11', 1, 'D', 1),
-(101, 0, 1, 18, 150, '97934324242', '2016-07-19', 585, 600, 'safd', 0, NULL, '2016-07-19 14:12:29', 1, 'D', 1),
-(102, 0, 1, 18, 150, '979', '2016-07-19', 600, 615, 'asdfsf', 0, NULL, '2016-07-19 15:14:33', 1, 'D', 1),
-(103, 0, 1, 18, 151, '435', '2016-07-19', 615, 630, 'xv', 0, NULL, '2016-07-19 15:38:53', 1, 'D', 1),
-(104, 0, 1, 18, 150, '979', '2016-07-19', 630, 645, 'asdfsaf', 0, NULL, '2016-07-19 15:52:49', 1, 'D', 1),
-(105, 0, 1, 18, 169, '324234234234', '2016-07-21', 540, 555, 'Jamie needs a appointment\n', 0, NULL, '2016-07-21 16:25:00', 1, 'D', 1),
-(106, 0, 1, 18, 169, '324234234234', '2016-07-21', 600, 615, 'booked when closing appointment', 1, NULL, '2016-07-21 23:28:49', 1, 'D', 1),
-(107, 0, 1, 18, 169, '324234234234', '2016-07-21', 600, 615, 'booked when closing appointment', 1, NULL, '2016-07-21 23:29:19', 1, 'D', 1),
-(108, 0, 1, 18, 173, '45345234', '2016-07-22', 540, 555, 'Neal wants to see the doctor', 0, NULL, '2016-07-22 16:00:02', 1, 'D', 1),
-(109, 0, 1, 18, 136, '4134134', '2016-07-23', 540, 555, 'This is manual appointment', 4, 110, '2016-07-23 15:15:41', 1, 'D', 1),
-(110, 0, 1, 18, 136, '4134134', '2016-07-24', 600, 615, 'rescheduled appointment', 0, NULL, '2016-07-23 15:16:33', 1, 'D', 1);
+INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_id`, `contact`, `appointment_date`, `start_mins`, `end_mins`, `description`, `state`, `fk_rescheduled_id`, `created_date_time`, `fk_created_by_pk`, `created_by_type`, `is_active`, `fk_schedule_day_id`) VALUES
+(1, 1, 14, 96, '342314', '2016-06-09', 555, 570, 'app', 1, NULL, '2016-06-09 15:23:49', 1, 'D', 1, 0),
+(7, 1, 14, 105, '4444444', '2016-06-09', 540, 555, 'test appointemtn', 1, NULL, '2016-06-11 16:41:13', 1, 'D', 1, 0),
+(8, 1, 14, 106, '4352', '2016-06-09', 660, 675, 'Hair fall', 2, NULL, '2016-06-12 00:01:08', 1, 'D', 1, 0),
+(9, 1, 14, 107, '7038348822', '2016-06-14', 540, 555, 'test problem', 1, NULL, '2016-06-14 12:11:46', 1, 'D', 1, 0),
+(10, 1, 14, 108, '7038348822', '2016-06-14', 555, 570, 'qwerqew', 0, NULL, '2016-06-14 12:21:12', 1, 'D', 1, 0),
+(11, 1, 14, 109, '323423', '2016-06-14', 570, 585, 'dsdsfdasf', 0, NULL, '2016-06-14 12:28:31', 1, 'D', 1, 0),
+(12, 1, 14, 110, '323423', '2016-06-14', 585, 600, 'asdfasd', 0, NULL, '2016-06-14 12:28:48', 1, 'D', 1, 0),
+(13, 1, 14, 111, '3243', '2016-06-14', 600, 615, 'just a lil test', 0, NULL, '2016-06-14 12:54:43', 1, 'D', 1, 0),
+(14, 1, 14, 112, '34234', '2016-06-14', 615, 630, 'dfdasf', 0, NULL, '2016-06-14 13:19:41', 1, 'D', 1, 0),
+(15, 1, 14, 113, '23414', '2016-06-14', 630, 645, 'this is good', 2, NULL, '2016-06-14 13:21:10', 1, 'D', 1, 0),
+(16, 1, 14, 100, '14242341', '2016-06-15', 540, 555, 'New Appointment', 2, NULL, '2016-06-15 09:06:28', 1, 'D', 1, 0),
+(17, 1, 14, 100, '14242341', '2016-06-15', 555, 570, 'sdfasd', 2, NULL, '2016-06-15 10:59:30', 1, 'D', 1, 0),
+(18, 1, 14, 114, '9049035958', '2016-06-15', 555, 570, 'guygu', 2, NULL, '2016-06-15 11:54:49', 1, 'D', 1, 0),
+(19, 1, 14, 93, '14242341', '2016-06-15', 540, 555, 'temp', 0, NULL, '2016-06-15 16:10:28', 1, 'D', 1, 0),
+(20, 1, 14, 106, '4352', '2016-06-15', 660, 675, 'test jay', 0, NULL, '2016-06-15 16:12:10', 1, 'D', 1, 0),
+(21, 1, 14, 108, '7038348822', '2016-06-15', 615, 630, 'Tim ', 0, NULL, '2016-06-15 16:12:57', 1, 'D', 1, 0),
+(22, 1, 14, 115, '23414', '2016-06-15', 555, 565, 'asda', 0, NULL, '2016-06-15 18:02:56', 1, 'D', 1, 0),
+(23, 1, 18, 116, '14242341', '2016-06-29', 540, 555, 'sdfasdf', 1, NULL, '2016-06-29 12:31:26', 1, 'D', 1, 0),
+(24, 1, 18, 104, '4444444', '2016-06-30', 540, 555, 'test appointment', 1, NULL, '2016-06-30 14:13:40', 1, 'D', 1, 0),
+(25, 1, 18, 108, '7038348822', '2016-06-30', 555, 570, 'test', 1, NULL, '2016-06-30 14:15:10', 1, 'D', 1, 0),
+(26, 1, 18, 108, '7038348822', '2016-06-30', 570, 585, 'dfasd', 1, NULL, '2016-06-30 14:19:24', 1, 'D', 1, 0),
+(27, 1, 18, 108, '7038348822', '2016-06-30', 585, 600, 'test', 1, NULL, '2016-06-30 14:25:03', 1, 'D', 1, 0),
+(28, 1, 18, 117, '14242341', '2016-06-30', 600, 615, 'test', 0, NULL, '2016-06-30 14:29:14', 1, 'D', 1, 0),
+(29, 1, 18, 100, '14242341', '2016-07-04', 540, 555, 'sdfasdf', 2, NULL, '2016-07-04 18:57:32', 1, 'D', 1, 0),
+(30, 1, 18, 100, '14242341', '2016-07-04', 570, 585, 'sdfsdf', 2, NULL, '2016-07-04 18:58:14', 1, 'D', 1, 0),
+(31, 1, 18, 100, '14242341', '2016-07-04', 600, 615, 'asdfasd', 2, NULL, '2016-07-04 19:27:31', 1, 'D', 1, 0),
+(32, 1, 18, 93, '14242341', '2016-07-04', 540, 555, 'asdfasd', 0, NULL, '2016-07-04 21:36:20', 1, 'D', 1, 0),
+(33, 1, 18, 104, '4444444', '2016-07-04', 555, 570, 'new appp', 1, NULL, '2016-07-04 22:21:59', 1, 'D', 1, 0),
+(34, 1, 18, 118, 'asdfasdfasd', '2016-07-06', 540, 555, 'asdfasdf', 1, NULL, '2016-07-06 16:10:37', 1, 'D', 1, 0),
+(35, 1, 18, 118, '5235245', '2016-07-06', 555, 570, 'Tims appointment', 2, NULL, '2016-07-06 16:15:46', 1, 'D', 1, 0),
+(36, 1, 18, 119, '12412341234', '2016-07-06', 570, 585, 'To see the doc', 1, NULL, '2016-07-06 16:17:20', 1, 'D', 1, 0),
+(37, 1, 18, 101, '14242341', '2016-07-06', 555, 570, 'asdfasdf', 0, NULL, '2016-07-06 21:52:22', 1, 'D', 1, 0),
+(38, 1, 18, 101, '123423', '2016-07-06', 585, 600, 'fadsfasd', 0, NULL, '2016-07-06 21:52:49', 1, 'D', 1, 0),
+(39, 1, 18, 120, '41243123', '2016-07-06', 600, 615, 'dasdfads', 0, NULL, '2016-07-06 21:59:15', 1, 'D', 1, 0),
+(40, 1, 18, 100, '14242341', '2016-07-07', 540, 555, 'sdf', 0, NULL, '2016-07-07 20:21:33', 1, 'D', 1, 0),
+(41, 1, 18, 100, '14242341', '2016-07-09', 540, 555, 'sfsdf', 0, NULL, '2016-07-09 09:34:37', 1, 'D', 1, 0),
+(42, 1, 18, 121, '142423413434', '2016-07-09', 555, 570, 'dfdgf', 0, NULL, '2016-07-09 09:35:25', 1, 'D', 1, 0),
+(43, 1, 18, 100, '14242341', '2016-07-09', 570, 585, 'sdf', 0, NULL, '2016-07-09 09:36:24', 1, 'D', 1, 0),
+(44, 1, 18, 122, '14242341', '2016-07-09', 585, 600, 'sdfsf', 0, NULL, '2016-07-09 09:50:59', 1, 'D', 1, 0),
+(45, 1, 18, 100, '34234', '2016-07-09', 600, 615, 'SFS', 0, NULL, '2016-07-09 09:51:28', 1, 'D', 1, 0),
+(46, 1, 18, 123, '34234', '2016-07-09', 615, 630, 'SDFSDF', 0, NULL, '2016-07-09 09:52:06', 1, 'D', 1, 0),
+(47, 1, 18, 124, '3434343', '2016-07-09', 630, 645, 'sdfsdf', 2, NULL, '2016-07-09 09:53:22', 1, 'D', 1, 0),
+(48, 1, 18, 100, '32234243', '2016-07-09', 645, 660, 'sdfsadf', 2, NULL, '2016-07-09 10:11:40', 1, 'D', 1, 0),
+(49, 1, 18, 125, '432423', '2016-07-09', 645, 660, 'sadfsdf', 2, NULL, '2016-07-09 10:13:12', 1, 'D', 1, 0),
+(50, 1, 18, 126, '4324234435345', '2016-07-09', 660, 675, 'sdfsaf', 2, NULL, '2016-07-09 10:14:43', 1, 'D', 1, 0),
+(51, 1, 18, 127, '43242334535345', '2016-07-09', 675, 690, 'sdfasf', 2, NULL, '2016-07-09 10:15:22', 1, 'D', 1, 0),
+(52, 1, 18, 128, '432423', '2016-07-09', 690, 705, 'sdfsad', 2, NULL, '2016-07-09 10:15:57', 1, 'D', 1, 0),
+(53, 1, 18, 129, '323423', '2016-07-09', 690, 705, 'sdfsadfaf', 0, NULL, '2016-07-09 15:27:26', 1, 'D', 1, 0),
+(54, 1, 18, 130, '323423', '2016-07-09', 705, 720, 'asdfaf', 0, NULL, '2016-07-09 15:27:51', 1, 'D', 1, 0),
+(55, 1, 18, 131, '323423', '2016-07-09', 675, 690, 'sad', 0, NULL, '2016-07-09 15:33:04', 1, 'D', 1, 0),
+(56, 1, 18, 132, '2222', '2016-07-09', 660, 675, 'sdfadf', 0, NULL, '2016-07-09 15:33:34', 1, 'D', 1, 0),
+(57, 1, 18, 109, '432413', '2016-07-09', 630, 645, 'dsfa', 0, NULL, '2016-07-09 17:21:48', 1, 'D', 1, 0),
+(58, 1, 18, 133, '4324233', '2016-07-09', 645, 660, 'dfgd', 2, NULL, '2016-07-09 17:22:26', 1, 'D', 1, 0),
+(59, 1, 18, 134, '4324233', '2016-07-09', 645, 660, 'asdfsaf', 2, NULL, '2016-07-09 17:23:45', 1, 'D', 1, 0),
+(60, 1, 18, 135, '4324233', '2016-07-09', 645, 660, 'asdfsdf', 2, NULL, '2016-07-09 17:24:13', 1, 'D', 1, 0),
+(61, 1, 18, 133, '4324233', '2016-07-09', 645, 660, 'asdf', 0, NULL, '2016-07-09 17:28:09', 1, 'D', 1, 0),
+(62, 1, 18, 136, '4134134', '2016-07-12', 540, 555, 'hahaha', 1, NULL, '2016-07-12 15:34:12', 1, 'D', 1, 0),
+(63, 1, 18, 137, '3241234132', '2016-07-13', 540, 555, 'TYT', 1, NULL, '2016-07-13 15:47:45', 1, 'D', 1, 0),
+(64, 1, 18, 137, '3241234132', '2016-07-13', 555, 570, 'the host', 1, NULL, '2016-07-13 16:40:38', 1, 'D', 1, 0),
+(65, 1, 18, 138, '3413241324', '2016-07-13', 570, 585, 'host at tyt', 1, NULL, '2016-07-13 17:06:56', 1, 'D', 1, 0),
+(66, 1, 18, 138, '3413241324', '2016-07-13', 585, 600, 'just a test', 1, NULL, '2016-07-13 17:58:17', 1, 'D', 1, 0),
+(67, 1, 18, 139, '523452345', '2016-07-13', 600, 615, 'Lavine', 1, NULL, '2016-07-13 18:08:54', 1, 'D', 1, 0),
+(68, 1, 18, 139, '523452345', '2016-07-13', 615, 630, 'Sugar', 1, NULL, '2016-07-13 18:10:04', 1, 'D', 1, 0),
+(69, 1, 18, 118, 'asdfasdfasd', '2016-07-13', 630, 645, 'asdafsdfasdf', 1, NULL, '2016-07-13 22:51:15', 1, 'D', 1, 0),
+(70, 1, 18, 140, '3241234123', '2016-07-13', 645, 660, 'hello', 2, NULL, '2016-07-13 23:08:21', 1, 'D', 1, 0),
+(71, 1, 18, 140, '3241234123', '2016-07-13', 660, 675, 'asdfasdf', 0, NULL, '2016-07-13 23:21:55', 1, 'D', 1, 0),
+(72, 1, 18, 140, '3241234123', '2016-07-13', 675, 690, 'asdfasdf', 0, NULL, '2016-07-13 23:23:03', 1, 'D', 1, 0),
+(73, 1, 18, 118, 'asdfasdfasd', '2016-07-13', 690, 705, 'Cant edit once the patient info had been added', 0, NULL, '2016-07-13 23:51:20', 1, 'D', 1, 0),
+(74, 1, 18, 114, '9049035958', '2016-07-13', 705, 720, 'aasdf', 0, NULL, '2016-07-13 23:55:22', 1, 'D', 1, 0),
+(75, 1, 18, 100, '14242341', '2016-07-14', 540, 555, 'aa', 0, NULL, '2016-07-14 15:54:44', 1, 'D', 1, 0),
+(76, 1, 18, 112, '7845612332', '2016-07-14', 555, 570, 'aa', 1, NULL, '2016-07-14 15:55:34', 1, 'D', 1, 0),
+(77, 1, 18, 141, '121235123', '2016-07-14', 570, 585, '123', 1, NULL, '2016-07-14 15:57:47', 1, 'D', 1, 0),
+(78, 1, 18, 141, '121235123', '2016-07-14', 585, 600, 'asd', 2, NULL, '2016-07-14 15:59:37', 1, 'D', 1, 0),
+(79, 1, 18, 141, '111242323', '2016-07-14', 600, 615, 'asd', 2, NULL, '2016-07-14 16:00:08', 1, 'D', 1, 0),
+(80, 1, 18, 142, '3423432', '2016-07-14', 615, 630, 'test this thing', 2, NULL, '2016-07-14 19:21:23', 1, 'D', 1, 0),
+(81, 1, 18, 116, '14242341', '2016-07-14', 630, 645, 'test this thing', 0, NULL, '2016-07-14 19:23:12', 1, 'D', 1, 0),
+(82, 1, 18, 116, '23423423', '2016-07-14', 645, 660, 'this did not rest it', 0, NULL, '2016-07-14 19:24:50', 1, 'D', 1, 0),
+(83, 1, 18, 114, '9049035958', '2016-07-14', 660, 675, 'description for Amanda lee', 0, NULL, '2016-07-14 19:31:18', 1, 'D', 1, 0),
+(84, 1, 18, 114, '3423423', '2016-07-14', 675, 690, 'Description for the new person', 0, NULL, '2016-07-14 19:32:30', 1, 'D', 1, 0),
+(85, 1, 18, 140, '3241234123', '2016-07-14', 690, 705, 'Hebo', 0, NULL, '2016-07-14 19:59:25', 1, 'D', 1, 0),
+(86, 1, 18, 140, '97898709', '2016-07-14', 705, 720, 'Bennoit', 0, NULL, '2016-07-14 20:00:04', 1, 'D', 1, 0),
+(87, 1, 18, 140, '3241234123', '2016-07-14', 585, 600, 'sdfasd', 0, NULL, '2016-07-14 20:03:33', 1, 'D', 1, 0),
+(88, 1, 18, 143, '44543534', '2016-07-14', 600, 615, 'Criag list', 0, NULL, '2016-07-14 20:04:58', 1, 'D', 1, 0),
+(89, 1, 18, 121, '5555555555', '2016-07-15', 540, 555, 'asdfasdf', 0, NULL, '2016-07-15 00:22:32', 1, 'D', 1, 0),
+(90, 1, 18, 100, '14242341', '2016-07-18', 540, 555, 'asdf', 0, NULL, '2016-07-16 18:09:59', 2, 'S', 1, 0),
+(91, 1, 18, 112, '34234', '2016-07-18', 555, 570, 'asdfdas', 2, NULL, '2016-07-18 15:46:52', 1, 'D', 1, 0),
+(92, 1, 18, 100, '14242341', '2016-07-18', 570, 585, 'asdfasd', 2, NULL, '2016-07-18 15:48:06', 1, 'D', 1, 0),
+(93, 1, 18, 136, '4134134', '2016-07-18', 675, 690, 'new appointment', 0, NULL, '2016-07-18 16:50:44', 1, 'D', 1, 0),
+(94, 43, 21, 145, '2423423', '2016-07-18', 540, 555, 'test jamie', 0, NULL, '2016-07-18 17:07:48', 43, 'D', 1, 0),
+(95, 1, 18, 146, 'asdfasd', '2016-07-18', 690, 705, 'sdf', 0, NULL, '2016-07-18 23:21:21', 1, 'D', 1, 0),
+(96, 1, 18, 147, '433423', '2016-07-18', 705, 720, 'dfasdfasd', 0, NULL, '2016-07-18 23:22:00', 1, 'D', 1, 0),
+(97, 47, 23, 148, '3421341234', '2016-07-18', 540, 555, 'hello', 0, NULL, '2016-07-18 23:29:05', 47, 'D', 1, 0),
+(98, 1, 18, 149, '904903595', '2016-07-19', 540, 555, 'sdf', 0, NULL, '2016-07-19 14:10:46', 1, 'D', 1, 0),
+(99, 1, 18, 150, '979', '2016-07-19', 555, 570, 'asdfs', 0, NULL, '2016-07-19 14:11:52', 1, 'D', 1, 0),
+(100, 1, 18, 150, '97943', '2016-07-19', 570, 585, 'sdf', 0, NULL, '2016-07-19 14:12:11', 1, 'D', 1, 0),
+(101, 1, 18, 150, '97934324242', '2016-07-19', 585, 600, 'safd', 0, NULL, '2016-07-19 14:12:29', 1, 'D', 1, 0),
+(102, 1, 18, 150, '979', '2016-07-19', 600, 615, 'asdfsf', 0, NULL, '2016-07-19 15:14:33', 1, 'D', 1, 0),
+(103, 1, 18, 151, '435', '2016-07-19', 615, 630, 'xv', 0, NULL, '2016-07-19 15:38:53', 1, 'D', 1, 0),
+(104, 1, 18, 150, '979', '2016-07-19', 630, 645, 'asdfsaf', 0, NULL, '2016-07-19 15:52:49', 1, 'D', 1, 0),
+(105, 1, 18, 169, '324234234234', '2016-07-21', 540, 555, 'Jamie needs a appointment\n', 0, NULL, '2016-07-21 16:25:00', 1, 'D', 1, 0),
+(106, 1, 18, 169, '324234234234', '2016-07-21', 600, 615, 'booked when closing appointment', 1, NULL, '2016-07-21 23:28:49', 1, 'D', 1, 0),
+(107, 1, 18, 169, '324234234234', '2016-07-21', 600, 615, 'booked when closing appointment', 1, NULL, '2016-07-21 23:29:19', 1, 'D', 1, 0),
+(108, 1, 18, 173, '45345234', '2016-07-22', 540, 555, 'Neal wants to see the doctor', 0, NULL, '2016-07-22 16:00:02', 1, 'D', 1, 0),
+(109, 1, 18, 136, '4134134', '2016-07-23', 540, 555, 'This is manual appointment', 3, 110, '2016-07-23 15:15:41', 1, 'D', 1, 0),
+(110, 1, 18, 136, '4134134', '2016-07-24', 600, 615, 'rescheduled appointment', 2, NULL, '2016-07-23 15:16:33', 1, 'D', 1, 0),
+(111, 1, 18, 171, '67668768', '2016-07-23', 555, 570, 'manual appointment for Gearson', 3, 112, '2016-07-23 15:52:12', 1, 'D', 1, 0),
+(112, 1, 18, 171, '67668768', '2016-07-24', 540, 555, 'rescheduled appointment', 0, NULL, '2016-07-23 15:52:48', 1, 'D', 1, 0),
+(113, 1, 18, 136, '4134134', '2016-07-23', 540, 555, 'asdfsdf', 0, NULL, '2016-07-23 17:47:47', 1, 'D', 1, 0),
+(114, 1, 18, 147, '433423', '2016-07-24', 555, 570, 'Hanks needs more hair', 0, NULL, '2016-07-24 20:53:46', 1, 'D', 1, 229488),
+(115, 1, 18, 140, '3241234123', '2016-07-24', 570, 585, 'Charlie has chocolate addictions', 0, NULL, '2016-07-24 21:03:21', 1, 'D', 1, 229488),
+(116, 1, 18, 174, '342342343', '2016-07-25', 540, 555, 'Hanna is anna', 3, 117, '2016-07-25 19:08:31', 1, 'D', 1, 229456),
+(117, 1, 18, 174, '342342343', '2016-07-26', 600, 615, 'rescheduled appointment', 3, 118, '2016-07-25 19:09:04', 1, 'D', 1, NULL),
+(118, 1, 18, 174, '342342343', '2016-07-25', 600, 615, 'rescheduled appointment', 3, 119, '2016-07-25 19:21:45', 1, 'D', 1, 229456),
+(119, 1, 18, 174, '342342343', '2016-07-26', 600, 615, 'rescheduled appointment', 3, 120, '2016-07-25 21:11:49', 1, 'D', 1, 229457),
+(120, 1, 18, 174, '342342343', '2016-07-27', 600, 615, 'rescheduled appointment', 3, 121, '2016-07-25 21:12:38', 1, 'D', 1, 229458),
+(121, 1, 18, 174, '342342343', '2016-07-26', 660, 675, 'rescheduled appointment', 0, NULL, '2016-07-25 21:13:16', 1, 'D', 1, 229457);
 
 -- --------------------------------------------------------
 
@@ -2550,7 +2784,8 @@ INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled
 (79, 'sdf', '2016-07-14 20:02:42', 1, 'D'),
 (80, 'asdfasd', '2016-07-14 20:02:47', 1, 'D'),
 (92, 'erwer', '2016-07-18 16:48:42', 1, 'D'),
-(91, 'this is ', '2016-07-18 16:50:17', 1, 'D');
+(91, 'this is ', '2016-07-18 16:50:17', 1, 'D'),
+(110, 'test cancel', '2016-07-23 16:25:54', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -2719,6 +2954,7 @@ CREATE TABLE IF NOT EXISTS `guardian` (
 INSERT INTO `guardian` (`fk_patient_id`, `name`, `date_of_birth`, `gender`, `picture_path`, `phone1`, `phone2`, `address`, `is_active`) VALUES
 (100, 'Marie Forleo', NULL, 0, 'undefined', '3423423432', NULL, '', 1),
 (101, 'asdfsdf', '2020-07-20', 1, '7.jpg', '5345345', 'asdfasdfsf', 'asdfdasf', 1),
+(125, 'Hamba', NULL, 1, 'undefined', '234234', NULL, '', 0),
 (154, 'tony', NULL, 1, '', '4234234', '', '', 1),
 (155, '', NULL, 1, '', '', '', '', 1),
 (156, '', NULL, 1, '', '', '', '', 1),
@@ -2810,7 +3046,7 @@ CREATE TABLE IF NOT EXISTS `medication_programme_list` (
   `duration_text` varchar(50) NOT NULL,
   `medicine` varchar(100) NOT NULL,
   `dose_no` int(11) NOT NULL,
-  `created_date` date NOT NULL,
+  `created_date` datetime NOT NULL,
   `is_active` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
   `modified_date` datetime DEFAULT NULL,
@@ -2823,13 +3059,13 @@ CREATE TABLE IF NOT EXISTS `medication_programme_list` (
 --
 
 INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `duration_days`, `duration_text`, `medicine`, `dose_no`, `created_date`, `is_active`, `fk_doctor_id`, `modified_date`, `update_marker`) VALUES
-(1, 1, 34444, 'sdafs', 'dfda', 34, '2016-07-09', 1, 1, '2016-07-19 18:45:21', 0),
-(2, 1, 4, '1 month', 'Hepatitis B', 2, '0000-00-00', 1, 1, '2016-07-19 18:45:21', 0),
-(3, 2, 3, '3 weeks', 'zyx', 3, '2016-07-18', 1, 1, '2016-07-22 13:33:47', 0),
-(4, 2, 4, '4 weeks', 'zzz', 5, '2016-07-18', 1, 1, '2016-07-22 13:33:47', 0),
-(5, 2, 5, '5 w', 'eeks', 6, '2016-07-18', 1, 1, '2016-07-22 13:33:47', 0),
-(6, 1, 5, 'five weeks', 'five', 4, '2016-07-19', 1, 1, '2016-07-19 18:45:21', 0),
-(7, 3, 4, '4 weeks', 'polio', 4, '2016-07-19', 1, 1, NULL, 0);
+(1, 1, 34444, 'sdafs', 'dfda', 34, '2016-07-09 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
+(2, 1, 4, '1 month', 'Hepatitis B', 2, '0000-00-00 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
+(3, 2, 3, '3 weeks', 'zyx', 3, '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
+(4, 2, 4, '4 weeks', 'zzz', 5, '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
+(5, 2, 5, '5 w', 'eeks', 6, '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
+(6, 1, 5, 'five weeks', 'five', 4, '2016-07-19 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
+(7, 3, 4, '4 weeks', 'polio', 4, '2016-07-19 00:00:00', 1, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -2885,7 +3121,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=174 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=175 ;
 
 --
 -- Dumping data for table `patient`
@@ -2921,7 +3157,7 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (122, 1, 'Amanda Lee (14242341)', '1995-04-01', 'AB+', '57 Kg', '5.8 ft', 0, '14242341', NULL, NULL, NULL, NULL, '2016-07-09 09:50:59', 1, 'D', NULL, NULL, NULL, 1),
 (123, 1, 'asdf (34234)', '2016-06-21', '', '434', '43', 1, '34234', NULL, NULL, NULL, NULL, '2016-07-09 09:52:06', 1, 'D', NULL, NULL, NULL, 1),
 (124, 1, 'Tim (asdfasdfasd)', '2016-07-06', 'AB+', 'sdf', 'sdaf', 1, '3434343', NULL, NULL, NULL, NULL, '2016-07-09 09:53:22', 1, 'D', NULL, NULL, NULL, 1),
-(125, 1, 'jhon', '2016-07-29', 'A+', '34', '343', 1, '432423', NULL, NULL, NULL, NULL, '2016-07-09 10:13:12', 1, 'D', NULL, NULL, NULL, 1),
+(125, 1, 'jhon', '2016-07-29', 'A+', '34', '343', 1, '432423', NULL, NULL, '', 'null', '2016-07-09 10:13:12', 1, 'D', NULL, 1, 'D', 0),
 (126, 1, 'jhon (432423)', '2016-07-29', 'A+', '34', '343', 1, '4324234435345', NULL, NULL, NULL, NULL, '2016-07-09 10:14:43', 1, 'D', NULL, NULL, NULL, 1),
 (127, 1, 'jhon (432423)', '2016-07-29', 'A+', '34', '343', 1, '43242334535345', NULL, NULL, NULL, NULL, '2016-07-09 10:15:22', 1, 'D', NULL, NULL, NULL, 1),
 (128, 1, 'jhon (432423)', '2016-07-29', 'A+', '34', '343', 1, '432423', NULL, NULL, NULL, NULL, '2016-07-09 10:15:57', 1, 'D', NULL, NULL, NULL, 1),
@@ -2969,7 +3205,8 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (170, 1, 'Brown', '2016-07-22', '-', '', '', 1, '423423432', NULL, NULL, '', 'undefined', '2016-07-22 13:39:23', 1, 'D', NULL, 1, 'D', 1),
 (171, 1, 'Gearson', '2016-07-22', '-', '', '', 1, '67668768', NULL, NULL, '', 'undefined', '2016-07-22 14:21:57', 1, 'D', NULL, 1, 'D', 1),
 (172, 1, 'Aulther', '2016-07-22', '-', '', '', 1, '6876868', NULL, NULL, '', 'undefined', '2016-07-22 14:51:35', 1, 'D', NULL, 1, 'D', 1),
-(173, 1, 'Neal', '2016-07-22', '-', '', '', 1, '45345234', NULL, NULL, NULL, NULL, '2016-07-22 16:00:02', 1, 'D', NULL, NULL, NULL, 1);
+(173, 1, 'Neal', '2016-07-22', '-', '', '', 1, '45345234', NULL, NULL, NULL, NULL, '2016-07-22 16:00:02', 1, 'D', NULL, NULL, NULL, 1),
+(174, 1, 'Hanna', '2016-07-25', '-', '', '', 0, '342342343', NULL, NULL, NULL, NULL, '2016-07-25 19:08:31', 1, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -3096,6 +3333,18 @@ CREATE TABLE IF NOT EXISTS `rescheduled_appointments` (
   UNIQUE KEY `fk_appointment_id_next_UNIQUE` (`fk_appointment_id_next`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `rescheduled_appointments`
+--
+
+INSERT INTO `rescheduled_appointments` (`fk_appointment_id`, `fk_appointment_id_next`, `created_date`, `fk_created_by_id`, `fk_created_by_type`, `remarks`) VALUES
+(111, 112, '2016-07-23 15:52:48', 1, 'D', 'Rescheduled due to misscommunication'),
+(116, 117, '2016-07-25 19:09:04', 1, 'D', 'she wants to return tomorrow'),
+(117, 118, '2016-07-25 19:21:45', 1, 'D', 'back to where I belong'),
+(118, 119, '2016-07-25 21:11:49', 1, 'D', 'on 26 th'),
+(119, 120, '2016-07-25 21:12:38', 1, 'D', 'on 27th'),
+(120, 121, '2016-07-25 21:13:16', 1, 'D', 'on 26th');
+
 -- --------------------------------------------------------
 
 --
@@ -3136,11 +3385,13 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `fk_doctor_id` int(11) NOT NULL,
   `fk_schedule_id` int(11) NOT NULL,
   `location_id` int(11) DEFAULT NULL,
-  `date` int(11) DEFAULT NULL,
+  `date` date DEFAULT NULL,
   `start_time_mins` int(11) NOT NULL,
   `end_time_mins` int(11) NOT NULL,
-  `is_blocked` int(11) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
+  `modified_by_id` int(11) DEFAULT NULL,
+  `modified_by_type` varchar(5) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229489 ;
 
@@ -3148,49 +3399,49 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
 -- Dumping data for table `schedule_day`
 --
 
-INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id`, `date`, `start_time_mins`, `end_time_mins`, `is_blocked`, `is_active`) VALUES
-(229438, 1, 74, 18, 20160629, 540, 720, 0, 1),
-(229439, 1, 74, 18, 20160630, 540, 720, 0, 1),
-(229440, 1, 74, 18, 20160701, 540, 720, 0, 1),
-(229441, 1, 74, 18, 20160704, 540, 720, 0, 1),
-(229442, 1, 74, 18, 20160705, 540, 720, 0, 1),
-(229443, 1, 74, 18, 20160706, 540, 720, 0, 1),
-(229444, 1, 74, 18, 20160707, 540, 720, 0, 1),
-(229445, 1, 74, 18, 20160708, 540, 720, 0, 1),
-(229446, 1, 74, 18, 20160711, 540, 720, 0, 1),
-(229447, 1, 74, 18, 20160712, 540, 720, 0, 1),
-(229448, 1, 74, 18, 20160713, 540, 720, 0, 1),
-(229449, 1, 74, 18, 20160714, 540, 720, 0, 1),
-(229450, 1, 75, 18, 20160715, 540, 720, 0, 1),
-(229451, 1, 75, 18, 20160718, 540, 720, 0, 1),
-(229452, 1, 75, 18, 20160719, 540, 720, 0, 1),
-(229453, 1, 75, 18, 20160720, 540, 720, 0, 1),
-(229454, 1, 75, 18, 20160721, 540, 720, 0, 1),
-(229455, 1, 75, 18, 20160722, 540, 720, 0, 1),
-(229456, 1, 75, 18, 20160725, 540, 720, 0, 1),
-(229457, 1, 75, 18, 20160726, 540, 720, 0, 1),
-(229458, 1, 75, 18, 20160727, 540, 720, 0, 1),
-(229459, 1, 75, 18, 20160728, 540, 720, 0, 1),
-(229460, 1, 75, 18, 20160729, 540, 720, 0, 1),
-(229470, 43, 79, 21, 20160718, 540, 720, 0, 1),
-(229471, 43, 79, 21, 20160719, 540, 720, 0, 1),
-(229472, 43, 79, 21, 20160720, 540, 720, 0, 1),
-(229473, 47, 80, 23, 20160718, 540, 720, 0, 1),
-(229474, 47, 80, 23, 20160719, 540, 720, 0, 1),
-(229475, 47, 80, 23, 20160720, 540, 720, 0, 1),
-(229476, 47, 80, 23, 20160721, 540, 720, 0, 1),
-(229477, 47, 80, 23, 20160722, 540, 720, 0, 1),
-(229478, 47, 80, 23, 20160723, 540, 720, 0, 1),
-(229479, 47, 80, 23, 20160724, 540, 720, 0, 1),
-(229480, 47, 80, 23, 20160725, 540, 720, 0, 1),
-(229481, 47, 80, 23, 20160726, 540, 720, 0, 1),
-(229482, 47, 80, 23, 20160727, 540, 720, 0, 1),
-(229483, 47, 80, 23, 20160728, 540, 720, 0, 1),
-(229484, 47, 80, 23, 20160729, 540, 720, 0, 1),
-(229485, 47, 80, 23, 20160730, 540, 720, 0, 1),
-(229486, 47, 80, 23, 20160731, 540, 720, 0, 1),
-(229487, 1, 81, 18, 20160723, 540, 720, 0, 1),
-(229488, 1, 81, 18, 20160724, 540, 720, 0, 1);
+INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id`, `date`, `start_time_mins`, `end_time_mins`, `is_active`, `modified_by_id`, `modified_by_type`, `modified_date`) VALUES
+(229438, 1, 74, 18, '2016-06-29', 540, 720, 1, NULL, NULL, NULL),
+(229439, 1, 74, 18, '2016-06-30', 540, 720, 1, NULL, NULL, NULL),
+(229440, 1, 74, 18, '2016-07-01', 540, 720, 1, NULL, NULL, NULL),
+(229441, 1, 74, 18, '2016-07-04', 540, 720, 1, NULL, NULL, NULL),
+(229442, 1, 74, 18, '2016-07-05', 540, 720, 1, NULL, NULL, NULL),
+(229443, 1, 74, 18, '2016-07-06', 540, 720, 1, NULL, NULL, NULL),
+(229444, 1, 74, 18, '2016-07-07', 540, 720, 1, NULL, NULL, NULL),
+(229445, 1, 74, 18, '2016-07-08', 540, 720, 1, NULL, NULL, NULL),
+(229446, 1, 74, 18, '2016-07-11', 540, 720, 1, NULL, NULL, NULL),
+(229447, 1, 74, 18, '2016-07-12', 540, 720, 1, NULL, NULL, NULL),
+(229448, 1, 74, 18, '2016-07-13', 540, 720, 1, NULL, NULL, NULL),
+(229449, 1, 74, 18, '2016-07-14', 540, 720, 1, NULL, NULL, NULL),
+(229450, 1, 75, 18, '2016-07-15', 540, 720, 1, NULL, NULL, NULL),
+(229451, 1, 75, 18, '2016-07-18', 540, 720, 1, NULL, NULL, NULL),
+(229452, 1, 75, 18, '2016-07-19', 540, 720, 1, NULL, NULL, NULL),
+(229453, 1, 75, 18, '2016-07-20', 540, 720, 1, NULL, NULL, NULL),
+(229454, 1, 75, 18, '2016-07-21', 540, 720, 1, NULL, NULL, NULL),
+(229455, 1, 75, 18, '2016-07-22', 540, 720, 1, NULL, NULL, NULL),
+(229456, 1, 75, 18, '2016-07-25', 540, 720, 1, NULL, NULL, NULL),
+(229457, 1, 75, 18, '2016-07-26', 540, 720, 1, NULL, NULL, NULL),
+(229458, 1, 75, 18, '2016-07-27', 540, 720, 0, 1, 'D', '2016-07-26 03:11:12'),
+(229459, 1, 75, 18, '2016-07-28', 540, 720, 0, 1, 'D', '2016-07-26 03:11:12'),
+(229460, 1, 75, 18, '2016-07-29', 540, 720, 1, 1, 'D', '2016-07-26 03:03:49'),
+(229470, 43, 79, 21, '2016-07-18', 540, 720, 1, NULL, NULL, NULL),
+(229471, 43, 79, 21, '2016-07-19', 540, 720, 1, NULL, NULL, NULL),
+(229472, 43, 79, 21, '2016-07-20', 540, 720, 1, NULL, NULL, NULL),
+(229473, 47, 80, 23, '2016-07-18', 540, 720, 1, NULL, NULL, NULL),
+(229474, 47, 80, 23, '2016-07-19', 540, 720, 1, NULL, NULL, NULL),
+(229475, 47, 80, 23, '2016-07-20', 540, 720, 1, NULL, NULL, NULL),
+(229476, 47, 80, 23, '2016-07-21', 540, 720, 1, NULL, NULL, NULL),
+(229477, 47, 80, 23, '2016-07-22', 540, 720, 1, NULL, NULL, NULL),
+(229478, 47, 80, 23, '2016-07-23', 540, 720, 1, NULL, NULL, NULL),
+(229479, 47, 80, 23, '2016-07-24', 540, 720, 1, NULL, NULL, NULL),
+(229480, 47, 80, 23, '2016-07-25', 540, 720, 1, NULL, NULL, NULL),
+(229481, 47, 80, 23, '2016-07-26', 540, 720, 1, NULL, NULL, NULL),
+(229482, 47, 80, 23, '2016-07-27', 540, 720, 1, NULL, NULL, NULL),
+(229483, 47, 80, 23, '2016-07-28', 540, 720, 1, NULL, NULL, NULL),
+(229484, 47, 80, 23, '2016-07-29', 540, 720, 1, NULL, NULL, NULL),
+(229485, 47, 80, 23, '2016-07-30', 540, 720, 1, NULL, NULL, NULL),
+(229486, 47, 80, 23, '2016-07-31', 540, 720, 1, NULL, NULL, NULL),
+(229487, 1, 81, 18, '2016-07-23', 540, 720, 1, NULL, NULL, NULL),
+(229488, 1, 81, 18, '2016-07-24', 540, 720, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
