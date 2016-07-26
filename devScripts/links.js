@@ -44,7 +44,6 @@ var links = {
    accountingUrl : "index.php/doctorDashboard/accounting",
    medicineSearchUrl : "index.php/doctorDashboard/medicineSearch",
 
-
    //schedule
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
@@ -57,7 +56,6 @@ var links = {
    programmeEditUrl:"index.php/doctorDashboard/createMedicalProgram",
    createModifyProgrammeUrl:"index.php/programme/createModifyProgramme",
    getProgrammeUrl:"index.php/programme/getProgrammes",
-
 
    //patient
    patientDetailPersistUrl:"index.php/patient/addUpdatePatient",
@@ -74,7 +72,6 @@ var links = {
    //Prescription
    getPrescriptionDetail:'index.php/patient/getPrescriptionDetail',
 
-
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
    getAppointmentForTheDayUrl: "index.php/appointment/getAppointmentsForTheDay",
    getAllAppointmentsUrl: "index.php/appointment/getAllAppointments",
@@ -87,7 +84,6 @@ var links = {
    deactivateLocationUrl:"index.php/locations/deactivateLocation",
    deliveryMethodsUrl:"index.php/patient/getDeliveryMethods",
 
-
    //registartion
    doctorUrl:"index.php/doctor/saveUpdateDoctor",
    doctorDetailsUrl:"index.php/doctor/getDoctorDetails",
@@ -99,7 +95,6 @@ var links = {
    getStaffDetailsUrl: "index.php/staff/getStaffDetails",
    staffListingUrl: "index.php/staff/getDoctorsStaffList",
 
-
     //upload
     closeApptUploadFiles:"index.php/Upload/CloseApptUpload",
     PatientUploadimage:"index.php/Upload/PatientImageUpload",
@@ -107,7 +102,7 @@ var links = {
 
     //Inventory
     saveUpdateProductStock: "index.php/doctor/saveUpdateProductStock",
-    getAllProducts:"index.php/doctor/getProductList"
-
+    getAllProducts:"index.php/doctor/getProductList",
+    getProductStockHistory:"index.php/doctor/getProductStockHistory"
 
 }
