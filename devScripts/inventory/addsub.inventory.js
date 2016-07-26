@@ -76,7 +76,7 @@ $(document).ready(function(){
             Model.locationList = response.data;
             StockView.renderLocations();
             if(Model.userType == 'D'){
-              Model.DefaultlocationId = Model.locationList[0];
+              Model.DefaultlocationId = Model.locationList[0].id;
             }
             StockView.initTypeahead();
           }
@@ -100,7 +100,7 @@ $(document).ready(function(){
                 && Model.locationList.length > 0
                 && !controller.DefaultLocationInit){
                   controller.DefaultLocationInit = true;
-            Model.DefaultlocationId = Model.locationList[0];
+            Model.DefaultlocationId = Model.locationList[0].id;
             }
 
               StockView.initTypeahead();
