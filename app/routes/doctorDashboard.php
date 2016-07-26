@@ -214,7 +214,7 @@ $app->group('/doctorDashboard', function(){
                       'active' => "accounting",
                       'name' => $user->name,
                       'userType' => $user->type);
-    return $this->view->render($response, '/doctor/accounting.html', $viewData);
+    return $this->view->render($response, '/inventory/inventory.html', $viewData);
   });
 
 

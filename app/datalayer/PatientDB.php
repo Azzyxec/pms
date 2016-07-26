@@ -415,10 +415,7 @@ class PatientDB{
         $patientHistory = array();
         while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 
-
-
           $patientHistoryRow = array();
-
 
           $patientHistoryRow['name'] = $result['name'];
           $patientHistoryRow['date'] = $result['appointment_date'];
@@ -427,7 +424,7 @@ class PatientDB{
           $patientHistoryRow['description'] = $result['description'];
           $patientHistoryRow['state'] = $result['state'];
           $patientHistoryRow['stateText'] = $result['state_text'];
-            $patientHistoryRow['remarks'] = $result['remarks'];
+          $patientHistoryRow['remarks'] = $result['remarks'];
 
           $patientHistory[] = $patientHistoryRow;
 
