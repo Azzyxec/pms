@@ -142,4 +142,97 @@ $app->group('/doctor', function(){
 
 });
 
+  $this->post('/saveUpdateProductStock', function($request, $response){
+
+    try {
+
+      $status = 1;
+      $message = "success";
+      $user = UserSessionManager::getUser();
+
+      if($user->id != -1){
+
+        $postedData = $request->getParsedBody();
+
+
+        $locationId = $postedData['locationId'];
+        $productId = $postedData['id'];
+        $productName = $postedData['name'];
+        $productStock = $postedData['stock'];
+        $operationType = $postedData['operationType']; // add substract
+
+        $doctorDB = new DoctorDB();
+        //return $response->withJson($postedData);
+
+        $status = $doctorDB->addUpdateProductStock(
+                                                    $user->doctorId,
+                                                    $locationId,
+                                                    $productId,
+                                                    $productName,
+                                                    $productStock,
+                                                    $operationType,
+                                                    $user->id,
+                                                    $user->type
+                                                  );
+
+      }else{
+        $status = -1;
+        $message = "user needs to be logged in";
+      }
+
+
+      $data = array('status' => $status, 'data' => $postedData, 'message' => $message );
+      return $response->withJson($data);
+
+
+    } catch (Exception $e) {
+
+      $data = array('status' => -1, 'data' => '', 'message' => $e->getMessage() );
+      return $response->withJson($data);
+
+    }
+
+
+
+
+  });
+
+  $this->get('/getProductList', function ($request, $response) {
+
+
+
+    try {
+      $productList = '';
+      $message = "success";
+      $status = 1;
+      $user = UserSessionManager::getUser();
+
+      if($user->id != -1){
+
+
+
+        $allGetVars = $request->getQueryParams();
+
+        $locationId = $allGetVars['locationId'];
+        $doctorId = $user->doctorId;
+        $doctorDB = new DoctorDB();
+
+        $productList = $doctorDB->getAllProducts($locationId, $doctorId);
+
+
+      }else{
+        $message = "not Logged in";
+        $status = -1;
+      }
+      $data = array('status' => $status,'data' => $productList,'message'=> $message);
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => -1,'data' => '','message'=> $e->getMessage());
+      return $response->withJson($data);
+    }
+
+  });
+
+
 });

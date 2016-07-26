@@ -174,7 +174,66 @@ class DoctorDB
 
       return array('status' => $status, 'data' => $user, 'message' => 'success');
     } catch (Exception $e) {
-      return array('status' => $status, 'data' => $user, 'message' => 'exception');
+      return array('status' => -1, 'data' => $user, 'message' => 'exception');
     }
   }
+
+  public function addUpdateProductStock($doctorId, $locationId, $productId, $name, $stock, $operationType, $loggedInUserId, $loggedInUserType){
+    try {
+
+      $paramArray = array(
+                          'pdoctor_id' => $doctorId,
+                          'plocation_id' => $locationId,
+                          'pproduct_id' => $productId,
+                          'pname' => $name,
+                          'pstock' => $stock,
+                          'poperation_type' => $operationType,
+                          'ploggedin_user_id' => $loggedInUserId,
+                          'ploggedin_user_type' => $loggedInUserType
+                        );
+
+      $statement = DBHelper::generateStatement('add_update_product_stock',  $paramArray);
+
+      $statement->execute();
+
+      $row = $statement->fetch();
+
+      $status = $row['status'];
+
+      return $status;
+    } catch (Exception $e) {
+      return array('status' => -1, 'data' => '', 'message' => 'exception');
+    }
+  }
+
+
+  public function getAllProducts($locationId, $doctorId){
+    try {
+
+      $paramArray = array(
+                          'pdoctor_id' => $doctorId,
+                          'plocation_id' => $locationId
+                          );
+
+      $statement = DBHelper::generateStatement('get_all_products',  $paramArray);
+      $statement->execute();
+
+
+      $allProducts = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+          $product = array();
+          $product['id'] =  $result['id'];
+          $product['name'] = $result['name'];
+          $product['stock'] = $result['current_stock'];
+          $allProducts[] = $product;
+      }
+
+      return $allProducts;
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exception');
+    }
+  }
+
+
 }

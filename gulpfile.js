@@ -200,7 +200,11 @@ var filesList = [
                   objConfig.scriptsBasePath + "doctor/manage.locations.js"
                 ], buildName: "manage.locations.js"},
 {build:true, files: [
+              objConfig.scriptsBasePath +"utility.js",
               objConfig.scriptsBasePath +"links.js",
+              objConfig.scriptsBasePath +"vendor/typeahead.bundle.min.js",
+              objConfig.scriptsBasePath +"vendor/bootstrap3-typeahead.min.js",
+              objConfig.scriptsBasePath +"bootstrapValidator.min.js",
               objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
               objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
               objConfig.scriptsBasePath + "inventory/addsub.inventory.js"

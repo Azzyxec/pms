@@ -1,11 +1,11 @@
 {% extends "/doctor/doctor-dash-base.html" %}
 {% block addCss %}
 
-    <!-- DataTables CSS -->
-    <link href="css/dataTables.bootstrap.css" rel="stylesheet">
+<!-- DataTables CSS -->
+<link href="css/dataTables.bootstrap.css" rel="stylesheet">
 
-    <!-- DataTables Responsive CSS -->
-    <link href="css/dataTables.responsive.css" rel="stylesheet">
+<!-- DataTables Responsive CSS -->
+<link href="css/dataTables.responsive.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
 <!-----------
@@ -18,41 +18,20 @@
 <section id="analytics-Section">
 
 
-    <!-- /.row -->
+  <!-- /.row -->
   <div class="row">
 
     <hr class="invisible">
 
     <div class="col-lg-8 col-md-10">
-      <div class="rw">
 
-      </div>
-        {% block bookFormAlerts %}
-      <div id="book-appointment-before-submit-warning-error" class="hidden alert alert-warning alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Warning!</strong> Please fill in the info.
-      </div>
-
-      <div id="book-appointment-before-submit-success" class="hidden alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Success!</strong> Patients Appointment Booked successfully
-      </div>
-
-      <div id="book-appointment-before-submit-other-error" class="hidden Salert alert-info alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <strong>Sorry!</strong>Somethings not right.
-      </div>
-        {% endblock %}
       <div class="panel panel-green">
         <div class="panel-heading">
-         Stock Inventory
+          Stock Inventory
         </div>
         <div class="panel-body">
-
-
-
           <div class="content_bottom">
-{% block StockInventoryForm %}
+            {% block StockInventoryForm %}
             <div class="">
               <div class="modal fade" id="Stock-history-table" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog  " role="document">
@@ -72,20 +51,18 @@
                             <thead>
                               <tr>
 
-                                 <th >Medicine(name)</th>
-                                 <th >Updated on</th>
-                                 <th >Updated by</th>
-                                 <th >Stock (nos)</th>
+                                <th >Medicine(name)</th>
+                                <th >Updated on</th>
+                                <th >Updated by</th>
+                                <th >Stock (nos)</th>
 
-                             </tr>
+                              </tr>
                             </thead>
                             <tbody>
 
                             </tbody>
                           </table>
                         </div>
-
-
 
                       </div>
 
@@ -94,51 +71,42 @@
                 </div>
               </div>
               <!-- /.panel -->
-              <form id="stock-inventory-form"  role="form" data-toggle="validator" class="form-horizontal">
+              <form id="stock-inventory-form"  role="form"  class="form-horizontal">
+                <input type="hidden" id="default-location-id"  value="{{defaultLoctionId}}">
+                <input type="hidden" id="user-type"  value="{{userType}}">
+                <div class="form-group ">
+                  <label for="focusedinput" class="col-md-4 col-sm-4 control-label">Product Name </label>
+                  <div class='col-md-6 col-sm-6'>
+
+                    <div class="input-group">
+                      <input type='text' name="ProductName" id="txt-product-name" class="form-control" placeholder="Search product name" required/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-search"></span>
+                      </span>
+
+                    </div><span class="badge ">Stock : <span id="current-stock"></span> nos</span>
+                    <a id="link-stock-history" href="#Stock-history-table" role="button" data-toggle="modal" class="btn btn-link">View Stock History</a>
+
+                  </div>
 
 
+                </div>
 
 
-                    <div class="form-group has-feedback">
-                    <label for="focusedinput" class="col-md-4 col-sm-4 control-label">Product Name </label>
-                    <div class='col-md-6 col-sm-6'>
-
-                    <div class="input-group form-group">
-                    <input type='text' id="stock-inventory-product-name" class="form-control" placeholder="Search product name" required/>
-                    <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-search"></span>
-                    </span>
-
-                  </div><span class="badge ">Stock : 400 nos</span>  <a  href="#Stock-history-table" role="button" data-toggle="modal" class="btn btn-link">View Stock History</a>
-
-                    </div>
-
-
-                    </div>
-
-
-
-
-
-
-
-
-
-
-                             <div class="form-group has-feedback">
+                <div class="form-group ">
                   <label for="focusedinput" class="col-md-4 col-sm-4 control-label">Stock</label>
                   <div class='col-md-6 col-sm-6'>
 
-                        <div class="input-group form-group">
-                        <input type='text'  class="form-control" placeholder="Add Stock amount" required/>
-                        <span class="input-group-btn">
-                        <button class="btn btn-default" type="button">ADD</button>
-                        <button class="btn btn-default" type="button">SUB</button>
+                    <div class="input-group ">
+                      <input type='text' name="stockQuantityTxt" id="txt-stock-quantity" class="form-control" placeholder="Add Stock amount" required/>
+                      <span class="input-group-btn">
+                        <button id="btn-add-stock" class="btn btn-default" type="button">ADD</button>
+                        <button id="btn-substract-stock" class="btn btn-default" type="button">SUB</button>
 
 
-                        </span>
+                      </span>
 
-                        </div>
+                    </div>
 
                   </div>
 
@@ -150,33 +118,33 @@
 
 
 
-                </form>
-{% endblock %}
-              </div>
-            </div>
-          </div>
-          <div class="panel-footer">
-            <div class="row">
-              <div class="text-center">
-
-                <button id="book-appointment-button" class="btn-success btn" name="submit" >Save</button>
-              </div>
-
+              </form>
+              {% endblock %}
             </div>
           </div>
         </div>
-        <div class="clearfix"> </div>
-      </div>
+        <div class="panel-footer">
+          <div class="row">
+            <div class="text-center">
 
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"> </div>
     </div>
 
+  </div>
 
-  </section>
-  <!---------- end dashboard section----------->
 
-  <!-- /#page-wrapper -->
-  {% endblock %}
+</section>
+<!---------- end dashboard section----------->
 
-  {% block addScripts %}
-  <script src="js/addsub.inventory.js"></script>
-  {% endblock %}
+<!-- /#page-wrapper -->
+{% endblock %}
+
+{% block addScripts %}
+<script src="js/addsub.inventory.js"></script>
+{% endblock %}

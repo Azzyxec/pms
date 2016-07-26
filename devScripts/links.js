@@ -44,6 +44,7 @@ var links = {
    accountingUrl : "index.php/doctorDashboard/accounting",
    medicineSearchUrl : "index.php/doctorDashboard/medicineSearch",
 
+
    //schedule
    getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
@@ -102,7 +103,11 @@ var links = {
     //upload
     closeApptUploadFiles:"index.php/Upload/CloseApptUpload",
     PatientUploadimage:"index.php/Upload/PatientImageUpload",
-    GaurdianUploadimage:"index.php/Upload/GuardianImageUpload"
+    GaurdianUploadimage:"index.php/Upload/GuardianImageUpload",
+
+    //Inventory
+    saveUpdateProductStock: "index.php/doctor/saveUpdateProductStock",
+    getAllProducts:"index.php/doctor/getProductList"
 
 
 }

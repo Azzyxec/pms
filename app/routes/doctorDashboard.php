@@ -213,6 +213,7 @@ $app->group('/doctorDashboard', function(){
     $viewData = array('basePath' => AppConfig::$basePath,
                       'active' => "accounting",
                       'name' => $user->name,
+                      'defaultLoctionId' => $user->locationId,
                       'userType' => $user->type);
     return $this->view->render($response, '/inventory/inventory.html', $viewData);
   });
