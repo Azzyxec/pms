@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2016 at 11:54 PM
+-- Generation Time: Jul 26, 2016 at 06:24 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -17,14 +17,14 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `pms`;
+-- Database: `pms`
 --
 
 DELIMITER $$
 --
 -- Procedures
 --
-CREATE  PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -67,7 +67,7 @@ begin
 								,null
                                 ,pis_active
 								);
-
+                                
 			set @llogin_id = last_insert_id();
 
 			 /*
@@ -94,7 +94,7 @@ begin
 							,paddress
 							,pis_active
 							);
-
+                            
              set @ldoctor_id = last_insert_id();
 			 /*
 		     select max(id)
@@ -131,7 +131,7 @@ begin
 	end if;
 
         commit;
-
+        
 		select '1' as status
 			   ,@ldoctor_id as id
 			   ,pname as name
@@ -148,7 +148,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
     MODIFIES SQL DATA
 begin
 
@@ -174,7 +174,7 @@ begin
 	end if;
 end$$
 
-CREATE  PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -241,7 +241,79 @@ select 1 as status;
 
 end$$
 
-CREATE  PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_product_stock`(
+in pdoctor_id int
+,in plocation_id int
+,in pproduct_id int
+,in pname varchar(200)
+,in pstock int
+,in poperation_type int
+,in ploggedin_user_id int
+,in ploggedin_user_type varchar(5)
+)
+BEGIN
+
+	declare lProductId int;
+    
+    set @lProductId = pproduct_id;
+
+ if pproduct_id <= 0 then
+ 
+	insert into product(
+						fk_doctor_id
+                        ,fk_location_id
+                        ,`name`
+                        ,current_stock
+                        ,created_date
+                        ,created_by_id
+                        ,created_by_type
+                        ,is_active
+					   )
+				 values(
+						pdoctor_id
+                        ,plocation_id
+                        ,pname
+                        ,0
+                        ,now()
+                        ,ploggedin_user_id
+                        ,ploggedin_user_type
+                        ,1
+					   );
+                       
+	set @lProductId = last_insert_id();
+ 
+ end if;
+ 
+	insert into product_stock_history (
+										fk_product_id
+                                        ,stock
+                                        ,operation_type
+                                        ,created_date
+                                        ,created_by_id
+                                        ,created_by_type
+									  )
+								values(
+										@lProductId
+                                        , ABS(pstock) 
+                                        ,poperation_type
+                                        ,now()
+                                        ,ploggedin_user_id
+                                        ,ploggedin_user_type
+									  );
+                                      
+	update product p
+    set    current_stock = current_stock + case when poperation_type = 1 then ABS(pstock)
+												when poperation_type = -1 then  -ABS(pstock)
+                                                else 0 end
+    where p.id = @lProductId;
+    
+    commit;
+
+ select 1 status;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
     READS SQL DATA
 begin
 
@@ -337,7 +409,7 @@ end if;
 
 end$$
 
-CREATE  PROCEDURE `cancel_appointment`(IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cancel_appointment`(IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))
     MODIFIES SQL DATA
 begin
 
@@ -356,8 +428,8 @@ if @lcanCancelAppointment = 1 then
 
  /*
  appointmentt states
- 0 - active
- 1 - closed
+ 0 - active 
+ 1 - closed 
  2 - cancelled
  3 - rescheduled
  */
@@ -392,7 +464,7 @@ select 2 as status;
 
 end$$
 
-CREATE  PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN pprescription_count INT, IN `pprescription_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN pprescription_count INT, IN `pprescription_xml` VARCHAR(65535))
     NO SQL
 begin
 
@@ -404,12 +476,12 @@ DECLARE lremarks varchar(1000);
 
 select count(fk_appointment_id)
 into  @lexsitingEntry
-from close_appointment
+from close_appointment 
 where fk_appointment_id = pappointment_id;
 
 if COALESCE(@lexsitingEntry, 0) = 0 then
 
-	select fk_patient_id
+	select fk_patient_id	
 	into @lpatientId
 	from appointment
 	where id = pappointment_id;
@@ -441,7 +513,7 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 									   ,pclosed_by_id
 									   ,pclosed_by_type
 									  );
-
+									  
 
 		#insert into prescription list
 
@@ -453,8 +525,8 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 				   ,ExtractValue(pprescription_xml, 'list/item[$@lcounter]/remarks')
 			into 	@lmedName
 				   ,@lremarks;
-
-			insert into close_appointment_prescriptions
+				   
+			insert into close_appointment_prescriptions 
 												(
 												 fk_appointment_id
 												 ,medicine
@@ -466,9 +538,9 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 												,@lmedName
 												,@lremarks
 												);
-
+			
 			SET @lcounter = @lcounter + 1;
-
+			
 		END WHILE;
 
 		select 1 as status;
@@ -482,7 +554,7 @@ select 2 as status;
 
 end$$
 
-CREATE  PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
     MODIFIES SQL DATA
 begin
 
@@ -540,7 +612,7 @@ select 1 as status;
 
 end$$
 
-CREATE  PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme`(IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 
@@ -567,7 +639,7 @@ begin
 											,now()
 											,1
 										   );
-
+                                           
 		set @lmaxProgrammeId = last_insert_id();
 
 		/*
@@ -702,7 +774,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
 begin
 
 declare lmaxPatientId int;
@@ -742,9 +814,9 @@ INSERT INTO `patient`
 					,plogged_in_user_type
 					,pis_active
 					);
-
+                    
 	set @lmaxPatientId = last_insert_id();
-
+    
     /*
 	select max(id)
 	into @lmaxPatientId
@@ -782,7 +854,7 @@ commit;
 
 end$$
 
-CREATE  PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
     MODIFIES SQL DATA
 begin
 	declare lprogrammeExists int;
@@ -801,8 +873,8 @@ begin
 	declare ldueOn varchar(20);
 	declare lgivenOn varchar(20);
 	declare lbatchNo varchar(100);
-
-
+    
+    
     # adding program header only if it alerady does not exist
 	set @lcounter1 = 1;
 
@@ -920,7 +992,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
     NO SQL
 begin
 
@@ -951,10 +1023,10 @@ begin
 							,CURDATE()
 							,1 							,1
 							);
-
-    set @lmaxScheduleId = last_insert_id();
-
-    /*
+                            
+    set @lmaxScheduleId = last_insert_id();                        
+          
+    /*      
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
@@ -1012,7 +1084,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
     MODIFIES SQL DATA
 begin
 
@@ -1054,8 +1126,8 @@ begin
 						,null
 						,pis_active
 						);
-
-             set @llogin_id = last_insert_id();
+                        
+             set @llogin_id = last_insert_id(); 
 
 			/*
 			 select max(id)
@@ -1091,8 +1163,8 @@ begin
 							   now(),
 							   pis_active
 							   );
-
-			 set @lstaff_id = last_insert_id();
+                               
+			 set @lstaff_id = last_insert_id(); 
 			/*
 			 select max(id)
 			 into @lstaff_id
@@ -1148,7 +1220,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
     MODIFIES SQL DATA
     DETERMINISTIC
 begin
@@ -1156,7 +1228,7 @@ begin
 
 	declare lscheduleExists int;
 	declare lscheduleExistCounter int;
-
+	
     DECLARE lmaxScheduleId INT;
 	DECLARE lcounter INT DEFAULT 1;
 
@@ -1165,14 +1237,14 @@ begin
 	DECLARE lendTimeMins varchar(20);
 	DECLARE lisBlocked INT;
 	DECLARE lisActive INT;
-
+	
 	set @lscheduleExists = 0;
 	set @lscheduleExistCounter = 0;
-
+	
 	set @lcounter = 1;
 
 	while @lcounter <= pschedule_count do
-
+		
 			SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/date')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/startTimeMinutes')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/endTimeMinutes')
@@ -1195,13 +1267,13 @@ begin
                                                 , sd.start_time_mins
                                                 , sd.end_time_mins)
 				  and sd.location_id = plocation_id;
-
-
+				  
+				  
 			set @lscheduleExistCounter = @lscheduleExistCounter + @lscheduleExists;
-
+	
 		SET @lcounter = @lcounter + 1;
 	END WHILE;
-
+	
 	if @lscheduleExistCounter = 0 then
 
 
@@ -1222,10 +1294,10 @@ begin
 							,puser_type
 							,1
 							);
-
-
-	set @lmaxScheduleId = last_insert_id();
-
+                            
+                            
+	set @lmaxScheduleId = last_insert_id(); 
+    
     /*
 	select max(id)
 	into @lmaxScheduleId
@@ -1275,16 +1347,16 @@ begin
 	commit;
 
 	SELECT 1 as status;
-
+	
 		else
-
+	
 	SELECT -2 as status;
-
+	
 	end if;
 
 end$$
 
-CREATE  PROCEDURE `deactivate_location_for_doctor`(in plocationId int)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deactivate_location_for_doctor`(in plocationId int)
 BEGIN
 
   #TODO dont deactivate if there are appointmetns on a location
@@ -1293,16 +1365,16 @@ BEGIN
   update work_locations wl
   set wl.is_active = 0
   where wl.id = plocationId;
-
+  
   # what else needs to be updated
   #schedules
   #staff login
   # active appointments
-
+  
 
 END$$
 
-CREATE  PROCEDURE `deactivate_schedule_days`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deactivate_schedule_days`(
 in pdoctor_id int
 ,in plocation_id int
 ,in pschedule_count int
@@ -1313,24 +1385,24 @@ in pdoctor_id int
 BEGIN
 
 	DECLARE lcounter INT DEFAULT 1;
-
+    
     DECLARE lscheduleDayId INT;
     DECLARE lactiveAppointmentCount INT;
-
+    
     DECLARE lnotDeactivated INT;
-
+    
     set @lnotDeactivated = 0;
 
 	set @lcounter = 1;
-
+    
     while @lcounter <= pschedule_count do
-
+    
 			SELECT ExtractValue(pschedule_days_xml, 'schedules/item[$@lcounter]/scheduleDayId')
 			into @lscheduleDayId;
-
+            
             set @lactiveAppointmentCount = 0;
-
-
+            
+            
             select count(*)
             into @lactiveAppointmentCount
             from appointment a
@@ -1338,10 +1410,10 @@ BEGIN
 				  and a.is_active = 1
                   and a.fk_schedule_day_id = @lscheduleDayId
                   and a.fk_doctor_id = pdoctor_id;
-
-
-		   if @lactiveAppointmentCount = 0 then
-
+                  
+                  
+		   if @lactiveAppointmentCount = 0 then 
+           
 		    update schedule_day sd
 			   set sd.is_active = 0
 				   ,sd.modified_by_id = puser_id
@@ -1349,20 +1421,20 @@ BEGIN
                    ,sd.modified_date = now()
              where sd.id = @lscheduleDayId
 				   and sd.fk_doctor_id = pdoctor_id;
-
-		   else
-
+            
+		   else 
+           
 			set @lnotDeactivated = @lnotDeactivated + 1;
-
+           
            end if;
 		set @lcounter = @lcounter + 1;
     END WHILE;
-
+    
     select 1 status;
-
+    
 END$$
 
-CREATE  PROCEDURE `getDoctorInfo`(IN `pid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
     READS SQL DATA
 SELECT
    d.name ,
@@ -1377,7 +1449,7 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
-CREATE  PROCEDURE `get_all_appointments`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_appointments`(IN `pdoctor_id` INT)
     READS SQL DATA
 begin
 
@@ -1404,7 +1476,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_all_doctors`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
     NO SQL
 begin
 
@@ -1421,7 +1493,7 @@ SELECT `id`
 
 end$$
 
-CREATE  PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1435,7 +1507,28 @@ where fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE  PROCEDURE `get_appointments_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_products`(
+ in pdoctor_id int
+,in plocation_id int
+)
+BEGIN
+
+SELECT 	 product.id
+		,product.fk_doctor_id
+		,product.fk_location_id
+		,product.name
+		,product.current_stock
+        ,date_format(product.created_date, '%d-%m-%Y') as created_date
+		,product.created_by_id
+		,product.created_by_type
+FROM pms.product 
+Where fk_doctor_id = pdoctor_id
+	  and fk_location_id = plocation_id
+      and is_active = 1;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_appointments_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
     NO SQL
 begin
 
@@ -1469,7 +1562,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
     READS SQL DATA
 begin
 
@@ -1492,13 +1585,13 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE  PROCEDURE `get_delivery_methods`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods`()
     READS SQL DATA
 select id
 	   ,name
 from delivery_methods$$
 
-CREATE  PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_doctors_checkup_programs`(IN `pdoctor_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1506,7 +1599,7 @@ select id
 from medication_programme
 where fk_doctors_id = pdoctor_id$$
 
-CREATE  PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1523,7 +1616,7 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE  PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
     READS SQL DATA
 select id
 	   , name
@@ -1532,7 +1625,7 @@ from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
 
-CREATE  PROCEDURE `get_patients_list`(IN `pdoctor_id` INT, IN pfetch_inactive INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT, IN pfetch_inactive INT)
     READS SQL DATA
 SELECT `id`
 		,`name`
@@ -1550,7 +1643,7 @@ FROM `patient`
 WHERE fk_doctor_id = pdoctor_id
 	  and is_active = case when COALESCE(pfetch_inactive, 0) = 0 then 1 else is_active end$$
 
-CREATE  PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
     NO SQL
 SELECT 	 id
 		,fk_medication_pogramme_id
@@ -1558,7 +1651,7 @@ SELECT 	 id
 FROM patient_medication_programme
 WHERE fk_patient_id = ppatient_id$$
 
-CREATE  PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
     NO SQL
 SELECT 	id
 		, fk_medication_programme_id
@@ -1573,7 +1666,7 @@ FROM  patient_medication_programme_list
 WHERE fk_patient_id = ppatient_id
 	  and fk_medication_programme_id = pmedication_programme_id$$
 
-CREATE  PROCEDURE `get_patient_all_appointments_history`(IN `patient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_all_appointments_history`(IN `patient_id` INT)
     NO SQL
 begin
 
@@ -1588,13 +1681,13 @@ begin
 		   ,a.end_mins
 		   ,a.description
            ,a.`state`
-		   ,case when a.`state` = 0 then 'active'
-				 when a.`state` = 1 then 'closed'
+		   ,case when a.`state` = 0 then 'active' 
+				 when a.`state` = 1 then 'closed' 
                  when a.`state` = 2 then 'cancelled'
                  when a.`state` = 3 then 'rescheduled' end as state_text
 		  ,case when a.`state` = 1 then cl.remarks
 				 when a.`state` = 2 then ca.remarks
-                 when a.`state` = 3 then ra.remarks
+                 when a.`state` = 3 then ra.remarks 
 									else '' end as remarks
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
@@ -1609,7 +1702,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
     NO SQL
 begin
 
@@ -1632,7 +1725,7 @@ WHERE id = ppatient_id;
 
 end$$
 
-CREATE  PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
     READS SQL DATA
 select `duration_days`
 	  , duration_text
@@ -1643,7 +1736,7 @@ from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
 	  and is_active = 1$$
 
-CREATE  PROCEDURE `get_schedules_for_deactivation`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_for_deactivation`(
 IN `pdoctor_id` INT
 , IN `plocation_id` INT
 , IN `pstart_date` VARCHAR(10)
@@ -1654,10 +1747,10 @@ BEGIN
 
 	declare lstartDate date;
     declare lendDate date;
-
+    
     set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
-
+    
 
 SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
 	   ,start_time_mins
@@ -1675,12 +1768,12 @@ SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
 
 END$$
 
-CREATE  PROCEDURE `get_schedules_timings_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_timings_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
     READS SQL DATA
 begin
 
 	declare ldate date;
-
+    
     set @ldate = STR_TO_DATE(pdate, '%d-%m-%Y');
 
 	select sd.start_time_mins
@@ -1697,13 +1790,13 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
     READS SQL DATA
 begin
 
 	declare lstartDate date;
     declare lendDate date;
-
+    
     set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
 
@@ -1713,8 +1806,8 @@ begin
 		   ,fk_schedule_id
            ,id as schedule_day_id
            ,(
-			  select count(*)
-              from appointment a
+			  select count(*) 
+              from appointment a 
               where a.fk_schedule_day_id = sd.id
 				    and a.is_active = 1
                     and a.state = 0
@@ -1730,7 +1823,7 @@ begin
 
  end$$
 
-CREATE  PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1744,7 +1837,7 @@ where s.fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE  PROCEDURE `get_staff_details`(IN `pid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
     READS SQL DATA
 begin
 
@@ -1779,7 +1872,7 @@ WHERE id = pid;
 
 end$$
 
-CREATE  PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
     NO SQL
 begin
 
@@ -1798,7 +1891,7 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE  PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
     READS SQL DATA
 begin
 
@@ -1882,7 +1975,7 @@ end if;
 
 end$$
 
-CREATE  PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
     READS SQL DATA
 begin
 
@@ -1950,7 +2043,7 @@ end if;
 
 end$$
 
-CREATE  PROCEDURE `insert_new_appointment`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_appointment`(
 IN `pdoctor_id` INT
 , IN `plocation_id` INT
 , IN pfk_schedule_day_id INT
@@ -2003,7 +2096,7 @@ commit;
 
 end$$
 
-CREATE  PROCEDURE `insert_next_appointment`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_next_appointment`(
 IN `pappointment_id` INT
 , IN `pappointment_date` VARCHAR(10)
 , IN `pstart_mins` INT
@@ -2019,9 +2112,9 @@ BEGIN
     declare lPatientId int;
     declare lcontact varchar(20);
     declare ldecription VARCHAR(2000);
-
+    
     declare lscheduleDayId int;
-
+    
     select  fk_doctor_id
 		   ,fk_location_id
 		   ,fk_patient_id
@@ -2030,10 +2123,10 @@ BEGIN
 		   ,@lLocationId
            ,@lPatientId
            ,@lcontact
-    from appointment a
+    from appointment a 
     where a.id = pappointment_id;
-
-
+    
+    
 	set @lscheduleDayId = get_schedule_day_id(
 											  @lDoctorId
 											  ,@lLocationId
@@ -2041,12 +2134,12 @@ BEGIN
 											  ,pstart_mins
 											  ,pend_mins
 											 );
-
+                                         
     if @lscheduleDayId > 0 then
-
-
+    
+    
 		if COALESCE(@lDoctorId, 0) > 0 then
-
+		
 			set @ldecription = 'booked when closing appointment';
 
 			INSERT INTO `appointment`(
@@ -2084,16 +2177,16 @@ BEGIN
 									 );
 
 			commit;
-
-
+			
+		
 		end if; #if COALESCE(@lDoctorId, 0) > 0 then
-
+    
     end if; #if @lscheduleDayId > 0 then
-
+    
 
 END$$
 
-CREATE  PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
     MODIFIES SQL DATA
 begin
 
@@ -2214,7 +2307,7 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `reschedule_appointment`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reschedule_appointment`(
  IN `pappointment_id` INT
 ,IN `pappointment_date` VARCHAR(10)
 ,IN `pstart_mins` INT
@@ -2231,10 +2324,10 @@ BEGIN
     declare lcontact varchar(20);
     declare ldecription VARCHAR(2000);
     declare lscheduleDayId int;
-
+    
     declare lnewAppointmentId int;
-
-
+    
+    
     select  fk_doctor_id
 		   ,fk_location_id
 		   ,fk_patient_id
@@ -2243,10 +2336,10 @@ BEGIN
 		   ,@lLocationId
            ,@lPatientId
            ,@lcontact
-    from appointment a
+    from appointment a 
     where a.id = pappointment_id
 		  and a.is_active = 1;
-
+          
 	set @lscheduleDayId = get_schedule_day_id(
 											  @lDoctorId
 											  ,@lLocationId
@@ -2254,15 +2347,15 @@ BEGIN
 											  ,pstart_mins
 											  ,pend_mins
 											 );
-
+                                             
     if @lscheduleDayId > 0 then
-
+    
     if COALESCE(@lDoctorId, 0) > 0 then
-
+    
 			#make a new appointment entry
-
+			
 			set @ldecription = 'rescheduled appointment';
-
+			
 			INSERT INTO `appointment`(
 										`fk_doctor_id`
 										, `fk_location_id`
@@ -2278,7 +2371,7 @@ BEGIN
 										, `created_by_type`
 										, `is_active`
                                         , fk_schedule_day_id
-										)
+										) 
 								 VALUES (
 										 @lDoctorId
 										,@lLocationId
@@ -2297,19 +2390,19 @@ BEGIN
 										);
 
 			#update the current appointment state to rescheduled
-
+			
 			set @lnewAppointmentId = last_insert_id();
-
+			
 			update appointment a
 			set state = 3
 				,fk_rescheduled_id = @lnewAppointmentId
 			where a.id = pappointment_id
 				  and a.is_active = 1;
-
-
-
+			
+		
+		
 			#make an entry in the rescheduled table
-
+			
 			insert into rescheduled_appointments (
 												  fk_appointment_id
 												  ,fk_appointment_id_next
@@ -2327,16 +2420,16 @@ BEGIN
 												 ,pcreated_by_type
 												 ,premarks
 												);
-
+																						
 			commit;
 
 		end if; # if COALESCE(@lDoctorId, 0) > 0 then
-
+		
 	end if; #if @lscheduleDayId > 0 then
 
 END$$
 
-CREATE  PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
     NO SQL
 begin
 
@@ -2388,7 +2481,7 @@ end$$
 --
 -- Functions
 --
-CREATE  FUNCTION `check_appointment_avalibility`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_appointment_avalibility`(
   `pdoctor_id` INT
 , `plocation_id` INT
 , `pappointment_date` VARCHAR(20)
@@ -2431,7 +2524,7 @@ begin
 
 	if COALESCE(@lscheduleCount, 0) = 0 then
 		return 2;  	end if;
-
+        
 	/*
      appointmetn states
      0 - active
@@ -2455,7 +2548,7 @@ begin
 
 end$$
 
-CREATE  FUNCTION `check_next_appointment_avilibility`(`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT ) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_next_appointment_avilibility`(`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT ) RETURNS int(11)
 BEGIN
 
 	/*
@@ -2469,37 +2562,37 @@ BEGIN
 	declare lDoctorId int;
     declare lLocationId int;
     declare lAvalibilityStatus int;
-
+    
     select fk_doctor_id
 		   ,fk_location_id
 	into   @lDoctorId
 		   ,@lLocationId
     from appointment a
     where a.id = pappointment_id;
-
+    
     if COALESCE(@lDoctorId, 0) > 0 then
-
-
+    
+    
 		set @lAvalibilityStatus = check_appointment_avalibility(@lDoctorId
 																, @lLocationId
 																, pappointment_date
 																, pstart_time
 																, pend_time
 															   );
-
-
+    
+    
 		return @lAvalibilityStatus;
-
+    
     else
 		#there is no appointment for this id
 		return 5;
-
+    
     end if;
 
 RETURN 1;
 END$$
 
-CREATE  FUNCTION `get_schedule_day_id`(
+CREATE DEFINER=`root`@`localhost` FUNCTION `get_schedule_day_id`(
    `pdoctor_id` INT
  , `plocation_id` INT
  , `pappointment_date` VARCHAR(20)
@@ -2516,11 +2609,11 @@ BEGIN
 
 	declare lnewAppointmentDate date;
     declare lscheduleDayId date;
-
+    
     set @lscheduleDayId = 0;
 
 	set @lnewAppointmentDate = STR_TO_DATE(pappointment_date, '%d-%m-%Y');
-
+    
     select COALESCE(sc.id, 0)
 	into   @lscheduleDayId
 	from schedule_day sc
@@ -2530,12 +2623,12 @@ BEGIN
 		  and sc.start_time_mins <= pstart_time
 		  and sc.end_time_mins >= pend_time
 		  and sc.is_active = 1;
-
+    
 
 RETURN  @lscheduleDayId;
 END$$
 
-CREATE  FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
     NO SQL
 begin
 
@@ -2560,7 +2653,7 @@ if @dotProduct > @lenghtSsuare then
 return 1;
 end$$
 
-CREATE  FUNCTION `is_timing_overlapping`(`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS int(11)
+CREATE DEFINER=`root`@`localhost` FUNCTION `is_timing_overlapping`(`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS int(11)
     NO SQL
 begin
 
@@ -2570,13 +2663,13 @@ begin
 		or  pAppointStartTime >= pAppointEndTime then
 		return 1;
 	end if;
-
+    
     #its assumed cases for boundry conditions are take care by the calling proc/function
-
-
+    
+    
 	# test for starttime after the  endtime of an existing appointment
     # and for endtime before the start time of an existing appointment
-	if pnewStartTime >= pAppointEndTime
+	if pnewStartTime >= pAppointEndTime 
 		or pnewEndTime <= pAppointStartTime then
 		  return 0;
 	else
@@ -3361,7 +3454,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=82 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=83 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3372,7 +3465,8 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 (75, 1, '2016-07-15', '2016-07-30', '2016-07-15 00:00:00', 1, 'D', 1),
 (79, 43, '2016-07-18', '2016-07-20', '2016-07-18 17:05:50', 43, 'D', 1),
 (80, 47, '2016-07-18', '2016-07-31', '2016-07-18 23:28:33', 47, 'D', 1),
-(81, 1, '2016-07-23', '2016-07-24', '2016-07-23 13:04:41', 1, 'D', 1);
+(81, 1, '2016-07-23', '2016-07-24', '2016-07-23 13:04:41', 1, 'D', 1),
+(82, 1, '2016-08-01', '2016-08-15', '2016-07-26 21:28:16', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
