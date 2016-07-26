@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 26, 2016 at 06:24 PM
+-- Generation Time: Jul 26, 2016 at 06:29 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -3408,6 +3408,70 @@ INSERT INTO `patient_medication_programme_list` (`id`, `fk_patient_id`, `fk_doct
 (22, 100, 1, 1, 1, 34444, 'dfda', 34, '2016-07-21', '2016-07-22', '4'),
 (23, 100, 1, 1, 2, 4, 'Hepatitis B', 2, '2016-07-22', '2016-07-23', '5'),
 (24, 100, 1, 1, 6, 5, 'five', 4, '2016-07-23', '2016-07-24', '6');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product`
+--
+
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_doctor_id` int(11) NOT NULL,
+  `fk_location_id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `current_stock` int(11) NOT NULL DEFAULT '0',
+  `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_by_id` int(11) NOT NULL,
+  `created_by_type` varchar(5) NOT NULL,
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id`, `fk_doctor_id`, `fk_location_id`, `name`, `current_stock`, `created_date`, `created_by_id`, `created_by_type`, `is_active`) VALUES
+(4, 1, 1, 'crosin', 5, '2016-07-26 18:35:56', 1, 'D', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_stock_history`
+--
+
+CREATE TABLE IF NOT EXISTS `product_stock_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fk_product_id` int(11) NOT NULL,
+  `stock` int(11) NOT NULL,
+  `operation_type` int(11) NOT NULL,
+  `created_date` datetime NOT NULL,
+  `created_by_id` int(11) NOT NULL,
+  `created_by_type` varchar(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+
+--
+-- Dumping data for table `product_stock_history`
+--
+
+INSERT INTO `product_stock_history` (`id`, `fk_product_id`, `stock`, `operation_type`, `created_date`, `created_by_id`, `created_by_type`) VALUES
+(4, 4, 5, 1, '2016-07-26 18:35:56', 1, 'D'),
+(5, 5, 5, 1, '2016-07-26 18:37:54', 1, 'D'),
+(6, 6, 5, 1, '2016-07-26 18:44:53', 1, 'D'),
+(7, 7, 4, 1, '2016-07-26 19:00:53', 1, 'D'),
+(8, 8, 5, 1, '2016-07-26 19:02:08', 1, 'D'),
+(9, 9, 3, 1, '2016-07-26 19:03:24', 1, 'D'),
+(10, 10, 3, 1, '2016-07-26 19:04:09', 1, 'D'),
+(11, 11, 8, 1, '2016-07-26 19:04:33', 1, 'D'),
+(12, 12, 0, 1, '2016-07-26 19:12:21', 1, 'D'),
+(13, 13, 33, 1, '2016-07-26 19:17:21', 1, 'D'),
+(14, 14, 0, 1, '2016-07-26 19:22:38', 1, 'D'),
+(15, 15, 0, 1, '2016-07-26 19:23:48', 1, 'D'),
+(16, 16, 34, 1, '2016-07-26 19:32:01', 1, 'D'),
+(17, 17, 33, 1, '2016-07-26 19:32:44', 1, 'D'),
+(18, 18, 343, 1, '2016-07-26 20:00:59', 1, 'D');
 
 -- --------------------------------------------------------
 
