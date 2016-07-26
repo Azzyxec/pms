@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 26, 2016 at 06:29 PM
+-- Generation Time: Jul 26, 2016 at 08:25 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -67,7 +67,7 @@ begin
 								,null
                                 ,pis_active
 								);
-                                
+
 			set @llogin_id = last_insert_id();
 
 			 /*
@@ -94,7 +94,7 @@ begin
 							,paddress
 							,pis_active
 							);
-                            
+
              set @ldoctor_id = last_insert_id();
 			 /*
 		     select max(id)
@@ -131,7 +131,7 @@ begin
 	end if;
 
         commit;
-        
+
 		select '1' as status
 			   ,@ldoctor_id as id
 			   ,pname as name
@@ -254,11 +254,11 @@ in pdoctor_id int
 BEGIN
 
 	declare lProductId int;
-    
+
     set @lProductId = pproduct_id;
 
  if pproduct_id <= 0 then
- 
+
 	insert into product(
 						fk_doctor_id
                         ,fk_location_id
@@ -279,11 +279,11 @@ BEGIN
                         ,ploggedin_user_type
                         ,1
 					   );
-                       
+
 	set @lProductId = last_insert_id();
- 
+
  end if;
- 
+
 	insert into product_stock_history (
 										fk_product_id
                                         ,stock
@@ -294,19 +294,19 @@ BEGIN
 									  )
 								values(
 										@lProductId
-                                        , ABS(pstock) 
+                                        , ABS(pstock)
                                         ,poperation_type
                                         ,now()
                                         ,ploggedin_user_id
                                         ,ploggedin_user_type
 									  );
-                                      
+
 	update product p
     set    current_stock = current_stock + case when poperation_type = 1 then ABS(pstock)
 												when poperation_type = -1 then  -ABS(pstock)
                                                 else 0 end
     where p.id = @lProductId;
-    
+
     commit;
 
  select 1 status;
@@ -428,8 +428,8 @@ if @lcanCancelAppointment = 1 then
 
  /*
  appointmentt states
- 0 - active 
- 1 - closed 
+ 0 - active
+ 1 - closed
  2 - cancelled
  3 - rescheduled
  */
@@ -476,12 +476,12 @@ DECLARE lremarks varchar(1000);
 
 select count(fk_appointment_id)
 into  @lexsitingEntry
-from close_appointment 
+from close_appointment
 where fk_appointment_id = pappointment_id;
 
 if COALESCE(@lexsitingEntry, 0) = 0 then
 
-	select fk_patient_id	
+	select fk_patient_id
 	into @lpatientId
 	from appointment
 	where id = pappointment_id;
@@ -513,7 +513,7 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 									   ,pclosed_by_id
 									   ,pclosed_by_type
 									  );
-									  
+
 
 		#insert into prescription list
 
@@ -525,8 +525,8 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 				   ,ExtractValue(pprescription_xml, 'list/item[$@lcounter]/remarks')
 			into 	@lmedName
 				   ,@lremarks;
-				   
-			insert into close_appointment_prescriptions 
+
+			insert into close_appointment_prescriptions
 												(
 												 fk_appointment_id
 												 ,medicine
@@ -538,9 +538,9 @@ if COALESCE(@lexsitingEntry, 0) = 0 then
 												,@lmedName
 												,@lremarks
 												);
-			
+
 			SET @lcounter = @lcounter + 1;
-			
+
 		END WHILE;
 
 		select 1 as status;
@@ -639,7 +639,7 @@ begin
 											,now()
 											,1
 										   );
-                                           
+
 		set @lmaxProgrammeId = last_insert_id();
 
 		/*
@@ -814,9 +814,9 @@ INSERT INTO `patient`
 					,plogged_in_user_type
 					,pis_active
 					);
-                    
+
 	set @lmaxPatientId = last_insert_id();
-    
+
     /*
 	select max(id)
 	into @lmaxPatientId
@@ -873,8 +873,8 @@ begin
 	declare ldueOn varchar(20);
 	declare lgivenOn varchar(20);
 	declare lbatchNo varchar(100);
-    
-    
+
+
     # adding program header only if it alerady does not exist
 	set @lcounter1 = 1;
 
@@ -1023,10 +1023,10 @@ begin
 							,CURDATE()
 							,1 							,1
 							);
-                            
-    set @lmaxScheduleId = last_insert_id();                        
-          
-    /*      
+
+    set @lmaxScheduleId = last_insert_id();
+
+    /*
 	select max(id)
 	into @lmaxScheduleId
 	from schedule;
@@ -1126,8 +1126,8 @@ begin
 						,null
 						,pis_active
 						);
-                        
-             set @llogin_id = last_insert_id(); 
+
+             set @llogin_id = last_insert_id();
 
 			/*
 			 select max(id)
@@ -1163,8 +1163,8 @@ begin
 							   now(),
 							   pis_active
 							   );
-                               
-			 set @lstaff_id = last_insert_id(); 
+
+			 set @lstaff_id = last_insert_id();
 			/*
 			 select max(id)
 			 into @lstaff_id
@@ -1228,7 +1228,7 @@ begin
 
 	declare lscheduleExists int;
 	declare lscheduleExistCounter int;
-	
+
     DECLARE lmaxScheduleId INT;
 	DECLARE lcounter INT DEFAULT 1;
 
@@ -1237,23 +1237,21 @@ begin
 	DECLARE lendTimeMins varchar(20);
 	DECLARE lisBlocked INT;
 	DECLARE lisActive INT;
-	
+
 	set @lscheduleExists = 0;
 	set @lscheduleExistCounter = 0;
-	
+
 	set @lcounter = 1;
 
 	while @lcounter <= pschedule_count do
-		
+
 			SELECT ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/date')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/startTimeMinutes')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/endTimeMinutes')
-				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/isBlocked')
 				   ,ExtractValue(pschedule_xml, 'schedules/item[$@lcounter]/active')
 			into @lscheduleDate
 				 ,@lstartTimeMins
 				 ,@lendTimeMins
-				 ,@lisBlocked
 				 ,@lisActive;
 
 			select count(*)
@@ -1267,13 +1265,13 @@ begin
                                                 , sd.start_time_mins
                                                 , sd.end_time_mins)
 				  and sd.location_id = plocation_id;
-				  
-				  
+
+
 			set @lscheduleExistCounter = @lscheduleExistCounter + @lscheduleExists;
-	
+
 		SET @lcounter = @lcounter + 1;
 	END WHILE;
-	
+
 	if @lscheduleExistCounter = 0 then
 
 
@@ -1294,10 +1292,10 @@ begin
 							,puser_type
 							,1
 							);
-                            
-                            
-	set @lmaxScheduleId = last_insert_id(); 
-    
+
+
+	set @lmaxScheduleId = last_insert_id();
+
     /*
 	select max(id)
 	into @lmaxScheduleId
@@ -1327,7 +1325,6 @@ begin
 					  ,`date`
 					  ,start_time_mins
 					  ,end_time_mins
-					  ,is_blocked
 					  ,is_active
 					)
 			 VALUES (
@@ -1337,7 +1334,6 @@ begin
 					  ,STR_TO_DATE(@lscheduleDate, '%d-%m-%Y')
 					  ,@lstartTimeMins
 					  ,@lendTimeMins
-					  ,@lisBlocked
 					  ,@lisActive
 					 );
 
@@ -1347,11 +1343,11 @@ begin
 	commit;
 
 	SELECT 1 as status;
-	
+
 		else
-	
+
 	SELECT -2 as status;
-	
+
 	end if;
 
 end$$
@@ -1365,12 +1361,12 @@ BEGIN
   update work_locations wl
   set wl.is_active = 0
   where wl.id = plocationId;
-  
+
   # what else needs to be updated
   #schedules
   #staff login
   # active appointments
-  
+
 
 END$$
 
@@ -1385,24 +1381,24 @@ in pdoctor_id int
 BEGIN
 
 	DECLARE lcounter INT DEFAULT 1;
-    
+
     DECLARE lscheduleDayId INT;
     DECLARE lactiveAppointmentCount INT;
-    
+
     DECLARE lnotDeactivated INT;
-    
+
     set @lnotDeactivated = 0;
 
 	set @lcounter = 1;
-    
+
     while @lcounter <= pschedule_count do
-    
+
 			SELECT ExtractValue(pschedule_days_xml, 'schedules/item[$@lcounter]/scheduleDayId')
 			into @lscheduleDayId;
-            
+
             set @lactiveAppointmentCount = 0;
-            
-            
+
+
             select count(*)
             into @lactiveAppointmentCount
             from appointment a
@@ -1410,10 +1406,10 @@ BEGIN
 				  and a.is_active = 1
                   and a.fk_schedule_day_id = @lscheduleDayId
                   and a.fk_doctor_id = pdoctor_id;
-                  
-                  
-		   if @lactiveAppointmentCount = 0 then 
-           
+
+
+		   if @lactiveAppointmentCount = 0 then
+
 		    update schedule_day sd
 			   set sd.is_active = 0
 				   ,sd.modified_by_id = puser_id
@@ -1421,17 +1417,17 @@ BEGIN
                    ,sd.modified_date = now()
              where sd.id = @lscheduleDayId
 				   and sd.fk_doctor_id = pdoctor_id;
-            
-		   else 
-           
+
+		   else
+
 			set @lnotDeactivated = @lnotDeactivated + 1;
-           
+
            end if;
 		set @lcounter = @lcounter + 1;
     END WHILE;
-    
+
     select 1 status;
-    
+
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
@@ -1521,7 +1517,7 @@ SELECT 	 product.id
         ,date_format(product.created_date, '%d-%m-%Y') as created_date
 		,product.created_by_id
 		,product.created_by_type
-FROM pms.product 
+FROM pms.product
 Where fk_doctor_id = pdoctor_id
 	  and fk_location_id = plocation_id
       and is_active = 1;
@@ -1681,13 +1677,13 @@ begin
 		   ,a.end_mins
 		   ,a.description
            ,a.`state`
-		   ,case when a.`state` = 0 then 'active' 
-				 when a.`state` = 1 then 'closed' 
+		   ,case when a.`state` = 0 then 'active'
+				 when a.`state` = 1 then 'closed'
                  when a.`state` = 2 then 'cancelled'
                  when a.`state` = 3 then 'rescheduled' end as state_text
 		  ,case when a.`state` = 1 then cl.remarks
 				 when a.`state` = 2 then ca.remarks
-                 when a.`state` = 3 then ra.remarks 
+                 when a.`state` = 3 then ra.remarks
 									else '' end as remarks
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
@@ -1725,6 +1721,32 @@ WHERE id = ppatient_id;
 
 end$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_product_stock_history`(in pproduct_id int)
+BEGIN
+
+SELECT  ph.id
+		,ph.fk_product_id
+        ,p.name as product_name
+		,ph.stock
+		,case when ph.operation_type = 1 then 'added'
+			  when ph.operation_type = 2 then 'substracted'
+              end as operation_type
+        ,date_format(ph.created_date, '%d-%m-%Y') as created_date
+		,case when ph.created_by_type = 'D' then d.name
+			  when ph.created_by_type = 'S' then s.first_name
+              end as created_by
+		,case when ph.created_by_type = 'D' then 'doctor'
+			  when ph.created_by_type = 'S' then 'Staff'
+              end as created_by_type
+FROM product_stock_history ph
+inner join product p on p.id = ph.fk_product_id
+left join doctor d on d.id = ph.created_by_id and ph.created_by_type = 'D'
+left join staff s on  s.id = ph.created_by_id and ph.created_by_type = 'S'
+where ph.fk_product_id = pproduct_id;
+
+
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(IN `pprogramme_id` INT)
     READS SQL DATA
 select `duration_days`
@@ -1747,10 +1769,10 @@ BEGIN
 
 	declare lstartDate date;
     declare lendDate date;
-    
+
     set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
-    
+
 
 SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
 	   ,start_time_mins
@@ -1773,7 +1795,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_timings_for_the_day`(
 begin
 
 	declare ldate date;
-    
+
     set @ldate = STR_TO_DATE(pdate, '%d-%m-%Y');
 
 	select sd.start_time_mins
@@ -1796,7 +1818,7 @@ begin
 
 	declare lstartDate date;
     declare lendDate date;
-    
+
     set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
 
@@ -1806,8 +1828,8 @@ begin
 		   ,fk_schedule_id
            ,id as schedule_day_id
            ,(
-			  select count(*) 
-              from appointment a 
+			  select count(*)
+              from appointment a
               where a.fk_schedule_day_id = sd.id
 				    and a.is_active = 1
                     and a.state = 0
@@ -2112,9 +2134,9 @@ BEGIN
     declare lPatientId int;
     declare lcontact varchar(20);
     declare ldecription VARCHAR(2000);
-    
+
     declare lscheduleDayId int;
-    
+
     select  fk_doctor_id
 		   ,fk_location_id
 		   ,fk_patient_id
@@ -2123,10 +2145,10 @@ BEGIN
 		   ,@lLocationId
            ,@lPatientId
            ,@lcontact
-    from appointment a 
+    from appointment a
     where a.id = pappointment_id;
-    
-    
+
+
 	set @lscheduleDayId = get_schedule_day_id(
 											  @lDoctorId
 											  ,@lLocationId
@@ -2134,12 +2156,12 @@ BEGIN
 											  ,pstart_mins
 											  ,pend_mins
 											 );
-                                         
+
     if @lscheduleDayId > 0 then
-    
-    
+
+
 		if COALESCE(@lDoctorId, 0) > 0 then
-		
+
 			set @ldecription = 'booked when closing appointment';
 
 			INSERT INTO `appointment`(
@@ -2177,12 +2199,12 @@ BEGIN
 									 );
 
 			commit;
-			
-		
+
+
 		end if; #if COALESCE(@lDoctorId, 0) > 0 then
-    
+
     end if; #if @lscheduleDayId > 0 then
-    
+
 
 END$$
 
@@ -2324,10 +2346,10 @@ BEGIN
     declare lcontact varchar(20);
     declare ldecription VARCHAR(2000);
     declare lscheduleDayId int;
-    
+
     declare lnewAppointmentId int;
-    
-    
+
+
     select  fk_doctor_id
 		   ,fk_location_id
 		   ,fk_patient_id
@@ -2336,10 +2358,10 @@ BEGIN
 		   ,@lLocationId
            ,@lPatientId
            ,@lcontact
-    from appointment a 
+    from appointment a
     where a.id = pappointment_id
 		  and a.is_active = 1;
-          
+
 	set @lscheduleDayId = get_schedule_day_id(
 											  @lDoctorId
 											  ,@lLocationId
@@ -2347,15 +2369,15 @@ BEGIN
 											  ,pstart_mins
 											  ,pend_mins
 											 );
-                                             
+
     if @lscheduleDayId > 0 then
-    
+
     if COALESCE(@lDoctorId, 0) > 0 then
-    
+
 			#make a new appointment entry
-			
+
 			set @ldecription = 'rescheduled appointment';
-			
+
 			INSERT INTO `appointment`(
 										`fk_doctor_id`
 										, `fk_location_id`
@@ -2371,7 +2393,7 @@ BEGIN
 										, `created_by_type`
 										, `is_active`
                                         , fk_schedule_day_id
-										) 
+										)
 								 VALUES (
 										 @lDoctorId
 										,@lLocationId
@@ -2390,19 +2412,19 @@ BEGIN
 										);
 
 			#update the current appointment state to rescheduled
-			
+
 			set @lnewAppointmentId = last_insert_id();
-			
+
 			update appointment a
 			set state = 3
 				,fk_rescheduled_id = @lnewAppointmentId
 			where a.id = pappointment_id
 				  and a.is_active = 1;
-			
-		
-		
+
+
+
 			#make an entry in the rescheduled table
-			
+
 			insert into rescheduled_appointments (
 												  fk_appointment_id
 												  ,fk_appointment_id_next
@@ -2420,11 +2442,11 @@ BEGIN
 												 ,pcreated_by_type
 												 ,premarks
 												);
-																						
+
 			commit;
 
 		end if; # if COALESCE(@lDoctorId, 0) > 0 then
-		
+
 	end if; #if @lscheduleDayId > 0 then
 
 END$$
@@ -2524,7 +2546,7 @@ begin
 
 	if COALESCE(@lscheduleCount, 0) = 0 then
 		return 2;  	end if;
-        
+
 	/*
      appointmetn states
      0 - active
@@ -2562,31 +2584,31 @@ BEGIN
 	declare lDoctorId int;
     declare lLocationId int;
     declare lAvalibilityStatus int;
-    
+
     select fk_doctor_id
 		   ,fk_location_id
 	into   @lDoctorId
 		   ,@lLocationId
     from appointment a
     where a.id = pappointment_id;
-    
+
     if COALESCE(@lDoctorId, 0) > 0 then
-    
-    
+
+
 		set @lAvalibilityStatus = check_appointment_avalibility(@lDoctorId
 																, @lLocationId
 																, pappointment_date
 																, pstart_time
 																, pend_time
 															   );
-    
-    
+
+
 		return @lAvalibilityStatus;
-    
+
     else
 		#there is no appointment for this id
 		return 5;
-    
+
     end if;
 
 RETURN 1;
@@ -2609,11 +2631,11 @@ BEGIN
 
 	declare lnewAppointmentDate date;
     declare lscheduleDayId date;
-    
+
     set @lscheduleDayId = 0;
 
 	set @lnewAppointmentDate = STR_TO_DATE(pappointment_date, '%d-%m-%Y');
-    
+
     select COALESCE(sc.id, 0)
 	into   @lscheduleDayId
 	from schedule_day sc
@@ -2623,7 +2645,7 @@ BEGIN
 		  and sc.start_time_mins <= pstart_time
 		  and sc.end_time_mins >= pend_time
 		  and sc.is_active = 1;
-    
+
 
 RETURN  @lscheduleDayId;
 END$$
@@ -2663,13 +2685,13 @@ begin
 		or  pAppointStartTime >= pAppointEndTime then
 		return 1;
 	end if;
-    
+
     #its assumed cases for boundry conditions are take care by the calling proc/function
-    
-    
+
+
 	# test for starttime after the  endtime of an existing appointment
     # and for endtime before the start time of an existing appointment
-	if pnewStartTime >= pAppointEndTime 
+	if pnewStartTime >= pAppointEndTime
 		or pnewEndTime <= pAppointStartTime then
 		  return 0;
 	else
@@ -3518,7 +3540,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=83 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=84 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3530,7 +3552,8 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 (79, 43, '2016-07-18', '2016-07-20', '2016-07-18 17:05:50', 43, 'D', 1),
 (80, 47, '2016-07-18', '2016-07-31', '2016-07-18 23:28:33', 47, 'D', 1),
 (81, 1, '2016-07-23', '2016-07-24', '2016-07-23 13:04:41', 1, 'D', 1),
-(82, 1, '2016-08-01', '2016-08-15', '2016-07-26 21:28:16', 1, 'D', 1);
+(82, 1, '2016-08-01', '2016-08-15', '2016-07-26 21:28:16', 1, 'D', 1),
+(83, 1, '2016-08-01', '2016-08-15', '2016-07-26 23:03:00', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3551,7 +3574,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229489 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229504 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -3577,7 +3600,7 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229454, 1, 75, 18, '2016-07-21', 540, 720, 1, NULL, NULL, NULL),
 (229455, 1, 75, 18, '2016-07-22', 540, 720, 1, NULL, NULL, NULL),
 (229456, 1, 75, 18, '2016-07-25', 540, 720, 1, NULL, NULL, NULL),
-(229457, 1, 75, 18, '2016-07-26', 540, 720, 1, NULL, NULL, NULL), 
+(229457, 1, 75, 18, '2016-07-26', 540, 720, 1, NULL, NULL, NULL),
 (229458, 1, 75, 18, '2016-07-27', 540, 720, 0, 1, 'D', '2016-07-26 03:11:12'),
 (229459, 1, 75, 18, '2016-07-28', 540, 720, 0, 1, 'D', '2016-07-26 03:11:12'),
 (229460, 1, 75, 18, '2016-07-29', 540, 720, 1, 1, 'D', '2016-07-26 03:03:49'),
@@ -3599,7 +3622,22 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229485, 47, 80, 23, '2016-07-30', 540, 720, 1, NULL, NULL, NULL),
 (229486, 47, 80, 23, '2016-07-31', 540, 720, 1, NULL, NULL, NULL),
 (229487, 1, 81, 18, '2016-07-23', 540, 720, 1, NULL, NULL, NULL),
-(229488, 1, 81, 18, '2016-07-24', 540, 720, 1, NULL, NULL, NULL);
+(229488, 1, 81, 18, '2016-07-24', 540, 720, 1, NULL, NULL, NULL),
+(229489, 1, 83, 18, '2016-08-01', 540, 720, 1, NULL, NULL, NULL),
+(229490, 1, 83, 18, '2016-08-02', 540, 720, 1, NULL, NULL, NULL),
+(229491, 1, 83, 18, '2016-08-03', 540, 720, 1, NULL, NULL, NULL),
+(229492, 1, 83, 18, '2016-08-04', 540, 720, 1, NULL, NULL, NULL),
+(229493, 1, 83, 18, '2016-08-05', 540, 720, 1, NULL, NULL, NULL),
+(229494, 1, 83, 18, '2016-08-06', 540, 720, 1, NULL, NULL, NULL),
+(229495, 1, 83, 18, '2016-08-07', 540, 720, 1, NULL, NULL, NULL),
+(229496, 1, 83, 18, '2016-08-08', 540, 720, 1, NULL, NULL, NULL),
+(229497, 1, 83, 18, '2016-08-09', 540, 720, 1, NULL, NULL, NULL),
+(229498, 1, 83, 18, '2016-08-10', 540, 720, 1, NULL, NULL, NULL),
+(229499, 1, 83, 18, '2016-08-11', 540, 720, 1, NULL, NULL, NULL),
+(229500, 1, 83, 18, '2016-08-12', 540, 720, 1, NULL, NULL, NULL),
+(229501, 1, 83, 18, '2016-08-13', 540, 720, 1, NULL, NULL, NULL),
+(229502, 1, 83, 18, '2016-08-14', 540, 720, 1, NULL, NULL, NULL),
+(229503, 1, 83, 18, '2016-08-15', 540, 720, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
