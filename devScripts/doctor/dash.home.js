@@ -264,6 +264,11 @@ $(document).ready(function(){
         this.appointmentsLoaded == true){
          //console.log(' removing overlay ');
          todayAppointmentListView.overlay.addClass('hidden');
+
+         setTimeout(function(){
+           todayAppointmentListView.render();
+         }, 200);
+
     }
 
   };
@@ -309,7 +314,7 @@ controller.prototype.getUserInfo = function () {
       }
     });
 
-  }; 
+  };
 
   controller.prototype.getLocations = function () {
     $.get( this.getLocationUrl , {})
@@ -320,7 +325,14 @@ controller.prototype.getUserInfo = function () {
       cont.locationsLoaded = true;
       cont.removeOverLay();
       cont.addLocationsAlert();
-      todayAppointmentListView.render();
+
+      /*
+      moved to remove overlay as it dint render all the time
+      setTimeout(function(){
+        todayAppointmentListView.render();
+      }, 500);
+      */
+
     });
   };
 
