@@ -39,7 +39,7 @@ $(document).ready(function(){
         });
 
         //getting the prescription List from the patient
-        $.get( controller.getPrescriptionDetail, {patient_id:controller.patientId} )
+        $.get( controller.getPrescriptionDetail, {appointmentId:controller.patientId} )
         .done(function( response ) {
           console.log('prescriptionList' + JSON.stringify(response));
 
