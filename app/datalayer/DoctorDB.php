@@ -235,5 +235,34 @@ class DoctorDB
     }
   }
 
+  public function getproductHistory($productId){
+    try {
+
+      $paramArray = array(
+                          'pproduct_id' => $productId
+                          );
+
+      $statement = DBHelper::generateStatement('get_product_stock_history',  $paramArray);
+      $statement->execute();
+
+      $stockHistoryList = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+          $row = array();
+          $row['productName'] =  $result['product_name'];
+          $row['stock'] = $result['stock'];
+          $row['operationType'] = $result['operation_type'];
+          $row['createdDate'] = $result['created_date'];
+          $row['createdBy'] = $result['created_by'];
+          $row['createdByType'] = $result['created_by_type'];
+          $stockHistoryList[] = $row;
+      }
+
+      return $stockHistoryList;
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exception');
+    }
+  }
+
 
 }

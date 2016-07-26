@@ -234,5 +234,42 @@ $app->group('/doctor', function(){
 
   });
 
+  $this->get('/getProductStockHistory', function ($request, $response) {
+
+
+
+    try {
+      $productList = '';
+      $message = "success";
+      $status = 1;
+      $user = UserSessionManager::getUser();
+
+      if($user->id != -1){
+
+
+
+        $allGetVars = $request->getQueryParams();
+
+        $productId = $allGetVars['productId'];
+        $doctorDB = new DoctorDB();
+
+        $productList = $doctorDB->getproductHistory($productId);
+
+
+      }else{
+        $message = "not Logged in";
+        $status = -1;
+      }
+      $data = array('status' => $status,'data' => $productList,'message'=> $message);
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => -1,'data' => '','message'=> $e->getMessage());
+      return $response->withJson($data);
+    }
+
+  });
+
+
 
 });
