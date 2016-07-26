@@ -17,8 +17,8 @@ $(document).ready(function(){
          .done(function( response ) {
            console.log('response ' + JSON.stringify(response));
            programmeListModel = response.data;
-           ProgrammeListView.render();
-         }); 
+           ProgrammeListView.render();   
+         });
 
 
       },

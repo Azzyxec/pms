@@ -1,4 +1,88 @@
 <hr class="invisible">
+
+<div class="modal fade" id="prescription-list-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog  " role="document">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <div class="book-app-alerts-container">
+
+        </div>
+
+        <h4 class="modal-title" id="myModalLabel">Prescriptions Info</h4>
+      </div>
+      <div class="modal-body">
+        <div class="">
+       <input type="hidden" >
+              <div class="table-responsive">
+                <table class="table text-center table-bordered table-hover table-striped" id="prescription-list-table">
+                    <thead >
+                      <colgroup>
+                        <col width = "10%"></col>
+                          <col width = "30%"></col>
+                            <col width = "60%"></col>
+                      </colgroup>
+                      <tr>
+                    <th colspan="3" ><h3 style="margin:0px" class="text-center">Prescriptions</h3></th>
+
+                     </tr>
+                         <tr>
+                            <th >Sr.no.</th>
+                            <th >Medicine(name)</th>
+
+                            <th >Dosage(info)</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="prescription-list-table-body">
+                        <tr>
+                          <td  >1</td>
+                          <td  >asdf</td>
+                          <td  >dasf</td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+                <table class="table text-center table-bordered table-hover table-striped">
+                    <thead >
+                      <colgroup>
+                        <col width = "10%"></col>
+                          <col width = "60%"></col>
+                            <col width = "30%"></col>
+                      </colgroup>
+                      <tr >
+                    <th  colspan="3"><h3  style="margin:0px" class="text-center">Uploaded Documents</h3></th>
+
+                     </tr>
+                         <tr>
+                            <th >Sr.no.</th>
+                            <th >Document (name)</th>
+
+                            <th >Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="uploaded-document-table-body">
+                        <tr>
+                          <td  >1</td>
+                          <td  >asdf</td>
+                          <td  >Download / view</td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.table-responsive -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
 <!-- /.panel -->
 <div class="panel panel-green">
 
