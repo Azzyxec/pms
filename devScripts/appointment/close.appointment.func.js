@@ -11,6 +11,7 @@ function getCloseAppointmentController(){
     patientsName:'',
     remarks: '',
     prescriptionList:[],
+    //UploadedList[],
     currentEntry:{}
   }
 
@@ -175,7 +176,7 @@ function getCloseAppointmentController(){
 
       });
 
-      
+
 
       //initialize blueimp fileupload plugin
 

@@ -94,11 +94,11 @@ $(document).ready(function(){
             if(full.state == 1 && (full.prescriptionList.length > 0 || full.uploadedList.length > 0)){
               console.log('active button');
 
-                return '<a href="#prescription-list-modal" data-id="'+full.id+'" class="prescription-btn btn btn-default" role="button" data-toggle="modal">View Prescription</a>';
+                return '<a href="#prescription-list-modal" data-id="'+full.id+'" class="btn-sm prescription-btn btn btn-default " role="button" data-toggle="modal">View Prescription</a>';
 
             }else{
               console.log('deactive button');
-              return '<a   disabled="true" class="prescription-btn btn btn-default" role="button" >View Prescription</a>';
+              return '<a   disabled="true" class="prescription-btn btn btn-default btn-sm" role="button" >View Prescription</a>';
             }
           }
           }
@@ -110,6 +110,7 @@ $(document).ready(function(){
         }
 
       } );
+
 
     }
 
@@ -221,11 +222,11 @@ var modalView = {
         tr.append(td);
 
         var td = $('<td/>',{
-          html:'<a   href="'+UploadList[i].documentPath+'" class=" btn btn-sm btn-default" role="button" >Download</a>'
+          html:'<a  download="'+UploadList[i].documentPath+'" href="images/scannedDoc/'+UploadList[i].documentPath+'" class=" btn btn-sm btn-default" role="button" >Download</a><a  target="_blank" href="images/scannedDoc/'+UploadList[i].documentPath+'"  style="margin-left:5px"class=" btn btn-sm btn-default" role="button" >View</a>'
         });
         tr.append(td);
         this.uploadedListTableBody.append(tr);
-      } 
+      }
       }
 
 
