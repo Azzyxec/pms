@@ -14,7 +14,7 @@ $(document).ready(function(){
   var controller = {
     init: function(){
     this.createUpdateScheduleUrl = links.createUpdateScheduleUrl;
-    this.getLocationUrl = links.getLocationUrl;
+    this.getLocationUrl = links.getActiveLocations;
     this.getScheduleCalendarUrl = links.getScheduleCalendarUrl;
 
     stepOneView.init();

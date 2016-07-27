@@ -44,12 +44,31 @@ $app->group('/locations', function(){
   });
 
 
-  $this->get('/getDoctorLocations', function ($request, $response) {
+  $this->get('/getAllLocations', function ($request, $response) {
     try {
 
       $user = UserSessionManager::getUser();
       $doctorDB = new DoctorDB();
-      $data = $doctorDB->getAllLocations($user->doctorId);
+      $getOnlyActiveRows = 0;
+      $data = $doctorDB->getAllLocations($user->doctorId, $getOnlyActiveRows);
+
+      $data = array('status' => "1", 'data' => $data['data'], 'message' => 'success' );
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+      return $response->withJson($data);
+    }
+
+  });
+
+  $this->get('/getActiveLocations', function ($request, $response) {
+    try {
+
+      $user = UserSessionManager::getUser();
+      $doctorDB = new DoctorDB();
+      $getOnlyActiveRows = 1;
+      $data = $doctorDB->getAllLocations($user->doctorId, $getOnlyActiveRows);
 
       $data = array('status' => "1", 'data' => $data['data'], 'message' => 'success' );
       return $response->withJson($data);

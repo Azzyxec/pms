@@ -11,7 +11,7 @@ $(document).ready(function(){
         var controller = {
           init: function(){
             this.saveUpdateLocations = links.saveUpdateLocations;
-            this.locationListUrl = links.locationListUrl;
+            this.locationListUrl = links.getLocationUrl;
             this.deactivateLocationUrl = links.deactivateLocationUrl;
 
             LocationView.init();
@@ -25,6 +25,7 @@ $(document).ready(function(){
             $.post(controller.saveUpdateLocations , model.loc)
              .done(function( response ) {
                console.log('save response ' + JSON.stringify(response));
+               LocationView.locationName.val('');
                controller.updateLocationFromServer();
              });
 
@@ -70,6 +71,7 @@ $(document).ready(function(){
         var LocationView = {
           init: function(){
             this.locationName = $('#txt-location-name');
+            this.locationNameHelpLabel = $('#help-location-name');
             this.overLay = $('#dash-overlay');
 
             $('#btn-add-location').click(function(){
@@ -77,12 +79,34 @@ $(document).ready(function(){
 
               var locName = LocationView.locationName.val();
 
-              var locationModel = controller.getLocationModel();
-              locationModel.name =  locName;
+              var isEmpty = validator.isEmptyString(locName);
 
-              console.log(JSON.stringify(model.loc));
-              LocationView.locationName.val('');
-              controller.persistLocationModel();
+              if(!isEmpty){
+
+                var locationModel = controller.getLocationModel();
+                locationModel.name =  locName;
+
+                console.log(JSON.stringify(model.loc));
+
+                controller.persistLocationModel();
+             }
+
+            });
+
+            //wiring validations
+            this.locationName.on('focus click change keyup select blur', function(){
+
+
+              var locName = LocationView.locationName.val();
+              var isEmpty = validator.isEmptyString(locName);
+
+              if(isEmpty){
+                LocationView.locationName.addClass('has-error');
+                LocationView.locationNameHelpLabel.removeClass('hidden');
+              }else{
+                LocationView.locationName.removeClass('has-error');
+                LocationView.locationNameHelpLabel.addClass('hidden');
+              }
 
             });
 
@@ -117,7 +141,7 @@ $(document).ready(function(){
 
               var td = $('<td/>');
               td.text(locations[i].status);
-              //tr.append(td);
+              tr.append(td);
 
               var editLink = $('<a/>',{
                 text: 'Edit',
@@ -144,8 +168,8 @@ $(document).ready(function(){
 
               var td = $('<span/>');
               td.append(editLink);
-              //td.append(" / ");
-              //td.append(deactivateLink);
+              td.append(" / ");
+              td.append(deactivateLink);
 
 
               tr.append(td);

@@ -16,7 +16,7 @@ $(document).ready(function(){
 
   var controller = {
     init: function(){
-    this.getLocationUrl = links.getLocationUrl;
+    this.getLocationUrl = links.getActiveLocations;
     this.getSechduleforDeactivation = links.getSechduleforDeactivation;
     this.deactivateScheduleDays = links.deactivateScheduleDays;
     this.getScheduleCalendarUrl = links.getScheduleCalendarUrl;

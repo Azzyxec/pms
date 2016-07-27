@@ -56,10 +56,10 @@ class DoctorDB
 
 
 
-  public function getAllLocations($doctorId){
+  public function getAllLocations($doctorId, $getOnlyActiveRows){
     try {
 
-      $paramArray = array('pdoctor_id' => $doctorId);
+      $paramArray = array('pdoctor_id' => $doctorId, 'ponly_active_rows' => $getOnlyActiveRows);
       $statement = DBHelper::generateStatement('get_all_doctor_locations',  $paramArray);
       $statement->execute();
 
@@ -68,8 +68,8 @@ class DoctorDB
           $location = array();
           $location['id'] =  $result['id'];
           $location['name'] = $result['name'];
+          $location['isActive'] = $result['is_active'];
           $location['status'] = $result['status'];
-          //$location['name'] = $result['name'];
           $allLocaions[] = $location;
       }
 

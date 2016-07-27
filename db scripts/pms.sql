@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 27, 2016 at 08:33 PM
+-- Generation Time: Jul 27, 2016 at 09:52 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -1483,7 +1483,10 @@ SELECT `id`
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(
+IN `pdoctor_id` INT
+,IN `ponly_active_rows` INT
+)
     NO SQL
 begin
 
@@ -1492,7 +1495,8 @@ select id
        ,is_active
        ,case when is_active = 0 then 'inactive' else 'active' end as `status`
 from work_locations
-where fk_doctor_id = pdoctor_id;
+where fk_doctor_id = pdoctor_id
+	  and is_active = case when ponly_active_rows =  1 then 1 else is_active end;
 
 
 end$$
@@ -1511,6 +1515,18 @@ SELECT 	 product.id
 FROM pms.product
 Where fk_doctor_id = pdoctor_id
       and is_active = 1;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_All_Uploaded_Doc`(in pappointment_id int)
+BEGIN
+
+select fk_appointment_id
+    ,document_name
+       ,document_path
+
+from  close_appointment_documents
+where  fk_appointment_id = pappointment_id;
 
 END$$
 
@@ -1718,6 +1734,19 @@ WHERE id = ppatient_id;
 
 
 end$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_prescriptions_list`(in pappointment_id int )
+BEGIN
+
+select fk_appointment_id
+    ,medicine
+       ,remarks
+
+from  close_appointment_prescriptions
+where  fk_appointment_id = pappointment_id;
+
+
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `get_product_stock_history`(IN `pproduct_id` INT)
 BEGIN
@@ -3050,7 +3079,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
 
 --
 -- Dumping data for table `login`
@@ -3079,7 +3108,8 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (86, 'D', 'timmy', '$2y$12$9129aC9jd1VxSVRPLty27ebnGBwOMGseslZSA2p/HchCIfpI/6WOu', '2016-07-18 17:09:34', '2016-07-18 18:30:20', 1),
 (87, 'D', 'dan', '$2y$12$5E5VHzymTDr6MXcwrrYqFOhOqLAt0f3eOzcpbE8kv8xLEPh1j0NF6', '2016-07-18 21:25:39', NULL, 0),
 (88, 'D', 'picolo', '$2y$12$ra430g6xGWEE7/ub6fsT9uVzkcYgO9FBJ8P974q/M0GgbTKG6ZxhO', '2016-07-18 21:45:37', NULL, 0),
-(89, 'D', 'hans', '$2y$12$hRFvYZESR5X3aymuQqM04OVDgZU2yJkcxAXiMjCjIBOUO49d4HTse', '2016-07-18 23:27:11', '2016-07-18 23:27:38', 1);
+(89, 'D', 'hans', '$2y$12$hRFvYZESR5X3aymuQqM04OVDgZU2yJkcxAXiMjCjIBOUO49d4HTse', '2016-07-18 23:27:11', '2016-07-18 23:27:38', 1),
+(90, 'S', 'someone', '$2y$12$tzbdZ8nznpvfbrMU5NhPIOWqJmCaRYbcq97q8Qydg31v4IO0WovcG', '2016-07-28 01:13:58', '2016-07-28 01:17:26', 1);
 
 -- --------------------------------------------------------
 
@@ -3660,14 +3690,15 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `modified_date` datetime NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `staff`
 --
 
 INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `email`, `address`, `fk_location_id`, `fk_doctor_id`, `fk_user_id`, `fk_created_by_id`, `created_by_type`, `created_date`, `fk_modified_by_id`, `modified_by_type`, `modified_date`, `is_active`) VALUES
-(2, 'magnus', 'staff', '423412', '3234', 'staff@gmail.com', '34124', 18, 1, 60, 1, 'D', '2016-06-27 20:18:24', 1, 0, '2016-07-11 17:39:04', 1);
+(2, 'magnus', 'staff', '423412', '3234', 'staff@gmail.com', '34124', 18, 1, 60, 1, 'D', '2016-06-27 20:18:24', 1, 0, '2016-07-11 17:39:04', 1),
+(3, 'New Staff', 'Last', '70423423', '', 'gmail@email.com', 'Some Address', 18, 1, 90, 1, 'D', '2016-07-28 01:13:58', 1, 0, '2016-07-28 01:17:26', 1);
 
 -- --------------------------------------------------------
 

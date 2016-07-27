@@ -123,7 +123,8 @@ class ScheduleDB
       // get locaion list for the doctor
 
       $doctorDB = new DoctorDB();
-      $locationsResult = $doctorDB->getAllLocations($doctorId);
+      $getOnlyActiveRows = 1;
+      $locationsResult = $doctorDB->getAllLocations($doctorId, $getOnlyActiveRows);
 
       $locationList = $locationsResult['data'];
 

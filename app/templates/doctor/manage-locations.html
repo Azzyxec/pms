@@ -17,6 +17,7 @@
   <div class="form-group">
     <label for="exampleInputEmail1">Location:</label>
     <input id="txt-location-name" type="text" class="form-control">
+    <span id="help-location-name" class=" hidden help-block .sr-only">Please enter the location name</span>
   </div>
 
   <button id="btn-add-location" type="button" class=" btn-success btn" name="Add" value="Save">Save</button>
@@ -31,9 +32,9 @@
                     <table class="table text-center table-bordered table-hover table-striped ">
                       <thead id="programme-table-header">
                         <tr>
-                          <th class="col-md-1">Work Locations</th>
-                          <th class="col-md-1"></th>
-                          <th class="col-md-1"></th>
+                          <th class="col-md-1 text-center">Work Locations</th>
+                          <th class="col-md-1  text-center">Status</th>
+                          <th class="col-md-1  text-center">Action</th>
                         </tr>
                       </thead>
                       <tbody id="location-list-table-body">

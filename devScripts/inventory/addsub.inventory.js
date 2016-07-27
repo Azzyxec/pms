@@ -16,7 +16,7 @@ $(document).ready(function(){
       init:function(){
         this.saveUpdateProductStock = links.saveUpdateProductStock;
         this.getAllProductListUrl =   links.getAllProducts;
-        this.locationListUrl = links.locationListUrl;
+        this.locationListUrl = links.getActiveLocations;
         this.DefaultLocationInit = false;
 
         //setting user info

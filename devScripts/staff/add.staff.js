@@ -24,7 +24,7 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
-        this.getLocationsUrl = links.locationListUrl;
+        this.getLocationsUrl = links.getActiveLocations;
         this.createModifyStaffUrl = links.createModifyStaffUrl;
         this.getStaffDetailsUrl = links.getStaffDetailsUrl;
 
@@ -131,7 +131,7 @@ $(document).ready(function(){
         this.selectLocations = $('#sel-locations');
 
         this.validator =   $("#staffFrm").bootstrapValidator({
-           trigger:" focus blur",
+           trigger:"focus click change keyup select blur",
            feedbackIcons: {
              valid: 'glyphicon glyphicon-ok ',
              invalid: 'glyphicon glyphicon-remove ',
@@ -142,30 +142,27 @@ $(document).ready(function(){
              fname : {
                validators : {
                  notEmpty : {
-                   message : 'Please enter staff member\'s  Name!'
+                   message : 'Please enter a name'
                  }
                }
 
              },
-
                 lname : {
                validators : {
                  notEmpty : {
-                   message : 'Please Enter staff member\'s last Name!'
+                   message : 'Please enter last name'
                  }
                }
 
              }
-
-
              , s_email :{
 
                validators : {
                  emailAddress :{
-                   message : 'Please Enter valid email'
+                   message : 'Please enter valid email'
                  },
                  notEmpty :{
-                   message : 'Please enter patients Email Id'
+                   message : 'Please enter a email'
                  }
                }
              }
@@ -173,26 +170,22 @@ $(document).ready(function(){
 
                validators : {
                  notEmpty :{
-                   message : 'Please enter staff member\'s username'
+                   message : 'Please enter username'
                  }
                }
              },
-
              pswd :{
-
               validators : {
                 notEmpty :{
-                  message : 'Please enter staff member\'s password'
+                  message : 'Please enter staff password'
                 }
               }
             },
-
-
             s_location:{
 
              validators : {
                notEmpty :{
-                 message : 'Please enter staff member\'s password'
+                 message : 'Please select location'
                }
              }
            }
@@ -200,7 +193,7 @@ $(document).ready(function(){
 
                validators : {
                  notEmpty :{
-                   message : 'Please enter staff member\'s contact no'
+                   message : 'Please enter contact no'
                  },
                  regexp: {
                                regexp:  /^\+?[0-9()-\s]+$/,
@@ -208,27 +201,15 @@ $(document).ready(function(){
                              }
 
                }
-             }
-             ,  phone2 :{
-
-               validators : {
-                 notEmpty :{
-                   message : 'Please enter staff member\'s alternate phone no'
-                 }
-               }
              },
-
                Saddress :{
 
                validators : {
                  notEmpty :{
-                   message : 'Please enter patients address'
+                   message : 'Please enter address'
                  }
                }
              }
-
-
-
            }
          }).on('success.form.bv',function(e){
               e.preventDefault();
@@ -264,7 +245,6 @@ $(document).ready(function(){
 
            });
 
-
         this.saveButton = $('#btn-save');
         this.cancelButton = $('#btn-staff-cancel');
 
@@ -287,13 +267,12 @@ $(document).ready(function(){
         this.selectLocations.empty();
 
         //adding the select option to the list
-        var option = $('<option/>',{
-                        value: 0,
-                        text: 'Select...',
-                        selected: 'selected'
-                      }
-                      );
-        this.selectLocations.append(option);
+        // var option = $('<option/>',{
+        //                 text: 'Select...',
+        //                 selected: 'selected'
+        //               }
+        //               );
+        //this.selectLocations.append(option);
 
         var locations = controller.getLocationList();
 
@@ -321,7 +300,9 @@ $(document).ready(function(){
 
 
        //setting the locatio option
-       CreateUpdateView.selectLocations.val(model.staff.locationId);
+       if(model.staff.locationId != 0){
+         CreateUpdateView.selectLocations.val(model.staff.locationId);
+       }
 
          // CreateUpdateView.selectLocations.find(':option[value="' + model.staff.locationId + '"]').attr('selected', 'selected');
 

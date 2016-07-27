@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   $(function(){
-    console.log('doctor dash js'); 
+    console.log('doctor dash js');
 
     var model = {
       appointmentList:[],
@@ -17,7 +17,7 @@ $(document).ready(function(){
 
     function controller(){
       //initlize any url
-      this.getLocationUrl =  links.getLocationUrl;
+      this.getLocationUrl =  links.getActiveLocations;
       this.getAppointmentForTheDayUrl = links.getAppointmentForTheDayUrl;
       this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
       this.getPatientsHistoryUrl = links.patientsHistoryUrl;

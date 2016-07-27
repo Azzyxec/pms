@@ -45,7 +45,6 @@ var links = {
    medicineSearchUrl : "index.php/doctorDashboard/medicineSearch",
 
    //schedule
-   getLocationUrl: "index.php/locations/getDoctorLocations",
    createUpdateScheduleUrl: "index.php/schedule/createUpdateSchedule",
    getSechduleCalendarDetailsUrl: "index.php/schedule/getCalanderDetails",
    getSechduleforDeactivation: "index.php/schedule/getSchedulesForDeactivation",
@@ -72,7 +71,6 @@ var links = {
 
    //Prescription
    getPrescriptionDetail:'index.php/patient/getPrescriptionDetail',
-
    bookAppointmentUrl: "index.php/appointment/bookAppointment",
    getAppointmentForTheDayUrl: "index.php/appointment/getAppointmentsForTheDay",
    getAllAppointmentsUrl: "index.php/appointment/getAllAppointments",
@@ -81,7 +79,9 @@ var links = {
    rescheduleAppointmentUrl: "index.php/appointment/rescheduleAppointment",
 
    saveUpdateLocations:"index.php/locations/addUpdateLocation",
-   locationListUrl:"index.php/locations/getDoctorLocations",
+   locationListUrl:"index.php/locations/getAllLocations",
+   getLocationUrl: "index.php/locations/getAllLocations",
+   getActiveLocations: "index.php/locations/getActiveLocations",
    deactivateLocationUrl:"index.php/locations/deactivateLocation",
    deliveryMethodsUrl:"index.php/patient/getDeliveryMethods",
 
