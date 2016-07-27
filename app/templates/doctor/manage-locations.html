@@ -13,29 +13,37 @@
         <div class="panel-body">
           <div class="content_bottom">
 
-            <form class="">
-              <div class="form-group">
-                <label for="exampleInputEmail1">Location:</label>
+            <form class="form-horizontal">
+              <div class="form-group form-inline">
+                <label class="col-lg-2 col-md-2 col-sm-2 control-label" for="exampleInputEmail1">Location:</label>
+                  <div class=" col-lg-6 col-md-6 col-sm-6">
                 <input id="txt-location-name" type="text" class="form-control">
+                <button id="btn-add-location" type="button" style="margin:10px" class=" btn-success btn" name="Add" value="Save">Save</button>
                 <span id="help-location-name" class=" hidden help-block .sr-only">Please enter the location name</span>
+              </div>
               </div>
 
               <div class="form-group">
                 <label for="focusedinput" class="col-lg-2 col-md-2 col-sm-2  control-label">Status:</label>
                 <div class=" col-lg-6 col-md-6 col-sm-6">
-                  <label>
+
+                  <label class="radio-inline">
                     <input type="radio" name="p_status" id="pactive"  value="1" checked>
                     Active
-                  </label>
-                  <label>
-                    <input type="radio" name="p_status" id="pinactive" value="0">
-                    Inactive
-                  </label>
+</label>
+<label class="radio-inline">
+  <input type="radio" name="p_status" id="pinactive" value="0">
+  Inactive
+</label>
+
+
+
+
                 </div>
               </div>
 
               <div class="form-group">
-                <button id="btn-add-location" type="button" class=" btn-success btn" name="Add" value="Save">Save</button>
+
               </div>
 
             </form>
