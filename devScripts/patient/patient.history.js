@@ -225,7 +225,7 @@ var modalView = {
         });
         tr.append(td);
         this.uploadedListTableBody.append(tr);
-      }
+      } 
       }
 
 
