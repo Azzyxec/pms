@@ -18,11 +18,12 @@ class DoctorDB
     # code...
   }
 
-  public function saveUpdateLoction($id, $name, $doctorId){
+  public function saveUpdateLoction($id, $name, $isActive, $doctorId){
     try {
 
       $paramArray = array('pid' => $id,
                           'pname' => $name,
+                          'pis_active' => $isActive,
                           'pdoctor_id' =>$doctorId
                           );
 

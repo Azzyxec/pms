@@ -12,7 +12,7 @@ $app->group('/locations', function(){
       $postedData = $request->getParsedBody();
         $user = UserSessionManager::getUser();
         $doctorDB = new DoctorDB();
-        $data = $doctorDB->saveUpdateLoction($postedData['id'], $postedData['name'], $user->id);
+        $data = $doctorDB->saveUpdateLoction($postedData['id'], $postedData['name'], $postedData['isActive'],  $user->id);
 
       $data = array('status' => "1", 'data' => "1", 'message' => 'success' );
       return $response->withJson($data);

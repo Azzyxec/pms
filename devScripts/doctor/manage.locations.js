@@ -4,7 +4,7 @@ $(document).ready(function(){
         console.log('Manage Locations  js loaded');
 
         var model = {
-                      loc:{id:0, name:""},
+                      loc:{id:0, name:"", isActive:1},
                       list:[]
                     };
 
@@ -45,14 +45,15 @@ $(document).ready(function(){
                LocationView.overLay.addClass('hidden');
              });
           },
-          updateModel: function(id, name){
+          updateModel: function(id, name, isActive){
             model.loc.id = id;
             model.loc.name = name;
+            model.loc.isActive = isActive;
             LocationView.render();
           },
-          deactivateLocation: function(locationId){
+          deactivateLocation: function(locationId, pisActive){
 
-            $.post(controller.deactivateLocationUrl , {id: locationId})
+            $.post(controller.deactivateLocationUrl , {id: locationId, isActive: pisActive})
              .done(function( response ) {
                console.log('deactivate response ' + JSON.stringify(response));
 
@@ -72,6 +73,8 @@ $(document).ready(function(){
           init: function(){
             this.locationName = $('#txt-location-name');
             this.locationNameHelpLabel = $('#help-location-name');
+            this.activeControl = $('#pactive');
+            this.inActiveControl = $('#pinactive');
             this.overLay = $('#dash-overlay');
 
             $('#btn-add-location').click(function(){
@@ -82,6 +85,12 @@ $(document).ready(function(){
               var isEmpty = validator.isEmptyString(locName);
 
               if(!isEmpty){
+
+                if(LocationView.activeControl.is(":checked")){
+                  model.loc.isActive = 1;
+                }else{
+                  model.loc.isActive = 0;
+                }
 
                 var locationModel = controller.getLocationModel();
                 locationModel.name =  locName;
@@ -114,6 +123,17 @@ $(document).ready(function(){
           render: function(){
             var locationModel = controller.getLocationModel();
             this.locationName.val(locationModel.name);
+
+            console.log(JSON.stringify(locationModel));
+
+            if(+locationModel.isActive == 1){
+              console.log('check active');
+              this.activeControl.prop('checked', true);
+            }else{
+              console.log('check inactive');
+              this.inActiveControl.prop('checked', true);
+            }
+
           }
         };
 
@@ -150,27 +170,29 @@ $(document).ready(function(){
               editLink.click((function(location){
                 return function(){
                   console.log('edit click ' + JSON.stringify(location));
-                  controller.updateModel(location.id, location.name);
-                }
-              })(locations[i]));
-
-
-              var deactivateLink = $('<a/>',{
-                text: 'Deactivate',
-              });
-
-              deactivateLink.click((function(location){
-                return function(){
-                  console.log('remove click ' + JSON.stringify(location));
-                  controller.deactivateLocation(location.id);
+                  controller.updateModel(location.id, location.name, location.isActive);
                 }
               })(locations[i]));
 
               var td = $('<span/>');
               td.append(editLink);
-              td.append(" / ");
-              td.append(deactivateLink);
 
+
+              // var deactivateLink = $('<a/>',{
+              //   text: 'Deactivate',
+              // });
+              //
+              // deactivateLink.click((function(location){
+              //   return function(){
+              //     console.log('remove click ' + JSON.stringify(location));
+              //     controller.deactivateLocation(location.id);
+              //   }
+              // })(locations[i]));
+              //
+              // var td = $('<span/>');
+              // td.append(editLink);
+              //td.append(" / ");
+              //td.append(deactivateLink);
 
               tr.append(td);
 

@@ -5,55 +5,72 @@
   <div class="row">
     <hr class="invisible">
 
-      <div class="col-md-12">
-        <div class="panel panel-green">
-          <div class="panel-heading">
-            Work Locations
-          </div>
-          <div class="panel-body">
-            <div class="content_bottom">
+    <div class="col-md-12">
+      <div class="panel panel-green">
+        <div class="panel-heading">
+          Work Locations
+        </div>
+        <div class="panel-body">
+          <div class="content_bottom">
 
-                  <form>
-  <div class="form-group">
-    <label for="exampleInputEmail1">Location:</label>
-    <input id="txt-location-name" type="text" class="form-control">
-    <span id="help-location-name" class=" hidden help-block .sr-only">Please enter the location name</span>
-  </div>
+            <form class="">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Location:</label>
+                <input id="txt-location-name" type="text" class="form-control">
+                <span id="help-location-name" class=" hidden help-block .sr-only">Please enter the location name</span>
+              </div>
 
-  <button id="btn-add-location" type="button" class=" btn-success btn" name="Add" value="Save">Save</button>
-</form>
-
-              <div class="row">
-
-                <div class="col-md-8">
-
-                  <hr>
-                  <div class="table-responsive table-condensed">
-                    <table class="table text-center table-bordered table-hover table-striped ">
-                      <thead id="programme-table-header">
-                        <tr>
-                          <th class="col-md-1 text-center">Work Locations</th>
-                          <th class="col-md-1  text-center">Status</th>
-                          <th class="col-md-1  text-center">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody id="location-list-table-body">
-                      </tbody>
-
-                    </table>
-                  </div>
-                  <!-- /.table-responsive -->
+              <div class="form-group">
+                <label for="focusedinput" class="col-lg-2 col-md-2 col-sm-2  control-label">Status:</label>
+                <div class=" col-lg-6 col-md-6 col-sm-6">
+                  <label>
+                    <input type="radio" name="p_status" id="pactive"  value="1" checked>
+                    Active
+                  </label>
+                  <label>
+                    <input type="radio" name="p_status" id="pinactive" value="0">
+                    Inactive
+                  </label>
                 </div>
+              </div>
 
+              <div class="form-group">
+                <button id="btn-add-location" type="button" class=" btn-success btn" name="Add" value="Save">Save</button>
+              </div>
 
+            </form>
+
+            <div class="row">
+
+              <div class="col-md-8">
+
+                <hr>
+                <div class="table-responsive table-condensed">
+                  <table class="table text-center table-bordered table-hover table-striped ">
+                    <thead id="programme-table-header">
+                      <tr>
+                        <th class="col-md-1 text-center">Work Locations</th>
+                        <th class="col-md-1  text-center">Status</th>
+                        <th class="col-md-1  text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="location-list-table-body">
+                    </tbody>
+
+                  </table>
+                </div>
+                <!-- /.table-responsive -->
               </div>
 
 
+            </div>
+
+
           </div>
         </div>
-        </div>
       </div>
-      <div class="clearfix"> </div>
+    </div>
+    <div class="clearfix"> </div>
 
   </div>
 </div>
