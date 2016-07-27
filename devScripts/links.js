@@ -56,6 +56,7 @@ var links = {
    programmeEditUrl:"index.php/doctorDashboard/createMedicalProgram",
    createModifyProgrammeUrl:"index.php/programme/createModifyProgramme",
    getProgrammeUrl:"index.php/programme/getProgrammes",
+   getAllPrograms:"index.php/programme/getAllPrograms",
 
    //patient
    patientDetailPersistUrl:"index.php/patient/addUpdatePatient",

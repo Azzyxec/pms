@@ -275,7 +275,7 @@ gulp.task('publish-build-js', function(){
       //console.log('error at ' + JSON.stringify(filesList[16]));
       //var i = 15;
       //error at 17, 26
-      if(i != 17 && i != 26 && filesList[i].build == true){
+      if(i != 17 && i != 25 && filesList[i].build == true){
         gulp.src(filesList[i].files)
             .pipe(concat(filesList[i].buildName))
             .pipe(uglify())

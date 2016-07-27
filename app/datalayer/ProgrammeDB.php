@@ -6,7 +6,7 @@ use Pms\Datalayer\DBHelper;
 
 class ProgrammeDB{
 
-  public function createModifyPrograme($programId, $doctorId, $programName, $programmeListArray){
+  public function createModifyPrograme($programId, $doctorId, $programName, $isActive, $listCount, $loggedInUserId, $loggedInUserType,  $programmeListArray){
     try {
 
       $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><programme></programme>');
@@ -17,7 +17,10 @@ class ProgrammeDB{
                           'pprogramme_id' => $programId,
                           'pdoctor_id' => $doctorId,
                           'pprogramme_name' => $programName,
-                          'pprogrammes_count' => \count($programmeListArray),
+                          'pis_active' => $isActive,
+                          'pprogrammes_count' => $listCount,
+                          'puser_id' => $loggedInUserId,
+                          'puser_type' =>$loggedInUserType,
                           'pprogrammes_xml' => $programmeXML,
                         );
 
@@ -38,11 +41,12 @@ class ProgrammeDB{
   }
 
 
-  public function getDoctorsCheckupPrograms($doctorId){
+  public function getDoctorsCheckupPrograms($doctorId, $getOnlyActiveRows){
     try {
 
       $paramArray = array(
                           'pdoctor_id' => $doctorId
+                          ,'pget_active_rows' => $getOnlyActiveRows
                         );
 
       $statement = DBHelper::generateStatement('get_doctors_checkup_programs',  $paramArray);
@@ -52,7 +56,11 @@ class ProgrammeDB{
       $programmeList = array();
 
       while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
-        $programmeList[] = array('id' => $result['id'], 'name' => $result['name'], 'created' =>  $result['created_date']);
+        $programmeList[] = array('id' => $result['id']
+                                 , 'name' => $result['name']
+                                 , 'created' =>  $result['created_date']
+                                 , 'state' =>  $result['state']
+                                 );
       }
 
       return $programmeList;
@@ -64,11 +72,12 @@ class ProgrammeDB{
   }
 
 //used to get into to attach a program to a patient
-  public function getProgrammeListDetails($programmeId){
+  public function getProgrammeListDetails($programmeId, $getOnlyActiveRows){
     try {
 
       $paramArray = array(
                           'pprogramme_id' => $programmeId
+                          ,'pget_active_rows' => $getOnlyActiveRows
                         );
 
       $statement = DBHelper::generateStatement('get_programme_list_details',  $paramArray);
@@ -117,9 +126,11 @@ class ProgrammeDB{
       $medicationProgramme = array();
       $medicationProgramme['programId'] = $programmeRow['id'];
       $medicationProgramme['programmeName'] = $programmeRow['name'];
+      $medicationProgramme['isActive'] = $programmeRow['is_active'];
 
       $paramArray = array(
                           'pprogramme_id' => $medicationProgramme['programId']
+                          ,'pget_active_rows' => 0
                         );
 
       $statement = DBHelper::generateStatement('get_programme_list_details',  $paramArray);
