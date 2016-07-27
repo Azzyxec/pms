@@ -7,7 +7,9 @@ $(document).ready(function(){
       programId: 0,
       programmeName: "",
       programeList:[],
-      ProgrammeDetails:null
+      listCount: 0,
+      ProgrammeDetails:null,
+      isActive: 1
     };
 
     var controller = {
@@ -37,6 +39,9 @@ $(document).ready(function(){
         }
 
 
+      },
+      isProgrammeActive: function(){
+        return model.isActive;
       },
       clearModel: function(){
         model.programId = 0;
@@ -111,7 +116,15 @@ $(document).ready(function(){
         //update the programme name
         model.programmeName =  programmeView.programmeName.val();
 
+        if(programmeView.activeRadio.is(":checked")){
+          model.isActive = 1;
+        }else{
+          model.isActive = 0;
+        }
 
+        model.listCount = model.programeList.length;
+
+        console.log('is active ' + model.isActive);
 
         $.post(controller.createModifyProgrammeUrl , model)
         .done(function( response ) {
@@ -134,12 +147,13 @@ $(document).ready(function(){
       init: function(){
         this.programmeName = $('#programme-name');
         this.tableBody  = $('#programme-list-table-body');
+        this.activeRadio = $('#pactive');
+        this.inActiveRadio = $('#pinactive');
 
         this.duration = $('#txt-duration');
         this.durationText = $('#txt-duration-text');
         this.vaccine = $('#txt-vaccine');
         this.doseNo = $('#txt-dose-no');
-
 
         this.groupProgrammeName = $('#group-programme-name');
         this.programmeNamehelpLabel = $('#help-programme-name');
@@ -262,6 +276,17 @@ $(document).ready(function(){
         //updating the values in the view
 
         this.programmeName.val(programmeName);
+
+        //setting active or inActiveRadio
+        console.log('is Active ' + controller.isProgrammeActive());
+
+        if(+controller.isProgrammeActive() == 1){
+          console.log('check active');
+          this.activeRadio.prop('checked', true);
+        }else{
+          console.log('check inactive');
+          this.inActiveRadio.prop('checked', true);
+        }
 
         if(currentprogrammeDetail){
           this.duration.val(currentprogrammeDetail.duration);

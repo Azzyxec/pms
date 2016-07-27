@@ -1,12 +1,12 @@
 
 SELECT  CONCAT('DROP table `',table_schema,'`.`',table_name,'`;') as stmt
 FROM information_schema.tables
-WHERE table_schema = 'dreamdkp_pms'
+WHERE table_schema = 'dreamdkp_pmsdev'
 
 SELECT
     CONCAT('DROP ',ROUTINE_TYPE,' `',ROUTINE_SCHEMA,'`.`',ROUTINE_NAME,'`;') as stmt
 FROM information_schema.ROUTINES
-where routine_schema = 'dreamdkp_pms'
+where routine_schema = 'dreamdkp_pmsdev'
 
 
 DROP table `dreamdkp_pms`.`appointment`;

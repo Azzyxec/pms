@@ -8,7 +8,7 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
-        this.programmeListUrl = links.doctorsProgramsUrl;
+        this.programmeListUrl = links.getAllPrograms;
         this.programmeEditUrl = links.programmeEditUrl;
 
         ProgrammeListView.init();
@@ -17,7 +17,7 @@ $(document).ready(function(){
          .done(function( response ) {
            console.log('response ' + JSON.stringify(response));
            programmeListModel = response.data;
-           ProgrammeListView.render();   
+           ProgrammeListView.render();
          });
 
 
@@ -49,19 +49,18 @@ $(document).ready(function(){
 
           var tr = $('<tr/>');
 
-          var td = $('<td/>');
-          td.text(programmeList[i].name);
+          var td = $('<a/>',{
+            text: programmeList[i].name,
+            href: controller.programmeEditUrl + '?id=' +  programmeList[i].id
+          });
           tr.append(td);
 
           var td = $('<td/>');
           td.text(programmeList[i].created);
           tr.append(td);
 
-
-          var td = $('<a/>',{
-            text: 'Edit',
-            href: controller.programmeEditUrl + '?id=' +  programmeList[i].id
-          });
+          var td = $('<td/>');
+          td.text(programmeList[i].state);
           tr.append(td);
 
 

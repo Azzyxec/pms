@@ -22,13 +22,17 @@ $app->group('/programme', function(){
 
         $programmeDB = new ProgrammeDB();
         $resultArray = $programmeDB->createModifyPrograme($postedData['programId']
-                                                          , $user->id
+                                                          , $user->doctorId
                                                           , $postedData['programmeName']
+                                                          , $postedData['isActive']
+                                                          , $postedData['listCount']
+                                                          , $user->id
+                                                          ,$user->type
                                                           , $postedData['programeList']
                                                          );
 
-        $data = array('status' => "1", 'data' => $resultArray['data'], 'message' => 'success');
-        return $response->withJson($resultArray);
+        $data = array('status' => $resultArray['data'], 'data' => $postedData, 'message' => 'success');
+        return $response->withJson($data);
 
       }
 
@@ -74,7 +78,8 @@ $app->group('/programme', function(){
           if($user->id != "-1"){
 
           $programmeDB = new ProgrammeDB();
-          $doctorsPrograms = $programmeDB->getDoctorsCheckupPrograms($user->id);
+          $getOnlyActiveRows = 1;
+          $doctorsPrograms = $programmeDB->getDoctorsCheckupPrograms($user->id, $getOnlyActiveRows);
           $data = array('status' => 1, 'data' => $doctorsPrograms, 'message' => 'success');
           return $response->withJson($data);
 
@@ -90,6 +95,34 @@ $app->group('/programme', function(){
 
   });
 
+
+  $this->get('/getAllPrograms', function ($request, $response) {
+    try {
+
+
+          $user = UserSessionManager::getUser();
+
+          if($user->id != "-1"){
+
+          $programmeDB = new ProgrammeDB();
+          $getOnlyActiveRows = 0;
+          $doctorsPrograms = $programmeDB->getDoctorsCheckupPrograms($user->id, $getOnlyActiveRows);
+          $data = array('status' => 1, 'data' => $doctorsPrograms, 'message' => 'success');
+          return $response->withJson($data);
+
+        }else{
+          $data = array('status' => 2, 'data' => "", 'message' => 'User needs to be logged in');
+          return $response->withJson($data);
+        }
+
+    } catch (Exception $e) {
+        $data = array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in main' . $e->getMessage());
+        return $response->withJson($data);
+    }
+
+  });
+
+
   $this->get('/getProgrammeListDetails', function ($request, $response) {
     try {
 
@@ -98,7 +131,8 @@ $app->group('/programme', function(){
         if(isset($allGetVars['id'])){
 
           $programmeDB = new ProgrammeDB();
-          $result = $programmeDB->getProgrammeListDetails($allGetVars['id']);
+          $fetchOnlyActiveRecords = 1;
+          $result = $programmeDB->getProgrammeListDetails($allGetVars['id'], $fetchOnlyActiveRecords);
           return $response->withJson($result);
 
         }
