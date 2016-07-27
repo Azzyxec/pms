@@ -418,13 +418,65 @@ class PatientDB{
           $patientHistoryRow = array();
 
           $patientHistoryRow['name'] = $result['name'];
+            $patientHistoryRow['id'] = $result['id'];
           $patientHistoryRow['date'] = $result['appointment_date'];
           $patientHistoryRow['locName'] = $result['location_name'];
           $patientHistoryRow['time'] = $result['start_mins'];
           $patientHistoryRow['description'] = $result['description'];
           $patientHistoryRow['state'] = $result['state'];
+          if($patientHistoryRow['state'] == 1){
+            $appointmentId = $result['id'];
+
+            $paramArray2 = array(
+                                'pappointment_id' => $appointmentId
+                              );
+
+            $statement2 = DBHelper::generateStatement('get_prescriptions_list',  $paramArray2);
+
+            $statement2->execute();
+            $prescriptionArray = array();
+
+            while (($result2 = $statement2->fetch(PDO::FETCH_ASSOC)) !== false) {
+              $prescriptionRow = array();
+              $prescriptionRow['appointmentId'] = $result2['fk_appointment_id'];
+              $prescriptionRow['medicine'] = $result2['medicine'];
+              $prescriptionRow['remarks'] = $result2['remarks'];
+
+              $prescriptionArray[] = $prescriptionRow;
+
+            }
+
+
+            $paramArray3 = array(
+                                'pappointment_id' => $appointmentId
+                              );
+
+            $statement3 = DBHelper::generateStatement('get_All_Uploaded_Doc',  $paramArray3);
+
+            $statement3->execute();
+            $uploadedListArray = array();
+
+            while (($result3 = $statement3->fetch(PDO::FETCH_ASSOC)) !== false) {
+              $uploadedRow = array();
+              $uploadedRow['appointmentId'] = $result3['fk_appointment_id'];
+              $uploadedRow['documentName'] = $result3['document_name'];
+              $uploadedRow['documentPath'] = $result3['document_path'];
+
+              $uploadedListArray[] = $uploadedRow;
+
+            }
+
+            $patientHistoryRow['prescriptionList'] = $prescriptionArray;
+            $patientHistoryRow['uploadedList'] = $uploadedListArray;
+
+          }else{
+            $patientHistoryRow['prescriptionList'] = array();
+            $patientHistoryRow['uploadedList'] = array();
+          }
+
           $patientHistoryRow['stateText'] = $result['state_text'];
           $patientHistoryRow['remarks'] = $result['remarks'];
+
 
           $patientHistory[] = $patientHistoryRow;
 
