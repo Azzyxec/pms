@@ -156,7 +156,6 @@ $(document).ready(function(){
 
              }
              , s_email :{
-
                validators : {
                  emailAddress :{
                    message : 'Please enter valid email'
@@ -167,7 +166,6 @@ $(document).ready(function(){
                }
              }
              ,  uname :{
-
                validators : {
                  notEmpty :{
                    message : 'Please enter username'

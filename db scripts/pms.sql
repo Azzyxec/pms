@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 27, 2016 at 09:52 PM
+-- Generation Time: Jul 27, 2016 at 11:12 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -148,7 +148,12 @@ begin
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(
+IN `pid` INT
+, IN `pname` VARCHAR(100)
+, IN `pis_active` INT
+, IN `pdoctor_id` INT
+)
     MODIFIES SQL DATA
 begin
 
@@ -159,18 +164,21 @@ begin
             						fk_doctor_id
 									,name
                                     ,created_date
+                                    ,is_active
 								  )
 							values
 									(
                                     pdoctor_id
 									,pname
                                     ,now()
+                                    ,pis_active
 								   );
 		else
 
 		UPDATE `work_locations`
 		SET `name` = pname
 			 ,modified_date = now()
+             ,is_active = pis_active
 		WHERE id = pid;
 
 	end if;
@@ -1847,11 +1855,11 @@ begin
     set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
 
-	SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
-		   ,start_time_mins
-		   ,end_time_mins
-		   ,fk_schedule_id
-           ,id as schedule_day_id
+	SELECT DATE_FORMAT(sd.`date`, '%d-%m-%Y') as `schedule_date`
+		   ,sd.start_time_mins
+		   ,sd.end_time_mins
+		   ,sd.fk_schedule_id
+           ,sd.id as schedule_day_id
            ,(
 			  select count(*)
               from appointment a
@@ -1860,13 +1868,15 @@ begin
                     and a.state = 0
 			) as appointment_count
 	  FROM schedule_day sd
-	  WHERE fk_doctor_id = pdoctor_id
-			and location_id = plocation_id
-			and `date` >= @lstartDate
-			and `date` <= @lendDate
-			and is_active = 1
-	  group by `date`, start_time_mins, end_time_mins
-	  order by `date` asc, start_time_mins asc;
+      inner join work_locations wl on wl.id = sd.location_id
+								      and wl.is_active = 1
+	  WHERE sd.fk_doctor_id = pdoctor_id
+			and sd.location_id = plocation_id
+			and sd.`date` >= @lstartDate
+			and sd.`date` <= @lendDate
+			and sd.is_active = 1
+	  group by sd.`date`, sd.start_time_mins, sd.end_time_mins
+	  order by sd.`date` asc, sd.start_time_mins asc;
 
  end$$
 
@@ -2928,11 +2938,12 @@ INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_t
 --
 
 CREATE TABLE IF NOT EXISTS `close_appointment_documents` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_appointment_id` int(11) NOT NULL,
   `document_name` varchar(200) NOT NULL,
-  `document_path` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `document_path` varchar(500) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -3079,7 +3090,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=92 ;
 
 --
 -- Dumping data for table `login`
@@ -3109,7 +3120,8 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (87, 'D', 'dan', '$2y$12$5E5VHzymTDr6MXcwrrYqFOhOqLAt0f3eOzcpbE8kv8xLEPh1j0NF6', '2016-07-18 21:25:39', NULL, 0),
 (88, 'D', 'picolo', '$2y$12$ra430g6xGWEE7/ub6fsT9uVzkcYgO9FBJ8P974q/M0GgbTKG6ZxhO', '2016-07-18 21:45:37', NULL, 0),
 (89, 'D', 'hans', '$2y$12$hRFvYZESR5X3aymuQqM04OVDgZU2yJkcxAXiMjCjIBOUO49d4HTse', '2016-07-18 23:27:11', '2016-07-18 23:27:38', 1),
-(90, 'S', 'someone', '$2y$12$tzbdZ8nznpvfbrMU5NhPIOWqJmCaRYbcq97q8Qydg31v4IO0WovcG', '2016-07-28 01:13:58', '2016-07-28 01:17:26', 1);
+(90, 'S', 'someone', '$2y$12$tzbdZ8nznpvfbrMU5NhPIOWqJmCaRYbcq97q8Qydg31v4IO0WovcG', '2016-07-28 01:13:58', '2016-07-28 01:17:26', 1),
+(91, 'S', 'staffer', '$2y$12$TVOmTA6W1au0.SrZgHt0AePiiQsppbLbP8XS/rhzMt2t3lJbN5rsS', '2016-07-28 01:30:15', '2016-07-28 01:30:54', 1);
 
 -- --------------------------------------------------------
 
@@ -3566,7 +3578,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=84 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=85 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3579,7 +3591,8 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 (80, 47, '2016-07-18', '2016-07-31', '2016-07-18 23:28:33', 47, 'D', 1),
 (81, 1, '2016-07-23', '2016-07-24', '2016-07-23 13:04:41', 1, 'D', 1),
 (82, 1, '2016-08-01', '2016-08-15', '2016-07-26 21:28:16', 1, 'D', 1),
-(83, 1, '2016-08-01', '2016-08-15', '2016-07-27 03:05:50', 1, 'D', 1);
+(83, 1, '2016-08-01', '2016-08-15', '2016-07-27 03:05:50', 1, 'D', 1),
+(84, 1, '2016-07-28', '2016-08-01', '2016-07-28 02:24:05', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3600,7 +3613,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229504 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229509 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -3663,7 +3676,12 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229500, 1, 83, 18, '2016-08-12', 540, 720, 1, NULL, NULL, NULL),
 (229501, 1, 83, 18, '2016-08-13', 540, 720, 1, NULL, NULL, NULL),
 (229502, 1, 83, 18, '2016-08-14', 540, 720, 1, NULL, NULL, NULL),
-(229503, 1, 83, 18, '2016-08-15', 540, 720, 1, NULL, NULL, NULL);
+(229503, 1, 83, 18, '2016-08-15', 540, 720, 1, NULL, NULL, NULL),
+(229504, 1, 84, 20, '2016-07-28', 540, 720, 1, NULL, NULL, NULL),
+(229505, 1, 84, 20, '2016-07-29', 540, 720, 1, NULL, NULL, NULL),
+(229506, 1, 84, 20, '2016-07-30', 540, 720, 1, NULL, NULL, NULL),
+(229507, 1, 84, 20, '2016-07-31', 540, 720, 1, NULL, NULL, NULL),
+(229508, 1, 84, 20, '2016-08-01', 540, 720, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3690,7 +3708,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `modified_date` datetime NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `staff`
@@ -3698,7 +3716,8 @@ CREATE TABLE IF NOT EXISTS `staff` (
 
 INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `email`, `address`, `fk_location_id`, `fk_doctor_id`, `fk_user_id`, `fk_created_by_id`, `created_by_type`, `created_date`, `fk_modified_by_id`, `modified_by_type`, `modified_date`, `is_active`) VALUES
 (2, 'magnus', 'staff', '423412', '3234', 'staff@gmail.com', '34124', 18, 1, 60, 1, 'D', '2016-06-27 20:18:24', 1, 0, '2016-07-11 17:39:04', 1),
-(3, 'New Staff', 'Last', '70423423', '', 'gmail@email.com', 'Some Address', 18, 1, 90, 1, 'D', '2016-07-28 01:13:58', 1, 0, '2016-07-28 01:17:26', 1);
+(3, 'New Staff', 'Last', '70423423', '', 'gmail@email.com', 'Some Address', 18, 1, 90, 1, 'D', '2016-07-28 01:13:58', 1, 0, '2016-07-28 01:17:26', 1),
+(4, 'staffer', 'again', '234234', '', 'asdf@asd.com', 'sadfsd', 18, 1, 91, 1, 'D', '2016-07-28 01:30:15', 1, 0, '2016-07-28 01:30:54', 1);
 
 -- --------------------------------------------------------
 
@@ -3715,7 +3734,7 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
   `created_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
 
 --
 -- Dumping data for table `work_locations`
@@ -3724,11 +3743,12 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
 INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`, `created_date`, `modified_date`) VALUES
 (18, 1, 'Margaon', '', 1, NULL, NULL),
 (19, 1, 'Panjim', '', 1, NULL, NULL),
-(20, 1, 'Vasco', '', 0, NULL, NULL),
+(20, 1, 'Vasco', '', 0, NULL, '2016-07-28 02:40:33'),
 (21, 43, 'Cali', '', 1, NULL, NULL),
 (22, 43, 'Tex', '', 1, NULL, NULL),
 (23, 47, 'Vermont', '', 1, NULL, NULL),
-(24, 47, 'Mich', '', 1, NULL, NULL);
+(24, 47, 'Mich', '', 1, NULL, NULL),
+(25, 1, 'new', '', 0, '2016-07-28 02:23:26', '2016-07-28 02:23:34');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
