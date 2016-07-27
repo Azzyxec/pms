@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 26, 2016 at 11:37 PM
--- Server version: 10.1.13-MariaDB
--- PHP Version: 5.6.23
+-- Generation Time: Jul 27, 2016 at 08:33 PM
+-- Server version: 5.6.17
+-- PHP Version: 5.5.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `pms`
@@ -24,7 +24,8 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE  PROCEDURE `add_update_doctor` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_doctor`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pemail` VARCHAR(100), IN `pqualification` VARCHAR(1000), IN `paddress` VARCHAR(2000), IN `plogin_id` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `pis_active` INT)
+    MODIFIES SQL DATA
 begin
 
 	declare llogin_id_exists int;
@@ -147,7 +148,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `add_update_locations` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_locations`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdoctor_id` INT)
+    MODIFIES SQL DATA
 begin
 
 
@@ -156,23 +158,26 @@ begin
 		insert into work_locations(
             						fk_doctor_id
 									,name
+                                    ,created_date
 								  )
 							values
 									(
                                     pdoctor_id
 									,pname
+                                    ,now()
 								   );
 		else
 
 		UPDATE `work_locations`
 		SET `name` = pname
+			 ,modified_date = now()
 		WHERE id = pid;
-
 
 	end if;
 end$$
 
-CREATE  PROCEDURE `add_update_patient_birth_details` (IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
+    MODIFIES SQL DATA
 begin
 
 declare lbirthEntryExists int;
@@ -238,7 +243,8 @@ select 1 as status;
 
 end$$
 
-CREATE  PROCEDURE `add_update_product_stock` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pproduct_id` INT, IN `pname` VARCHAR(200), IN `pstock` INT, IN `poperation_type` INT, IN `ploggedin_user_id` INT, IN `ploggedin_user_type` VARCHAR(5))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_product_stock`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pproduct_id` INT, IN `pname` VARCHAR(200), IN `pstock` INT, IN `poperation_type` INT, IN `ploggedin_user_id` INT, IN `ploggedin_user_type` VARCHAR(5))
+BEGIN
 
 	declare lProductId int;
 
@@ -300,7 +306,8 @@ CREATE  PROCEDURE `add_update_product_stock` (IN `pdoctor_id` INT, IN `plocation
 
 END$$
 
-CREATE  PROCEDURE `authenticate` (IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `authenticate`(IN `plogin_id` VARCHAR(90), IN `ppassword` VARCHAR(90))
+    READS SQL DATA
 begin
 
 declare lLoginId int;
@@ -395,7 +402,8 @@ end if;
 
 end$$
 
-CREATE  PROCEDURE `cancel_appointment` (IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cancel_appointment`(IN `pappointment_id` INT, IN `premarks` VARCHAR(3000), IN `pcancelled_by_id` INT, IN `pcancelled_by_type` VARCHAR(5))
+    MODIFIES SQL DATA
 begin
 
 
@@ -449,7 +457,8 @@ select 2 as status;
 
 end$$
 
-CREATE  PROCEDURE `close_appointment_proc` (IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN `pprescription_count` INT, IN `pprescription_xml` VARCHAR(65535))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN `pprescription_count` INT, IN `pprescription_xml` VARCHAR(65535))
+    NO SQL
 begin
 
 declare lpatientId int;
@@ -538,7 +547,8 @@ select 2 as status;
 
 end$$
 
-CREATE  PROCEDURE `create_modify_guardian` (IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_guardian`(IN `pfk_patient_id` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(20), IN `pgender` INT, IN `pphone1` VARCHAR(20), IN `pphone2` VARCHAR(20), IN `ppicture_path` VARCHAR(100), IN `pis_active` INT, IN `paddress` VARCHAR(3000))
+    MODIFIES SQL DATA
 begin
 
 declare lguardianEntryExists int;
@@ -595,7 +605,17 @@ select 1 as status;
 
 end$$
 
-CREATE  PROCEDURE `create_modify_medical_programme` (IN `pprogramme_id` INT, IN `pdoctor_id` INT, IN `pprogramme_name` VARCHAR(100), IN `pprogrammes_count` INT, IN `pprogrammes_xml` VARCHAR(65535))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_medical_programme`(
+IN `pprogramme_id` INT
+, IN `pdoctor_id` INT
+, IN `pprogramme_name` VARCHAR(100)
+, IN `pis_active` INT
+, IN `pprogrammes_count` INT
+, IN puser_id INT
+, IN puser_type INT
+, IN `pprogrammes_xml` VARCHAR(65535)
+)
+    MODIFIES SQL DATA
 begin
 
 	declare lmaxProgrammeId int;
@@ -603,9 +623,9 @@ begin
 
 	declare lprogrammeId int;
 	declare lprogrammeDuration int;
-	declare ldurationText varchar(50);
+	declare ldurationText varchar(100);
 	declare lvaccine varchar(100);
-	declare ldoseNo int;
+	declare ldoseNo varchar(100);
 
 	if pprogramme_id <= 0 then
 
@@ -614,15 +634,19 @@ begin
 											, `name`
 											, `created_date`
 											, `is_active`
+                                            , created_by_id
+                                            , created_by_type
 											)
 									VALUES (
 											pdoctor_id
 											,pprogramme_name
 											,now()
-											,1
+											,pis_active
+                                            ,puser_id
+                                            ,puser_type
 										   );
 
-		set @lmaxProgrammeId = last_insert_id();
+		set @lmaxProgrammeId = LAST_INSERT_ID();
 
 		/*
 		select max(id)
@@ -634,13 +658,11 @@ begin
 
 		while @lcounter <= pprogrammes_count do
 
-			SELECT ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/id')
-				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/duration')
+			SELECT ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/duration')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/text')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/vaccine')
 				   ,ExtractValue(pprogrammes_xml, 'programme/item[$@lcounter]/doseNo')
-			into @lprogrammeId
-				 ,@lprogrammeDuration
+			into  @lprogrammeDuration
 				 ,@ldurationText
 				 ,@lvaccine
 				 ,@ldoseNo;
@@ -648,7 +670,7 @@ begin
 			INSERT INTO `medication_programme_list`(
 													 `fk_medication_programme_id`
 													, `duration_days`
-													, duration_text
+													,  duration_text
 													, `medicine`
 													, `dose_no`
 													, `created_date`
@@ -663,7 +685,7 @@ begin
 													,@ldoseNo
 													,now()
 													,pdoctor_id
-													,1
+													,pis_active
 												  );
 
 			SET @lcounter = @lcounter + 1;
@@ -674,6 +696,10 @@ begin
 
 		UPDATE `medication_programme`
 		   SET  `name`= pprogramme_name
+				,is_active = pis_active
+                ,modified_date = now()
+                ,modified_by_id = puser_id
+                ,modified_by_type = puser_type
 		 WHERE id = pprogramme_id;
 
 		 set @lcounter = 1;
@@ -756,7 +782,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_modify_patient` (IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)  begin
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patient`(IN `pid` INT, IN `pname` VARCHAR(100), IN `pdate_of_birth` VARCHAR(30), IN `pblood_group` VARCHAR(50), IN `pweight` VARCHAR(50), IN `pheight` VARCHAR(50), IN `pgender` INT, IN `pcontact1` VARCHAR(20), IN `pcontact2` VARCHAR(20), IN `paddress` VARCHAR(1000), IN `ppicture_path` VARCHAR(200), IN `pdoctor_id` INT, IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(5), IN `pis_active` INT)
+begin
 
 declare lmaxPatientId int;
 
@@ -835,7 +862,8 @@ commit;
 
 end$$
 
-CREATE  PROCEDURE `create_modify_patients_programme` (IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_patients_programme`(IN `ppatient_id` INT, IN `pdoctor_id` INT, IN `pprogramme_count` INT, IN `pprogramme_xml` VARCHAR(65535))
+    MODIFIES SQL DATA
 begin
 	declare lprogrammeExists int;
 	declare lprogrammeId int;
@@ -972,7 +1000,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_modify_schedule` (IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(20), IN `pend_date` VARCHAR(20), IN `pschedule_count` INT, IN `plocation_count` INT, IN `pschedule_xml` VARCHAR(65535))
+    NO SQL
 begin
 
 
@@ -1063,7 +1092,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_modify_staff` (IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_modify_staff`(IN `pid` INT, IN `pfk_doctor_id` INT, IN `pfk_location_id` INT, IN `pfirst_name` VARCHAR(100), IN `plast_name` VARCHAR(100), IN `pcontact1` VARCHAR(50), IN `pcontact2` VARCHAR(50), IN `pemail` VARCHAR(100), IN `paddress` VARCHAR(1000), IN `puser_name` VARCHAR(100), IN `ppassword` VARCHAR(100), IN `precovery_contact` VARCHAR(50), IN `precovery_email` VARCHAR(100), IN `pfk_logged_in_user_id` INT, IN `plogged_in_user_type` VARCHAR(2), IN `pis_active` INT)
+    MODIFIES SQL DATA
 begin
 
 	declare llogin_id_exists int;
@@ -1198,7 +1228,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `create_schedule` (IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `create_schedule`(IN `pdoctor_id` INT, IN `pstart_date` VARCHAR(15), IN `pend_date` VARCHAR(15), IN `pschedule_count` INT, IN `plocation_id` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), IN `pschedule_xml` VARCHAR(65535))
+    MODIFIES SQL DATA
     DETERMINISTIC
 begin
 
@@ -1274,6 +1305,7 @@ begin
 
     /*
 	select max(id)
+
 	into @lmaxScheduleId
 	from schedule;
     */
@@ -1326,24 +1358,21 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `deactivate_location_for_doctor` (IN `plocationId` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deactivate_location_for_doctor`(IN `plocationId` INT)
+BEGIN
 
   #TODO dont deactivate if there are appointmetns on a location
   # add deactivated by info
 
   update work_locations wl
   set wl.is_active = 0
+	  ,wl.modified_date = now()
   where wl.id = plocationId;
-
-  # what else needs to be updated
-  #schedules
-  #staff login
-  # active appointments
-
 
 END$$
 
-CREATE  PROCEDURE `deactivate_schedule_days` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pschedule_count` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), `pschedule_days_xml` VARCHAR(65535))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deactivate_schedule_days`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pschedule_count` INT, IN `puser_id` INT, IN `puser_type` VARCHAR(5), `pschedule_days_xml` VARCHAR(65535))
+BEGIN
 
 	DECLARE lcounter INT DEFAULT 1;
 
@@ -1395,7 +1424,8 @@ CREATE  PROCEDURE `deactivate_schedule_days` (IN `pdoctor_id` INT, IN `plocation
 
 END$$
 
-CREATE  PROCEDURE `getDoctorInfo` (IN `pid` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDoctorInfo`(IN `pid` INT)
+    READS SQL DATA
 SELECT
    d.name ,
    d.contact1 ,
@@ -1409,7 +1439,8 @@ FROM  doctor d
 	  inner join login l on d.fk_login_id = l.id
 WHERE d.id = pid$$
 
-CREATE  PROCEDURE `get_all_appointments` (IN `pdoctor_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_appointments`(IN `pdoctor_id` INT)
+    READS SQL DATA
 begin
 
 
@@ -1435,7 +1466,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_all_doctors` ()  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctors`()
+    NO SQL
 begin
 
 SELECT `id`
@@ -1451,7 +1483,8 @@ SELECT `id`
 
 end$$
 
-CREATE  PROCEDURE `get_all_doctor_locations` (IN `pdoctor_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_doctor_locations`(IN `pdoctor_id` INT)
+    NO SQL
 begin
 
 select id
@@ -1464,7 +1497,8 @@ where fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE  PROCEDURE `get_all_products` (IN `pdoctor_id` INT, IN `plocation_id` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_all_products`(IN `pdoctor_id` INT, IN `plocation_id` INT)
+BEGIN
 
 SELECT 	 product.id
 		,product.fk_doctor_id
@@ -1474,13 +1508,14 @@ SELECT 	 product.id
         ,date_format(product.created_date, '%d-%m-%Y') as created_date
 		,product.created_by_id
 		,product.created_by_type
-FROM product
+FROM pms.product
 Where fk_doctor_id = pdoctor_id
       and is_active = 1;
 
 END$$
 
-CREATE  PROCEDURE `get_appointments_for_the_day` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_appointments_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+    NO SQL
 begin
 
 	declare lappointmentDate date;
@@ -1513,7 +1548,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_birth_details` (IN `ppatient_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_birth_details`(IN `ppatient_id` INT)
+    READS SQL DATA
 begin
 
 
@@ -1535,19 +1571,29 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE  PROCEDURE `get_delivery_methods` ()  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_delivery_methods`()
+    READS SQL DATA
 select id
 	   ,name
 from delivery_methods$$
 
-CREATE  PROCEDURE `get_doctors_checkup_programs` (IN `pdoctor_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_doctors_checkup_programs`(
+IN `pdoctor_id` INT
+,IN `pget_active_rows` INT
+)
+    READS SQL DATA
 select id
 	   , name
        , date_format(created_date, '%d %b %Y') as created_date
+       , case when is_active = 1 then 'active'
+			  else 'inactive'
+              end as state
 from medication_programme
-where fk_doctors_id = pdoctor_id$$
+where fk_doctors_id = pdoctor_id
+	  and is_active = case when pget_active_rows = 1 then 1 else is_active end$$
 
-CREATE  PROCEDURE `get_guardian_info` (IN `ppatient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_guardian_info`(IN `ppatient_id` INT)
+    NO SQL
 begin
 
 SELECT `name`
@@ -1563,15 +1609,18 @@ WHERE fk_patient_id = ppatient_id;
 
 end$$
 
-CREATE  PROCEDURE `get_medication_programme` (IN `pdoctor_id` INT, IN `pprogramme_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_medication_programme`(IN `pdoctor_id` INT, IN `pprogramme_id` INT)
+    READS SQL DATA
 select id
 	   , name
        , date_format(created_date, '%d %b %Y') as created_date
+       ,is_active
 from medication_programme
 where fk_doctors_id = pdoctor_id
 	  and id = pprogramme_id$$
 
-CREATE  PROCEDURE `get_patients_list` (IN `pdoctor_id` INT, IN `pfetch_inactive` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_list`(IN `pdoctor_id` INT, IN `pfetch_inactive` INT)
+    READS SQL DATA
 SELECT `id`
 		,`name`
 		, date_format(`date_of_birth`, '%d-%m-%Y') as date_of_birth
@@ -1588,14 +1637,16 @@ FROM `patient`
 WHERE fk_doctor_id = pdoctor_id
 	  and is_active = case when COALESCE(pfetch_inactive, 0) = 0 then 1 else is_active end$$
 
-CREATE  PROCEDURE `get_patients_programmes` (IN `ppatient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programmes`(IN `ppatient_id` INT)
+    NO SQL
 SELECT 	 id
 		,fk_medication_pogramme_id
 		, name
 FROM patient_medication_programme
 WHERE fk_patient_id = ppatient_id$$
 
-CREATE  PROCEDURE `get_patients_programme_details` (IN `ppatient_id` INT, IN `pmedication_programme_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patients_programme_details`(IN `ppatient_id` INT, IN `pmedication_programme_id` INT)
+    NO SQL
 SELECT 	id
 		, fk_medication_programme_id
 		, fk_medication_programme_list_id
@@ -1609,7 +1660,8 @@ FROM  patient_medication_programme_list
 WHERE fk_patient_id = ppatient_id
 	  and fk_medication_programme_id = pmedication_programme_id$$
 
-CREATE  PROCEDURE `get_patient_all_appointments_history` (IN `patient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_all_appointments_history`(IN `patient_id` INT)
+    NO SQL
 begin
 
 
@@ -1644,7 +1696,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_patient_details` (IN `ppatient_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_patient_details`(IN `ppatient_id` INT)
+    NO SQL
 begin
 
 SELECT  `name`
@@ -1666,7 +1719,8 @@ WHERE id = ppatient_id;
 
 end$$
 
-CREATE  PROCEDURE `get_product_stock_history` (IN `pproduct_id` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_product_stock_history`(IN `pproduct_id` INT)
+BEGIN
 
 SELECT  ph.id
 		,ph.fk_product_id
@@ -1691,7 +1745,11 @@ where ph.fk_product_id = pproduct_id;
 
 END$$
 
-CREATE  PROCEDURE `get_programme_list_details` (IN `pprogramme_id` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_programme_list_details`(
+IN `pprogramme_id` INT
+,IN `pget_active_rows` INT
+)
+    READS SQL DATA
 select `duration_days`
 	  , duration_text
 	  , `medicine`
@@ -1699,9 +1757,10 @@ select `duration_days`
       , id
 from medication_programme_list
 where fk_medication_programme_id = pprogramme_id
-	  and is_active = 1$$
+	  and is_active = case when pget_active_rows = 1 then 1 else is_active end$$
 
-CREATE  PROCEDURE `get_schedules_for_deactivation` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_for_deactivation`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+    READS SQL DATA
 BEGIN
 
 	declare lstartDate date;
@@ -1727,7 +1786,8 @@ SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
 
 END$$
 
-CREATE  PROCEDURE `get_schedules_timings_for_the_day` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedules_timings_for_the_day`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pdate` VARCHAR(20))
+    READS SQL DATA
 begin
 
 	declare ldate date;
@@ -1748,7 +1808,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `get_schedule_calander_details` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_calander_details`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pstart_date` VARCHAR(10), IN `pend_date` VARCHAR(10))
+    READS SQL DATA
 begin
 
 	declare lstartDate date;
@@ -1780,7 +1841,8 @@ begin
 
  end$$
 
-CREATE  PROCEDURE `get_schedule_list` (IN `pdoctor_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_schedule_list`(IN `pdoctor_id` INT)
+    NO SQL
 begin
 
 SELECT s.id
@@ -1793,7 +1855,8 @@ where s.fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE  PROCEDURE `get_staff_details` (IN `pid` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_details`(IN `pid` INT)
+    READS SQL DATA
 begin
 
 declare luser_id int;
@@ -1827,7 +1890,8 @@ WHERE id = pid;
 
 end$$
 
-CREATE  PROCEDURE `get_staff_list_for_doctor` (IN `pdoctor_id` INT)  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_staff_list_for_doctor`(IN `pdoctor_id` INT)
+    NO SQL
 begin
 
 SELECT   s.id
@@ -1845,7 +1909,8 @@ WHERE fk_doctor_id = pdoctor_id;
 
 end$$
 
-CREATE  PROCEDURE `get_user_info` (IN `puser_id` VARCHAR(100))  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info`(IN `puser_id` VARCHAR(100))
+    READS SQL DATA
 begin
 
 declare lLoginId int;
@@ -1928,7 +1993,8 @@ end if;
 
 end$$
 
-CREATE  PROCEDURE `get_user_info_for_login` (IN `plogin_id_pk` INT)  READS SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_user_info_for_login`(IN `plogin_id_pk` INT)
+    READS SQL DATA
 begin
 
 	declare lLoginId int;
@@ -1995,7 +2061,8 @@ end if;
 
 end$$
 
-CREATE  PROCEDURE `insert_new_appointment` (IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pfk_schedule_day_id` INT, IN `ppatient_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `pcontact` VARCHAR(20), IN `pdescription` VARCHAR(2000))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_new_appointment`(IN `pdoctor_id` INT, IN `plocation_id` INT, IN `pfk_schedule_day_id` INT, IN `ppatient_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `pcontact` VARCHAR(20), IN `pdescription` VARCHAR(2000))
+    MODIFIES SQL DATA
 begin
 
 
@@ -2035,7 +2102,8 @@ commit;
 
 end$$
 
-CREATE  PROCEDURE `insert_next_appointment` (IN `pappointment_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insert_next_appointment`(IN `pappointment_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5))
+    MODIFIES SQL DATA
 BEGIN
 
 	declare lDoctorId int;
@@ -2117,7 +2185,8 @@ BEGIN
 
 END$$
 
-CREATE  PROCEDURE `make_reset_password_request` (IN `plogin_id` VARCHAR(100))  MODIFIES SQL DATA
+CREATE DEFINER=`root`@`localhost` PROCEDURE `make_reset_password_request`(IN `plogin_id` VARCHAR(100))
+    MODIFIES SQL DATA
 begin
 
 
@@ -2237,7 +2306,8 @@ begin
 
 end$$
 
-CREATE  PROCEDURE `reschedule_appointment` (IN `pappointment_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `premarks` VARCHAR(2000))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reschedule_appointment`(IN `pappointment_id` INT, IN `pappointment_date` VARCHAR(10), IN `pstart_mins` INT, IN `pend_mins` INT, IN `pcreated_by_id` INT, IN `pcreated_by_type` VARCHAR(5), IN `premarks` VARCHAR(2000))
+BEGIN
 
 	declare lDoctorId int;
     declare lLocationId int;
@@ -2350,7 +2420,8 @@ CREATE  PROCEDURE `reschedule_appointment` (IN `pappointment_id` INT, IN `pappoi
 
 END$$
 
-CREATE  PROCEDURE `reset_password` (IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))  NO SQL
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reset_password`(IN `preset_code` VARCHAR(100), IN `pnew_password` VARCHAR(100))
+    NO SQL
 begin
 
 	DECLARE lstatus INT;
@@ -2401,7 +2472,8 @@ end$$
 --
 -- Functions
 --
-CREATE  FUNCTION `check_appointment_avalibility` (`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_appointment_avalibility`(`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS int(11)
+    NO SQL
 begin
 
 	/*
@@ -2461,7 +2533,8 @@ begin
 
 end$$
 
-CREATE  FUNCTION `check_next_appointment_avilibility` (`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) BEGIN
+CREATE DEFINER=`root`@`localhost` FUNCTION `check_next_appointment_avilibility`(`pappointment_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS int(11)
+BEGIN
 
 	/*
 	1 time slot available
@@ -2504,7 +2577,8 @@ CREATE  FUNCTION `check_next_appointment_avilibility` (`pappointment_id` INT, `p
 RETURN 1;
 END$$
 
-CREATE  FUNCTION `get_schedule_day_id` (`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `get_schedule_day_id`(`pdoctor_id` INT, `plocation_id` INT, `pappointment_date` VARCHAR(20), `pstart_time` INT, `pend_time` INT) RETURNS int(11)
+    NO SQL
 BEGIN
 
 	/*
@@ -2533,7 +2607,8 @@ BEGIN
 RETURN  @lscheduleDayId;
 END$$
 
-CREATE  FUNCTION `isCbetweenAB` (`pointA` INT, `pointB` INT, `pointC` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `isCbetweenAB`(`pointA` INT, `pointB` INT, `pointC` INT) RETURNS int(11)
+    NO SQL
 begin
 
 
@@ -2557,7 +2632,8 @@ if @dotProduct > @lenghtSsuare then
 return 1;
 end$$
 
-CREATE  FUNCTION `is_timing_overlapping` (`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS INT(11) NO SQL
+CREATE DEFINER=`root`@`localhost` FUNCTION `is_timing_overlapping`(`pnewStartTime` INT, `pnewEndTime` INT, `pAppointStartTime` INT, `pAppointEndTime` INT) RETURNS int(11)
+    NO SQL
 begin
 
 
@@ -2589,8 +2665,8 @@ DELIMITER ;
 -- Table structure for table `appointment`
 --
 
-CREATE TABLE `appointment` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `appointment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_location_id` int(11) NOT NULL,
   `fk_patient_id` int(11) NOT NULL,
@@ -2605,8 +2681,9 @@ CREATE TABLE `appointment` (
   `fk_created_by_pk` int(11) NOT NULL,
   `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL,
-  `fk_schedule_day_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `fk_schedule_day_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=122 ;
 
 --
 -- Dumping data for table `appointment`
@@ -2736,7 +2813,7 @@ INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_i
 -- Table structure for table `cancelled_appointments`
 --
 
-CREATE TABLE `cancelled_appointments` (
+CREATE TABLE IF NOT EXISTS `cancelled_appointments` (
   `fk_appointment_id` int(11) NOT NULL,
   `remarks` varchar(300) NOT NULL,
   `cancelled_date_time` datetime NOT NULL,
@@ -2788,7 +2865,7 @@ INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled
 -- Table structure for table `close_appointment`
 --
 
-CREATE TABLE `close_appointment` (
+CREATE TABLE IF NOT EXISTS `close_appointment` (
   `fk_appointment_id` int(11) NOT NULL,
   `closing_date` date NOT NULL,
   `closing_time_mins` int(11) NOT NULL,
@@ -2821,7 +2898,7 @@ INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_t
 -- Table structure for table `close_appointment_documents`
 --
 
-CREATE TABLE `close_appointment_documents` (
+CREATE TABLE IF NOT EXISTS `close_appointment_documents` (
   `id` int(11) NOT NULL,
   `fk_appointment_id` int(11) NOT NULL,
   `document_name` varchar(200) NOT NULL,
@@ -2834,12 +2911,13 @@ CREATE TABLE `close_appointment_documents` (
 -- Table structure for table `close_appointment_prescriptions`
 --
 
-CREATE TABLE `close_appointment_prescriptions` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `close_appointment_prescriptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_appointment_id` int(11) NOT NULL,
   `medicine` varchar(200) DEFAULT NULL,
-  `remarks` varchar(1000) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `remarks` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=21 ;
 
 --
 -- Dumping data for table `close_appointment_prescriptions`
@@ -2863,10 +2941,11 @@ INSERT INTO `close_appointment_prescriptions` (`id`, `fk_appointment_id`, `medic
 -- Table structure for table `delivery_methods`
 --
 
-CREATE TABLE `delivery_methods` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE IF NOT EXISTS `delivery_methods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `delivery_methods`
@@ -2882,16 +2961,17 @@ INSERT INTO `delivery_methods` (`id`, `name`) VALUES
 -- Table structure for table `doctor`
 --
 
-CREATE TABLE `doctor` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `doctor` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_login_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `contact1` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `qualification` varchar(1000) NOT NULL,
   `address` varchar(2000) NOT NULL,
-  `is_active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
 
 --
 -- Dumping data for table `doctor`
@@ -2926,7 +3006,7 @@ INSERT INTO `doctor` (`id`, `fk_login_id`, `name`, `contact1`, `email`, `qualifi
 -- Table structure for table `guardian`
 --
 
-CREATE TABLE `guardian` (
+CREATE TABLE IF NOT EXISTS `guardian` (
   `fk_patient_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `date_of_birth` date DEFAULT NULL,
@@ -2935,7 +3015,8 @@ CREATE TABLE `guardian` (
   `phone1` varchar(20) NOT NULL,
   `phone2` varchar(20) DEFAULT NULL,
   `address` varchar(3000) NOT NULL,
-  `is_active` int(11) DEFAULT '1'
+  `is_active` int(11) DEFAULT '1',
+  PRIMARY KEY (`fk_patient_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -2960,15 +3041,16 @@ INSERT INTO `guardian` (`fk_patient_id`, `name`, `date_of_birth`, `gender`, `pic
 -- Table structure for table `login`
 --
 
-CREATE TABLE `login` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL,
   `login_id` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created` datetime NOT NULL,
   `last_modified` datetime DEFAULT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
 --
 -- Dumping data for table `login`
@@ -3005,22 +3087,34 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 -- Table structure for table `medication_programme`
 --
 
-CREATE TABLE `medication_programme` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `medication_programme` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctors_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `created_date` date NOT NULL,
-  `is_active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `created_date` datetime NOT NULL,
+  `is_active` int(11) NOT NULL,
+  `created_by_id` int(11) DEFAULT NULL,
+  `created_by_type` varchar(5) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `modified_by_id` int(11) DEFAULT NULL,
+  `modified_by_type` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `medication_programme`
 --
 
-INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date`, `is_active`) VALUES
-(1, 1, 'polio', '2016-07-09', 1),
-(2, 1, 'test1', '2016-07-18', 1),
-(3, 1, 'Polio', '2016-07-19', 1);
+INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date`, `is_active`, `created_by_id`, `created_by_type`, `modified_date`, `modified_by_id`, `modified_by_type`) VALUES
+(1, 1, 'polio', '2016-07-09 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
+(2, 1, 'test1', '2016-07-18 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
+(3, 1, 'Polio', '2016-07-19 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
+(4, 1, 'Test', '2016-07-27 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
+(5, 1, 'New', '2016-07-27 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
+(6, 1, 'Xerces', '2016-07-27 00:00:00', 0, NULL, NULL, '2016-07-27 18:32:22', 1, '0'),
+(7, 1, 'newst', '2016-07-27 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
+(8, 1, 'Reno', '2016-07-27 17:53:16', 0, 1, '0', NULL, NULL, NULL),
+(9, 1, 'CVW', '2016-07-27 17:55:01', 0, 1, '0', '2016-07-27 18:09:45', 1, '0');
 
 -- --------------------------------------------------------
 
@@ -3028,32 +3122,37 @@ INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date
 -- Table structure for table `medication_programme_list`
 --
 
-CREATE TABLE `medication_programme_list` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `medication_programme_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_medication_programme_id` int(11) NOT NULL,
   `duration_days` int(11) NOT NULL,
-  `duration_text` varchar(50) NOT NULL,
+  `duration_text` varchar(100) NOT NULL,
   `medicine` varchar(100) NOT NULL,
-  `dose_no` int(11) NOT NULL,
+  `dose_no` varchar(100) NOT NULL,
   `created_date` datetime NOT NULL,
-  `is_active` int(11) NOT NULL,
+  `is_active` int(11) DEFAULT '0',
   `fk_doctor_id` int(11) NOT NULL,
   `modified_date` datetime DEFAULT NULL,
-  `update_marker` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `update_marker` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `medication_programme_list`
 --
 
 INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `duration_days`, `duration_text`, `medicine`, `dose_no`, `created_date`, `is_active`, `fk_doctor_id`, `modified_date`, `update_marker`) VALUES
-(1, 1, 34444, 'sdafs', 'dfda', 34, '2016-07-09 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
-(2, 1, 4, '1 month', 'Hepatitis B', 2, '0000-00-00 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
-(3, 2, 3, '3 weeks', 'zyx', 3, '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
-(4, 2, 4, '4 weeks', 'zzz', 5, '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
-(5, 2, 5, '5 w', 'eeks', 6, '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
-(6, 1, 5, 'five weeks', 'five', 4, '2016-07-19 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
-(7, 3, 4, '4 weeks', 'polio', 4, '2016-07-19 00:00:00', 1, 1, NULL, 0);
+(1, 1, 34444, 'sdafs', 'dfda', '34', '2016-07-09 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
+(2, 1, 4, '1 month', 'Hepatitis B', '2', '0000-00-00 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
+(3, 2, 3, '3 weeks', 'zyx', '3', '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
+(4, 2, 4, '4 weeks', 'zzz', '5', '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
+(5, 2, 5, '5 w', 'eeks', '6', '2016-07-18 00:00:00', 1, 1, '2016-07-22 13:33:47', 0),
+(6, 1, 5, 'five weeks', 'five', '4', '2016-07-19 00:00:00', 1, 1, '2016-07-19 18:45:21', 0),
+(7, 3, 4, '4 weeks', 'polio', '4', '2016-07-19 00:00:00', 1, 1, NULL, 0),
+(8, 4, 5, 'update', 'sss', '4', '2016-07-27 17:17:37', 1, 1, NULL, 1),
+(9, 6, 4, '333', '333', '2333', '2016-07-27 17:24:46', 1, 1, '2016-07-27 18:32:22', 1),
+(10, 8, 4, 'four', 'xyz', 'dose', '2016-07-27 17:53:16', 0, 1, NULL, 0),
+(11, 9, 3, '3', '3', '3', '2016-07-27 17:55:01', 0, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -3061,8 +3160,8 @@ INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `du
 -- Table structure for table `password_reset_request`
 --
 
-CREATE TABLE `password_reset_request` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `password_reset_request` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_login_id` int(11) NOT NULL,
   `old_password` varchar(100) NOT NULL,
   `reset_code` varchar(100) NOT NULL,
@@ -3070,8 +3169,9 @@ CREATE TABLE `password_reset_request` (
   `recovery_mobile` varchar(20) DEFAULT NULL,
   `created_date_time` datetime NOT NULL,
   `modified_date` datetime DEFAULT NULL,
-  `is_valid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_valid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `password_reset_request`
@@ -3086,8 +3186,8 @@ INSERT INTO `password_reset_request` (`id`, `fk_login_id`, `old_password`, `rese
 -- Table structure for table `patient`
 --
 
-CREATE TABLE `patient` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `patient` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `date_of_birth` date NOT NULL,
@@ -3106,8 +3206,9 @@ CREATE TABLE `patient` (
   `modified_date` datetime DEFAULT NULL,
   `fk_modified_by_id` int(11) DEFAULT NULL,
   `modified_by_type` varchar(5) DEFAULT NULL,
-  `is_active` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=175 ;
 
 --
 -- Dumping data for table `patient`
@@ -3200,7 +3301,7 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 -- Table structure for table `patient_birth_details`
 --
 
-CREATE TABLE `patient_birth_details` (
+CREATE TABLE IF NOT EXISTS `patient_birth_details` (
   `fk_patient_id` int(11) NOT NULL,
   `fk_delivery_method_id` int(11) NOT NULL,
   `birth_weight` varchar(20) NOT NULL,
@@ -3219,7 +3320,8 @@ CREATE TABLE `patient_birth_details` (
   `created_by_type` int(11) NOT NULL,
   `fk_modified_by_id` int(11) NOT NULL,
   `modified_by_type` int(11) NOT NULL,
-  `is_active` int(11) NOT NULL
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`fk_patient_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -3228,15 +3330,16 @@ CREATE TABLE `patient_birth_details` (
 -- Table structure for table `patient_medication_programme`
 --
 
-CREATE TABLE `patient_medication_programme` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `patient_medication_programme` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_patient_id` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_medication_pogramme_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `created_date` datetime NOT NULL,
-  `is_active` int(100) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(100) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `patient_medication_programme`
@@ -3255,8 +3358,8 @@ INSERT INTO `patient_medication_programme` (`id`, `fk_patient_id`, `fk_doctor_id
 -- Table structure for table `patient_medication_programme_list`
 --
 
-CREATE TABLE `patient_medication_programme_list` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `patient_medication_programme_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_patient_id` int(11) NOT NULL,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_medication_programme_id` int(11) NOT NULL,
@@ -3266,8 +3369,9 @@ CREATE TABLE `patient_medication_programme_list` (
   `dose_no` int(11) NOT NULL,
   `due_on` date DEFAULT NULL,
   `give_on` date DEFAULT NULL,
-  `batch_no` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `batch_no` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `patient_medication_programme_list`
@@ -3305,8 +3409,8 @@ INSERT INTO `patient_medication_programme_list` (`id`, `fk_patient_id`, `fk_doct
 -- Table structure for table `product`
 --
 
-CREATE TABLE `product` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_location_id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
@@ -3314,8 +3418,9 @@ CREATE TABLE `product` (
   `created_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by_id` int(11) NOT NULL,
   `created_by_type` varchar(5) NOT NULL,
-  `is_active` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
 
 --
 -- Dumping data for table `product`
@@ -3324,14 +3429,19 @@ CREATE TABLE `product` (
 INSERT INTO `product` (`id`, `fk_doctor_id`, `fk_location_id`, `name`, `current_stock`, `created_date`, `created_by_id`, `created_by_type`, `is_active`) VALUES
 (23, 1, 0, 'Crossin', 44, '2016-07-27 01:51:49', 1, 'D', 1),
 (24, 1, 19, 'dCold', 50, '2016-07-27 01:52:26', 1, 'D', 1),
-(25, 1, 19, 'd', 3, '2016-07-27 01:54:25', 1, 'D', 1),
-(26, 1, 18, 'dcold', 33, '2016-07-27 02:15:26', 1, 'D', 1),
+(25, 1, 19, 'd', 9, '2016-07-27 01:54:25', 1, 'D', 1),
+(26, 1, 18, 'dcold', 35, '2016-07-27 02:15:26', 1, 'D', 1),
 (27, 1, 20, 'crossin', 333, '2016-07-27 02:16:24', 1, 'D', 1),
 (28, 1, 20, 'vascod', 33, '2016-07-27 02:16:50', 1, 'D', 1),
 (29, 1, 20, 'dd', 3, '2016-07-27 02:26:34', 1, 'D', 1),
 (30, 1, 18, 'abaxki', 3, '2016-07-27 02:26:54', 1, 'D', 1),
 (31, 1, 19, 'dddddd', 9, '2016-07-27 02:57:37', 1, 'D', 1),
-(32, 1, 19, 'ddddddd', 6, '2016-07-27 02:58:15', 1, 'D', 1);
+(32, 1, 19, 'ddddddd', 6, '2016-07-27 02:58:15', 1, 'D', 1),
+(33, 1, 0, 'new', 6, '2016-07-27 03:14:38', 1, 'D', 1),
+(34, 1, 0, 'sdf', 5, '2016-07-27 03:23:04', 1, 'D', 1),
+(35, 1, 0, 'sdf', 5, '2016-07-27 03:23:13', 1, 'D', 1),
+(36, 1, 19, 'fasdfasd', 5, '2016-07-27 03:23:19', 1, 'D', 1),
+(37, 1, 18, 'new', 11, '2016-07-27 03:32:39', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3339,15 +3449,16 @@ INSERT INTO `product` (`id`, `fk_doctor_id`, `fk_location_id`, `name`, `current_
 -- Table structure for table `product_stock_history`
 --
 
-CREATE TABLE `product_stock_history` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `product_stock_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_product_id` int(11) NOT NULL,
   `stock` int(11) NOT NULL,
   `operation_type` int(11) NOT NULL,
   `created_date` datetime NOT NULL,
   `created_by_id` int(11) NOT NULL,
-  `created_by_type` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `created_by_type` varchar(5) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
 
 --
 -- Dumping data for table `product_stock_history`
@@ -3370,7 +3481,15 @@ INSERT INTO `product_stock_history` (`id`, `fk_product_id`, `stock`, `operation_
 (36, 31, 3, -1, '2016-07-27 02:58:03', 1, 'D'),
 (37, 32, 3, 1, '2016-07-27 02:58:15', 1, 'D'),
 (38, 31, 3, 1, '2016-07-27 03:03:26', 1, 'D'),
-(39, 32, 3, 1, '2016-07-27 03:03:51', 1, 'D');
+(39, 32, 3, 1, '2016-07-27 03:03:51', 1, 'D'),
+(40, 33, 6, 1, '2016-07-27 03:14:38', 1, 'D'),
+(41, 25, 6, 1, '2016-07-27 03:22:43', 1, 'D'),
+(42, 34, 5, 1, '2016-07-27 03:23:04', 1, 'D'),
+(43, 35, 5, 1, '2016-07-27 03:23:13', 1, 'D'),
+(44, 36, 5, 1, '2016-07-27 03:23:19', 1, 'D'),
+(45, 26, 2, 1, '2016-07-27 03:24:44', 1, 'D'),
+(46, 37, 5, 1, '2016-07-27 03:32:39', 1, 'D'),
+(47, 37, 6, 1, '2016-07-27 03:32:45', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -3378,13 +3497,15 @@ INSERT INTO `product_stock_history` (`id`, `fk_product_id`, `stock`, `operation_
 -- Table structure for table `rescheduled_appointments`
 --
 
-CREATE TABLE `rescheduled_appointments` (
+CREATE TABLE IF NOT EXISTS `rescheduled_appointments` (
   `fk_appointment_id` int(11) NOT NULL,
   `fk_appointment_id_next` int(11) NOT NULL,
   `created_date` datetime NOT NULL,
   `fk_created_by_id` int(11) NOT NULL,
   `fk_created_by_type` varchar(5) NOT NULL,
-  `remarks` varchar(2000) DEFAULT NULL
+  `remarks` varchar(2000) DEFAULT NULL,
+  UNIQUE KEY `fk_appointment_id_UNIQUE` (`fk_appointment_id`),
+  UNIQUE KEY `fk_appointment_id_next_UNIQUE` (`fk_appointment_id_next`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -3405,16 +3526,17 @@ INSERT INTO `rescheduled_appointments` (`fk_appointment_id`, `fk_appointment_id_
 -- Table structure for table `schedule`
 --
 
-CREATE TABLE `schedule` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `schedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `created_date` datetime NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_by_type` varchar(5) DEFAULT NULL,
-  `is_active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=84 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3435,8 +3557,8 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 -- Table structure for table `schedule_day`
 --
 
-CREATE TABLE `schedule_day` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `schedule_day` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
   `fk_schedule_id` int(11) NOT NULL,
   `location_id` int(11) DEFAULT NULL,
@@ -3446,8 +3568,9 @@ CREATE TABLE `schedule_day` (
   `is_active` int(11) DEFAULT NULL,
   `modified_by_id` int(11) DEFAULT NULL,
   `modified_by_type` varchar(5) DEFAULT NULL,
-  `modified_date` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `modified_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229504 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -3518,8 +3641,8 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 -- Table structure for table `staff`
 --
 
-CREATE TABLE `staff` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `staff` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   `contact1` varchar(50) NOT NULL,
@@ -3535,8 +3658,9 @@ CREATE TABLE `staff` (
   `fk_modified_by_id` int(11) NOT NULL,
   `modified_by_type` int(11) NOT NULL,
   `modified_date` datetime NOT NULL,
-  `is_active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `staff`
@@ -3551,241 +3675,30 @@ INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `e
 -- Table structure for table `work_locations`
 --
 
-CREATE TABLE `work_locations` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `work_locations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `fk_doctor_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` varchar(1000) NOT NULL,
-  `is_active` int(11) DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `is_active` int(11) DEFAULT '1',
+  `created_date` datetime DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
 
 --
 -- Dumping data for table `work_locations`
 --
 
-INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`) VALUES
-(18, 1, 'Margaon', '', 1),
-(19, 1, 'Panjim', '', 1),
-(20, 1, 'Vasco', '', 0),
-(21, 43, 'Cali', '', 1),
-(22, 43, 'Tex', '', 1),
-(23, 47, 'Vermont', '', 1),
-(24, 47, 'Mich', '', 1);
+INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`, `created_date`, `modified_date`) VALUES
+(18, 1, 'Margaon', '', 1, NULL, NULL),
+(19, 1, 'Panjim', '', 1, NULL, NULL),
+(20, 1, 'Vasco', '', 0, NULL, NULL),
+(21, 43, 'Cali', '', 1, NULL, NULL),
+(22, 43, 'Tex', '', 1, NULL, NULL),
+(23, 47, 'Vermont', '', 1, NULL, NULL),
+(24, 47, 'Mich', '', 1, NULL, NULL);
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `appointment`
---
-ALTER TABLE `appointment`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `close_appointment_prescriptions`
---
-ALTER TABLE `close_appointment_prescriptions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `delivery_methods`
---
-ALTER TABLE `delivery_methods`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `doctor`
---
-ALTER TABLE `doctor`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `guardian`
---
-ALTER TABLE `guardian`
-  ADD PRIMARY KEY (`fk_patient_id`);
-
---
--- Indexes for table `login`
---
-ALTER TABLE `login`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `medication_programme`
---
-ALTER TABLE `medication_programme`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `medication_programme_list`
---
-ALTER TABLE `medication_programme_list`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `password_reset_request`
---
-ALTER TABLE `password_reset_request`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `patient`
---
-ALTER TABLE `patient`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `patient_birth_details`
---
-ALTER TABLE `patient_birth_details`
-  ADD PRIMARY KEY (`fk_patient_id`);
-
---
--- Indexes for table `patient_medication_programme`
---
-ALTER TABLE `patient_medication_programme`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `patient_medication_programme_list`
---
-ALTER TABLE `patient_medication_programme_list`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `product`
---
-ALTER TABLE `product`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `product_stock_history`
---
-ALTER TABLE `product_stock_history`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `rescheduled_appointments`
---
-ALTER TABLE `rescheduled_appointments`
-  ADD UNIQUE KEY `fk_appointment_id_UNIQUE` (`fk_appointment_id`),
-  ADD UNIQUE KEY `fk_appointment_id_next_UNIQUE` (`fk_appointment_id_next`);
-
---
--- Indexes for table `schedule`
---
-ALTER TABLE `schedule`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `schedule_day`
---
-ALTER TABLE `schedule_day`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `staff`
---
-ALTER TABLE `staff`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `work_locations`
---
-ALTER TABLE `work_locations`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `appointment`
---
-ALTER TABLE `appointment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
---
--- AUTO_INCREMENT for table `close_appointment_prescriptions`
---
-ALTER TABLE `close_appointment_prescriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
---
--- AUTO_INCREMENT for table `delivery_methods`
---
-ALTER TABLE `delivery_methods`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `doctor`
---
-ALTER TABLE `doctor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
---
--- AUTO_INCREMENT for table `login`
---
-ALTER TABLE `login`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
---
--- AUTO_INCREMENT for table `medication_programme`
---
-ALTER TABLE `medication_programme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `medication_programme_list`
---
-ALTER TABLE `medication_programme_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
---
--- AUTO_INCREMENT for table `password_reset_request`
---
-ALTER TABLE `password_reset_request`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT for table `patient`
---
-ALTER TABLE `patient`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
---
--- AUTO_INCREMENT for table `patient_medication_programme`
---
-ALTER TABLE `patient_medication_programme`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
---
--- AUTO_INCREMENT for table `patient_medication_programme_list`
---
-ALTER TABLE `patient_medication_programme_list`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
---
--- AUTO_INCREMENT for table `product`
---
-ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
---
--- AUTO_INCREMENT for table `product_stock_history`
---
-ALTER TABLE `product_stock_history`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
---
--- AUTO_INCREMENT for table `schedule`
---
-ALTER TABLE `schedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
---
--- AUTO_INCREMENT for table `schedule_day`
---
-ALTER TABLE `schedule_day`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229504;
---
--- AUTO_INCREMENT for table `staff`
---
-ALTER TABLE `staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `work_locations`
---
-ALTER TABLE `work_locations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
