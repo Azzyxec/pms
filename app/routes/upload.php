@@ -84,7 +84,7 @@ $app->group('/Upload',function(){
     $this->post('/GuardianImageUpload',function($request, $response){
         try{
            $upload_dir = 'images/guardianUserImages/';
-           $upload_handler = new CustomUploadHandlerr(array(
+           $upload_handler = new CustomUploadHandler(array(
                         'max_file_size' => 1048576, //1MB file size
                         'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
                         'upload_dir' => $upload_dir,

@@ -509,7 +509,7 @@ var patientDetailsView = {
             //create file info text, name and file size
             var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
-            model.patientInfo.picUploadPath =file.name;
+            model.patientInfo.picUploadPath = file.name;
             console.log(file.name);
             $("#patient-picture-container").attr('src','images/patientUserImages/'+model.patientInfo.picUploadPath);
 
