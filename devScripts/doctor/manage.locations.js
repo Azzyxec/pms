@@ -8,7 +8,7 @@ $(document).ready(function(){
                       list:[]
                     };
 
-        var controller = {
+        var controller = {  
           init: function(){
             this.saveUpdateLocations = links.saveUpdateLocations;
             this.locationListUrl = links.getLocationUrl;

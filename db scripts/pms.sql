@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 27, 2016 at 10:57 PM
+-- Generation Time: Jul 27, 2016 at 11:12 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -1855,11 +1855,11 @@ begin
     set @lstartDate = STR_TO_DATE(pstart_date, '%d-%m-%Y');
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
 
-	SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
-		   ,start_time_mins
-		   ,end_time_mins
-		   ,fk_schedule_id
-           ,id as schedule_day_id
+	SELECT DATE_FORMAT(sd.`date`, '%d-%m-%Y') as `schedule_date`
+		   ,sd.start_time_mins
+		   ,sd.end_time_mins
+		   ,sd.fk_schedule_id
+           ,sd.id as schedule_day_id
            ,(
 			  select count(*)
               from appointment a
@@ -1868,13 +1868,15 @@ begin
                     and a.state = 0
 			) as appointment_count
 	  FROM schedule_day sd
-	  WHERE fk_doctor_id = pdoctor_id
-			and location_id = plocation_id
-			and `date` >= @lstartDate
-			and `date` <= @lendDate
-			and is_active = 1
-	  group by `date`, start_time_mins, end_time_mins
-	  order by `date` asc, start_time_mins asc;
+      inner join work_locations wl on wl.id = sd.location_id
+								      and wl.is_active = 1
+	  WHERE sd.fk_doctor_id = pdoctor_id
+			and sd.location_id = plocation_id
+			and sd.`date` >= @lstartDate
+			and sd.`date` <= @lendDate
+			and sd.is_active = 1
+	  group by sd.`date`, sd.start_time_mins, sd.end_time_mins
+	  order by sd.`date` asc, sd.start_time_mins asc;
 
  end$$
 
@@ -3741,7 +3743,7 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
 INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`, `created_date`, `modified_date`) VALUES
 (18, 1, 'Margaon', '', 1, NULL, NULL),
 (19, 1, 'Panjim', '', 1, NULL, NULL),
-(20, 1, 'Vasco', '', 1, NULL, '2016-07-28 02:23:38'),
+(20, 1, 'Vasco', '', 0, NULL, '2016-07-28 02:40:33'),
 (21, 43, 'Cali', '', 1, NULL, NULL),
 (22, 43, 'Tex', '', 1, NULL, NULL),
 (23, 47, 'Vermont', '', 1, NULL, NULL),
