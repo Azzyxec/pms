@@ -71,20 +71,20 @@ $app->group('/schedule', function(){
       $postedData = $request->getParsedBody();
 
       $locId = $postedData['locationId'];
-      $scheduleList = $postedData['scheduleList'];
+      $scheduleDayIdList = $postedData['scheduleDayIdList'];
       $scheduleCount = $postedData['scheduleCount'];
       $doctorId = $user->doctorId;
 
       //converting schedule list to xml
-      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><schedules></schedules>');
-      XMLHelper::array_to_xml($scheduleList, $xml_data);
-      $scheduleListXML = $xml_data->asXML();
+      $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><schedulDays></schedulDays>');
+      XMLHelper::array_to_xml($scheduleDayIdList, $xml_data);
+      $scheduleDayIdListXML = $xml_data->asXML();
 
       $userId = $user->id;
       $userType = $user->type;
 
       $scheduleDB = new ScheduleDB();
-      $result = $scheduleDB->deactivateScheduleDays($doctorId, $locId, $scheduleCount, $scheduleListXML, $userId, $userType);
+      $result = $scheduleDB->deactivateScheduleDays($doctorId, $locId, $scheduleCount, $scheduleDayIdListXML, $userId, $userType);
 
       $data = array('status' => $result['status'], 'data' => $postedData, 'message' => 'success' );
       return $response->withJson($data);

@@ -59,7 +59,7 @@ class ScheduleDB
     }
   }
 
-  public function deactivateScheduleDays($doctorId, $locId, $scheduleCount, $scheduleListXML, $userId, $userType){
+  public function deactivateScheduleDays($doctorId, $locId, $scheduleCount, $scheduleDayIdListXML, $userId, $userType){
 
     try {
 
@@ -69,7 +69,7 @@ class ScheduleDB
         'plocation_id' =>  $locId,
         'puser_id' =>  $userId,
         'puser_type' =>  $userType,
-        'pschedule_days_xml' => $scheduleListXML
+        'pschedule_days_id_xml' => $scheduleDayIdListXML
       );
 
       $statement = DBHelper::generateStatement('deactivate_schedule_days',  $paramArray);
@@ -216,9 +216,6 @@ class ScheduleDB
   public function getSchedulesForDeactivation($doctorId, $locationId,  $startDate, $endDate){
     try {
 
-
-
-
         $paramArray = array(
           'pdoctor_id' => $doctorId,
           'plocation_id' => $locationId,
@@ -231,25 +228,64 @@ class ScheduleDB
         $statement->execute();
 
 
-        $ScheduleArray = array();
+        //$ScheduleArray = array();
+
+        $scheduleCalendar = array();
 
 
         while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
 
+          //specific to each schedule
           $item = array();
-          $item['date'] = $result['schedule_date'];
           $item['startTimeMinutes'] = $result['start_time_mins'];
           $item['endTimeMinutes'] = $result['end_time_mins'];
           $item['scheduleId'] = $result['fk_schedule_id'];
           $item['scheduleDayId'] = $result['schedule_day_id'];
           $item['activeAppointments'] = $result['appointment_count'];
 
-          $ScheduleArray[] = $item;
+          //making a schedule
+          $schedule = array();
+          $schedule['date'] = $result['schedule_date']; //common to each schedule
+          $schedule['timings'][] = $item;
+
+          $scheduleCalendar['scheduleList'][] = $schedule;
 
         }
 
+        if(isset($scheduleCalendar['scheduleList'])){
 
-      return array('status' => "1", 'data' => $ScheduleArray, 'message' => 'success' );
+          $scheduleLists = $scheduleCalendar['scheduleList'];
+
+          $newList = array();
+
+          foreach ($scheduleLists as $key => $value) {
+
+            $date = $value['date'];
+
+            $valueExists = false;
+
+            foreach ($newList as $key1 => $value1) {
+              //$newList[] = $date;
+              if(isset($value1)){
+                if(strcmp($date, $value1['date']) == 0){
+                  $newList[$key1]['timings'][] = $value['timings'][0];
+                  $valueExists = true;
+                }
+              }
+            }//inner for loop ends
+
+            if(!$valueExists){
+              $newList[] = $value;
+            }
+
+          }
+
+          $scheduleCalendar['scheduleList'] = $newList;
+
+
+        }
+
+      return array('status' => "1", 'data' => $scheduleCalendar, 'message' => 'success' );
 
     } catch (Exception $e) {
       return array('status' => "-1", 'data' => "-1", 'message' => 'exception' );
