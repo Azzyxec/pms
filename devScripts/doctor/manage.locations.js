@@ -27,6 +27,15 @@ $(document).ready(function(){
                console.log('save response ' + JSON.stringify(response));
                LocationView.locationName.val('');
                controller.updateLocationFromServer();
+
+               if(response.status == 1){
+                 utility.getAlerts('Location saved successfully', 'alert-success', '', '.container-fluid');
+                 console.log('Location saved successfully');
+               }else if(response.status == 2){
+                 utility.getAlerts('Cannot deactivate this location, there are active appointments on the following days ' + response.data, 'alert-warning', '', '.container-fluid');
+                 console.log('Cannot deactivate this location, there are active appointments on the following days ' + response.data);
+               }
+
              });
 
           },
@@ -84,6 +93,15 @@ $(document).ready(function(){
 
               var isEmpty = validator.isEmptyString(locName);
 
+
+              if(isEmpty){
+                LocationView.locationName.addClass('has-error');
+                LocationView.locationNameHelpLabel.removeClass('hidden');
+              }else{
+                LocationView.locationName.removeClass('has-error');
+                LocationView.locationNameHelpLabel.addClass('hidden');
+              }
+
               if(!isEmpty){
 
                 if(LocationView.activeControl.is(":checked")){
@@ -139,6 +157,7 @@ $(document).ready(function(){
 
         var locationListView = {
           init: function(){
+            this.locationListContainer = $('#location-list-container');
             this.tableBody = $('#location-list-table-body');
 
           },
@@ -149,6 +168,12 @@ $(document).ready(function(){
             this.tableBody.empty();
 
             console.log('render' + JSON.stringify(locations));
+
+            if(locations.length > 0 ){
+              this.locationListContainer.removeClass('hidden');
+            }else{
+              this.locationListContainer.addClass('hidden');
+            }
 
             for(var i = 0; i < locations.length; i++){
               //console.log('looping ' +  JSON.stringify (patientsList[i]));

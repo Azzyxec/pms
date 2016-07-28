@@ -12,13 +12,13 @@ $app->group('/locations', function(){
       $postedData = $request->getParsedBody();
         $user = UserSessionManager::getUser();
         $doctorDB = new DoctorDB();
-        $data = $doctorDB->saveUpdateLoction($postedData['id'], $postedData['name'], $postedData['isActive'],  $user->id);
+        $result = $doctorDB->saveUpdateLoction($postedData['id'], $postedData['name'], $postedData['isActive'],  $user->id);
 
-      $data = array('status' => "1", 'data' => "1", 'message' => 'success' );
+      $data = array('status' => $result['status'], 'data' => $result['data'], 'message' => 'success', 'result' => $result);
       return $response->withJson($data);
 
     } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+      $data = array('status' => "-1", 'data' => '', 'message' => 'exception in controller '. $e->getMessage() );
       return $response->withJson($data);
     }
 

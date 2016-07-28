@@ -275,7 +275,7 @@ $(document).ready(function(){
   controller.prototype.addLocationsAlert = function(){
 if(  model.appointmenListViewModel.locationList.length <= 0)
 {
-  utility.getAlerts("To get started, please create a work locations!","alert-warning","","#page-wrapper");
+  utility.getAlerts("No work locations found, please create new work locations or activate existing work locations","alert-warning","","#page-wrapper");
 //  $("#manage-Doctors-Schedule-Section-Link-Btn").hide();
   console.log('locations not loaded');
   //$("#patients-Entry-Section-Link-Btn").hide();

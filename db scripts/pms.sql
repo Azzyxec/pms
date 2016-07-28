@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 28, 2016 at 05:42 PM
+-- Generation Time: Jul 28, 2016 at 11:46 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -157,6 +157,11 @@ IN `pid` INT
     MODIFIES SQL DATA
 begin
 
+	# status 1 when all things are ok
+    # status 2 when there are active appointments and schedule cant be deactivated
+
+	declare lActiveAppointmentCount int;
+
 
 	if pid <= 0 then
 
@@ -173,13 +178,61 @@ begin
                                     ,now()
                                     ,pis_active
 								   );
+
+		   select 1 as status, '-' as dates;
+
 		else
 
-		UPDATE `work_locations`
-		SET `name` = pname
-			 ,modified_date = now()
-             ,is_active = pis_active
-		WHERE id = pid;
+        # if pis_active =0 , then check if there are active appointments for this location
+
+        if COALESCE(pis_active, 0) = 0 then
+
+			select COALESCE(count(id), 0)
+            into @lActiveAppointmentCount
+            from appointment a
+            where a.fk_location_id = pid
+				  and a.state = 0
+                  and a.is_active = 1
+                  and a.appointment_date >= curdate();
+
+            if COALESCE(@lActiveAppointmentCount, 0) = 0 then
+
+				UPDATE `work_locations`
+				SET `name` = pname
+					 ,modified_date = now()
+					 ,is_active = pis_active
+				WHERE id = pid;
+
+                select 1 as status, '-' as dates;
+
+			else
+
+				#there are active appointments then dont deactivate the location
+                # just return the dates when then appointments are active
+
+				select  GROUP_CONCAT(date_format(appointment_date, ' %d %M %Y') ) AS dates
+					   ,2 as status
+				from  appointment a
+				where a.fk_location_id = pid
+					  and a.state = 0
+					  and a.is_active = 1
+                      and a.appointment_date >= curdate();
+
+            end if;
+
+        else
+
+			UPDATE `work_locations`
+			SET `name` = pname
+				 ,modified_date = now()
+				 ,is_active = pis_active
+			WHERE id = pid;
+
+            select 1 as status, '-' as dates;
+
+        end if;
+
+
 
 	end if;
 end$$
@@ -465,7 +518,17 @@ select 2 as status;
 
 end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc`(IN `pappointment_id` INT, IN `pclosing_date` VARCHAR(20), IN `pclosing_time_mins` INT, IN `premarks` VARCHAR(3000), IN `pclosed_by_id` INT, IN `pclosed_by_type` VARCHAR(5), IN `pprescription_count` INT, IN `pprescription_xml` VARCHAR(65535))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `close_appointment_proc`(
+IN `pappointment_id` INT
+, IN `pclosing_date` VARCHAR(20)
+, IN `pclosing_time_mins` INT
+, IN `premarks` VARCHAR(3000)
+, IN `pclosed_by_id` INT
+, IN `pclosed_by_type` VARCHAR(5)
+, IN `pprescription_count` INT
+, IN `puploaded_file_list_count` INT
+, IN `pprescription_xml` VARCHAR(65535)
+,IN `puploaded_file_list_xml` varchar(65536))
     NO SQL
 begin
 
@@ -482,72 +545,104 @@ where fk_appointment_id = pappointment_id;
 
 if COALESCE(@lexsitingEntry, 0) = 0 then
 
-	select fk_patient_id
-	into @lpatientId
-	from appointment
-	where id = pappointment_id;
+ select fk_patient_id
+ into @lpatientId
+ from appointment
+ where id = pappointment_id;
 
-	if COALESCE(@lpatientId, 0) > 0 then
+ if COALESCE(@lpatientId, 0) > 0 then
 
-		update appointment a
-		set a.state = 1
-		where id = pappointment_id;
+  update appointment a
+  set a.state = 1
+  where id = pappointment_id;
 
-		insert into close_appointment(
-									  fk_appointment_id
-									  ,closing_date
-									  ,closing_time_mins
-									  ,fk_patient_id
-									  ,remarks
-									  ,created_date_time
-									  ,fk_created_by_id
-									  ,created_by_type
-									  )
-								values
-									  (
-									   pappointment_id
-									   ,STR_TO_DATE(pclosing_date, '%d-%m-%Y')
-									   ,pclosing_time_mins
-									   ,@lpatientId
-									   ,premarks
-									   ,now()
-									   ,pclosed_by_id
-									   ,pclosed_by_type
-									  );
-
-
-		#insert into prescription list
-
-		set @lcounter = 1;
-
-		while @lcounter <= pprescription_count do
-
-			SELECT ExtractValue(pprescription_xml, 'list/item[$@lcounter]/name')
-				   ,ExtractValue(pprescription_xml, 'list/item[$@lcounter]/remarks')
-			into 	@lmedName
-				   ,@lremarks;
-
-			insert into close_appointment_prescriptions
-												(
-												 fk_appointment_id
-												 ,medicine
-												 ,remarks
-												 )
-												values
-												(
-												pappointment_id
-												,@lmedName
-												,@lremarks
-												);
-
-			SET @lcounter = @lcounter + 1;
-
-		END WHILE;
-
-		select 1 as status;
+  insert into close_appointment(
+           fk_appointment_id
+           ,closing_date
+           ,closing_time_mins
+           ,fk_patient_id
+           ,remarks
+           ,created_date_time
+           ,fk_created_by_id
+           ,created_by_type
+           )
+        values
+           (
+            pappointment_id
+            ,STR_TO_DATE(pclosing_date, '%d-%m-%Y')
+            ,pclosing_time_mins
+            ,@lpatientId
+            ,premarks
+            ,now()
+            ,pclosed_by_id
+            ,pclosed_by_type
+           );
 
 
-	end if;
+  #insert into uploadedlist list
+
+  set @lcounter = 1;
+
+  while @lcounter <= puploaded_file_list_count do
+
+   SELECT ExtractValue(puploaded_file_list_xml, 'list/item[$@lcounter]/orignalFileName')
+       ,ExtractValue(puploaded_file_list_xml, 'list/item[$@lcounter]/newFileName')
+   into  @loriginalName
+       ,@lnewName;
+
+   insert into close_appointment_documents
+            (
+             fk_appointment_id
+             ,document_name
+             ,document_path
+             )
+            values
+            (
+            pappointment_id
+            ,@loriginalName
+            ,@lnewName
+            );
+
+   SET @lcounter = @lcounter + 1;
+
+  END WHILE;
+
+
+
+         #insert into prescription list
+
+  set @lcounter = 1;
+
+  while @lcounter <= pprescription_count do
+
+   SELECT ExtractValue(pprescription_xml, 'list/item[$@lcounter]/name')
+       ,ExtractValue(pprescription_xml, 'list/item[$@lcounter]/remarks')
+   into  @lmedName
+       ,@lremarks;
+
+   insert into close_appointment_prescriptions
+            (
+             fk_appointment_id
+             ,medicine
+             ,remarks
+             )
+            values
+            (
+            pappointment_id
+            ,@lmedName
+            ,@lremarks
+            );
+
+   SET @lcounter = @lcounter + 1;
+
+  END WHILE;
+
+
+
+  select 1 as status;
+
+
+ end if;
 
 end if;
 
@@ -1566,6 +1661,7 @@ begin
            ,a.fk_location_id as loc
 	from appointment a
 	inner join patient p on a.fk_patient_id = p.id
+    inner join work_locations wl on wl.id = a.fk_location_id and wl.is_active = 1
 	left join cancelled_appointments ca on ca.fk_appointment_id = a.id
 	left join close_appointment cl on cl.fk_appointment_id = a.id
     left join rescheduled_appointments ra on ra.fk_appointment_id = a.id
@@ -1841,8 +1937,9 @@ begin
 		   ,sd.end_time_mins
            ,sd.location_id as loc_id
            ,sd.fk_schedule_id as schedule_id
-           ,id
+           ,sd.id
 	from schedule_day sd
+    inner join work_locations wl on wl.id = sd.location_id and wl.is_active = 1
 	where sd.fk_doctor_id = pdoctor_id
 		  and sd.location_id = case when plocation_id > 0 then plocation_id else sd.location_id end
 		  and sd.date = @ldate
@@ -2728,7 +2825,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `is_active` int(11) NOT NULL,
   `fk_schedule_day_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=123 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=126 ;
 
 --
 -- Dumping data for table `appointment`
@@ -2851,7 +2948,10 @@ INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_i
 (119, 1, 18, 174, '342342343', '2016-07-26', 600, 615, 'rescheduled appointment', 3, 120, '2016-07-25 21:11:49', 1, 'D', 1, 229457),
 (120, 1, 18, 174, '342342343', '2016-07-27', 600, 615, 'rescheduled appointment', 3, 121, '2016-07-25 21:12:38', 1, 'D', 1, 229458),
 (121, 1, 18, 174, '342342343', '2016-07-26', 660, 675, 'rescheduled appointment', 0, NULL, '2016-07-25 21:13:16', 1, 'D', 1, 229457),
-(122, 1, 18, 174, '342342343', '2016-07-28', 540, 555, 'trial', 2, NULL, '2016-07-28 03:52:06', 1, 'D', 1, 229509);
+(122, 1, 18, 174, '342342343', '2016-07-28', 540, 555, 'trial', 2, NULL, '2016-07-28 03:52:06', 1, 'D', 1, 229509),
+(123, 1, 18, 147, '433423', '2016-07-29', 540, 555, 'Hanks will hang on..', 0, NULL, '2016-07-29 00:21:43', 1, 'D', 1, 229510),
+(124, 29, 26, 175, '234234234', '2016-07-29', 540, 555, 'some driscription', 1, NULL, '2016-07-29 02:22:28', 29, 'D', 1, 229530),
+(125, 29, 26, 175, '234234234', '2016-07-29', 555, 570, 'two', 2, NULL, '2016-07-29 02:23:04', 29, 'D', 1, 229530);
 
 -- --------------------------------------------------------
 
@@ -2904,7 +3004,8 @@ INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled
 (92, 'erwer', '2016-07-18 16:48:42', 1, 'D'),
 (91, 'this is ', '2016-07-18 16:50:17', 1, 'D'),
 (110, 'test cancel', '2016-07-23 16:25:54', 1, 'D'),
-(122, 'test cancel\n', '2016-07-28 13:59:55', 1, 'D');
+(122, 'test cancel\n', '2016-07-28 13:59:55', 1, 'D'),
+(125, 'test cancel', '2016-07-29 02:23:40', 29, 'D');
 
 -- --------------------------------------------------------
 
@@ -2937,7 +3038,8 @@ INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_t
 (76, '2016-07-14', 9, 112, 'clsedo', '2016-07-14 15:56:39', 1, 'D'),
 (77, '2016-07-14', 9, 141, 'asd', '2016-07-14 15:58:48', 1, 'D'),
 (106, '2016-07-21', 10, 169, 'sdfasdfasd', '2016-07-21 23:29:19', 1, 'D'),
-(107, '2016-07-21', 10, 169, 'just close and dont book', '2016-07-21 23:38:47', 1, 'D');
+(107, '2016-07-21', 10, 169, 'just close and dont book', '2016-07-21 23:38:47', 1, 'D'),
+(124, '2016-07-29', 9, 175, 'closed happly', '2016-07-29 02:22:47', 29, 'D');
 
 -- --------------------------------------------------------
 
@@ -3109,8 +3211,8 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (33, 'D', 'doc', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-05-01 18:26:09', '2016-07-18 18:57:52', 1),
 (58, 'D', 'savio', '$2y$12$/W.gLAwQ/i5/FnVeHnJBDOe.N.2MBLW/wZL7Ma30I33dT.C5J86y.', '2016-06-15 21:07:02', NULL, 1),
 (60, 'S', 'staff', '$2y$12$7OWYFWYvJRDie5vvf/O2NOus6bxNgV5hL/40UnxgHsYALhwfMsTMa', '2016-06-27 20:18:24', '2016-07-11 17:39:04', 1),
-(71, 'D', 'greg', '$2y$12$uChOxKAHGWGTNo.kL2ZeL.hLyn8V0A/ycFRx9txbJm3etSWmeWPn.', '2016-07-01 13:12:35', NULL, 0),
-(72, 'D', 'greg1', '$2y$12$ojHLC5SzUdeR/vIAj02xPOHK.bohocQBg6lK0mGg7JyY2r/MnElVW', '2016-07-01 13:14:21', NULL, 0),
+(71, 'D', 'greg', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-01 13:12:35', NULL, 1),
+(72, 'D', 'greg1', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-01 13:14:21', NULL, 1),
 (73, 'D', 'greg2', '$2y$12$ELXgLQUlSZV9J4yDF.kBq.WN7SoAVNE5BaBTtagL/GGOaAni7SF6S', '2016-07-01 13:14:55', NULL, 0),
 (74, 'D', 'greg3', '$2y$12$/VNhMWUtpMme.mjWdb8fPOarg7CUSVi8RtfHjNtuHIsXTX00YTxw.', '2016-07-01 13:15:18', NULL, 0),
 (75, 'D', 'greg4', '$2y$12$hjaDSfKHgs1W7zv2kVp6aOtGZP648d6q1WIOyb1PMZA2N.2FL2fyy', '2016-07-01 13:15:35', NULL, 0),
@@ -3124,11 +3226,11 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (83, 'D', 'darius1', '$2y$12$CQsJ4KM3xHW7rJS6RSQ6BuuvMVE7xbT3wnLf5gi.aWoKBp2V9S7h.', '2016-07-17 19:13:21', NULL, 0),
 (84, 'D', 'darius2', '$2y$12$9K6ZrZdCasDUrY3N8/gudOUVQzrL8gBbBnYUbzs5AmUOQonSAqIda', '2016-07-17 19:13:59', NULL, 0),
 (85, 'D', 'newan', '$2y$12$3Zag1luAOeZ6CDYzoWzNl.gsJKB6REmO05h9iGumZRLGQtvHg1vJC', '2016-07-18 17:01:08', '2016-07-18 17:02:56', 1),
-(86, 'D', 'timmy', '$2y$12$9129aC9jd1VxSVRPLty27ebnGBwOMGseslZSA2p/HchCIfpI/6WOu', '2016-07-18 17:09:34', '2016-07-18 18:30:20', 1),
+(86, 'D', 'timmy', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-18 17:09:34', '2016-07-18 18:30:20', 1),
 (87, 'D', 'dan', '$2y$12$5E5VHzymTDr6MXcwrrYqFOhOqLAt0f3eOzcpbE8kv8xLEPh1j0NF6', '2016-07-18 21:25:39', NULL, 0),
 (88, 'D', 'picolo', '$2y$12$ra430g6xGWEE7/ub6fsT9uVzkcYgO9FBJ8P974q/M0GgbTKG6ZxhO', '2016-07-18 21:45:37', NULL, 0),
-(89, 'D', 'hans', '$2y$12$hRFvYZESR5X3aymuQqM04OVDgZU2yJkcxAXiMjCjIBOUO49d4HTse', '2016-07-18 23:27:11', '2016-07-18 23:27:38', 1),
-(90, 'S', 'someone', '$2y$12$tzbdZ8nznpvfbrMU5NhPIOWqJmCaRYbcq97q8Qydg31v4IO0WovcG', '2016-07-28 01:13:58', '2016-07-28 01:17:26', 1),
+(89, 'D', 'hans', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-18 23:27:11', '2016-07-18 23:27:38', 1),
+(90, 'S', 'someone', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-28 01:13:58', '2016-07-28 01:17:26', 1),
 (91, 'S', 'staffer', '$2y$12$TVOmTA6W1au0.SrZgHt0AePiiQsppbLbP8XS/rhzMt2t3lJbN5rsS', '2016-07-28 01:30:15', '2016-07-28 01:30:54', 1);
 
 -- --------------------------------------------------------
@@ -3258,7 +3360,7 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=175 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=176 ;
 
 --
 -- Dumping data for table `patient`
@@ -3343,7 +3445,8 @@ INSERT INTO `patient` (`id`, `fk_doctor_id`, `name`, `date_of_birth`, `blood_gro
 (171, 1, 'Gearson', '2016-07-22', '-', '', '', 1, '67668768', NULL, NULL, '', 'undefined', '2016-07-22 14:21:57', 1, 'D', NULL, 1, 'D', 1),
 (172, 1, 'Aulther', '2016-07-22', '-', '', '', 1, '6876868', NULL, NULL, '', 'undefined', '2016-07-22 14:51:35', 1, 'D', NULL, 1, 'D', 1),
 (173, 1, 'Neal', '2016-07-22', '-', '', '', 1, '45345234', NULL, NULL, NULL, NULL, '2016-07-22 16:00:02', 1, 'D', NULL, NULL, NULL, 1),
-(174, 1, 'Hanna', '2016-07-25', '-', '', '', 0, '342342343', NULL, NULL, NULL, NULL, '2016-07-25 19:08:31', 1, 'D', NULL, NULL, NULL, 1);
+(174, 1, 'Hanna', '2016-07-25', '-', '', '', 0, '342342343', NULL, NULL, NULL, NULL, '2016-07-25 19:08:31', 1, 'D', NULL, NULL, NULL, 1),
+(175, 29, 'Dettol', '2016-07-29', '-', '', '', 1, '234234234', NULL, NULL, NULL, NULL, '2016-07-29 02:22:28', 29, 'D', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -3470,7 +3573,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `created_by_type` varchar(5) NOT NULL,
   `is_active` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=40 ;
 
 --
 -- Dumping data for table `product`
@@ -3491,7 +3594,9 @@ INSERT INTO `product` (`id`, `fk_doctor_id`, `fk_location_id`, `name`, `current_
 (34, 1, 0, 'sdf', 5, '2016-07-27 03:23:04', 1, 'D', 1),
 (35, 1, 0, 'sdf', 5, '2016-07-27 03:23:13', 1, 'D', 1),
 (36, 1, 19, 'fasdfasd', 5, '2016-07-27 03:23:19', 1, 'D', 1),
-(37, 1, 18, 'new', 11, '2016-07-27 03:32:39', 1, 'D', 1);
+(37, 1, 18, 'new', 11, '2016-07-27 03:32:39', 1, 'D', 1),
+(38, 29, -1, 'asdfsadf', 3, '2016-07-29 03:10:06', 29, 'D', 1),
+(39, 29, -1, 'new', 3, '2016-07-29 03:10:21', 29, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3508,7 +3613,7 @@ CREATE TABLE IF NOT EXISTS `product_stock_history` (
   `created_by_id` int(11) NOT NULL,
   `created_by_type` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=50 ;
 
 --
 -- Dumping data for table `product_stock_history`
@@ -3539,7 +3644,9 @@ INSERT INTO `product_stock_history` (`id`, `fk_product_id`, `stock`, `operation_
 (44, 36, 5, 1, '2016-07-27 03:23:19', 1, 'D'),
 (45, 26, 2, 1, '2016-07-27 03:24:44', 1, 'D'),
 (46, 37, 5, 1, '2016-07-27 03:32:39', 1, 'D'),
-(47, 37, 6, 1, '2016-07-27 03:32:45', 1, 'D');
+(47, 37, 6, 1, '2016-07-27 03:32:45', 1, 'D'),
+(48, 38, 3, 1, '2016-07-29 03:10:06', 29, 'D'),
+(49, 39, 3, 1, '2016-07-29 03:10:21', 29, 'D');
 
 -- --------------------------------------------------------
 
@@ -3586,7 +3693,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=88 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3603,7 +3710,9 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 (84, 1, '2016-07-28', '2016-08-01', '2016-07-28 02:24:05', 1, 'D', 1),
 (85, 1, '2016-07-28', '2016-08-06', '2016-07-28 03:17:47', 1, 'D', 1),
 (86, 1, '2016-08-09', '2016-08-19', '2016-07-28 03:38:03', 1, 'D', 1),
-(87, 1, '2016-08-01', '2016-08-06', '2016-07-28 16:19:26', 1, 'D', 1);
+(87, 1, '2016-08-01', '2016-08-06', '2016-07-28 16:19:26', 1, 'D', 1),
+(88, 29, '2016-07-29', '2016-07-31', '2016-07-29 02:20:02', 29, 'D', 1),
+(89, 29, '2016-07-29', '2016-08-13', '2016-07-29 03:07:10', 29, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3624,7 +3733,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229530 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229549 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -3713,7 +3822,26 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229526, 1, 87, 18, '2016-08-03', 900, 1080, 1, NULL, NULL, NULL),
 (229527, 1, 87, 18, '2016-08-04', 900, 1080, 1, NULL, NULL, NULL),
 (229528, 1, 87, 18, '2016-08-05', 900, 1080, 1, NULL, NULL, NULL),
-(229529, 1, 87, 18, '2016-08-06', 900, 1080, 1, NULL, NULL, NULL);
+(229529, 1, 87, 18, '2016-08-06', 900, 1080, 1, NULL, NULL, NULL),
+(229530, 29, 88, 26, '2016-07-29', 540, 720, 1, NULL, NULL, NULL),
+(229531, 29, 88, 26, '2016-07-30', 540, 720, 1, NULL, NULL, NULL),
+(229532, 29, 88, 26, '2016-07-31', 540, 720, 1, NULL, NULL, NULL),
+(229533, 29, 89, NULL, '2016-07-29', 540, 720, 1, NULL, NULL, NULL),
+(229534, 29, 89, NULL, '2016-07-30', 540, 720, 1, NULL, NULL, NULL),
+(229535, 29, 89, NULL, '2016-07-31', 540, 720, 1, NULL, NULL, NULL),
+(229536, 29, 89, NULL, '2016-08-01', 540, 720, 1, NULL, NULL, NULL),
+(229537, 29, 89, NULL, '2016-08-02', 540, 720, 1, NULL, NULL, NULL),
+(229538, 29, 89, NULL, '2016-08-03', 540, 720, 1, NULL, NULL, NULL),
+(229539, 29, 89, NULL, '2016-08-04', 540, 720, 1, NULL, NULL, NULL),
+(229540, 29, 89, NULL, '2016-08-05', 540, 720, 1, NULL, NULL, NULL),
+(229541, 29, 89, NULL, '2016-08-06', 540, 720, 1, NULL, NULL, NULL),
+(229542, 29, 89, NULL, '2016-08-07', 540, 720, 1, NULL, NULL, NULL),
+(229543, 29, 89, NULL, '2016-08-08', 540, 720, 1, NULL, NULL, NULL),
+(229544, 29, 89, NULL, '2016-08-09', 540, 720, 1, NULL, NULL, NULL),
+(229545, 29, 89, NULL, '2016-08-10', 540, 720, 1, NULL, NULL, NULL),
+(229546, 29, 89, NULL, '2016-08-11', 540, 720, 1, NULL, NULL, NULL),
+(229547, 29, 89, NULL, '2016-08-12', 540, 720, 1, NULL, NULL, NULL),
+(229548, 29, 89, NULL, '2016-08-13', 540, 720, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3766,7 +3894,7 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
   `created_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
 -- Dumping data for table `work_locations`
@@ -3775,12 +3903,13 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
 INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`, `created_date`, `modified_date`) VALUES
 (18, 1, 'Margaon', '', 1, NULL, NULL),
 (19, 1, 'Panjim', '', 1, NULL, NULL),
-(20, 1, 'Vasco', '', 0, NULL, '2016-07-28 02:40:33'),
+(20, 1, 'Vasco', '', 1, NULL, '2016-07-29 01:39:21'),
 (21, 43, 'Cali', '', 1, NULL, NULL),
 (22, 43, 'Tex', '', 1, NULL, NULL),
 (23, 47, 'Vermont', '', 1, NULL, NULL),
 (24, 47, 'Mich', '', 1, NULL, NULL),
-(25, 1, 'new', '', 0, '2016-07-28 02:23:26', '2016-07-28 02:23:34');
+(25, 1, 'new', '', 0, '2016-07-28 02:23:26', '2016-07-29 01:37:41'),
+(26, 29, 'Canada', '', 0, '2016-07-29 02:04:09', '2016-07-29 02:40:34');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
