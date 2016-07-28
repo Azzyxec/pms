@@ -17,7 +17,7 @@ $(document).ready(function(){
             //getting the programme list for the doctor
             $.get(this.doctorListingUrl ,  {})
             .done(function( response ) {
-              console.log("patients list: " + JSON.stringify(response));
+              console.log("Doctor List: " + JSON.stringify(response));
               if(response.status == 1){
                 listModel = response.data;
                 listView.render();
@@ -42,42 +42,37 @@ $(document).ready(function(){
                   render:  function(){
 
                     var doctorsList = controller.getListModel();
-                    //console.log('model in view' + JSON.stringify (doctorsList));
+                    console.log('model in view ' + JSON.stringify (doctorsList));
 
-                    for(var i = 0; i < doctorsList.length; i++){
-                      //console.log('looping ' +  JSON.stringify (doctorsList[i]));
+                    var table = $('#example').DataTable( {
+                      "bProcessing": true,
+                      "data":  controller.getListModel(),
+                      "aoColumns": [
+                      { "mData": "name" },
+                      { "mData": "contact" },
+                      { "mData": "email" },
+                      { "mData": "qualifications" },
+                      { "mData": "isActive",
+                      "mRender" : function(column, type, row){
+                        if(column == 1){
+                          return '<label>Active</label>'
+                        }else {
+                          return '<label>Inactive</label>'
+                        }
 
-                      var tr = $('<tr/>');
+                      }
 
-                      var td = $('<td/>');
-                      td.text(doctorsList[i].name);
-                      tr.append(td);
-
-                      var td = $('<td/>');
-                      td.text(doctorsList[i].contact);
-                      tr.append(td);
-
-                      var td = $('<td/>');
-                      td.text(doctorsList[i].email);
-                      tr.append(td);
-
-
-                      var td = $('<td/>');
-                      td.text(doctorsList[i].qualifications);
-                      tr.append(td);
-
-                      var td = $('<td/>');
-                      td.text( doctorsList[i].isActive==1?'Active':'Not Active');
-                      tr.append(td);
-
-                      var td = $('<a/>',{
-                        text: 'Edit',
-                        href: controller.adminDoctorEditRedirect + '?id=' +  doctorsList[i].id
-                      });
-                      tr.append(td);
-
-                      this.tablebody.append(tr);
+                    },
+                      { "mData": "id",
+                      "mRender" : function(column, type, row){
+                        return '<a href = " '+controller.adminDoctorEditRedirect + '?id=' +column+'" class="btn btn-sm btn-default">Edit</a>';
+                      }
                     }
+                    ],
+                    "order": [[1, 'asc']]
+                  } );
+
+                    
 
                   }
                 };
