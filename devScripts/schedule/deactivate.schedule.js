@@ -60,11 +60,15 @@ $(document).ready(function(){
     },
     getSchedulesFromServer: function(){
 
+
+
       var data = {
                   locationId: scheduleModel.selectedLocation.id,
                   startDate:scheduleModel.startDate,
                   endDate:scheduleModel.endDate
                  };
+
+      console.log('get req ' + JSON.stringify(data));
 
       $.get(this.getSechduleforDeactivation , data)
       .done(function( response ) {
@@ -80,6 +84,8 @@ $(document).ready(function(){
     //Dates will be in dd mm yy format
     var fromDateStr = stepOneView.fromDateControl.val();
     var toDateStr = stepOneView.toDateControl.val();
+
+    console.log('from ui start ' + fromDateStr + ' end date ' + toDateStr);
 
     //setting the models start and end date
     scheduleModel.startDate = fromDateStr;
@@ -147,26 +153,34 @@ $(document).ready(function(){
 
         var mscheduleDate = moment(scheduleDay.date, "DD-MM-YYYY");
 
-        var diff =  moment.duration(calanderStartDate.diff(mscheduleDate)).asDays();
+        if(i+1 < scheduleDaysList.length){
+          var mnextScheduleDate = moment(scheduleDaysList[i + 1].date, "DD-MM-YYYY");
+          console.log('next day ' + scheduleDaysList[i + 1].date);
 
-        if(diff > 0){
 
-          for(var j = 0; j <= diff; j++){
+          var diff =  moment.duration(mnextScheduleDate.diff(mscheduleDate)).asDays();
 
-            var schedule = {
-            date: calanderStartDate.format('DD-MM-YYYY'),
-            noSchedule: true
-            };
+          console.log(' diff1 next schedule ' + diff);
 
-            scheduleModel.scheduleList.push(schedule);
+          // adding days if there are gaps between schedules
+          if(diff > 1){
 
-            calanderStartDate.add(1, 'd');
+            for(var j = 1; j < diff; j++){
+
+              var schedule = {
+              date: calanderStartDate.format('DD-MM-YYYY'),
+              noSchedule: true
+              };
+
+              scheduleModel.scheduleList.push(schedule);
+
+              calanderStartDate.add(1, 'd');
+
+            }
 
           }
 
-
         }
-
 
       }
 
@@ -303,6 +317,15 @@ var stepOneView = {
       //updating location text in the second step
       var locationId = self.selectLocations.find(":selected").attr('value');
       var locationName = self.selectLocations.find(":selected").text();
+
+      var fromDateStr = stepOneView.fromDateControl.val();
+      var toDateStr = stepOneView.toDateControl.val();
+
+      console.log('from ui start ' + fromDateStr + ' end date ' + toDateStr);
+
+      //setting the models start and end date
+      scheduleModel.startDate = fromDateStr;
+      scheduleModel.endDate = toDateStr;
 
       controller.updateSelectedLocation(locationId, locationName);
       controller.getSchedulesFromServer();
