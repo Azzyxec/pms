@@ -11,7 +11,6 @@ function getCloseAppointmentController(){
     patientsName:'',
     remarks: '',
     prescriptionList:[],
-    //UploadedList[],
     currentEntry:{}
   }
 
@@ -215,6 +214,7 @@ function getCloseAppointmentController(){
       });
 
       fi.on('fileuploadadd', function (e, data) {
+
               data.context = $('<div/>').addClass('file-wrapper').appendTo('#files'); //create new DIV with "file-wrapper" class
               $.each(data.files, function (index, file){  //loop though each file
               var node = $('<div/>').addClass('file-row'); //create a new node with "file-row" class
@@ -238,6 +238,7 @@ function getCloseAppointmentController(){
       });
 
       fi.on('fileuploadprogress', function (e, data) {
+
           var progress = parseInt(data.loaded / data.total * 100, 10);
           if (data.context) {
               data.context.each(function () {
@@ -245,7 +246,9 @@ function getCloseAppointmentController(){
               });
           }
       });
+
       fi.on('fileuploaddone', function (e, data) { // invoke callback method on success
+         console.log('on done');
           $.each(data.result.files, function (index, file) { //loop though each file
               if (file.url){ //successful upload returns a file url
                   var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);

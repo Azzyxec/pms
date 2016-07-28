@@ -183,6 +183,8 @@ var filesList = [
 {build:true, files: [
                   objConfig.scriptsBasePath +"links.js",
                   objConfig.scriptsBasePath + "admin/adminDashboard.js",
+                  objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
+                  objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",
                   objConfig.scriptsBasePath + "admin/admin.doctor.listings.js"
                 ], buildName: "admin.doctor.listings.js"},
 {build:true, files: [
