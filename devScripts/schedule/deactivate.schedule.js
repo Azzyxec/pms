@@ -74,146 +74,34 @@ $(document).ready(function(){
       .done(function( response ) {
 
         console.log('locs ' + JSON.stringify(response));
-        controller.generateModel(response.data);
+        controller.generateModel(response.data.scheduleList);
 
       });
 
     },
     generateModel: function(scheduleDaysList){
 
-    //Dates will be in dd mm yy format
-    var fromDateStr = stepOneView.fromDateControl.val();
-    var toDateStr = stepOneView.toDateControl.val();
-
-    console.log('from ui start ' + fromDateStr + ' end date ' + toDateStr);
-
-    //setting the models start and end date
-    scheduleModel.startDate = fromDateStr;
-    scheduleModel.endDate = toDateStr;
-
-    //date validations, cannot put previoous dates
-    //cannot dates in revrese order
-    //cannot make schedule for more than 60 days
-
-    var mfromDate = moment(fromDateStr, "DD-MM-YYYY");
-    var mtoDate = moment(toDateStr, "DD-MM-YYYY");
-
-    //console.log('date range from ' +  mfromDate.format('DD-MM-YYYY') + ' to ' + mtoDate.format('DD-MM-YYYY'));
-
-    //getting the difference is dates in terms of dates
-    var daysDuration =  moment.duration(mtoDate.diff(mfromDate)).asDays();
-    console.log('duration ' + daysDuration);
-
-    scheduleModel.scheduleDaysCount = daysDuration;
-
-    //adding initital dates, if start day is not monday
-    var startDay = mfromDate.format('ddd');
-
-    if(startDay != 'Mon'){
-
-      var blocksToAdd = mfromDate.day() - 1;
-
-      var calanderStartDate = moment(mfromDate).subtract(blocksToAdd, 'days');
-
-      for(var i = 0; i < blocksToAdd ; i++){
-
-        var schedule = {
-        date: calanderStartDate.format('DD-MM-YYYY'),
-        isSchedule: false
-        };
-
-        scheduleModel.scheduleList.push(schedule);
-
-        calanderStartDate.add(1, 'd');
-
-      }
-
-    } //if(startDay != 'Mon'){
-
-    //adding the rest of the objects
-
-    //console.log(' the schedules' + JSON.stringify(scheduleDaysList));
-
-
     if(scheduleDaysList && scheduleDaysList.length > 0){
-
 
       for( var i = 0; i < scheduleDaysList.length; i++){
 
         var scheduleDay = scheduleDaysList[i];
 
-        scheduleDay.isSchedule = true;
-        scheduleDay.startTime = utility.getTimeFromMinutes(scheduleDay.startTimeMinutes);
-        scheduleDay.endTime = utility.getTimeFromMinutes(scheduleDay.endTimeMinutes);
-        scheduleDay.deactivate = false;
+        //scheduleDay.startTime = utility.getTimeFromMinutes(scheduleDay.startTimeMinutes);
+        //scheduleDay.endTime = utility.getTimeFromMinutes(scheduleDay.endTimeMinutes);
 
         scheduleModel.scheduleList.push(scheduleDaysList[i]);
-
-        calanderStartDate.add(1, 'd');
-
-        var mscheduleDate = moment(scheduleDay.date, "DD-MM-YYYY");
-
-        if(i+1 < scheduleDaysList.length){
-          var mnextScheduleDate = moment(scheduleDaysList[i + 1].date, "DD-MM-YYYY");
-          console.log('next day ' + scheduleDaysList[i + 1].date);
-
-
-          var diff =  moment.duration(mnextScheduleDate.diff(mscheduleDate)).asDays();
-
-          console.log(' diff1 next schedule ' + diff);
-
-          // adding days if there are gaps between schedules
-          if(diff > 1){
-
-            for(var j = 1; j < diff; j++){
-
-              var schedule = {
-              date: calanderStartDate.format('DD-MM-YYYY'),
-              noSchedule: true
-              };
-
-              scheduleModel.scheduleList.push(schedule);
-
-              calanderStartDate.add(1, 'd');
-
-            }
-
           }
 
-        }
-
-      }
-
-    // adding rest of the days if there is no schedule
-     if(scheduleDaysList.length < daysDuration){
-
-       for(var i = scheduleDaysList.length; i <= daysDuration; i++ ){
-
-         var schedule = {
-         date: calanderStartDate.format('DD-MM-YYYY'),
-         noSchedule: true
-         };
-
-         scheduleModel.scheduleList.push(schedule);
-
-         calanderStartDate.add(1, 'd');
-
-
-
-       }
-
-
-     }
-
-    }else{
+      }else{
       console.log('no schedules');
       // when no results have been found
       scheduleModel.scheduleList = [];
     }
-      console.log('schedule list' + JSON.stringify(scheduleModel.scheduleList));
+
+    console.log('schedule list' + JSON.stringify(scheduleModel.scheduleList));
 
      //move to step two
-
      stepOneView.panel.hide();
      deactivateScheduleView.visible(true);
      deactivateScheduleView.render();
@@ -225,13 +113,19 @@ $(document).ready(function(){
     },
     deactivateScheduleDay: function(){
 
+
+
       var list = [];
+
+      console.log('before list ' + JSON.stringify(scheduleModel.scheduleList));
 
       for(var i = 0; i <scheduleModel.scheduleList.length; i++ ){
         var scheduleObj = scheduleModel.scheduleList[i];
-        if(scheduleObj.isSchedule && scheduleObj.deactivate){
-          //console.log('adding ' + JSON.stringify(scheduleObj));
-          list.push(scheduleObj);
+        for(var j = 0; j < scheduleObj.timings.length; j++){
+          var item = scheduleObj.timings[j];
+          if(item.deactivate == true){
+            list.push({scheduleDayId:item.scheduleDayId});
+          }
         }
       }
 
@@ -243,7 +137,7 @@ $(document).ready(function(){
 
       var data = {
         locationId: scheduleModel.selectedLocation.id,
-        scheduleList: list,
+        scheduleDayIdList: list,
         scheduleCount: list.length
       };
 
@@ -421,16 +315,12 @@ render: function() {
 
   this.tableBody.empty();
 
-  //addin the rest of the dates
+  //rendering the schedueles
   var daysCount = schedule.scheduleList.length;
 
   if(daysCount > 0){
     utility.getAlerts("Note: deactivation checkboxes are disabled when there are active appointments, please cancel or reschedule appointments on that day to deactivate the schedule.","alert-warning","",".container-fluid");
-  }else{
-    //utility.getAlerts("No schedules were found, please try searching on different days or you might need to add new schedules.","alert-warning","",".container-fluid");
   }
-
-
 
   var loopCount = Math.ceil(daysCount / 7);
 
@@ -443,57 +333,58 @@ render: function() {
       var scheduleItem = schedule.scheduleList[indexCounter];
 
       var date = moment(scheduleItem.date, "DD-MM-YYYY");
-      var span =  $('<span/>',{class: 'pull-right font-16 calendar-date', text:date.format('Do')});
+      var span =  $('<span/>',{class: 'pull-right font-16 calendar-date', text:date.format('Do MMM YYYY')});
 
       var td = $('<td/>').append(span)
       .append($('<br><br>'));
 
-      if(scheduleItem.isSchedule){
+      for(var k = 0; k < scheduleItem.timings.length; k++){
 
-        var time = scheduleItem.startTime + ' to ' + scheduleItem.endTime;
-        var span1 =  $('<span class= "label font-16 apptLabel label-danger"  >'+time+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span/>');
-        td.append(span1);
+        var lschedule = scheduleItem.timings[k];
 
+        var time = utility.getTimeFromMinutes(lschedule.startTimeMinutes)
+                  + ' to '
+                  + utility.getTimeFromMinutes(lschedule.startTimeMinutes);
+
+        var span1 =  $('<span class= "label font-16 label-custom"  >'+time+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span/>');
         var checkbox = $('<input/>',{type:'checkbox'
-                                     ,style:'position: absolute; margin-left: -10px;  margin-top: 5px;'
+                                     ,style:'position: absolute; margin-left: -10px;  margin-top: 0px;'
                                      ,checked: true
                                     });
         span1.append(checkbox);
 
-        if(scheduleItem.activeAppointments == 0){
-          //there are not active appointments, allow to deactivate
-          scheduleItem.deactivate = true;
+        td.append(span1);
 
-          checkbox.on('change', (function(scheduleItem){
+        //activationg or deactivation check boxes
+        if(lschedule.activeAppointments == 0){
+        //there are not active appointments, allow to deactivate
+        lschedule.deactivate = true;
 
-              return function(){
-                if(this.checked){
-                  //console.log('checked');
-                    scheduleItem.deactivate = true;
-                }else{
-                  //console.log('un checked');
-                  scheduleItem.deactivate = false;
-                }
+        checkbox.on('change', (function(litem){
 
-                console.log('checked ' + JSON.stringify(scheduleItem));
+            return function(){
+              if(this.checked){
+                //console.log('checked');
+                  litem.deactivate = true;
+              }else{
+                //console.log('un checked');
+                 litem.deactivate = false;
+              }
 
-             }
+              console.log('checked ' + JSON.stringify(litem));
 
-          })(scheduleItem));
+           }
+
+        })(lschedule));
 
         }else{
-          //there are active appointments, so disable the checkbox
-          checkbox.prop('disabled', true);
-
+        //there are active appointments, so disable the checkbox
+        lschedule.deactivate = false;
+        checkbox.prop('disabled', true);
         }
 
-      }else if(!scheduleItem.isSchedule && scheduleItem.noSchedule){
-        var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'No Schedule'});
-        td.append(span1);
-      }else{
-        var span1 =  $('<span/>',{class: 'label font-16 label-info', text:'Not Applicable'});
-        td.append(span1);
       }
+
 
       tr.append(td);
 
