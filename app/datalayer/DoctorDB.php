@@ -30,8 +30,9 @@ class DoctorDB
       $statement = DBHelper::generateStatement('add_update_locations',  $paramArray);
       $statement->execute();
 
-      //$statement->fetch();
-      return  array('status' => "1", 'data' => "1", 'message' => 'success');
+      $row = $statement->fetch();
+
+      return  array('status' =>$row['status'], 'data' => $row['dates'], 'message' => 'success');
     } catch (Exception $e) {
       return array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in DB' . $e->getMessage());
     }
