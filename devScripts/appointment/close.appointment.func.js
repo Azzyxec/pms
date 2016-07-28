@@ -97,6 +97,8 @@ function getCloseAppointmentController(){
 
            controller.allowSubmit = true;
 
+
+
            console.log('close response ' + JSON.stringify(response));
            //close in proper resonse, else dsplay messge the appoitmetn could not be compated
          });

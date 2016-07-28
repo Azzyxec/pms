@@ -175,7 +175,14 @@ class AppointmentDB{
 
   }
 
-  public function closeAppointment($appointmentInfo, $prescriptionListXML, $prescriptionCount, $loggedinUserId, $loggedinUserType){
+  public function closeAppointment(
+                                    $appointmentInfo
+                                  , $prescriptionListXML
+                                  , $prescriptionCount
+                                  , $uploadedFileListXml
+                                  , $uploadedFileCount
+                                  , $loggedinUserId
+                                  , $loggedinUserType){
     try {
 
       $paramArray = array(
@@ -186,7 +193,9 @@ class AppointmentDB{
         'pclosed_by_id' => $loggedinUserId,
         'pclosed_by_type' => $loggedinUserType,
         'pprescription_count' => $prescriptionCount,
-        'pprescription_xml' => $prescriptionListXML
+        'puploaded_file_list_count' => $uploadedFileCount,
+        'pprescription_xml' => $prescriptionListXML,
+        'puploaded_file_list_xml' => $uploadedFileListXml
       );
 
       $statement = DBHelper::generateStatement('close_appointment_proc',  $paramArray);

@@ -1,5 +1,8 @@
 <?php
 use Pms\utilities\UploadHandler;
+use Pms\Entities\UserSessionManager;
+
+
 
 class CustomUploadHandler extends UploadHandler {
   // protected function trim_file_name($file_path, $name, $size, $type, $error, $index, $content_range) {
@@ -46,6 +49,8 @@ $app->group('/Upload',function(){
           $uploadFileName = $value->getClientFilename();
           $fileSize =  $value->getSize();
           $mediaType =  $value->getClientMediaType();
+          $uniqueFileName = $uploadFileName;
+
           if($fileSize <= $MaxfileSize){
               $value->moveTo("images/scannedDoc/$uploadFileName");
           }
@@ -55,13 +60,16 @@ $app->group('/Upload',function(){
 
 
       $returnFiles = array();
-      $uniqueFileName = uniqid() . $returnFiles['name'];
+      $uploadedFileSession = UserSessionManager::addUploadedfile($uploadFileName,$uniqueFileName);
+
 
 
       $returnFiles['files'] =  array('name'=>$uploadFileName
                                       , 'size' => $fileSize
                                       , 'type'=> 'image/jpeg'
                                       , 'url' => 'index.php/Upload/' . $uploadFileName );
+
+
 
 
   $data = array('status' => "1", 'data' => $files, 'message' => "success" );

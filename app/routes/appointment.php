@@ -18,12 +18,31 @@ $app->group('/appointment', function(){
       $nextAppointmentStatus = -1;
 
       $user = UserSessionManager::getUser();
+      $uploadedFileList = UserSessionManager::getUploadedfileList();
+      //
+      //return $response->withJson($uploadedFileList);
+
 
       if($user->id != -1){
 
         $postedData = $request->getParsedBody();
 
         $appointment = $postedData['appointment'];
+
+        $uploadedFiles = array();
+        $uploadedFileListXml = "";
+        $uploadedFileCount = 0;
+        if(isset($uploadedFileList)){
+          $uploadedFiles = $uploadedFileList;
+
+          $uploadedFileCount = count($uploadedFiles);
+
+          $xml_data1 = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
+          XMLHelper::array_to_xml($uploadedFiles, $xml_data1);
+          $uploadedFileListXml = $xml_data1->asXML();
+
+        }
+
 
         $prescription = array();
         $prescriptionListXml = "";
@@ -42,8 +61,8 @@ $app->group('/appointment', function(){
         }
 
         $appointmentDB = new AppointmentDB();
-        $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount,  $user->id, $user->type);
-
+        $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount, $uploadedFileListXml, $uploadedFileCount ,  $user->id, $user->type);
+        UserSessionManager::clearUploadedFileList();
 
         //booking the next appointment
         $bookNextAppointment = $appointment['bookNextAppointment'];
@@ -66,6 +85,8 @@ $app->group('/appointment', function(){
                                                                                    );
 
           if($nextAppointmentStatus == 1){
+
+
             //can book appointment/ make and new appointment entry
 
                    $appointmentDB->insertNextAppointmentEntry(

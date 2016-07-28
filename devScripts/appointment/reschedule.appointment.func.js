@@ -81,6 +81,7 @@ function getRescheduleAppointmentController(){
          }
 
          if(response.status == 2){
+          utility.getAlerts("Appointment could not be rescheduled either because timings clash with existing appointment or there is no schedule","alert-warning","",".modal-body");
            console.log('message that appointment could not be rescheduled');
          }
 

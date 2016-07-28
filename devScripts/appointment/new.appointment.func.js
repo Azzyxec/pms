@@ -287,20 +287,20 @@ function makeAppointmentController(){
           controller.resetPatientInfo();
           //todayAppointmentListView.newAppointmentModal.modal('hide');
           //update the location list with new values
-          utility.getAlerts("Appointments added success fully","alert-success text-center",'','.book-app-alerts-container');
+          utility.getAlerts("Appointments added success fully","alert-success text-center",'','.modal-body');
           //may be can return the id of the newly added patient, to update the patient model
 
         }else if(response.status == 2){
-          utility.getAlerts("Schedule not added or timimgs dont match!","alert-warning text-center",'','.book-app-alerts-container');
+          utility.getAlerts("Schedule not added or timimgs dont match!","alert-warning text-center",'','.modal-body');
 
           console.log('schedule not added or timimgs dont match');
 
         }else if(response.status == 3){
-            utility.getAlerts("timimng clash with existign appointment","alert-warning text-center",'','.book-app-alerts-container');
+            utility.getAlerts("timimng clash with existign appointment","alert-warning text-center",'','.modal-body');
 
           console.log('timimng clash with existign appointment');
         }else if(response.status == 4){
-          utility.getAlerts("cannot book a backdated appointment","alert-warning text-center",'','.book-app-alerts-container');
+          utility.getAlerts("cannot book a backdated appointment","alert-warning text-center",'','.modal-body');
           console.log('cannot book a backdated appointment');
         }
 
