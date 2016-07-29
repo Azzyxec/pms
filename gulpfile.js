@@ -130,12 +130,14 @@ var filesList = [
                   objConfig.scriptsBasePath +"validator.js",
                   objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                   objConfig.scriptsBasePath +"staff/add.staff.js"
                 ], buildName: "add.staff.js"},
 {build:true, files: [
                   objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath +"staff/list.staff.js"
                 ], buildName: "list.staff.js"},
@@ -165,6 +167,7 @@ var filesList = [
                                 ], buildName: "patient.entry.js"},
 {build:true, files: [
                   objConfig.scriptsBasePath +"links.js",
+                  objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath +"programme/programme.listing.js"
                 ], buildName: "programme.listing.js"},
@@ -229,6 +232,7 @@ var filesList = [
 {build:true, files: [
                   objConfig.scriptsBasePath + "links.js",
                   objConfig.scriptsBasePath + "moment.js",
+                  objConfig.scriptsBasePath +"utility.js",
                   objConfig.scriptsBasePath + "bootstrap-datetimepicker.min.js",
                   objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
                   objConfig.scriptsBasePath + "schedule/schedule.calendar.js"

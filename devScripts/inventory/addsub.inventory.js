@@ -10,7 +10,7 @@ $(document).ready(function(){
       DefaultlocationId:0,
       userType: '',
       SelectedLocationId:1,
-      StockList : [{medicineName:'crosin',UpdatedOn:'26-07-2016',UpdatedBy:'26-07-2016',stock:'4'}]
+      StockList : []
     }
     controller = {
       init:function(){
@@ -74,18 +74,25 @@ $(document).ready(function(){
 
           if(response.status == 1){
             Model.locationList = response.data;
-            StockView.renderLocations();
-            if(Model.userType == 'D'){
-              Model.DefaultlocationId = Model.locationList[0].id;
+
+            if(Model.locationList.length > 0){
+              StockView.renderLocations();
+              if(Model.userType == 'D'){
+                Model.DefaultlocationId = Model.locationList[0].id;
+              }
+              StockView.initTypeahead();
+            }else{
+              //there are no locations
+              StockView.locationSelect.prop('disabled', true);
+              utility.getAlerts('could not find locations, please create work locations or active existing ones', 'alert-warning', '', '.container-fluid');
             }
-            StockView.initTypeahead();
+
           }
 
         });
 
       },
       getAllProductsServer: function () {
-
 
         $.get(this.getAllProductListUrl, {})
         .done(function(response){
@@ -96,15 +103,14 @@ $(document).ready(function(){
 
             Model.productList = response.data;
             if(Model.userType == 'D'
-                && Model.locationList
-                && Model.locationList.length > 0
-                && !controller.DefaultLocationInit){
-                  controller.DefaultLocationInit = true;
-            Model.DefaultlocationId = Model.locationList[0].id;
+            && Model.locationList
+            && Model.locationList.length > 0
+            && !controller.DefaultLocationInit){
+              controller.DefaultLocationInit = true;
+              Model.DefaultlocationId = Model.locationList[0].id;
             }
 
-              StockView.initTypeahead();
-
+            StockView.initTypeahead();
           }
 
         });
@@ -122,31 +128,38 @@ $(document).ready(function(){
       },
       AddUpdateToServer: function(opernType){
 
-        var data = {
-          locationId: Model.DefaultlocationId,
-          id: Model.selectedProduct.id,
-          name: Model.selectedProduct.name,
-          stock: Model.selectedProduct.stock,
-          operationType: opernType
-        }
 
-        $.post( controller.saveUpdateProductStock , data)
-        .done(function( response ) {
-
-          console.log(' response ' + JSON.stringify(response));
-          if(response.status == 1){
-            controller.resetProductModel();
-            utility.getAlerts('Stock updated Successfully!','alert-success ','','.container-fluid');
-            StockView.reset();
-            controller.getAllProductsServer();
-          }else{
-            utility.getAlerts('Something is wrong!','alert-warning ','','.container-fluid');
-            StockView.reset();
+        if(Model.DefaultlocationId > 0){
+          var data = {
+            locationId: Model.DefaultlocationId,
+            id: Model.selectedProduct.id,
+            name: Model.selectedProduct.name,
+            stock: Model.selectedProduct.stock,
+            operationType: opernType
           }
 
-        });
+          $.post( controller.saveUpdateProductStock , data)
+          .done(function( response ) {
+
+            console.log(' response ' + JSON.stringify(response));
+            if(response.status == 1){
+              controller.resetProductModel();
+              utility.getAlerts('Stock updated Successfully!','alert-success ','','.container-fluid');
+              StockView.reset();
+              controller.getAllProductsServer();
+            }else{
+              utility.getAlerts('Something is wrong!','alert-warning ','','.container-fluid');
+              StockView.reset();
+            }
+
+          });
+
+        }else{
+          utility.getAlerts('cannnot save, no location selected','alert-warning ','','.container-fluid');
+        }
 
       }
+
     }
 
     StockView = {
@@ -216,7 +229,7 @@ $(document).ready(function(){
           if(!name || 0 === name.length){
             console.log('reset patient model');
             controller.resetProductModel();
-              StockView.stockLabel.text('0');
+            StockView.stockLabel.text('0');
 
           }else if(name.length > 0) {
 
@@ -278,9 +291,9 @@ $(document).ready(function(){
       initTypeahead: function(){
         var ProductList = controller.getProductListforLocation(Model.DefaultlocationId);
 
- console.log('iniit typeahead product list' + JSON.stringify(ProductList));
-       this.productName.typeahead("destroy");
-       this.productName.on("change click keyup select blur ",this.ProductNameHandler);
+        console.log('iniit typeahead product list' + JSON.stringify(ProductList));
+        this.productName.typeahead("destroy");
+        this.productName.on("change click keyup select blur ",this.ProductNameHandler);
         this.productName.typeahead({
           name: 'all-products',
           source: ProductList,
@@ -295,6 +308,7 @@ $(document).ready(function(){
       },
       reset:function(){
         //this.form.reset();
+
         this.form.bootstrapValidator("resetForm",true);
       },
       renderProductView: function(){
@@ -311,31 +325,33 @@ $(document).ready(function(){
 
         var list = Model.locationList;
 
+        this.locationSelect.prop('disabled', false);
+
         this.locationSelect.empty();
 
 
-          for(var i = 0; i< list.length; i++ ){
-            //<li role="presentation" id="all-appointments-filter-button"  class="all-appointments-filter-button active "><a >Margaon</a></li>
-            var option = $('<option/>', {
-              value:list[i].id,
-              text:list[i].name
-            });
+        for(var i = 0; i< list.length; i++ ){
+          //<li role="presentation" id="all-appointments-filter-button"  class="all-appointments-filter-button active "><a >Margaon</a></li>
+          var option = $('<option/>', {
+            value:list[i].id,
+            text:list[i].name
+          });
 
-            var defaultLocId = Model.DefaultlocationId;
+          var defaultLocId = Model.DefaultlocationId;
 
-            if(defaultLocId == list[i].id){
-              option.addClass('select');
-            }
-
-            this.locationSelect.append(option);
-
+          if(defaultLocId == list[i].id){
+            option.addClass('select');
           }
 
-          //disable select for staff
-          if(Model.userType == 'S'){
-            this.locationSelect.attr('disabled', true);
+          this.locationSelect.append(option);
 
-          }
+        }
+
+        //disable select for staff
+        if(Model.userType == 'S'){
+          this.locationSelect.attr('disabled', true);
+
+        }
       }
 
     }

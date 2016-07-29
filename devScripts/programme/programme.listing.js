@@ -13,11 +13,25 @@ $(document).ready(function(){
 
         ProgrammeListView.init();
 
+
         $.get( this.programmeListUrl , {})
          .done(function( response ) {
            console.log('response ' + JSON.stringify(response));
            programmeListModel = response.data;
-           ProgrammeListView.render();
+
+           if(response.status == 1){
+             if(programmeListModel.length > 0){
+                ProgrammeListView.tableConatiner.removeClass('hidden');
+               ProgrammeListView.render();
+             }else{
+               ProgrammeListView.tableConatiner.addClass('hidden');
+               utility.getAlerts('No medical programs to list, add new schedules by clicking the new program button','alert-warning ','','.container-fluid');
+             }
+
+           }else{
+             utility.getAlerts('Something is not right','alert-danger ','','.container-fluid');
+           }
+
          });
 
 
@@ -29,6 +43,7 @@ $(document).ready(function(){
 
     var ProgrammeListView = {
       init: function(){
+        this.tableConatiner = $('#list-container');
         this.tableBody = $('#programme-list-table-body');
         this.newProgrammeButton = $('#btn-new-programme');
 
