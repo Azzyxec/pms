@@ -296,7 +296,7 @@ function makeAppointmentController(){
           console.log('schedule not added or timimgs dont match');
 
         }else if(response.status == 3){
-            utility.getAlerts("timimng clash with existign appointment","alert-warning text-center",'','.modal-body');
+            utility.getAlerts("timimng clash with existign appointment, please try reloading the dashboard!","alert-warning text-center",'','.modal-body');
 
           console.log('timimng clash with existign appointment');
         }else if(response.status == 4){
