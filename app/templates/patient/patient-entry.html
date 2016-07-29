@@ -17,9 +17,9 @@
 
         <li role="presentation"><a id="patients-entry-link" href="#patients-entry-section" aria-expanded="true" aria-controls="profile" role="tab" data-toggle="tab">Patients Details</a></li>
         <li role="presentation"><a id="guardian-entry-link" href="#guardian-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Guardian Details</a></li>
-        <!--<li role="presentation"><a id="birth-entry-link" href="#birth-entry-section" aria-controls="messages" role="tab" data-toggle="tab">Births Details</a></li>-->
         <li role="presentation"><a id="patients-programme-link" href="#patients-entry-more-details-section" aria-controls="messages" role="tab" data-toggle="tab">Checkup Program</a></li>
-        <li role="presentation"><a id="patients-history-link" href="#patients-history-section" aria-controls="messages" role="tab" data-toggle="tab">Appointment History</a></li>
+        <!-- <li role="presentation"><a id="patients-history-link" href="#patients-history-section" aria-controls="messages" role="tab" data-toggle="tab">Appointment History</a></li> -->
+        <li role="presentation"><a id="birth-entry-link" href="#patients-history-section" aria-controls="messages" role="tab" data-toggle="tab">Appointment History</a></li>
 
       </ul>
 
@@ -288,7 +288,7 @@
 
 
 
-        <div role="tabpanel" class="tab-pane " id="birth-entry-section">
+        <!-- <div role="tabpanel" class="tab-pane " id="birth-entry-section">
 
           <div class="panel panel-green">
             <div class="panel-heading">
@@ -399,10 +399,12 @@
 
         </div>
 
+ -->
 
 
-
-
+    <div role="tabpanel" class="tab-pane " id="patients-history-section">
+          {% include '/patient/patient-historysection.html' %}
+    </div>
         <div role="tabpanel" class="tab-pane" id="patients-entry-more-details-section">
           <hr class="invisible">
 
@@ -489,11 +491,7 @@
         </div>  <!--  programme tab ends -->
 
 
-        <div class="col-md-10 " role="tabpanel" class=" tab-pane" id="patients-history-section">
 
-          {% include '/patient/patient-historysection.html' %}
-
-        </div>
 
       </div>
 

@@ -399,6 +399,14 @@ var patientDetailsView = {
     this.activeControl = $('#pactive');
     this.inactiveControl = $('#pinactive');
     this.submitBtn =  $('.patients-detail-form-submit');
+    this.patientHistoryLinkBtn = $('#patients-history-link');
+
+    this.patientHistorySection = $('#patient-history-panel');
+
+
+
+
+
 
 
     this.initValidators();

@@ -49,6 +49,18 @@ body{
     padding: 5px;
 }
 
+@media only screen and (max-width: 767px) {
+  .timeline_child_item{
+       border-left: none;
+
+      padding: 5px;
+  }
+  .timeline_item{
+       border-left: 6px solid #62bdfa;
+  }
+
+}
+
 @media only screen and (max-width: 1100px) {
     .timeline_child_item {
      //border-left: 6px solid #62bdfa;
@@ -481,7 +493,7 @@ box-shadow: inset 5px 6px 9px -7px;
   box-shadow: inset 7px -8px 16px -11px;
 }
 
- 
+
 
 .hovercollapse{
   background-color:#dff0d8 !important;
