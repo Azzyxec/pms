@@ -16,8 +16,21 @@ $(document).ready(function(){
             $.get( controller.staffListingUrl , {})
             .done(function( response ) {
               console.log("doctors list: " + JSON.stringify(response));
-              listModel = response.data;
-              listView.render();
+
+              if(response.status == 1){
+
+                if(response.data.length > 0){
+                listModel = response.data;
+                listView.render();
+                listView.listingContainer.removeClass('hidden');
+              }else{
+                utility.getAlerts('No staff to list, you can add new staff by clicking on Add Staff button','alert-warning ','','.container-fluid');
+              }
+
+              }else{
+                utility.getAlerts('Something is wrong!','alert-warning ','','.container-fluid');
+              }
+
             });
 
           },
@@ -29,6 +42,7 @@ $(document).ready(function(){
 
         var listView = {
           init: function(){
+            this.listingContainer = $('#listing-container');
             this.tablebody = $('#staff-list-table-body');
             this.newStaffButton = $('#btn-new-staff');
 
@@ -78,7 +92,7 @@ $(document).ready(function(){
               tr.append(td);
 
 
-          
+
 
               this.tablebody.append(tr);
             }

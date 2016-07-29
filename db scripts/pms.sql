@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 28, 2016 at 11:46 PM
+-- Generation Time: Jul 29, 2016 at 12:28 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -3200,7 +3200,7 @@ CREATE TABLE IF NOT EXISTS `login` (
   `last_modified` datetime DEFAULT NULL,
   `is_active` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=92 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=93 ;
 
 --
 -- Dumping data for table `login`
@@ -3231,7 +3231,8 @@ INSERT INTO `login` (`id`, `type`, `login_id`, `password`, `created`, `last_modi
 (88, 'D', 'picolo', '$2y$12$ra430g6xGWEE7/ub6fsT9uVzkcYgO9FBJ8P974q/M0GgbTKG6ZxhO', '2016-07-18 21:45:37', NULL, 0),
 (89, 'D', 'hans', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-18 23:27:11', '2016-07-18 23:27:38', 1),
 (90, 'S', 'someone', '$2y$12$femdEL9iXOFphtG4NQARJOwXdIG4LDxAiTL32eb9VBAFGoaR.soSa', '2016-07-28 01:13:58', '2016-07-28 01:17:26', 1),
-(91, 'S', 'staffer', '$2y$12$TVOmTA6W1au0.SrZgHt0AePiiQsppbLbP8XS/rhzMt2t3lJbN5rsS', '2016-07-28 01:30:15', '2016-07-28 01:30:54', 1);
+(91, 'S', 'staffer', '$2y$12$TVOmTA6W1au0.SrZgHt0AePiiQsppbLbP8XS/rhzMt2t3lJbN5rsS', '2016-07-28 01:30:15', '2016-07-28 01:30:54', 1),
+(92, 'S', 'staffone', '$2y$12$N3Q6zGGqHr6ZxQT4PFr/C.fP/R4NoFKsl1vjYLSnYpNxDsNriCOZu', '2016-07-29 15:39:41', '2016-07-29 15:41:02', 1);
 
 -- --------------------------------------------------------
 
@@ -3251,7 +3252,7 @@ CREATE TABLE IF NOT EXISTS `medication_programme` (
   `modified_by_id` int(11) DEFAULT NULL,
   `modified_by_type` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `medication_programme`
@@ -3266,7 +3267,8 @@ INSERT INTO `medication_programme` (`id`, `fk_doctors_id`, `name`, `created_date
 (6, 1, 'Xerces', '2016-07-27 00:00:00', 0, NULL, NULL, '2016-07-27 18:32:22', 1, '0'),
 (7, 1, 'newst', '2016-07-27 00:00:00', 1, NULL, NULL, NULL, NULL, NULL),
 (8, 1, 'Reno', '2016-07-27 17:53:16', 0, 1, '0', NULL, NULL, NULL),
-(9, 1, 'CVW', '2016-07-27 17:55:01', 0, 1, '0', '2016-07-27 18:09:45', 1, '0');
+(9, 1, 'CVW', '2016-07-27 17:55:01', 0, 1, '0', '2016-07-27 18:09:45', 1, '0'),
+(10, 29, 'test', '2016-07-29 15:41:39', 1, 29, '0', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3287,7 +3289,7 @@ CREATE TABLE IF NOT EXISTS `medication_programme_list` (
   `modified_date` datetime DEFAULT NULL,
   `update_marker` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `medication_programme_list`
@@ -3304,7 +3306,8 @@ INSERT INTO `medication_programme_list` (`id`, `fk_medication_programme_id`, `du
 (8, 4, 5, 'update', 'sss', '4', '2016-07-27 17:17:37', 1, 1, NULL, 1),
 (9, 6, 4, '333', '333', '2333', '2016-07-27 17:24:46', 1, 1, '2016-07-27 18:32:22', 1),
 (10, 8, 4, 'four', 'xyz', 'dose', '2016-07-27 17:53:16', 0, 1, NULL, 0),
-(11, 9, 3, '3', '3', '3', '2016-07-27 17:55:01', 0, 1, NULL, 0);
+(11, 9, 3, '3', '3', '3', '2016-07-27 17:55:01', 0, 1, NULL, 0),
+(12, 10, 4, 'four weeks', 'sdf', '3', '2016-07-29 15:41:39', 1, 29, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -3693,7 +3696,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=90 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3712,7 +3715,8 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 (86, 1, '2016-08-09', '2016-08-19', '2016-07-28 03:38:03', 1, 'D', 1),
 (87, 1, '2016-08-01', '2016-08-06', '2016-07-28 16:19:26', 1, 'D', 1),
 (88, 29, '2016-07-29', '2016-07-31', '2016-07-29 02:20:02', 29, 'D', 1),
-(89, 29, '2016-07-29', '2016-08-13', '2016-07-29 03:07:10', 29, 'D', 1);
+(89, 29, '2016-07-29', '2016-08-13', '2016-07-29 03:07:10', 29, 'D', 1),
+(90, 29, '2016-08-01', '2016-08-04', '2016-07-29 15:58:20', 29, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3733,7 +3737,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229549 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229553 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -3841,7 +3845,11 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229545, 29, 89, NULL, '2016-08-10', 540, 720, 1, NULL, NULL, NULL),
 (229546, 29, 89, NULL, '2016-08-11', 540, 720, 1, NULL, NULL, NULL),
 (229547, 29, 89, NULL, '2016-08-12', 540, 720, 1, NULL, NULL, NULL),
-(229548, 29, 89, NULL, '2016-08-13', 540, 720, 1, NULL, NULL, NULL);
+(229548, 29, 89, NULL, '2016-08-13', 540, 720, 1, NULL, NULL, NULL),
+(229549, 29, 90, 26, '2016-08-01', 540, 720, 1, NULL, NULL, NULL),
+(229550, 29, 90, 26, '2016-08-02', 540, 720, 1, NULL, NULL, NULL),
+(229551, 29, 90, 26, '2016-08-03', 540, 720, 1, NULL, NULL, NULL),
+(229552, 29, 90, 26, '2016-08-04', 540, 720, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3868,7 +3876,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `modified_date` datetime NOT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `staff`
@@ -3877,7 +3885,8 @@ CREATE TABLE IF NOT EXISTS `staff` (
 INSERT INTO `staff` (`id`, `first_name`, `last_name`, `contact1`, `contact2`, `email`, `address`, `fk_location_id`, `fk_doctor_id`, `fk_user_id`, `fk_created_by_id`, `created_by_type`, `created_date`, `fk_modified_by_id`, `modified_by_type`, `modified_date`, `is_active`) VALUES
 (2, 'magnus', 'staff', '423412', '3234', 'staff@gmail.com', '34124', 18, 1, 60, 1, 'D', '2016-06-27 20:18:24', 1, 0, '2016-07-11 17:39:04', 1),
 (3, 'New Staff', 'Last', '70423423', '', 'gmail@email.com', 'Some Address', 18, 1, 90, 1, 'D', '2016-07-28 01:13:58', 1, 0, '2016-07-28 01:17:26', 1),
-(4, 'staffer', 'again', '234234', '', 'asdf@asd.com', 'sadfsd', 18, 1, 91, 1, 'D', '2016-07-28 01:30:15', 1, 0, '2016-07-28 01:30:54', 1);
+(4, 'staffer', 'again', '234234', '', 'asdf@asd.com', 'sadfsd', 18, 1, 91, 1, 'D', '2016-07-28 01:30:15', 1, 0, '2016-07-28 01:30:54', 1),
+(5, 'staffone', 'sdfasd', '53452345', '', 'asdf@gmail.com', 'address', 26, 29, 92, 29, 'D', '2016-07-29 15:39:41', 29, 0, '2016-07-29 15:41:02', 1);
 
 -- --------------------------------------------------------
 
@@ -3909,7 +3918,7 @@ INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_a
 (23, 47, 'Vermont', '', 1, NULL, NULL),
 (24, 47, 'Mich', '', 1, NULL, NULL),
 (25, 1, 'new', '', 0, '2016-07-28 02:23:26', '2016-07-29 01:37:41'),
-(26, 29, 'Canada', '', 0, '2016-07-29 02:04:09', '2016-07-29 02:40:34');
+(26, 29, 'Canada', '', 1, '2016-07-29 02:04:09', '2016-07-29 15:38:57');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
