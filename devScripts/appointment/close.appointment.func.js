@@ -606,6 +606,10 @@ function getCloseAppointmentController(){
           });*/
       });
 
+      this.fi.on('fileuploadfail', function (e, data) {
+        //on file upload fail
+        console.log('on fail');
+      });
 
     },
     destroyFileUploader: function(){
