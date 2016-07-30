@@ -15,7 +15,7 @@ $(document).ready(function(){
     };
 
     var controller = {
-      init: function(){
+      init: function(){ 
         this.getLocationUrl = links.getActiveLocations1;
         this.getSechduleforDeactivation = links.getSechduleforDeactivation;
         this.deactivateScheduleDays = links.deactivateScheduleDays;

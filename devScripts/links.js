@@ -102,9 +102,15 @@ var links = {
     PatientUploadimage:"index.php/Upload/PatientImageUpload",
     GaurdianUploadimage:"index.php/Upload/GuardianImageUpload",
 
+    //upload server location path
+    patientPicturePathUrl:'images/patientUserImages/',
+    guardianPicturePathUrl:'images/guardianUserImages/',
+
     //Inventory
     saveUpdateProductStock: "index.php/doctor/saveUpdateProductStock",
     getAllProducts:"index.php/doctor/getProductList",
     getProductStockHistory:"index.php/doctor/getProductStockHistory"
+
+
 
 }

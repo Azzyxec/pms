@@ -50,7 +50,8 @@ $(document).ready(function(){
       //View related properties,i.e. to fill drop downs
       programmeNameList: [],  //contains name value pair for the drop down
       attachedProgrammeId: 0,  //this property might not be needed
-      deliveryMethods: []
+      deliveryMethods: [],
+      defaultPictureName: 'defaultProfile.jpg'
     };
 
     function MainController(){
@@ -64,6 +65,8 @@ $(document).ready(function(){
       this.patientsDetailsUrl = links.patientsDetailsUrl;
       this.patientsImageUrl = links.getpatientsImageUrl;
       this.redirectPatientsListingUrl = links.patientsListingUrl;
+      this.patientsPicturePath = links.patientPicturePathUrl;
+      this.guardianPicturePath = links.guardianPicturePathUrl;
 
       //this.patientsProgrammesUrl = links.patientsProgrammesUrl;
     };
@@ -638,7 +641,11 @@ var patientDetailsView = {
     this.contact1.val(lpatientInfo.contact1);
     //this.contact2.val(lpatientInfo.contact2);
     this.address.val(lpatientInfo.address);
-    this.imgBox.attr('src','images/patientUserImages/'+lpatientInfo.picturePath);
+    if(lpatientInfo.picturePath == ''){
+       lpatientInfo.picturePath = model.defaultPictureName;
+    }
+
+    this.imgBox.attr('src',controller.patientsPicturePath+lpatientInfo.picturePath);
     //this.picUpload.val(model.);
 
 
@@ -732,7 +739,7 @@ var patientGuardianDetailsView = {
                 var file_txt = $('<div/>').addClass('file-row-text ').append('<span>'+file.name  + '</span>');
 
                 model.guardianInfo.picUploadPath = file.name;
-                $("#guardian-profile-image").attr('src','images/guardianUserImages/'+model.guardianInfo.picUploadPath);
+                $("#guardian-profile-image").attr('src',controller.guardianPicturePath+model.guardianInfo.picUploadPath);
 
                 file_txt.append(removeBtn); //add remove button inside info text element
                 file_txt.prependTo(node); //add to node element
