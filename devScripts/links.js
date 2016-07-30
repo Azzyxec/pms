@@ -82,6 +82,7 @@ var links = {
    locationListUrl:"index.php/locations/getAllLocations",
    getLocationUrl: "index.php/locations/getAllLocations",
    getActiveLocations: "index.php/locations/getActiveLocations",
+   getActiveLocations1: "index.php/locations/getActiveLocations1",
    deactivateLocationUrl:"index.php/locations/deactivateLocation",
    deliveryMethodsUrl:"index.php/patient/getDeliveryMethods",
 

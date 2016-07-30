@@ -324,7 +324,8 @@ $(document).ready(function(){
 
           var td = $('<a/>',{
             text: 'Remove',
-            class: "btn btn-default btn-sm"
+            class: "btn btn-default btn-sm",
+            style: "margin:5px"
           });
 
           td.click((function(programme){
@@ -346,7 +347,8 @@ $(document).ready(function(){
 
           var editLink = $('<a/>',{
             text: 'Edit',
-            class: ""
+            class: "btn btn-default btn-sm",
+            style: "margin:5px"
           });
 
           editLink.click((function(programme){
@@ -363,9 +365,9 @@ $(document).ready(function(){
 
           })(programmeList[i]));
 
-          var td = $('<td/>');
-          td.append(editLink);
-          tr.append(td);
+        //  var td = $('.last-td-col');
+          //td.append(editLink);
+          tr.append(editLink);
 
 
           this.tableBody.append(tr);

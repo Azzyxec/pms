@@ -80,4 +80,25 @@ $app->group('/locations', function(){
 
   });
 
+  $this->get('/getActiveLocations1', function ($request, $response) {
+    try {
+
+      $user = UserSessionManager::getUser();
+      $doctorDB = new DoctorDB();
+
+      $data = $doctorDB->getActiveLocations($user->doctorId, $user->id, $user->type);
+
+      $data = array('status' => "1", 'data' => $data['data'], 'message' => 'success' );
+      return $response->withJson($data);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller' );
+      return $response->withJson($data);
+    }
+
+  });
+
+
+
+
 });

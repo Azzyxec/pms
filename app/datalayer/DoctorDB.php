@@ -83,6 +83,33 @@ class DoctorDB
 
   }
 
+  public function getActiveLocations($doctorId, $loginUserId , $userType){
+    try {
+
+      $paramArray = array('pdoctor_id' => $doctorId
+      , 'plogin_user_id' => $loginUserId
+      , 'puser_type' => $userType);
+      $statement = DBHelper::generateStatement('get_active_locations',  $paramArray);
+      $statement->execute();
+
+      $allLocaions = array();
+      while (($result = $statement->fetch(PDO::FETCH_ASSOC)) !== false) {
+          $location = array();
+          $location['id'] =  $result['id'];
+          $location['name'] = $result['name'];
+          $location['isActive'] = $result['is_active'];
+          $location['status'] = $result['status'];
+          $allLocaions[] = $location;
+      }
+
+      return array('status' => 1, 'data' => $allLocaions, 'message' => 'success');
+
+    } catch (Exception $e) {
+      return array('status' => "-1", 'data' => "-1", 'message' => 'exceptoin in DB' . $e->getMessage());
+    }
+
+  }
+
   public function getAllDoctors(){
     try {
 

@@ -117,14 +117,14 @@ class ScheduleDB
     }
   }
 
-  public function getCalanderDetails($doctorId, $startDate, $endDate){
+  public function getCalanderDetails($doctorId, $startDate, $endDate, $userLoginId, $userType){
     try {
 
       // get locaion list for the doctor
 
       $doctorDB = new DoctorDB();
-      $getOnlyActiveRows = 1;
-      $locationsResult = $doctorDB->getAllLocations($doctorId, $getOnlyActiveRows);
+
+      $locationsResult = $doctorDB->getActiveLocations($doctorId, $userLoginId, $userType);
 
       $locationList = $locationsResult['data'];
 

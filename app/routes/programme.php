@@ -53,7 +53,7 @@ $app->group('/programme', function(){
 
         $programmeDB = new ProgrammeDB();
 
-        $result = $programmeDB->getMedicationProgrammes($user->id, $allGetVars['id']);
+        $result = $programmeDB->getMedicationProgrammes($user->doctorId, $allGetVars['id']);
 
         return $response->withJson($result);
 
@@ -106,7 +106,7 @@ $app->group('/programme', function(){
 
           $programmeDB = new ProgrammeDB();
           $getOnlyActiveRows = 0;
-          $doctorsPrograms = $programmeDB->getDoctorsCheckupPrograms($user->id, $getOnlyActiveRows);
+          $doctorsPrograms = $programmeDB->getDoctorsCheckupPrograms($user->doctorId, $getOnlyActiveRows);
           $data = array('status' => 1, 'data' => $doctorsPrograms, 'message' => 'success');
           return $response->withJson($data);
 

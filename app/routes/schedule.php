@@ -133,9 +133,12 @@ $app->group('/schedule', function(){
         $doctorId = $user->doctorId;
         $startDate = $allGetVars['startDate']; //'01-05-2016';
         $endDate = $allGetVars['endDate']; //'30-06-2016';
+        $userLoginId = $user->id;
+        $userType = $user->type;
+
 
         $scheduleDB = new ScheduleDB();
-        $scheduleResponse = $scheduleDB->getCalanderDetails($doctorId, $startDate, $endDate);
+        $scheduleResponse = $scheduleDB->getCalanderDetails($doctorId, $startDate, $endDate, $userLoginId, $userType);
 
         $data = array('status' => "1", 'data' => $scheduleResponse['data'], 'message' => 'success' );
         return $response->withJson($data);

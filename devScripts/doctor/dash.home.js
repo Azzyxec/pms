@@ -18,7 +18,7 @@ $(document).ready(function(){
 
     function controller(){
       //initlize any url
-      this.getLocationUrl =  links.getActiveLocations;
+      this.getLocationUrl =  links.getActiveLocations1;
       this.getAppointmentForTheDayUrl = links.getAppointmentForTheDayUrl;
       this.getPatientsForAutoFillUrl = links.getPatientsForAutoFillUrl;
       this.getPatientsHistoryUrl = links.patientsHistoryUrl;
@@ -341,6 +341,7 @@ controller.prototype.getUserInfo = function () {
     //console.log('called with' +  pdate);
     $.get( this.getAppointmentForTheDayUrl , {date:   pdate, locId: 0})
     .done(function( response ) {
+      console.log("befor raw responise" +JSON.stringify(response));
 
       model.appointmentList = response.data;
 
@@ -508,7 +509,7 @@ render: function(){
   var userInfo = cont.getUserInfoModel();
 
 
-  if(userInfo && userInfo.type == 'D'){
+  if(true){
 
     this.locationNavContainer.empty();
 

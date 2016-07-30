@@ -16,7 +16,7 @@ $(document).ready(function(){
 
     var controller = {
       init: function(){
-        this.getLocationUrl = links.getActiveLocations;
+        this.getLocationUrl = links.getActiveLocations1;
         this.getSechduleforDeactivation = links.getSechduleforDeactivation;
         this.deactivateScheduleDays = links.deactivateScheduleDays;
         this.getScheduleCalendarUrl = links.getScheduleCalendarUrl;
@@ -170,7 +170,7 @@ $(document).ready(function(){
         this.cancelButton.on('click', function(){
           window.location = links.getScheduleCalendarUrl;
         });
-        this.initValidators(); 
+        this.initValidators();
 
 
         this.fromDateControl.datetimepicker({
