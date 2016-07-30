@@ -307,6 +307,7 @@ function makeAppointmentController(){
 
         controller.completeCallback(response);
       }).always(function () {
+        console.log('always after calls');
         controller.allowSubmit = true;
 
       });

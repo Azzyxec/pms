@@ -90,6 +90,7 @@ function getRescheduleAppointmentController(){
 
            console.log('reschedule response ' + JSON.stringify(response));
          }).always(function () {
+           console.log('always after calls');
            controller.allowSubmit = true;
          });
       }
