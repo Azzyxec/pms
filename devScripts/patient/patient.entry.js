@@ -67,6 +67,7 @@ $(document).ready(function(){
       this.redirectPatientsListingUrl = links.patientsListingUrl;
       this.patientsPicturePath = links.patientPicturePathUrl;
       this.guardianPicturePath = links.guardianPicturePathUrl;
+      this.defaultProfilePath = links.defaultProfilePathUrl;
 
       //this.patientsProgrammesUrl = links.patientsProgrammesUrl;
     };
@@ -522,7 +523,7 @@ var patientDetailsView = {
 
             model.patientInfo.picUploadPath = file.name;
             console.log(file.name);
-            $("#patient-picture-container").attr('src','images/patientUserImages/'+model.patientInfo.picUploadPath);
+            $("#patient-picture-container").attr('src',controller.patientsPicturePath+model.patientInfo.picUploadPath);
 
             file_txt.append(removeBtn); //add remove button inside info text element
             file_txt.prependTo(node); //add to node element
@@ -641,11 +642,21 @@ var patientDetailsView = {
     this.contact1.val(lpatientInfo.contact1);
     //this.contact2.val(lpatientInfo.contact2);
     this.address.val(lpatientInfo.address);
-    if(lpatientInfo.picturePath == ''){
-       lpatientInfo.picturePath = model.defaultPictureName;
-    }
+  //  var picturePathe = '';
+    console.log('controller profile path' + controller.defaultProfilePath );
+    console.log('controller model path' + controller.patientsPicturePath );
 
-    this.imgBox.attr('src',controller.patientsPicturePath+lpatientInfo.picturePath);
+    if(!lpatientInfo.picturePath || 0 === lpatientInfo.picturePath.trim().length){
+       lpatientInfo.picturePath = model.defaultPictureName;
+       this.patientPicturePath = controller.defaultProfilePath;
+       console.log('patient picture path is null'+this.patientPicturePath );
+    }else{
+
+      this.patientPicturePath = controller.patientsPicturePath;
+        console.log('patient picture path is set' + this.patientPicturePath);
+    }
+ console.log('full path' + this.patientPicturePath + lpatientInfo.picturePath);
+    this.imgBox.attr('src', this.patientPicturePath + lpatientInfo.picturePath);
     //this.picUpload.val(model.);
 
 
@@ -843,7 +854,22 @@ var patientGuardianDetailsView = {
     this.contact1.val(lguardianInfo.contact1);
     //this.contact2.val(lguardianInfo.contact2);
     this.address.val(lguardianInfo.address);
-    this.imgBox.attr('src','images/guardianUserImages/'+lguardianInfo.picturePath);
+
+
+
+        if(!lguardianInfo.picturePath || 0 === lguardianInfo.picturePath.trim().length){
+           lguardianInfo.picturePath = model.defaultPictureName;
+           this.PicturePath = controller.defaultProfilePath;
+
+        }else{
+
+          this.PicturePath = controller.guardianPicturePath;
+
+        }
+
+        this.imgBox.attr('src', this.PicturePath + lguardianInfo.picturePath);
+
+
     //this.picUpload.val(model.);
 
 
