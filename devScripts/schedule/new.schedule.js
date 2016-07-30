@@ -231,7 +231,7 @@ var stepOneView = {
       window.location = links.getScheduleCalendarUrl;
     });
 
-    //this.initValidators();
+    this.initValidators();
 
     this.fromDateControl.datetimepicker({
     inline: false,
@@ -295,16 +295,25 @@ var stepOneView = {
     this.nextButton.on('click', (function(self){
     return function(){
       console.log('schedule next nclick');
+      stepOneView.form.data('bootstrapValidator').validate();
+      if(stepOneView.form.data('bootstrapValidator').isValid()){
+        console.log('validated');
+        //updating location text in the second step
+        var locationId = stepOneView.selectLocations.find(":selected").attr('value');
+        var locationName = stepOneView.selectLocations.find(":selected").text();
+        controller.updateSelectedLocation(locationId, locationName);
 
-      //updating location text in the second step
-      var locationId = self.selectLocations.find(":selected").attr('value');
-      var locationName = self.selectLocations.find(":selected").text();
-      controller.updateSelectedLocation(locationId, locationName);
+        controller.generateModel();
+        stepOneView.panel.hide();
+        createScheduleView.panel.show();
+        createScheduleView.render();
 
-      controller.generateModel();
-      self.panel.hide();
-      createScheduleView.panel.show();
-      createScheduleView.render();
+
+      } else{
+        console.log('invalid');
+      }
+
+
 
     };
     })(this));
@@ -335,6 +344,7 @@ var stepOneView = {
 
   },
   initValidators: function(){
+    console.log('bootstrapValidator init');
 
     this.form.bootstrapValidator({
         trigger:"focus click change keyup select blur",
@@ -349,6 +359,15 @@ var stepOneView = {
             validators : {
               notEmpty : {
                 message : 'Please select a schedule start date'
+              }
+            }
+          },
+
+            chkschedule : {
+
+            validators : {
+              notEmpty : {
+                message : 'please select atleast one checkbox'
               }
             }
           },

@@ -304,9 +304,11 @@ function makeAppointmentController(){
           console.log('cannot book a backdated appointment');
         }
 
-        controller.allowSubmit = true;
 
         controller.completeCallback(response);
+      }).always(function () {
+        controller.allowSubmit = true;
+
       });
 
     }

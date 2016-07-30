@@ -8,6 +8,7 @@ function getCancelAppointmentController(){
 
   var controller = {
     init: function(appointmentInfo){
+      this.allowSubmit = true;
       this.cancelAppointmentUrl = links.cancelAppointmentUrl;
       if(appointmentInfo){
         model.appointmentId = appointmentInfo.id;
@@ -19,18 +20,28 @@ function getCancelAppointmentController(){
       this.cancelCallback = callbackFunction;
     },
     cancelAppointment: function(){
+      if(this.allowSubmit){
+        this.allowSubmit = false;
+        var cancelReason = cancelView.cancelReason.val();
+        $.post( this.cancelAppointmentUrl , {id: model.appointmentId, remarks: cancelReason})
+         .done(function( response ) {
 
-      var cancelReason = cancelView.cancelReason.val();
-      $.post( this.cancelAppointmentUrl , {id: model.appointmentId, remarks: cancelReason})
-       .done(function( response ) {
+           if(controller.cancelCallback){
+             controller.cancelCallback(response);
+           }
 
-         if(controller.cancelCallback){
-           controller.cancelCallback(response);
-         }
+           console.log('cancel response ' + JSON.stringify(response));
+           //close in proper resonse, else dsplay messge the appoitmetn could not be compated
+         }).always(function () {
+            console.log('always after calls');
+             controller.allowSubmit = true;
+         });
 
-         console.log('cancel response ' + JSON.stringify(response));
-         //close in proper resonse, else dsplay messge the appoitmetn could not be compated
-       });
+      }
+
+
+
+
     }
 
   };

@@ -461,7 +461,7 @@ padding: 6px;
 
 @media screen and (min-width:768px){
 .schedule-form-time{
-  width:90px !important;
+  /*width:160px !important;*/
 
 }
 

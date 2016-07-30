@@ -98,8 +98,8 @@ var filesList = [
                   ], buildName: "list.appointment.js"},
  {build:true, files: [
                     objConfig.scriptsBasePath +"moment.js",
-                    objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                     objConfig.scriptsBasePath +"bootstrapValidator.min.js",
+                    objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                     objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"links.js",
                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",
@@ -107,6 +107,7 @@ var filesList = [
                   ], buildName: "new.schedule.js"},
 {build:true, files: [
                    objConfig.scriptsBasePath +"moment.js",
+                   objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                    objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
                    objConfig.scriptsBasePath +"utility.js",
                    objConfig.scriptsBasePath +"links.js",
