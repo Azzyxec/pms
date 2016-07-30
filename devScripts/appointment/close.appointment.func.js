@@ -94,7 +94,6 @@ function getCloseAppointmentController(){
 
       }
 
-
     },
     resetModel: function(){
       prescriptionListController.setPrescriptionList([]);

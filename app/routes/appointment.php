@@ -8,8 +8,7 @@ use Pms\Datalayer\AppointmentDB;
 use Pms\Datalayer\PatientDB;
 use Pms\Utilities\XMLHelper;
 
-$app->group('/appointment', function(){
-
+$app->group('/appointment', function(){ 
 
   $this->get('/addFiles', function ($request, $response) {
 
