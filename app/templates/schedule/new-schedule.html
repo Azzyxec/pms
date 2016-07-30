@@ -6,16 +6,15 @@
 <!-- Appointment step one  -->
 <div class="row">
   <hr class="invisible">
-  <div id="alert-overlapping-schedule" class="hidden alert alert-warning" role="alert">
-    <strong>Cannot add schedule!</strong> there is already and schedule added for one of the dates.
-  </div>
   <div class="col-md-10 col-lg-8">
     <div id="schedule-step-one" class="panel panel-green">
+
       <div class="panel-heading">
         Create Schedule
-      </div> 
+      </div>
       <div class="panel-body">
-        <form class="form-horizontal">
+
+        <form id='form-step-one' class="form-horizontal">
 
           <div class="form-group">
             <label for="" class="col-sm-2 control-label">Location</label>
@@ -27,11 +26,12 @@
 
           </div>
 
+          <!-- form -->
+
           <div class="form-group has-feedback">
 
             <label for="from-date" class="col-sm-2 control-label">From Date</label>
             <div class='col-md-6 col-sm-6'>
-
 
               <div class='input-group date' id='datetimepicker24'>
                 <input type="text" class="form-control" name="from-date" id="from-date" >
@@ -65,8 +65,6 @@
             </div>
 
           </div>
-
-
 
           <div class="form-group">
 
@@ -102,32 +100,33 @@
 
           <label for="" class="col-sm-2  control-label">Timings:</label>
 
+          <div class="form-inline col-sm-offset-2">
+            <span for="" >From</span>
+            <div class="input-group date">
+
+
+              <input type="text" class="form-control schedule-form-time" name="" id="from-time" >
+              <span class="input-group-addon">
+
+                <span class="glyphicon glyphicon-time"></span>
+              </span>
+            </div>
+            <span for="">To</span>
+            <div class="input-group date">
+
+
+              <input type="text" class="form-control schedule-form-time" name="" id="to-time"  >
+              <span class="input-group-addon">
+
+                <span class="glyphicon glyphicon-time"></span>
+              </span>
+            </div>
+
+          </div>
+
         </form>
 
-        <div class="form-inline col-sm-offset-2">
-            <span for="" >From</span>
-          <div class="input-group date">
 
-
-            <input type="text" class="form-control schedule-form-time" name="" id="from-time" >
-            <span class="input-group-addon">
-
-              <span class="glyphicon glyphicon-time"></span>
-            </span>
-          </div>
-  <span for="">To</span>
-          <div class="input-group date">
-
-
-            <input type="text" class="form-control schedule-form-time" name="" id="to-time"  >
-            <span class="input-group-addon">
-
-              <span class="glyphicon glyphicon-time"></span>
-            </span>
-          </div>
-
-
-        </div>
       </div>
       <div class="panel-footer">
         <div class="row">
@@ -138,6 +137,8 @@
 
         </div>
       </div>
+
+      <!-- step one panel -->
     </div>
 
 
@@ -191,7 +192,7 @@
           <button type="  button" class="btn btn-success   " id="btn-schedule-create">Create Schedule</button>
           <button type="button" class="btn btn-success " id="btn-back">Back</button>
         </div>
-     </div>
+      </div>
 
     </div>
 
