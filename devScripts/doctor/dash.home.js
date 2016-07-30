@@ -90,6 +90,9 @@ $(document).ready(function(){
     }//loop ends
 
 
+    console.log('loc filter stage ' +  JSON.stringify(intermediateList));
+
+
     //consolidate free time slots
     var removeList = [];
     var prevItem = {};
@@ -360,6 +363,7 @@ controller.prototype.getUserInfo = function () {
 
       if(locId != 0){
         appointmentList = cont.getSortedAppointmentList(locId);
+        console.log('sorting according to selectted location' + locId);
       }
 
       var filterId = cont.getCurrentFilter();

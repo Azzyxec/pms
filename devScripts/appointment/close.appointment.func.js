@@ -590,7 +590,7 @@ function getCloseAppointmentController(){
       });
 
       this.fi.on('fileuploaddone', function (e, data) { // invoke callback method on success
-         console.log('on done');
+         console.log('on done  ' + JSON.stringify(data) );
         /*  $.each(data.result.files, function (index, file) { //loop though each file
               if (file.url){ //successful upload returns a file url
                   var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
@@ -608,7 +608,9 @@ function getCloseAppointmentController(){
 
       this.fi.on('fileuploadfail', function (e, data) {
         //on file upload fail
-        console.log('on fail');
+        console.log('on fail data ' + + JSON.stringify(data));
+
+
       });
 
     },
@@ -616,7 +618,7 @@ function getCloseAppointmentController(){
       $('.file-wrapper').remove();
 
   //$('#fileupload').fileupload('destroy');
-    console.log('destroy fileuploader');
+    console.log('destroy fileuploader ');
 
     }
 
