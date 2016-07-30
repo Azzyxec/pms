@@ -323,6 +323,12 @@ controller.prototype.getUserInfo = function () {
       console.log("locations: " + JSON.stringify(response));
       model.appointmenListViewModel.locationList = response.data;
 
+      if(model.appointmenListViewModel.locationList.length > 0){
+        console.log('def locatoin ' + model.appointmenListViewModel.locationList[0].id);
+        model.DefaultlocationId = model.appointmenListViewModel.locationList[0].id;
+          //cont.setSelectedLocationId(model.appointmenListViewModel.locationList[0].id);
+      }
+
       cont.locationsLoaded = true;
       cont.removeOverLay();
       cont.addLocationsAlert();
