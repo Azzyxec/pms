@@ -10,7 +10,49 @@ use Pms\Utilities\XMLHelper;
 
 $app->group('/appointment', function(){
 
+
+  $this->get('/addFiles', function ($request, $response) {
+
+    $allGetVars = $request->getQueryParams();
+
+    $id = $allGetVars['id'];
+    $name = $allGetVars['name'];
+    $newName = $allGetVars['newName'];
+
+    UserSessionManager::addUploadedfile($id, $name, $newName);
+
+    return $response->withJson($allGetVars);
+
+  });
+
+  $this->get('/getFiles', function ($request, $response) {
+
+    $data = "no files";
+
+    $allGetVars = $request->getQueryParams();
+
+    $id = $allGetVars['id'];
+
+    $data = UserSessionManager::getUploadedfileList($id);
+
+    return $response->withJson($data);
+
+  });
+
+  $this->get('/clearfiles', function ($request, $response) {
+
+    $allGetVars = $request->getQueryParams();
+
+    $id = $allGetVars['id'];
+
+    UserSessionManager::clearFileList($id);
+    return $response->withJson('');
+
+  });
+
+
   $this->post('/closeAppointment', function ($request, $response) {
+
     try {
 
       $message = "success";
@@ -18,9 +60,9 @@ $app->group('/appointment', function(){
       $nextAppointmentStatus = -1;
 
       $user = UserSessionManager::getUser();
-      $uploadedFileList = UserSessionManager::getUploadedfileList();
+
       //
-      //return $response->withJson($uploadedFileList);
+      //
 
 
       if($user->id != -1){
@@ -29,20 +71,26 @@ $app->group('/appointment', function(){
 
         $appointment = $postedData['appointment'];
 
-        $uploadedFiles = array();
-        $uploadedFileListXml = "";
-        $uploadedFileCount = 0;
-        if(isset($uploadedFileList)){
-          $uploadedFiles = $uploadedFileList;
+        //checking for file uploadedFiles
+        if(isset( $appointment['uniqueId'])){
 
-          $uploadedFileCount = count($uploadedFiles);
+          $uniqueCloseAppointmentId =$appointment['uniqueId'];
+          $uploadedFileList = UserSessionManager::getUploadedfileList($uniqueCloseAppointmentId);
 
-          $xml_data1 = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
-          XMLHelper::array_to_xml($uploadedFiles, $xml_data1);
-          $uploadedFileListXml = $xml_data1->asXML();
+          //check if there are any uploaded files
+          $uploadedFileListXml = '';
+          $uploadedFileCount = count($uploadedFileList);
+          if($uploadedFileCount > 0){
+
+            $uploadedFileListXml = "";
+
+            $xml_data1 = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
+            XMLHelper::array_to_xml($uploadedFileList, $xml_data1);
+            $uploadedFileListXml = $xml_data1->asXML();
+
+          }
 
         }
-
 
         $prescription = array();
         $prescriptionListXml = "";
@@ -62,13 +110,17 @@ $app->group('/appointment', function(){
 
         $appointmentDB = new AppointmentDB();
         $status = $appointmentDB->closeAppointment($appointment, $prescriptionListXml, $prescriptionCount, $uploadedFileListXml, $uploadedFileCount ,  $user->id, $user->type);
-        UserSessionManager::clearUploadedFileList();
+
+        if($status == 1 && isset( $appointment['uniqueId'])){
+            $uniqueCloseAppointmentId = $appointment['uniqueId'];
+            UserSessionManager::clearFileList($uniqueCloseAppointmentId);
+        }
 
         //booking the next appointment
         $bookNextAppointment = $appointment['bookNextAppointment'];
 
 
-        if($status == 1 && $bookNextAppointment){
+        if($status == 1 && $bookNextAppointment == true){
           //info to check if next appointment is available
           $appointmentId = $appointment['appointmentId'];
           //contact get using appointment id
@@ -79,182 +131,182 @@ $app->group('/appointment', function(){
           //last close descripton: "xyz"
 
           $nextAppointmentStatus = $appointmentDB->checkNextAppointmentAvailibility($appointmentId,
-                                                                                   $appointmentDate,
-                                                                                   $appointmentStartTime,
-                                                                                   $appointmentEndTime
-                                                                                   );
+          $appointmentDate,
+          $appointmentStartTime,
+          $appointmentEndTime
+        );
 
-          if($nextAppointmentStatus == 1){
-
-
-            //can book appointment/ make and new appointment entry
-
-                   $appointmentDB->insertNextAppointmentEntry(
-                                                              $appointmentId,
-                                                              $appointmentDate,
-                                                              $appointmentStartTime,
-                                                              $appointmentEndTime,
-                                                              $user->id,
-                                                              $user->type
-                                                             );
+        if($nextAppointmentStatus == 1){
 
 
+          //can book appointment/ make and new appointment entry
 
-          }
-          //and get patient info using patient key
-        }
+          $appointmentDB->insertNextAppointmentEntry(
+          $appointmentId,
+          $appointmentDate,
+          $appointmentStartTime,
+          $appointmentEndTime,
+          $user->id,
+          $user->type
+        );
 
 
-      }else {
-        $message = "user not logged in";
+
       }
-
-      $data = array('status' => $status, 'nextAppointmentStatus' => $nextAppointmentStatus, 'data' => $postedData, 'message' => $message);
-      return $response->withJson($data);
-
-
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-      return $response->withJson($data);
+      //and get patient info using patient key
     }
 
-  });
 
-  $this->post('/cancelAppointment', function ($request, $response) {
-    try {
+  }else {
+    $message = "user not logged in";
+  }
 
-      $message = "success";
-      $status = "-1";
+  $data = array('status' => $status, 'nextAppointmentStatus' => $nextAppointmentStatus, 'data' => $postedData, 'message' => $message);
+  return $response->withJson($data);
 
-      $user = UserSessionManager::getUser();
 
-      if($user->id != -1){
+} catch (Exception $e) {
+  $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+  return $response->withJson($data);
+}
 
-        $postedData = $request->getParsedBody();
+});
 
-        $appointmentId = $postedData['id'];
-        $remarks = $postedData['remarks'];
+$this->post('/cancelAppointment', function ($request, $response) {
+  try {
 
-        $appointmentDB = new AppointmentDB();
-        $status = $appointmentDB->cancelAppointment($appointmentId, $remarks, $user->id, $user->type);
+    $message = "success";
+    $status = "-1";
 
-      }else{
-        $message = "user not logged in";
-      }
+    $user = UserSessionManager::getUser();
 
-      $data = array('status' => $status, 'data' => "", 'message' => $message);
-      return $response->withJson($data);
+    if($user->id != -1){
 
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-      return $response->withJson($data);
+      $postedData = $request->getParsedBody();
+
+      $appointmentId = $postedData['id'];
+      $remarks = $postedData['remarks'];
+
+      $appointmentDB = new AppointmentDB();
+      $status = $appointmentDB->cancelAppointment($appointmentId, $remarks, $user->id, $user->type);
+
+    }else{
+      $message = "user not logged in";
     }
 
-  });
+    $data = array('status' => $status, 'data' => "", 'message' => $message);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
 
 
-  $this->post('/rescheduleAppointment', function ($request, $response) {
-    try {
+$this->post('/rescheduleAppointment', function ($request, $response) {
+  try {
 
-      $message = "success";
-      $status = "-1"; //appointment timing clasing or no schedule added
-      $nextAppointmentStatus = -1;
+    $message = "success";
+    $status = "-1"; //appointment timing clasing or no schedule added
+    $nextAppointmentStatus = -1;
 
-      $user = UserSessionManager::getUser();
+    $user = UserSessionManager::getUser();
 
-      if($user->id != -1){
+    if($user->id != -1){
 
-        $postedData = $request->getParsedBody();
+      $postedData = $request->getParsedBody();
 
-        $rescheduleInfo = $postedData['rescheduleInfo'];
+      $rescheduleInfo = $postedData['rescheduleInfo'];
 
-        $appointmentId = $rescheduleInfo['appointmentId'];
-        $date = $rescheduleInfo['date'];
-        $startTimeMins = $rescheduleInfo['startTimeMins'];
-        $endTimeMins = $rescheduleInfo['endTimeMins'];
-        $remarks = $rescheduleInfo['remarks'];
-
-        $appointmentDB = new AppointmentDB();
-
-        $status = $appointmentDB->checkNextAppointmentAvailibility(
-                                                                   $appointmentId,
-                                                                   $date,
-                                                                   $startTimeMins,
-                                                                   $endTimeMins
-                                                                 );
-
-        if($status == 1){
-
-
-          $status = $appointmentDB->rescheduleAppointment(
-                                                          $appointmentId,
-                                                          $date,
-                                                          $startTimeMins,
-                                                          $endTimeMins,
-                                                          $user->id,
-                                                          $user->type,
-                                                          $remarks
-                                                         );
-
-
-        }
-
-
-
-
-      }else {
-        $message = "user not logged in";
-      }
-
-      $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
-      return $response->withJson($data);
-
-
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-      return $response->withJson($data);
-    }
-
-  });
-
-  $this->get('/getAppointmentsForTheDay', function ($request, $response) {
-    try {
-
-      $minTimeMins = 5;
-      //if the free time is greater than 5 mins then slot is made available for booking an appointment
-
-      $message = "success";
-
-      $allGetVars = $request->getQueryParams();
-      $locationId = $allGetVars['locId'];
-      $date = $allGetVars['date'];
-
-      $user = UserSessionManager::getUser();
+      $appointmentId = $rescheduleInfo['appointmentId'];
+      $date = $rescheduleInfo['date'];
+      $startTimeMins = $rescheduleInfo['startTimeMins'];
+      $endTimeMins = $rescheduleInfo['endTimeMins'];
+      $remarks = $rescheduleInfo['remarks'];
 
       $appointmentDB = new AppointmentDB();
 
-      $allApointments = $appointmentDB->getAppointmentsForTheDay($user->doctorId, $locationId, $date);
+      $status = $appointmentDB->checkNextAppointmentAvailibility(
+      $appointmentId,
+      $date,
+      $startTimeMins,
+      $endTimeMins
+    );
+
+    if($status == 1){
 
 
-      //if date is previous date then dont calculate the free time, so that booking appointment slot is not shown
+      $status = $appointmentDB->rescheduleAppointment(
+      $appointmentId,
+      $date,
+      $startTimeMins,
+      $endTimeMins,
+      $user->id,
+      $user->type,
+      $remarks
+    );
 
-      $todaysDate = date_create(); // date("Y-m-d H:i:s");
-      $appointmentDate = DateTime::createFromFormat('d-m-Y', $date);
 
-      $allowBooking =  $appointmentDate >= $todaysDate;//   $todaysDate->diff($appointmentDate);
+  }
 
 
-      $timingList = $appointmentDB->getScheduleTimingsForTheDay($user->doctorId, $locationId, $date);
 
-      $todaysSchedule = array();
-      foreach ($timingList as $key => $schedule) {
-        //value is array with start and end timings i.e. 9 to 5 and 3 to 6
-        $startMins = $schedule['startMins'];
-        foreach ($allApointments as $key1 => $appointment) {
 
-          //Loop throught the schedules and determine if ther are withing the time range of a  schedule
-          if($schedule['startMins']  <= $appointment['startMins'] &&
-          $schedule['endMins'] >=  $appointment['endMins']){
+}else {
+  $message = "user not logged in";
+}
+
+$data = array('status' => $status, 'data' => $postedData, 'message' => $message);
+return $response->withJson($data);
+
+
+} catch (Exception $e) {
+  $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+  return $response->withJson($data);
+}
+
+});
+
+$this->get('/getAppointmentsForTheDay', function ($request, $response) {
+  try {
+
+    $minTimeMins = 5;
+    //if the free time is greater than 5 mins then slot is made available for booking an appointment
+
+    $message = "success";
+
+    $allGetVars = $request->getQueryParams();
+    $locationId = $allGetVars['locId'];
+    $date = $allGetVars['date'];
+
+    $user = UserSessionManager::getUser();
+
+    $appointmentDB = new AppointmentDB();
+
+    $allApointments = $appointmentDB->getAppointmentsForTheDay($user->doctorId, $locationId, $date);
+
+
+    //if date is previous date then dont calculate the free time, so that booking appointment slot is not shown
+
+    $todaysDate = date_create(); // date("Y-m-d H:i:s");
+    $appointmentDate = DateTime::createFromFormat('d-m-Y', $date);
+
+    $allowBooking =  $appointmentDate >= $todaysDate;//   $todaysDate->diff($appointmentDate);
+
+
+    $timingList = $appointmentDB->getScheduleTimingsForTheDay($user->doctorId, $locationId, $date);
+
+    $todaysSchedule = array();
+    foreach ($timingList as $key => $schedule) {
+      //value is array with start and end timings i.e. 9 to 5 and 3 to 6
+      $startMins = $schedule['startMins'];
+      foreach ($allApointments as $key1 => $appointment) {
+
+        //Loop throught the schedules and determine if ther are withing the time range of a  schedule
+        if($schedule['startMins']  <= $appointment['startMins'] &&
+        $schedule['endMins'] >=  $appointment['endMins']){
 
           //each appointmetn has a start mins and end mins
           //check the start time of appointment
@@ -264,175 +316,175 @@ $app->group('/appointment', function(){
           // as start time
           $endMins = $appointment['startMins'];
 
-            $differenceMins = $endMins - $startMins;
-            //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
+          $differenceMins = $endMins - $startMins;
+          //$todaysSchedule[] = array('diff' => $differenceMins, 'startMins' => $startMins, 'endMins' => $endMins);
 
-            if($differenceMins >= $minTimeMins){
-              if($allowBooking){
-                //this allowBooking flag check is booking date is today or greater than today
-                $freeTimeSlot = array('type' => 'f',
-                                      'state' => 0,
-                                      'scheduleId' => $schedule['scheduleId'],
-                                      'scheduleDayId' => $schedule['scheduleDayId'],
-                                      'locId' => $schedule['locId'],
-                                      'diff' => $differenceMins,
-                                      'startMins' => $startMins,
-                                      'endMins' => $endMins);
-                $todaysSchedule[] = $freeTimeSlot;
-              }
+          if($differenceMins >= $minTimeMins){
+            if($allowBooking){
+              //this allowBooking flag check is booking date is today or greater than today
+              $freeTimeSlot = array('type' => 'f',
+              'state' => 0,
+              'scheduleId' => $schedule['scheduleId'],
+              'scheduleDayId' => $schedule['scheduleDayId'],
+              'locId' => $schedule['locId'],
+              'diff' => $differenceMins,
+              'startMins' => $startMins,
+              'endMins' => $endMins);
+              $todaysSchedule[] = $freeTimeSlot;
             }
+          }
 
-            //type f for free time slot and a for any kin gof appointment
+          //type f for free time slot and a for any kin gof appointment
 
-            $appointment['type'] = 'a';
-            $todaysSchedule[] = $appointment;
+          $appointment['type'] = 'a';
+          $todaysSchedule[] = $appointment;
 
-            //since we take the end time of the current appointment
-            // to determine if there is a free time betwwen the next appointment
-            // we take the start time as end time of active and closed booking, active state = 0, closed state = 1
-            // we dont conside cancelled and rescheduled appointmetns , cancelled state = 2, rescheduled state = 3
-            if($appointment['state'] == 2 || $appointment['state'] == 3){
-              //if appointment is cancelled or rescheduled it will be considered as free time
-               $startMins = $appointment['startMins'];
-            }else{
+          //since we take the end time of the current appointment
+          // to determine if there is a free time betwwen the next appointment
+          // we take the start time as end time of active and closed booking, active state = 0, closed state = 1
+          // we dont conside cancelled and rescheduled appointmetns , cancelled state = 2, rescheduled state = 3
+          if($appointment['state'] == 2 || $appointment['state'] == 3){
+            //if appointment is cancelled or rescheduled it will be considered as free time
+            $startMins = $appointment['startMins'];
+          }else{
             $startMins = $appointment['endMins'];
           }
 
-          }
-        } //inner foreach
-
-        //checking if there is free time slot at the end
-        $endMins = $schedule['endMins'];
-        $differenceMins = $endMins - $startMins;
-        if($differenceMins >= $minTimeMins){
-          if($allowBooking){
-            $todaysSchedule[] = array('type' => 'f',
-                                      'state' => 0,
-                                      'scheduleId' => $schedule['scheduleId'],
-                                      'scheduleDayId' => $schedule['scheduleDayId'],
-                                      'locId' => $schedule['locId'],
-                                      'diff' => $differenceMins,
-                                      'startMins' => $startMins,
-                                      'endMins' => $endMins);
-          }
         }
+      } //inner foreach
 
-
-      }//outer foreach
-
-      $data = array('status' => 1, 'data' => $todaysSchedule, 'message' => $message, 'allowBooking' => $allowBooking);
-      return $response->withJson($data);
-
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-      return $response->withJson($data);
-    }
-
-  });
- $this->get('/getAllAppointments', function ($request, $response) {
-    try {
-
-      $minTimeMins = 5;
-      //if the free time is greater than 5 mins then slot is made available for booking an appointment
-
-      $message = "success";
-
-
-      $user = UserSessionManager::getUser();
-
-      $appointmentDB = new AppointmentDB();
-
-      $allPatientApointments = $appointmentDB->getAllAppointments($user->doctorId);
-
-     $data = array('status' => 1, 'data' => $allPatientApointments, 'message' => $message);
-      return $response->withJson($data);
-
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-      return $response->withJson($data);
-    }
-
-  });
-
-  $this->post('/bookAppointment', function ($request, $response) {
-
-    try {
-
-      $message = "success";
-
-      $user = UserSessionManager::getUser();
-
-      $postedData = $request->getParsedBody();
-
-      $appointmentData = $postedData['appointment'];
-
-      $appointment = new Appointment();
-      $appointment->scheduleDayId = $appointmentData['scheduleDayId'];
-      $appointment->locationId = $appointmentData['locationId'];
-      $appointment->contact = $appointmentData['contact'];
-      $appointment->appointmentDate = $appointmentData['date'];
-      $appointment->startMins = $appointmentData['startTimeMins'];
-      $appointment->endMins = $appointmentData['endTimeMins'];
-      $appointment->description = $appointmentData['description'];
-
-      //check if the appointment is available
-      $appointmentDB = new AppointmentDB();
-      $status = $appointmentDB->checkAppointmentAvailibility($appointment, $user->doctorId);
-
-      if($status == 1){
-
-        $patientData = $postedData['patient'];
-
-        if($patientData['id'] == 0){
-
-          //save the patient
-          $patient = new Patient();
-          $patient->id = 0;
-          $patient->name = trim($patientData['name']);
-          $patient->dateOfBirth = $patientData['dateOfBirth'];
-          $patient->bloodGroup = $patientData['bloodGroup'];
-          $patient->weight = $patientData['weight'];
-          $patient->height = $patientData['height'];
-          $patient->gender = $patientData['gender'];
-          $patient->contact1 = $patientData['contact'];
-          $patient->isActive = 1;
-
-          $patientDB = new PatientDB();
-
-          $resultArray = $patientDB->saveUpdatePatientInfo($patient, $user->doctorId, $user->id, $user->type );
-
-          $patientId = $resultArray['data']['patientId'];
-
-          $appointment->patientId = $patientId;
-
-        }else{
-          $appointment->patientId = $patientData['id'];
+      //checking if there is free time slot at the end
+      $endMins = $schedule['endMins'];
+      $differenceMins = $endMins - $startMins;
+      if($differenceMins >= $minTimeMins){
+        if($allowBooking){
+          $todaysSchedule[] = array('type' => 'f',
+          'state' => 0,
+          'scheduleId' => $schedule['scheduleId'],
+          'scheduleDayId' => $schedule['scheduleDayId'],
+          'locId' => $schedule['locId'],
+          'diff' => $differenceMins,
+          'startMins' => $startMins,
+          'endMins' => $endMins);
         }
-
-        $appointmentDB->insertAppointmentEntry($appointment, $user->doctorId, $user->id, $user->type);
-
-      }else if($status == 2){
-        //schedule not added or appointment timings are not in work timing range
-        $message = "Either there is no schedule or appointment timings are oustide the work timings";
-
-      }else if($status == 3){
-        // the timing over lap with an existing appointment
-        $message = "Timings clash with an existing appointment";
-      }
-      else if($status == 4){
-        // the timing over lap with an existing appointment
-        $message = "cannot book appointment for a previous date";
       }
 
-      $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
-      return $response->withJson($data);
 
-    } catch (Exception $e) {
-      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
-      return $response->withJson($data);
+    }//outer foreach
+
+    $data = array('status' => 1, 'data' => $todaysSchedule, 'message' => $message, 'allowBooking' => $allowBooking);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
+$this->get('/getAllAppointments', function ($request, $response) {
+  try {
+
+    $minTimeMins = 5;
+    //if the free time is greater than 5 mins then slot is made available for booking an appointment
+
+    $message = "success";
+
+
+    $user = UserSessionManager::getUser();
+
+    $appointmentDB = new AppointmentDB();
+
+    $allPatientApointments = $appointmentDB->getAllAppointments($user->doctorId);
+
+    $data = array('status' => 1, 'data' => $allPatientApointments, 'message' => $message);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
+
+$this->post('/bookAppointment', function ($request, $response) {
+
+  try {
+
+    $message = "success";
+
+    $user = UserSessionManager::getUser();
+
+    $postedData = $request->getParsedBody();
+
+    $appointmentData = $postedData['appointment'];
+
+    $appointment = new Appointment();
+    $appointment->scheduleDayId = $appointmentData['scheduleDayId'];
+    $appointment->locationId = $appointmentData['locationId'];
+    $appointment->contact = $appointmentData['contact'];
+    $appointment->appointmentDate = $appointmentData['date'];
+    $appointment->startMins = $appointmentData['startTimeMins'];
+    $appointment->endMins = $appointmentData['endTimeMins'];
+    $appointment->description = $appointmentData['description'];
+
+    //check if the appointment is available
+    $appointmentDB = new AppointmentDB();
+    $status = $appointmentDB->checkAppointmentAvailibility($appointment, $user->doctorId);
+
+    if($status == 1){
+
+      $patientData = $postedData['patient'];
+
+      if($patientData['id'] == 0){
+
+        //save the patient
+        $patient = new Patient();
+        $patient->id = 0;
+        $patient->name = trim($patientData['name']);
+        $patient->dateOfBirth = $patientData['dateOfBirth'];
+        $patient->bloodGroup = $patientData['bloodGroup'];
+        $patient->weight = $patientData['weight'];
+        $patient->height = $patientData['height'];
+        $patient->gender = $patientData['gender'];
+        $patient->contact1 = $patientData['contact'];
+        $patient->isActive = 1;
+
+        $patientDB = new PatientDB();
+
+        $resultArray = $patientDB->saveUpdatePatientInfo($patient, $user->doctorId, $user->id, $user->type );
+
+        $patientId = $resultArray['data']['patientId'];
+
+        $appointment->patientId = $patientId;
+
+      }else{
+        $appointment->patientId = $patientData['id'];
+      }
+
+      $appointmentDB->insertAppointmentEntry($appointment, $user->doctorId, $user->id, $user->type);
+
+    }else if($status == 2){
+      //schedule not added or appointment timings are not in work timing range
+      $message = "Either there is no schedule or appointment timings are oustide the work timings";
+
+    }else if($status == 3){
+      // the timing over lap with an existing appointment
+      $message = "Timings clash with an existing appointment";
+    }
+    else if($status == 4){
+      // the timing over lap with an existing appointment
+      $message = "cannot book appointment for a previous date";
     }
 
-  });
+    $data = array('status' => $status, 'data' => $postedData, 'message' => $message);
+    return $response->withJson($data);
+
+  } catch (Exception $e) {
+    $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in main' . $e->getMessage());
+    return $response->withJson($data);
+  }
+
+});
 
 
 });

@@ -11,7 +11,10 @@ function getCloseAppointmentController(){
     patientsName:'',
     remarks: '',
     prescriptionList:[],
-    currentEntry:{}
+    currentEntry:{},
+    uniqueId:''
+    //uploadedFileList: [],
+    //uploadedFileCount: 0
   }
 
   var ViewModel = {
@@ -24,13 +27,29 @@ function getCloseAppointmentController(){
       this.closeAppointmentUrl = links.closeAppointmentUrl;
       fileUploader.init();
 
-
       closeAppointmentView.init();
       prescriptionListController.init();
     },
+    generateUUID: function(){
+      var d = new Date().getTime();
+      if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now(); //use high-precision timer if available
+      }
+      var uuid = '_xxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+      });
+      return uuid;
+    },
+
     setCloseInfo: function(closeInfo){
+      model.uniqueId = this.generateUUID();
+      console.log('uniqueId = '+model.uniqueId);
       if(closeInfo){
         console.log('set info');
+
+
 
 
 
@@ -40,6 +59,9 @@ function getCloseAppointmentController(){
         model.patientsName = closeInfo.patientsName;
         closeAppointmentView.render();
       }
+    },
+    getUniqueId: function () {
+      return model.uniqueId;
     },
     getModel: function(){
       return model;
@@ -93,10 +115,10 @@ function getCloseAppointmentController(){
 
       if(controller.allowSubmit){
 
-        controller.allowSubmit = false;
-
         $.post( this.closeAppointmentUrl , {appointment: model})
          .done(function( response ) {
+
+            console.log('close response ' + JSON.stringify(response));
 
            if(controller.cancelCallback){
              controller.cancelCallback(response);
@@ -105,10 +127,13 @@ function getCloseAppointmentController(){
            controller.allowSubmit = true;
 
 
-
-           console.log('close response ' + JSON.stringify(response));
            //close in proper resonse, else dsplay messge the appoitmetn could not be compated
+         })
+         .always(function() {
+           console.log('always after calls');
+           controller.allowSubmit = true;
          });
+
        }
     },
     cleanup: function(){
@@ -486,7 +511,16 @@ function getCloseAppointmentController(){
       this.fi.fileupload({
           url: process_url,
           dataType: 'json',
-          autoUpload: true,
+          autoUpload: false,
+          add: function (e, data) {
+            console.log(JSON.stringify(data));
+            data.formData = {
+              'uploadId': controller.getUniqueId()
+            }
+
+              data.submit();
+
+      },
 
           acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
           maxFileSize: 5242880, //1MB
@@ -578,7 +612,7 @@ function getCloseAppointmentController(){
     destroyFileUploader: function(){
       $('.file-wrapper').remove();
 
-    //this.fi.fileupload('destroy');
+  //$('#fileupload').fileupload('destroy');
     console.log('destroy fileuploader');
 
     }

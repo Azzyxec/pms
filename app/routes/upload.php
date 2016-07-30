@@ -42,38 +42,40 @@ $app->group('/Upload',function(){
   $this->post('/CloseApptUpload',function($request, $response){
     try{
 
+      $postedData = $request->getParsedBody();
+      $uniqueCloseAppointmentId = $postedData['uploadId'];
+
       $files = $request->getUploadedFiles();
-      $MaxfileSize = 1048576;
+      $MaxfileSize = 1048576; //make5mb
       foreach ($files['files'] as $key => $value) {
         if ($value->getError() === UPLOAD_ERR_OK) {
           $uploadFileName = $value->getClientFilename();
           $fileSize =  $value->getSize();
-          $mediaType =  $value->getClientMediaType();
+          $mediaType =  $value->getClientMediaType(); //check file extension
           $uniqueFileName = $uploadFileName;
 
+          //generate a random  file name
           if($fileSize <= $MaxfileSize){
-              $value->moveTo("images/scannedDoc/$uploadFileName");
+            $value->moveTo("images/scannedDoc/$uploadFileName");
           }
+
+          UserSessionManager::addUploadedfile($uniqueCloseAppointmentId, $uploadFileName , $uniqueFileName);
+
         }
 
       }
 
-
+      //forming the return object
       $returnFiles = array();
-      $uploadedFileSession = UserSessionManager::addUploadedfile($uploadFileName,$uniqueFileName);
+      $returnFiles['files'] =  array(
+          'name'=>$uploadFileName
+          , 'size' => $fileSize
+          , 'type'=> 'image/jpeg'
+          , 'url' => 'images/scannedDoc/' . $uniqueFileName
+      );
 
-
-
-      $returnFiles['files'] =  array('name'=>$uploadFileName
-                                      , 'size' => $fileSize
-                                      , 'type'=> 'image/jpeg'
-                                      , 'url' => 'index.php/Upload/' . $uploadFileName );
-
-
-
-
-  $data = array('status' => "1", 'data' => $files, 'message' => "success" );
-      return $response->withJson($uniqueFileName);
+      $data = array('status' => "1", 'data' => $uniqueId, 'message' => "success" );
+      return $response->withJson($data);
     } catch (Exception $e){
 
       $data = array('status' => "-1", 'data' => "", 'message' => "exception in controller " . $e->getMessage() );

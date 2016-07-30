@@ -17,39 +17,34 @@ class UserSessionManager{
   }//getUser
 
 
-  public static function addUploadedfile($originalFileName, $newFileName){
-
-    if(isset($originalFileName) && isset($newFileName)){
-
-      if(isset($_SESSION['uploadedFiles'])){
-        $uploadedFiles = $_SESSION['uploadedFiles'];
-        $uploadedFiles[] = array('orignalFileName'=>$originalFileName, 'newFileName'=>$newFileName);
-
-
-        $_SESSION['uploadedFiles'] = $uploadedFiles;
-      }else{
-
-              $uploadedFiles = array();
-              $uploadedFiles[] = array('orignalFileName'=>$originalFileName, 'newFileName'=>$newFileName);
-              $_SESSION['uploadedFiles'] = $uploadedFiles;
-      }
-    }
-  }
-
-  public static function clearUploadedFileList(){
-    unset($_SESSION['uploadedFiles']);
-  }
-
-  public static function getUploadedfileList(){
-    if(isset($_SESSION['uploadedFiles'])){
-        $uploadedFiles = $_SESSION['uploadedFiles'];
-      return $uploadedFiles;
+  public static function addUploadedfile($uniqueId, $originalFileName, $newFileName){
+    if(isset($_SESSION[$uniqueId])){
+      $list = $_SESSION[$uniqueId];
+      $list[] = array('orignalFileName' => $originalFileName, 'newFileName' => $newFileName);
+      $_SESSION[$uniqueId] =$list;
 
     }else{
-      $uploadedFiles = array();
-      return   $uploadedFiles;
+
+      $fileList = array();
+      $fileList[] = array('orignalFileName' => $originalFileName, 'newFileName' => $newFileName);
+      $_SESSION[$uniqueId] = $fileList;
+    }
+
+  }
+
+  public static function getUploadedfileList($uniqueId){
+    if(isset($_SESSION[$uniqueId])){
+      return $_SESSION[$uniqueId];
+    }else{
+      return Array();
     }
   }
+
+
+  public static function clearFileList($uniqueId){
+    unset($_SESSION[$uniqueId]);
+  }
+
 
   /*
   public static function setAppointmentFileArray($appointmentId){
