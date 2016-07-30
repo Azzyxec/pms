@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 30, 2016 at 09:39 AM
+-- Generation Time: Jul 30, 2016 at 03:57 PM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -2671,7 +2671,7 @@ begin
 	select count(sc.id)
 	into   @lscheduleCount
 	from schedule_day sc
-    inner join work_locations wl on wl.id = sd.location_id and wl.is_active = 1
+    inner join work_locations wl on wl.id = sc.location_id and wl.is_active = 1
 	where sc.fk_doctor_id = pdoctor_id
 		  and sc.location_id = plocation_id
 		  and date(sc.`date`) = date(@lnewAppointmentDate)
@@ -2857,7 +2857,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   `is_active` int(11) NOT NULL,
   `fk_schedule_day_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=126 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=128 ;
 
 --
 -- Dumping data for table `appointment`
@@ -2983,7 +2983,9 @@ INSERT INTO `appointment` (`id`, `fk_doctor_id`, `fk_location_id`, `fk_patient_i
 (122, 1, 18, 174, '342342343', '2016-07-28', 540, 555, 'trial', 2, NULL, '2016-07-28 03:52:06', 1, 'D', 1, 229509),
 (123, 1, 18, 147, '433423', '2016-07-29', 540, 555, 'Hanks will hang on..', 0, NULL, '2016-07-29 00:21:43', 1, 'D', 1, 229510),
 (124, 29, 26, 175, '234234234', '2016-07-29', 540, 555, 'some driscription', 1, NULL, '2016-07-29 02:22:28', 29, 'D', 1, 229530),
-(125, 29, 26, 175, '234234234', '2016-07-29', 555, 570, 'two', 2, NULL, '2016-07-29 02:23:04', 29, 'D', 1, 229530);
+(125, 29, 26, 175, '234234234', '2016-07-29', 555, 570, 'two', 2, NULL, '2016-07-29 02:23:04', 29, 'D', 1, 229530),
+(126, 1, 18, 163, '23423423', '2016-07-30', 540, 555, 'doo', 2, NULL, '2016-07-30 19:20:29', 1, 'D', 1, 229511),
+(127, 1, 18, 163, '23423423', '2016-07-30', 540, 555, 'Scrapy\n', 1, NULL, '2016-07-30 19:20:55', 1, 'D', 1, 229511);
 
 -- --------------------------------------------------------
 
@@ -3037,7 +3039,8 @@ INSERT INTO `cancelled_appointments` (`fk_appointment_id`, `remarks`, `cancelled
 (91, 'this is ', '2016-07-18 16:50:17', 1, 'D'),
 (110, 'test cancel', '2016-07-23 16:25:54', 1, 'D'),
 (122, 'test cancel\n', '2016-07-28 13:59:55', 1, 'D'),
-(125, 'test cancel', '2016-07-29 02:23:40', 29, 'D');
+(125, 'test cancel', '2016-07-29 02:23:40', 29, 'D'),
+(126, 'yekes', '2016-07-30 19:20:41', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -3071,7 +3074,8 @@ INSERT INTO `close_appointment` (`fk_appointment_id`, `closing_date`, `closing_t
 (77, '2016-07-14', 9, 141, 'asd', '2016-07-14 15:58:48', 1, 'D'),
 (106, '2016-07-21', 10, 169, 'sdfasdfasd', '2016-07-21 23:29:19', 1, 'D'),
 (107, '2016-07-21', 10, 169, 'just close and dont book', '2016-07-21 23:38:47', 1, 'D'),
-(124, '2016-07-29', 9, 175, 'closed happly', '2016-07-29 02:22:47', 29, 'D');
+(124, '2016-07-29', 9, 175, 'closed happly', '2016-07-29 02:22:47', 29, 'D'),
+(127, '2016-07-30', 9, 163, 'close', '2016-07-30 19:21:44', 1, 'D');
 
 -- --------------------------------------------------------
 
@@ -3948,14 +3952,14 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
 --
 
 INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`, `created_date`, `modified_date`) VALUES
-(18, 1, 'Margaon', '', 0, NULL, '2016-07-30 13:06:04'),
-(19, 1, 'Panjim', '', 1, NULL, NULL),
+(18, 1, 'Margaon', '', 1, NULL, '2016-07-30 16:24:59'),
+(19, 1, 'Panjim', '', 0, NULL, '2016-07-30 14:37:32'),
 (20, 1, 'Vasco', '', 0, NULL, '2016-07-30 13:08:15'),
 (21, 43, 'Cali', '', 1, NULL, NULL),
 (22, 43, 'Tex', '', 1, NULL, NULL),
 (23, 47, 'Vermont', '', 1, NULL, NULL),
 (24, 47, 'Mich', '', 1, NULL, NULL),
-(25, 1, 'new', '', 0, '2016-07-28 02:23:26', '2016-07-29 01:37:41'),
+(25, 1, 'new', '', 0, '2016-07-28 02:23:26', '2016-07-30 14:11:19'),
 (26, 29, 'Canada', '', 1, '2016-07-29 02:04:09', '2016-07-29 15:38:57');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
