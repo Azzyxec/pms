@@ -105,6 +105,7 @@ var links = {
     //upload server location path
     patientPicturePathUrl:'images/patientUserImages/',
     guardianPicturePathUrl:'images/guardianUserImages/',
+    defaultProfilePathUrl:'images/',
 
     //Inventory
     saveUpdateProductStock: "index.php/doctor/saveUpdateProductStock",
