@@ -287,16 +287,16 @@ function makeAppointmentController(){
           controller.resetPatientInfo();
           //todayAppointmentListView.newAppointmentModal.modal('hide');
           //update the location list with new values
-          utility.getAlerts("Appointments added success fully","alert-success text-center",'','.modal-body');
+          utility.getAlerts("Appointments booked successfully, please try refresh the page if you cannot see the appointment","alert-success text-center",'','.modal-body');
           //may be can return the id of the newly added patient, to update the patient model
 
         }else if(response.status == 2){
-          utility.getAlerts("Schedule not added or timimgs dont match!","alert-warning text-center",'','.modal-body');
+          utility.getAlerts("Schedule not added or timimgs dont match!, please check the schedules timmings or try refreshing the page","alert-warning text-center",'','.modal-body');
 
           console.log('schedule not added or timimgs dont match');
 
         }else if(response.status == 3){
-            utility.getAlerts("timimng clash with existign appointment, please try reloading the dashboard!","alert-warning text-center",'','.modal-body');
+            utility.getAlerts("timimng clash with existign appointment, please try refreshing","alert-warning text-center",'','.modal-body');
 
           console.log('timimng clash with existign appointment');
         }else if(response.status == 4){

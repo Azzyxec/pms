@@ -74,6 +74,7 @@ $app->group('/Upload',function(){
           , 'url' => 'images/scannedDoc/' . $uniqueFileName
       );
 
+      //return $response;
       $data = array('status' => "1", 'data' => $uniqueCloseAppointmentId, 'message' => "success" );
       return $response->withJson($data);
     } catch (Exception $e){

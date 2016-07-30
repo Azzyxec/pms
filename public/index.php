@@ -11,6 +11,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
 
 use Pms\Middleware\AuthenticateMiddleware;
 
+date_default_timezone_set(AppConfig::$timezone);
+
 //importing entites
 //use Pms\Entities\UserSessionManager;
 //use Pms\Entities\Patient;
@@ -43,7 +45,6 @@ $container['notFoundHandler'] = function ($container) {
             ->write("<html><body><p>Opps, it's not allowed, please go to the main page <a href='/'>Login page</a></p></body></html>");
     };
 };
-
 
 //to make use of default session
 session_cache_limiter(false);
