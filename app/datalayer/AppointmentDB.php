@@ -35,6 +35,7 @@ class AppointmentDB{
         $appointment['description'] = $result['description'];
         $appointment['remarks'] = $result['remarks'];
         $appointment['state'] = $result['state'];
+        $appointment['scheduleDayId'] = $result['fk_schedule_day_id'];
         //$appointment['isRescheduled'] = $result['is_rescheduled'];
         $appointment['locId'] = $result['loc'];
 

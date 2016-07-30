@@ -8,7 +8,7 @@ use Pms\Datalayer\AppointmentDB;
 use Pms\Datalayer\PatientDB;
 use Pms\Utilities\XMLHelper;
 
-$app->group('/appointment', function(){ 
+$app->group('/appointment', function(){
 
   $this->get('/addFiles', function ($request, $response) {
 
@@ -304,8 +304,9 @@ $this->get('/getAppointmentsForTheDay', function ($request, $response) {
       foreach ($allApointments as $key1 => $appointment) {
 
         //Loop throught the schedules and determine if ther are withing the time range of a  schedule
-        if($schedule['startMins']  <= $appointment['startMins'] &&
-        $schedule['endMins'] >=  $appointment['endMins']){
+        if($schedule['startMins']  <= $appointment['startMins']
+        && $schedule['endMins'] >=  $appointment['endMins']
+        && $schedule['scheduleDayId'] = $appointment['scheduleDayId']){
 
           //each appointmetn has a start mins and end mins
           //check the start time of appointment
@@ -334,9 +335,16 @@ $this->get('/getAppointmentsForTheDay', function ($request, $response) {
           }
 
           //type f for free time slot and a for any kin gof appointment
-
-          $appointment['type'] = 'a';
-          $todaysSchedule[] = $appointment;
+          $contains = false;
+          foreach ($todaysSchedule as $Appkey => $Appvalue) {
+            if($Appvalue['type'] != 'f'  && $Appvalue['id'] == $appointment['id']){
+              $contains = true;
+            }
+          }
+          if($contains == false){
+            $appointment['type'] = 'a';
+            $todaysSchedule[] = $appointment;
+          }
 
           //since we take the end time of the current appointment
           // to determine if there is a free time betwwen the next appointment
@@ -380,6 +388,9 @@ $this->get('/getAppointmentsForTheDay', function ($request, $response) {
   }
 
 });
+
+
+
 $this->get('/getAllAppointments', function ($request, $response) {
   try {
 

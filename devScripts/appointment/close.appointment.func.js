@@ -15,7 +15,7 @@ function getCloseAppointmentController(){
     uniqueId:''
     //uploadedFileList: [],
     //uploadedFileCount: 0
-  }
+  };
 
   var ViewModel = {
                     appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
@@ -606,6 +606,10 @@ function getCloseAppointmentController(){
           });*/
       });
 
+      this.fi.on('fileuploadfail', function (e, data) {
+        //on file upload fail
+        console.log('on fail');
+      });
 
     },
     destroyFileUploader: function(){
