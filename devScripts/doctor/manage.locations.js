@@ -34,6 +34,9 @@ $(document).ready(function(){
                }else if(response.status == 2){
                  utility.getAlerts('Cannot deactivate this location, there are active appointments on the following days ' + response.data, 'alert-warning', '', '.container-fluid');
                  console.log('Cannot deactivate this location, there are active appointments on the following days ' + response.data);
+               }else if(response.status == 3){
+                 utility.getAlerts('Location deactivated, but there were active schedules, which can be reactivated by activating the location again, schedules on following days are affected ' + response.data, 'alert-warning', '', '.container-fluid');
+                 console.log('Location deactivated, but there were active schedules, which can be reactivated by activating the location, schedules on following days are affected  ' + response.data);
                }
 
              });
