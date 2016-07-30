@@ -99,6 +99,7 @@ var filesList = [
  {build:true, files: [
                     objConfig.scriptsBasePath +"moment.js",
                     objConfig.scriptsBasePath +"bootstrap-datetimepicker.min.js",
+                    objConfig.scriptsBasePath +"bootstrapValidator.min.js",
                     objConfig.scriptsBasePath +"utility.js",
                     objConfig.scriptsBasePath +"links.js",
                     objConfig.scriptsBasePath +"doctor/doctorDashboard.js",

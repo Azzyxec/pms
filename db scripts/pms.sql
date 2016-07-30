@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2016 at 12:28 PM
+-- Generation Time: Jul 30, 2016 at 09:39 AM
 -- Server version: 5.6.17
 -- PHP Version: 5.5.12
 
@@ -159,8 +159,19 @@ begin
 
 	# status 1 when all things are ok
     # status 2 when there are active appointments and schedule cant be deactivated
+    # status 3 when there are active schedules and schedule cant be deactivated
 
 	declare lActiveAppointmentCount int;
+    declare lActiveSchedulesCount int;
+    declare lstate int;
+    declare lAllowUpdate int;
+    declare ldates varchar(65535);
+    declare lscheduleDates  varchar(65535);
+    declare lappointmentDates  varchar(65535);
+
+    set @lstate = 1;
+    set @ldates = '-';
+
 
 
 	if pid <= 0 then
@@ -172,55 +183,18 @@ begin
                                     ,is_active
 								  )
 							values
-									(
-                                    pdoctor_id
-									,pname
-                                    ,now()
-                                    ,pis_active
-								   );
+								 (
+								   pdoctor_id
+								   ,pname
+								   ,now()
+								   ,pis_active
+								 );
 
-		   select 1 as status, '-' as dates;
+	 else
+	 #update
 
-		else
 
-        # if pis_active =0 , then check if there are active appointments for this location
-
-        if COALESCE(pis_active, 0) = 0 then
-
-			select COALESCE(count(id), 0)
-            into @lActiveAppointmentCount
-            from appointment a
-            where a.fk_location_id = pid
-				  and a.state = 0
-                  and a.is_active = 1
-                  and a.appointment_date >= curdate();
-
-            if COALESCE(@lActiveAppointmentCount, 0) = 0 then
-
-				UPDATE `work_locations`
-				SET `name` = pname
-					 ,modified_date = now()
-					 ,is_active = pis_active
-				WHERE id = pid;
-
-                select 1 as status, '-' as dates;
-
-			else
-
-				#there are active appointments then dont deactivate the location
-                # just return the dates when then appointments are active
-
-				select  GROUP_CONCAT(date_format(appointment_date, ' %d %M %Y') ) AS dates
-					   ,2 as status
-				from  appointment a
-				where a.fk_location_id = pid
-					  and a.state = 0
-					  and a.is_active = 1
-                      and a.appointment_date >= curdate();
-
-            end if;
-
-        else
+        if COALESCE(pis_active, 0) = 1 then
 
 			UPDATE `work_locations`
 			SET `name` = pname
@@ -228,13 +202,67 @@ begin
 				 ,is_active = pis_active
 			WHERE id = pid;
 
-            select 1 as status, '-' as dates;
-
-        end if;
+        else
 
 
+			# if pis_active = 0 , then check if there are active appointments for this location
+			select GROUP_CONCAT(date_format(appointment_date, ' %d %M %Y') ) AS dates
+				   ,COALESCE(count(appointment_date), 0)
+            into   @lappointmentDates
+				   ,@lActiveAppointmentCount
+            from   appointment a
+            where  a.fk_location_id = pid
+				   and a.state = 0
+                   and a.fk_doctor_id = pdoctor_id
+                   and a.is_active = 1
+                   and a.appointment_date >= curdate();
 
-	end if;
+			select GROUP_CONCAT(date_format(sd.date, ' %d %M %Y') ) AS dates
+				   ,COALESCE(count(sd.date), 0)
+            into   @lscheduleDates
+				   ,@lActiveSchedulesCount
+            from   schedule_day sd
+			where  sd.location_id = pid
+				   and sd.fk_doctor_id = pdoctor_id
+				   and sd.is_active = 1
+                   and sd.date >= curdate();
+
+            if COALESCE(@lActiveAppointmentCount, 0) = 0
+			   and COALESCE(@lActiveSchedulesCount, 0) = 0 then
+
+				UPDATE `work_locations`
+				SET `name` = pname
+					 ,modified_date = now()
+					 ,is_active = pis_active
+				WHERE id = pid;
+
+            elseif COALESCE(@lActiveAppointmentCount, 0) > 0 then
+
+				    set @lstate = 2;
+                    set @ldates = @lappointmentDates;
+
+            elseif COALESCE(@lActiveSchedulesCount, 0) > 0 then
+
+					UPDATE `work_locations`
+					SET `name` = pname
+						 ,modified_date = now()
+						 ,is_active = pis_active
+					WHERE id = pid;
+
+					set @lstate = 3;
+                    set @ldates = @lscheduleDates;
+
+			end if;
+
+		 end if;
+
+
+	end if; # if pid <= 0 then, i.e end of update
+
+    commit;
+
+    select @lstate  as status, @ldates as dates;
+
 end$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `add_update_patient_birth_details`(IN `ppatient_id` INT, IN `pdelivery_method_id` INT, IN `pbirth_weight` VARCHAR(20), IN `plength` VARCHAR(20), IN `phead` VARCHAR(20), IN `pblood_group` VARCHAR(10), IN `pmothers_name` VARCHAR(100), IN `pmothers_blood_group` VARCHAR(10), IN `pfathers_name` VARCHAR(100), IN `pfathers_blood_group` VARCHAR(10), IN `psiblings` VARCHAR(100), IN `premarks` VARCHAR(4000), IN `pis_active` INT)
@@ -1621,7 +1649,7 @@ SELECT 	 product.id
         ,date_format(product.created_date, '%d-%m-%Y') as created_date
 		,product.created_by_id
 		,product.created_by_type
-FROM pms.product
+FROM    product
 Where fk_doctor_id = pdoctor_id
       and is_active = 1;
 
@@ -1909,12 +1937,13 @@ BEGIN
     set @lendDate = STR_TO_DATE(pend_date, '%d-%m-%Y');
 
 
-SELECT DATE_FORMAT(`date`, '%d-%m-%Y') as `schedule_date`
-	   ,start_time_mins
-	   ,end_time_mins
-	   ,fk_schedule_id
-       ,id
+SELECT DATE_FORMAT(sd.`date`, '%d-%m-%Y') as `schedule_date`
+	   ,sd.start_time_mins
+	   ,sd.end_time_mins
+	   ,sd.fk_schedule_id
+       ,sd.id
   FROM schedule_day
+  inner join work_locations wl on wl.id = sd.location_id and wl.is_active = 0
   WHERE fk_doctor_id = pdoctor_id
 		and location_id = plocation_id
 		and `date` >= @lstartDate
@@ -2642,6 +2671,7 @@ begin
 	select count(sc.id)
 	into   @lscheduleCount
 	from schedule_day sc
+    inner join work_locations wl on wl.id = sd.location_id and wl.is_active = 1
 	where sc.fk_doctor_id = pdoctor_id
 		  and sc.location_id = plocation_id
 		  and date(sc.`date`) = date(@lnewAppointmentDate)
@@ -2663,6 +2693,7 @@ begin
 	 select sum(is_timing_overlapping(pstart_time, pend_time, a.start_mins, a.end_mins))
 	 into  @lappointmentSum
 	 from appointment a
+     inner join work_locations wl on wl.id = a.fk_location_id and wl.is_active = 1
 	 where  a.fk_doctor_id = pdoctor_id
 			and a.fk_location_id  = plocation_id
 			and a.appointment_date = @lnewAppointmentDate
@@ -2738,6 +2769,7 @@ BEGIN
     select COALESCE(sc.id, 0)
 	into   @lscheduleDayId
 	from schedule_day sc
+    inner join work_locations wl on wl.id = sc.location_id and wl.is_active = 1
 	where sc.fk_doctor_id = pdoctor_id
 		  and sc.location_id = plocation_id
 		  and sc.`date` = @lnewAppointmentDate
@@ -3696,7 +3728,7 @@ CREATE TABLE IF NOT EXISTS `schedule` (
   `created_by_type` varchar(5) DEFAULT NULL,
   `is_active` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=91 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=92 ;
 
 --
 -- Dumping data for table `schedule`
@@ -3716,7 +3748,8 @@ INSERT INTO `schedule` (`id`, `fk_doctor_id`, `start_date`, `end_date`, `created
 (87, 1, '2016-08-01', '2016-08-06', '2016-07-28 16:19:26', 1, 'D', 1),
 (88, 29, '2016-07-29', '2016-07-31', '2016-07-29 02:20:02', 29, 'D', 1),
 (89, 29, '2016-07-29', '2016-08-13', '2016-07-29 03:07:10', 29, 'D', 1),
-(90, 29, '2016-08-01', '2016-08-04', '2016-07-29 15:58:20', 29, 'D', 1);
+(90, 29, '2016-08-01', '2016-08-04', '2016-07-29 15:58:20', 29, 'D', 1),
+(91, 1, '2016-08-01', '2016-08-10', '2016-07-29 17:02:57', 1, 'D', 1);
 
 -- --------------------------------------------------------
 
@@ -3737,7 +3770,7 @@ CREATE TABLE IF NOT EXISTS `schedule_day` (
   `modified_by_type` varchar(5) DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229553 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=229558 ;
 
 --
 -- Dumping data for table `schedule_day`
@@ -3849,7 +3882,12 @@ INSERT INTO `schedule_day` (`id`, `fk_doctor_id`, `fk_schedule_id`, `location_id
 (229549, 29, 90, 26, '2016-08-01', 540, 720, 1, NULL, NULL, NULL),
 (229550, 29, 90, 26, '2016-08-02', 540, 720, 1, NULL, NULL, NULL),
 (229551, 29, 90, 26, '2016-08-03', 540, 720, 1, NULL, NULL, NULL),
-(229552, 29, 90, 26, '2016-08-04', 540, 720, 1, NULL, NULL, NULL);
+(229552, 29, 90, 26, '2016-08-04', 540, 720, 1, NULL, NULL, NULL),
+(229553, 1, 91, 20, '2016-08-01', 540, 720, 1, NULL, NULL, NULL),
+(229554, 1, 91, 20, '2016-08-03', 540, 720, 1, NULL, NULL, NULL),
+(229555, 1, 91, 20, '2016-08-05', 540, 720, 1, NULL, NULL, NULL),
+(229556, 1, 91, 20, '2016-08-08', 540, 720, 1, NULL, NULL, NULL),
+(229557, 1, 91, 20, '2016-08-10', 540, 720, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3910,9 +3948,9 @@ CREATE TABLE IF NOT EXISTS `work_locations` (
 --
 
 INSERT INTO `work_locations` (`id`, `fk_doctor_id`, `name`, `description`, `is_active`, `created_date`, `modified_date`) VALUES
-(18, 1, 'Margaon', '', 1, NULL, NULL),
+(18, 1, 'Margaon', '', 0, NULL, '2016-07-30 13:06:04'),
 (19, 1, 'Panjim', '', 1, NULL, NULL),
-(20, 1, 'Vasco', '', 1, NULL, '2016-07-29 01:39:21'),
+(20, 1, 'Vasco', '', 0, NULL, '2016-07-30 13:08:15'),
 (21, 43, 'Cali', '', 1, NULL, NULL),
 (22, 43, 'Tex', '', 1, NULL, NULL),
 (23, 47, 'Vermont', '', 1, NULL, NULL),

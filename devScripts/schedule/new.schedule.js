@@ -25,6 +25,16 @@ $(document).ready(function(){
     .done(function( response ) {
       //console.log('response ' + JSON.stringify(response));
       scheduleModel.workLocations = response.data;
+
+      if(scheduleModel.workLocations.length == 0){
+        utility.getAlerts("Could not find locations, please enter locations or activate existing ones","alert-warning","",".container-fluid");
+        stepOneView.nextButton.prop('disabled', true);
+        stepOneView.selectLocations.prop('disabled', true);
+      }else{
+        stepOneView.nextButton.prop('disabled', false);
+        stepOneView.selectLocations.prop('disabled', false);
+      }
+
       stepOneView.render();
     });
 
@@ -206,27 +216,22 @@ $(document).ready(function(){
 var stepOneView = {
 
   init: function(){
-    utility.removeAlerts();
+    //utility.removeAlerts();
+    this.form = $('#form-step-one');
     this.panel = $('#schedule-step-one');
     this.selectLocations = $('#sel-work-locations');
     this.fromDateControl = $('#from-date');
     this.toDateControl = $('#to-date');
     this.fromTimeControl = $('#from-time');
     this.toTimeControl = $('#to-time');
+    this.nextButton =   $('#btn-schedule-next');
     this.cancelButton = $('#btn-cancel');
 
     this.cancelButton.on('click', function(){
       window.location = links.getScheduleCalendarUrl;
     });
 
-
-
-
-
-
-
-
-
+    //this.initValidators();
 
     this.fromDateControl.datetimepicker({
     inline: false,
@@ -287,7 +292,7 @@ var stepOneView = {
     currDate.add(15, 'days')
     this.toDateControl.val(currDate.format('DD-MM-YYYY'));
 
-    $('#btn-schedule-next').on('click', (function(self){
+    this.nextButton.on('click', (function(self){
     return function(){
       console.log('schedule next nclick');
 
@@ -326,6 +331,61 @@ var stepOneView = {
     }
     });
 
+
+
+  },
+  initValidators: function(){
+
+    this.form.bootstrapValidator({
+        trigger:"focus click change keyup select blur",
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok ',
+          invalid: 'glyphicon glyphicon-remove ',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+          excluded: [':disabled'],
+        fields:{
+          StepOneFromDate : {
+            validators : {
+              notEmpty : {
+                message : 'Please select a schedule start date'
+              }
+            }
+          },
+          stepOneToDate : {
+
+            validators : {
+              notEmpty : {
+                message : 'please select schedule end date'
+              }
+            }
+          },
+          stepOneFromTime :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please select a start time'
+              }
+            }
+          }
+          ,stepOneToTime :{
+            validators : {
+              notEmpty :{
+                message : 'Please select a end time'
+              }
+            }
+          }
+
+        }
+      });
+
+  },
+  resetvalidator: function(){
+   //this.form.reset();
+   this.form.bootstrapValidator("resetForm", true);
+   //this.closeAppointmentButton.off();
+   //destroy typehad and token field
+
   },
   render: function(){
 
@@ -356,7 +416,7 @@ var createScheduleView = {
   this.appointmentLabel = $(".apptLabel");
 
   //alerts
-  this.overlappingDatesAlert = $('#alert-overlapping-schedule');
+  //this.overlappingDatesAlert = $('#alert-overlapping-schedule');
 
   this.appointmentLabel.on('click',function(){
     console.log("clicked");
@@ -374,8 +434,9 @@ var createScheduleView = {
   this.backButton = $('#btn-back');
 
   this.backButton.on('click', function(){
-    utility.removeAlerts();
+    //utility.removeAlerts();
     console.log("back btn init");
+    stepOneView.resetvalidator();
     stepOneView.panel.show();
     createScheduleView.panel.hide();
     controller.resetScheduleList();
@@ -416,7 +477,7 @@ var createScheduleView = {
     this.tableBody.empty();
 
   //hide alerts
-  this.overlappingDatesAlert.addClass('hidden');
+  //this.overlappingDatesAlert.addClass('hidden');
 
   this.panel.removeClass('hidden');
 
