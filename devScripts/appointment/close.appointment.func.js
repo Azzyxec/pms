@@ -113,7 +113,7 @@ function getCloseAppointmentController(){
 
 
       if(controller.allowSubmit){
-
+        controller.allowSubmit = false;
         $.post( this.closeAppointmentUrl , {appointment: model})
          .done(function( response ) {
 
@@ -123,7 +123,7 @@ function getCloseAppointmentController(){
              controller.cancelCallback(response);
            }
 
-           controller.allowSubmit = true;
+
 
 
            //close in proper resonse, else dsplay messge the appoitmetn could not be compated

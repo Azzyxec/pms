@@ -17,6 +17,7 @@ function getRescheduleAppointmentController(){
 
   var controller = {
     init: function(){
+      this.allowSubmit = true;
       this.rescheleduAppointmentUrl = links.rescheduleAppointmentUrl;
       rescheduleView.init();
     },
@@ -73,21 +74,30 @@ function getRescheduleAppointmentController(){
     },
     rescheduleAppointment: function(){
 
-      $.post(this.rescheleduAppointmentUrl , {rescheduleInfo: model})
-       .done(function( response ) {
+      if(this.allowSubmit){
+        this.allowSubmit = false;
+        $.post(this.rescheleduAppointmentUrl , {rescheduleInfo: model})
+         .done(function( response ) {
 
-         if(controller.callback){
-           controller.callback(response);
-         }
+           if(controller.callback){
+             controller.callback(response);
+           }
 
-         if(response.status == 2){
-          utility.getAlerts("Appointment could not be rescheduled either because timings clash with existing appointment or there is no schedule","alert-warning","",".modal-body");
-           console.log('message that appointment could not be rescheduled');
-         }
+           if(response.status == 2){
+            utility.getAlerts("Appointment could not be rescheduled either because timings clash with existing appointment or there is no schedule","alert-warning","",".modal-body");
+             console.log('message that appointment could not be rescheduled');
+           }
 
-         console.log('reschedule response ' + JSON.stringify(response));
-       });
-    }
+           console.log('reschedule response ' + JSON.stringify(response));
+         }).always(function () {
+           console.log('always after calls');
+           controller.allowSubmit = true;
+         });
+      }
+
+      }
+
+
 
   };
 
