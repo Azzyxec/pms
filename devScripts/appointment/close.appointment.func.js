@@ -610,7 +610,6 @@ function getCloseAppointmentController(){
         //on file upload fail
         console.log('on fail data ' + + JSON.stringify(data));
 
-
       });
 
     },
