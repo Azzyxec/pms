@@ -3,6 +3,7 @@ $(document).ready(function(){
   $(function(){
     console.log('doctor dash js');
 
+    //view model
     var model = {
       appointmentList:[],
       appointmentDate: moment().format('DD-MM-YYYY'),
