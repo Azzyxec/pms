@@ -92,7 +92,7 @@ $(document).ready(function(){
 
             scheduleModel.scheduleList.push(scheduleDaysList[i]);
           }
-          
+
         }else{
           console.log('no schedules');
           // when no results have been found
@@ -165,10 +165,12 @@ $(document).ready(function(){
         this.fromDateControl = $('#from-date');
         this.toDateControl = $('#to-date');
         this.cancelButton = $('#btn-cancel');
+        this.form = $('#form-step-one');
 
         this.cancelButton.on('click', function(){
           window.location = links.getScheduleCalendarUrl;
         });
+        this.initValidators(); 
 
 
         this.fromDateControl.datetimepicker({
@@ -202,28 +204,90 @@ $(document).ready(function(){
 
         $('#btn-schedule-next').on('click', (function(self){
           return function(){
+
             console.log('schedule next nclick');
+            stepOneView.form.data('bootstrapValidator').validate();
+            if(stepOneView.form.data('bootstrapValidator').isValid()){
+              console.log('validated');
 
-            //updating location text in the second step
-            var locationId = self.selectLocations.find(":selected").attr('value');
-            var locationName = self.selectLocations.find(":selected").text();
 
-            var fromDateStr = stepOneView.fromDateControl.val();
-            var toDateStr = stepOneView.toDateControl.val();
 
-            console.log('from ui start ' + fromDateStr + ' end date ' + toDateStr);
+                          //updating location text in the second step
+                          var locationId = stepOneView.selectLocations.find(":selected").attr('value');
+                          var locationName = stepOneView.selectLocations.find(":selected").text();
 
-            //setting the models start and end date
-            scheduleModel.startDate = fromDateStr;
-            scheduleModel.endDate = toDateStr;
+                          var fromDateStr = stepOneView.fromDateControl.val();
+                          var toDateStr = stepOneView.toDateControl.val();
 
-            controller.updateSelectedLocation(locationId, locationName);
-            controller.getSchedulesFromServer();
+                          console.log('from ui start ' + fromDateStr + ' end date ' + toDateStr);
+
+                          //setting the models start and end date
+                          scheduleModel.startDate = fromDateStr;
+                          scheduleModel.endDate = toDateStr;
+
+                          controller.updateSelectedLocation(locationId, locationName);
+                          controller.getSchedulesFromServer();
+
+            } else{
+              console.log('invalid');
+            }
+
+
 
           };
         })(this));
 
       }, // init function
+      initValidators: function(){
+
+        console.log('bootstrapValidator init');
+
+        this.form.bootstrapValidator({
+            trigger:"focus click change keyup select blur",
+            feedbackIcons: {
+              valid: 'glyphicon glyphicon-ok ',
+              invalid: 'glyphicon glyphicon-remove ',
+              validating: 'glyphicon glyphicon-refresh'
+            },
+              excluded: [':disabled'],
+            fields:{
+              selLocations : {
+                validators : {
+                  notEmpty : {
+                    message : 'Please select a location'
+                  }
+                }
+              },
+
+                fromDate : {
+
+                validators : {
+                  notEmpty : {
+                    message : 'please select schedule start date'
+                  }
+                }
+              },
+              toDate : {
+
+                validators : {
+                  notEmpty : {
+                    message : 'please select schedule end date'
+                  }
+                }
+              }
+
+            }
+          });
+
+      },
+      resetvalidator: function(){
+       //this.form.reset();
+       this.form.bootstrapValidator("resetForm", true);
+       //this.closeAppointmentButton.off();
+       //destroy typehad and token field
+
+      },
+
       render: function(){
 
         var locations = controller.getLocationList();
