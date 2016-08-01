@@ -3,7 +3,7 @@ namespace Pms\Datalayer;
 
 use \PDO;
 use Pms\Datalayer\DBHelper;
-use Pms\Entities\Appointment;
+use Pms\Entities\Appointment; 
 
 
 class AppointmentDB{

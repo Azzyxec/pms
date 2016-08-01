@@ -17,16 +17,18 @@ class UserSessionManager{
   }//getUser
 
 
-  public static function addUploadedfile($uniqueId, $originalFileName, $newFileName){
+  public static function addUploadedfile($uniqueId, $fileId, $originalFileName, $newFileName){
     if(isset($_SESSION[$uniqueId])){
+
       $list = $_SESSION[$uniqueId];
-      $list[] = array('orignalFileName' => $originalFileName, 'newFileName' => $newFileName);
+
+      $list['_'.$fileId] = array('orignalFileName' => $originalFileName, 'newFileName' => $newFileName);
       $_SESSION[$uniqueId] =$list;
 
     }else{
 
       $fileList = array();
-      $fileList[] = array('orignalFileName' => $originalFileName, 'newFileName' => $newFileName);
+      $fileList['_'.$fileId] = array('orignalFileName' => $originalFileName, 'newFileName' => $newFileName) ;
       $_SESSION[$uniqueId] = $fileList;
     }
 
@@ -44,6 +46,59 @@ class UserSessionManager{
   public static function clearFileList($uniqueId){
     unset($_SESSION[$uniqueId]);
   }
+
+
+
+  public static function singleAddUploadfile($uniqueId, $type, $originalFileName, $newFileName){
+
+    if(isset($_SESSION[$uniqueId])){
+
+      $fileList = $_SESSION[$uniqueId];
+      if ($type == 'P'){
+          $fileList['P'] = array('orignalName'=>$originalFileName, 'newFileName'=>$newFileName);
+      }elseif ($type == 'G') {
+          $fileList['G'] = array('orignalName'=>$originalFileName, 'newFileName'=>$newFileName);
+      }
+
+      $_SESSION[$uniqueId] = $fileList;
+
+
+    }else {
+      $fileList = array();
+      if ($type == 'P'){
+          $fileList['P'] =array('orignalName'=>$originalFileName, 'newFileName'=>$newFileName);
+      }elseif ($type == 'G') {
+          $fileList['G'] =array('orignalName'=>$originalFileName, 'newFileName'=>$newFileName);
+      }
+
+
+      $_SESSION[$uniqueId] = $fileList;
+
+    }
+  }
+
+  public static function getSingleUploadFile($uniqueId,$type){
+
+    if(isset($_SESSION[$uniqueId])){
+      $fileList = $_SESSION[$uniqueId];
+
+
+      if(isset($fileList[$type])){
+        return $fileList[$type];
+      }else{
+        return array();
+      }
+
+
+  }else{
+    return array();
+  }
+}
+
+  // public static function clearFileList($uniqueId){
+  //   unset($_SESSION[$uniqueId]);
+  // }
+
 
 
   /*

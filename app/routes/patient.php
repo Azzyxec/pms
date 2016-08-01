@@ -129,6 +129,47 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
 
     });
 
+    $this->get('/addSingleFiles', function ($request, $response) {
+
+      $allGetVars = $request->getQueryParams();
+
+      $id = $allGetVars['id'];
+      $type = $allGetVars['type'];
+      $name = $allGetVars['name'];
+      $newName = $allGetVars['newName'];
+
+      UserSessionManager::singleAddUploadfile($id, $type, $name, $newName);
+
+      return $response->withJson($allGetVars);
+
+    });
+
+    $this->get('/getSingleFiles', function ($request, $response) {
+
+      $data = "no files";
+
+      $allGetVars = $request->getQueryParams();
+
+      $id = $allGetVars['id'];
+      $type = $allGetVars['type'];
+
+      $data = UserSessionManager::getSingleUploadFile($id, $type);
+
+      return $response->withJson($data);
+
+    });
+
+    $this->get('/clearfiles', function ($request, $response) {
+
+      $allGetVars = $request->getQueryParams();
+
+      $id = $allGetVars['id'];
+
+      UserSessionManager::clearFileList($id);
+      return $response->withJson('');
+
+    });
+
 
     $this->post('/addUpdatePatient', function ($request, $response) {
       try {
@@ -170,6 +211,28 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
           //getting patients  info details
           $patient = Patient::getInsanceFromArray($postedData['patientInfo']);
 
+
+          //checking for file uploadedFiles
+          if(isset( $postedData['uniqueId'])){
+            $type = 'P';
+            $uniqueId = $postedData['uniqueId'];
+            $uploadedFileInfo = UserSessionManager::getSingleUploadFile($uniqueId,$type);
+
+            if(isset($uploadedFileInfo['newFileName'])){
+              $patient->picturePath = $uploadedFileInfo['newFileName'];
+            }
+
+
+
+
+
+
+          }
+
+
+
+
+
           $data = array('patient' => $patient);
 
          //save patients info
@@ -183,6 +246,8 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
 
          if(isset($postedData['guardianInfo'])){
 
+
+
            $guardianInfoProcessed = true;
 
            $guardianArray = $postedData['guardianInfo'];
@@ -192,13 +257,30 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
            $guardian->gender = $guardianArray['gender'];
            $guardian->contact1 = $guardianArray['contact1'];
            $guardian->address =  $guardianArray['address'];
-           $guardian->picturePath =  $guardianArray['picUploadPath'];
+
            $guardian->isActive = $patient->isActive;
+
+            //checking for file uploadedFiles
+
+           if(isset( $postedData['uniqueId'])){
+             $type = 'G';
+             $uniqueId = $postedData['uniqueId'];
+             $uploadedFileInfo = UserSessionManager::getSingleUploadFile($uniqueId, $type);
+
+
+
+
+             if(isset($uploadedFileInfo['newFileName'])){
+               $guardian->picturePath = $uploadedFileInfo['newFileName'];
+             }
+           }
 
            //TODO save guardian info
            $saveGuardianResponse = $patientDB->saveUpdateGuardianInfo($guardian, $savedPatientId);
 
            $data['guardian'] = $guardian;
+
+
 
          }
 
@@ -218,7 +300,7 @@ $this->get('/getPatientListForAutoFill', function ($request, $response) {
 
          }
 
-        $resp = array('status' => "1", 'data' => $data, 'guardianInfoProcessed' => $guardianInfoProcessed, 'message' => 'success' );
+        $resp = array('status' => "1", 'data' => $postedData, 'message' => 'success' );
 
         return $response->withJson($resp);
 
