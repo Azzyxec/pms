@@ -7,10 +7,37 @@ use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\AppointmentDB;
 use Pms\Datalayer\PatientDB;
 use Pms\Utilities\XMLHelper;
+use Pms\Utilities\SmsService;
 
 $app->group('/appointment', function(){
 
+
+  $this->get('/sendsms', function ($request, $response) {
+
+    try {
+
+      $allGetVars = $request->getQueryParams();
+
+      $message = $allGetVars['message'];
+      $mobileNo =  $allGetVars['mobileNo'];
+
+      $sms = SmsService::getInstance();
+
+      $smsResponse = $sms->send($message, $mobileNo);
+
+      return $response->write($sms->sendUrl . ' resp ' . $smsResponse);
+
+    } catch (Exception $e) {
+      $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in appointment controller' . $e->getMessage());
+      return $response->withJson($data);
+    }
+
+  });
+
+
   $this->get('/addFiles', function ($request, $response) {
+
+    $sms = SmsHelper::getInstance();
 
     $allGetVars = $request->getQueryParams();
 
