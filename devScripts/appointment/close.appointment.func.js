@@ -678,7 +678,7 @@ this.fi.on('fileuploadfail', function (e, data) {
   //on file upload fail
   console.log('on fail data ' + + JSON.stringify(data));
 
-
+ 
 });
 
 },
