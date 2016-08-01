@@ -253,8 +253,9 @@ $(document).ready(function(){
         if(programmeList.length <= 0){
           console.log('programme list validation');
           programmeView.isFormValid = false;
-          programmeView.commonHelpLabel.removeClass('hidden');
-          programmeView.commonHelpLabel.text('Please enter atleast one programme entry');
+          utility.getAlerts('Please enter atleast one programme entry','alert-warning','','.container-fluid');
+        //  programmeView.commonHelpLabel.removeClass('hidden');
+      //    programmeView.commonHelpLabel.text('Please enter atleast one programme entry');
         }else{
           programmeView.commonHelpLabel.addClass('hidden');
         }
@@ -322,11 +323,18 @@ $(document).ready(function(){
           td.text(programmeList[i].doseNo);
           tr.append(td);
 
-          var td = $('<a/>',{
+          var td = $('<td/>');
+          td.attr('align', 'left')
+
+
+          var remove = $('<a/>',{
             text: 'Remove',
-            class: "btn btn-default btn-sm",
-            style: "margin:5px"
+            class: "btn btn-default btn-sm"
+
           });
+
+          td.append(remove);
+
 
           td.click((function(programme){
             return function(){
@@ -348,8 +356,11 @@ $(document).ready(function(){
           var editLink = $('<a/>',{
             text: 'Edit',
             class: "btn btn-default btn-sm",
-            style: "margin:5px"
+            style: "margin-left:5px"
           });
+        //  var td = $('<td/>');
+          td.append(editLink);
+
 
           editLink.click((function(programme){
             return function(){
@@ -367,7 +378,8 @@ $(document).ready(function(){
 
         //  var td = $('.last-td-col');
           //td.append(editLink);
-          tr.append(editLink);
+        //  tr.append(td);
+
 
 
           this.tableBody.append(tr);

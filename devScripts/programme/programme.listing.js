@@ -63,11 +63,14 @@ $(document).ready(function(){
           //console.log('looping ' +  JSON.stringify (patientsList[i]));
 
           var tr = $('<tr/>');
+          var td = $('<td/>');
 
-          var td = $('<a/>',{
+          var a = $('<a/>',{
             text: programmeList[i].name,
             href: controller.programmeEditUrl + '?id=' +  programmeList[i].id
           });
+          td.append(a);
+
           tr.append(td);
 
           var td = $('<td/>');
