@@ -13,6 +13,7 @@ use Pms\Middleware\AuthenticateMiddleware;
 
 date_default_timezone_set(AppConfig::$timezone);
 
+
 //importing entites
 //use Pms\Entities\UserSessionManager;
 //use Pms\Entities\Patient;
@@ -101,6 +102,7 @@ require '../app/routes/doctor.php';
 require '../app/routes/staff.php';
 
 require '../app/routes/appointment.php';
+
 require '../app/routes/upload.php';
 
 // Run app
