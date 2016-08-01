@@ -16,7 +16,7 @@ $(document).ready(function(){
       init:function(){
         this.saveUpdateProductStock = links.saveUpdateProductStock;
         this.getAllProductListUrl =   links.getAllProducts;
-        this.locationListUrl = links.getActiveLocations;
+        this.locationListUrl = links.getActiveLocations1;
         this.DefaultLocationInit = false;
 
         //setting user info
@@ -310,6 +310,8 @@ $(document).ready(function(){
         //this.form.reset();
 
         this.form.bootstrapValidator("resetForm",true);
+        this.stockLabel.text('0');
+
       },
       renderProductView: function(){
         console.log('render product view');

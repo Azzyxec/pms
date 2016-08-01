@@ -704,18 +704,19 @@ var patientDetailsView = {
     //  var picturePathe = '';
     console.log('controller profile path' + controller.defaultProfilePath );
     console.log('controller model path' + controller.patientsPicturePath );
+    var imageSource = '';
 
-    if(!lpatientInfo.picturePath || 0 === lpatientInfo.picturePath.trim().length){
-      lpatientInfo.picturePath = model.defaultPictureName;
-      this.patientPicturePath = controller.defaultProfilePath;
-      console.log('patient picture path is null'+this.patientPicturePath );
+    if(lpatientInfo.picturePath == 'null' || lpatientInfo.picturePath == null || !lpatientInfo.picturePath || 0 === lpatientInfo.picturePath.trim().length){
+
+      imageSource = controller.defaultProfilePath + model.defaultPictureName;
+
+      console.log('patient picture path is null'+ imageSource );
     }else{
-
-      this.patientPicturePath = controller.patientsPicturePath;
-      console.log('patient picture path is set' + this.patientPicturePath);
+      imageSource = controller.patientsPicturePath + lpatientInfo.picturePath;
+      console.log('patient picture path is set' + imageSource);
     }
-    console.log('full path' + this.patientPicturePath + lpatientInfo.picturePath);
-    this.imgBox.attr('src', this.patientPicturePath + lpatientInfo.picturePath);
+    console.log('full path' + imageSource);
+    this.imgBox.attr('src', imageSource);
     //this.picUpload.val(model.);
 
 
@@ -934,7 +935,7 @@ var patientGuardianDetailsView = {
   isFormdirty: function(){
 
     if( (this.name.val() && this.name.val().trim().length > 0) ||
-    (this.name.val() && this.name.val().trim().length > 0)  ){
+    (this.contact1.val() && this.contact1.val().trim().length > 0)  ){
       return true;
     }
 
@@ -956,17 +957,17 @@ var patientGuardianDetailsView = {
 
 
 
-    if(!lguardianInfo.picturePath || 0 === lguardianInfo.picturePath.trim().length){
-      lguardianInfo.picturePath = model.defaultPictureName;
-      this.PicturePath = controller.defaultProfilePath;
+    if(lguardianInfo.picturePath == 'null' || lguardianInfo.picturePath == null || !lguardianInfo.picturePath || 0 === lguardianInfo.picturePath.trim().length){
+
+      this.PicturePath = controller.defaultProfilePath + model.defaultPictureName;
 
     }else{
 
-      this.PicturePath = controller.guardianPicturePath;
+      this.PicturePath = controller.guardianPicturePath + lguardianInfo.picturePath;
 
     }
 
-    this.imgBox.attr('src', this.PicturePath + lguardianInfo.picturePath);
+    this.imgBox.attr('src',this.PicturePath);
 
 
     //this.picUpload.val(model.);
