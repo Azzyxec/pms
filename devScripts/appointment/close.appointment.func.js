@@ -12,23 +12,33 @@ function getCloseAppointmentController(){
     remarks: '',
     prescriptionList:[],
     currentEntry:{},
-    uniqueId:''
-    //uploadedFileList: [],
+    uniqueId:'',
+    uploadedFileList: [],
     //uploadedFileCount: 0
   };
 
   var ViewModel = {
-                    appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
-                  };
+    appointmentTimes: [{id:5, name:'5 mins'}, {id:10, name:'10 mins'}, {id:15, name:'15 mins'}, {id:20, name:'20 mins'}, {id:30, name:'30 mins'}]
+  };
 
   var controller = {
     init: function(){
       this.allowSubmit = true;
       this.closeAppointmentUrl = links.closeAppointmentUrl;
+      this.fileUploadIdCount = 1;
+      this.currentRemoveFileId = 0;
       fileUploader.init();
 
       closeAppointmentView.init();
       prescriptionListController.init();
+    },
+    removeFileWithId: function(){
+
+     _.remove(model.uploadedFileList, function(item){
+        //console.log(' item ' + JSON.stringify(item));
+        return item.id == controller.currentRemoveFileId;
+      });
+
     },
     generateUUID: function(){
       var d = new Date().getTime();
@@ -67,7 +77,7 @@ function getCloseAppointmentController(){
       return model;
     },
     setCloseAppointmentCallback: function(callbackFunction){
-          this.cancelCallback = callbackFunction;
+      this.cancelCallback = callbackFunction;
     },
     updateModelFromView: function(){
 
@@ -115,25 +125,25 @@ function getCloseAppointmentController(){
       if(controller.allowSubmit){
         controller.allowSubmit = false;
         $.post( this.closeAppointmentUrl , {appointment: model})
-         .done(function( response ) {
+        .done(function( response ) {
 
-            console.log('close response ' + JSON.stringify(response));
+          console.log('close response ' + JSON.stringify(response));
 
-           if(controller.cancelCallback){
-             controller.cancelCallback(response);
-           }
-
-
+          if(controller.cancelCallback){
+            controller.cancelCallback(response);
+          }
 
 
-           //close in proper resonse, else dsplay messge the appoitmetn could not be compated
-         })
-         .always(function() {
-           console.log('always after calls');
-           controller.allowSubmit = true;
-         });
 
-       }
+
+          //close in proper resonse, else dsplay messge the appoitmetn could not be compated
+        })
+        .always(function() {
+          console.log('always after calls');
+          controller.allowSubmit = true;
+        });
+
+      }
     },
     cleanup: function(){
       this.resetModel();
@@ -194,8 +204,8 @@ function getCloseAppointmentController(){
       this.addEntry = $('#btn-add-row');
 
       this.medicineText.typeahead({
-      source: ['Avil', 'Bcosules', 'Cough syrup', 'Crosin', 'Koflets']
-       });
+        source: ['Avil', 'Bcosules', 'Cough syrup', 'Crosin', 'Koflets']
+      });
 
       this.addEntry.on('click', function(){
         var medicine = prescriptionListView.medicineText.val();
@@ -405,58 +415,58 @@ function getCloseAppointmentController(){
     },
     initValidators: function(){
       this.form.bootstrapValidator({
-          trigger:"focus click change keyup select blur",
-          feedbackIcons: {
-            valid: 'glyphicon glyphicon-ok ',
-            invalid: 'glyphicon glyphicon-remove ',
-            validating: 'glyphicon glyphicon-refresh'
+        trigger:"focus click change keyup select blur",
+        feedbackIcons: {
+          valid: 'glyphicon glyphicon-ok ',
+          invalid: 'glyphicon glyphicon-remove ',
+          validating: 'glyphicon glyphicon-refresh'
+        },
+        excluded: [':disabled'],
+        fields:{
+          closingDate : {
+            validators : {
+              notEmpty : {
+                message : 'Please enter closing date!'
+              }
+            }
           },
-            excluded: [':disabled'],
-          fields:{
-            closingDate : {
-              validators : {
-                notEmpty : {
-                  message : 'Please enter closing date!'
-                }
-              }
-            },
-            closingTime : {
+          closingTime : {
 
-              validators : {
-                notEmpty : {
-                  message : 'please enter closing time'
-                }
-              }
-            },
-            closingName :{
-
-              validators : {
-                notEmpty :{
-                  message : 'Please Enter Patients name'
-                },
-                  regexp: {
-                          regexp: /^[A-Za-z\s.\(\)0-9]{3,}$/,
-                          message: 'The full name can consist of alphabetical characters and spaces only'
-                      }
+            validators : {
+              notEmpty : {
+                message : 'please enter closing time'
               }
             }
-            ,  closingRemarks :{
-              validators : {
-                notEmpty :{
-                  message : 'Please enter a remark'
-                }
+          },
+          closingName :{
+
+            validators : {
+              notEmpty :{
+                message : 'Please Enter Patients name'
+              },
+              regexp: {
+                regexp: /^[A-Za-z\s.\(\)0-9]{3,}$/,
+                message: 'The full name can consist of alphabetical characters and spaces only'
               }
             }
-
           }
-        });
+          ,  closingRemarks :{
+            validators : {
+              notEmpty :{
+                message : 'Please enter a remark'
+              }
+            }
+          }
+
+        }
+      });
 
     },
     resetvalidator: function(){
-     //this.form.reset();
-     this.form.bootstrapValidator("resetForm", true);
-     //this.closeAppointmentButton.off();
-     //destroy typehad and token field
+      //this.form.reset();
+      this.form.bootstrapValidator("resetForm", true);
+      //this.closeAppointmentButton.off();
+      //destroy typehad and token field
 
     },
     resetFields: function(){
@@ -471,7 +481,7 @@ function getCloseAppointmentController(){
       var times = ViewModel.appointmentTimes;
 
 
-     this.nextAppointmentDuration.empty();
+      this.nextAppointmentDuration.empty();
 
 
       for(var i = 0; i < times.length; i++){
@@ -508,30 +518,21 @@ function getCloseAppointmentController(){
       this.fi = $('#fileupload');
       var process_url = links.closeApptUploadFiles; //PHP script
       this.fi.fileupload({
-          url: process_url,
-          dataType: 'json',
-          autoUpload: false,
-          add: function (e, data) {
-            console.log(JSON.stringify(data));
-            data.formData = {
-              'uploadId': controller.getUniqueId()
-            }
+        url: process_url,
+        dataType: 'json',
+        autoUpload: false,
 
-              data.submit();
-
-      },
-
-          acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
-          maxFileSize: 5242880, //1MB
-          maxNumberOfFiles:'1',
-          // Enable image resizing, except for Android and Opera,
-          // which actually support image resizing, but fail to
-          // send Blob objects via XHR requests:
-          disableImageResize: /Android(?!.*Chrome)|Opera/
-          .test(window.navigator.userAgent),
-          previewMaxWidth: 50,
-          previewMaxHeight: 50,
-          previewCrop: true
+        acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+        maxFileSize: 5242880, //1MB
+        maxNumberOfFiles:'1',
+        // Enable image resizing, except for Android and Opera,
+        // which actually support image resizing, but fail to
+        // send Blob objects via XHR requests:
+        disableImageResize: /Android(?!.*Chrome)|Opera/
+        .test(window.navigator.userAgent),
+        previewMaxWidth: 50,
+        previewMaxHeight: 50,
+        previewCrop: true
 
       });
 
@@ -542,87 +543,154 @@ function getCloseAppointmentController(){
 
 
         //button click function
-          var $this = $(this), data = $this.data();
-          data.submit().always(function () { //upload the file
-                  $this.remove(); //remove this button
-          });
+        var $this = $(this), data = $this.data();
+        data.submit().always(function () { //upload the file
+          $this.remove(); //remove this button
+        });
       });
 
       this.fi.on('fileuploadadd', function (e, data) {
 
-              data.context = $('<div/>').addClass('file-wrapper').appendTo('#files'); //create new DIV with "file-wrapper" class
-
-              $.each(data.files, function (index, file){  //loop though each file
-
-              var node = $('<div/>').addClass('file-row'); //create a new node with "file-row" class
-
-              var removeBtn  = $('<button/>').addClass('btn btn-info ').text('Remove'); //create new remove button
-
-              removeBtn.on('click', function(e, data){ //remove button function
-                  $(this).parent().parent().remove(); //remove file's wrapper to remove queued file
-              });
-
-              //create file info text, name and file size
-              var file_txt = $('<div/>').addClass('file-row-text').append('<span>'+file.name  + '</span>');
-
-              file_txt.append(removeBtn); //add remove button inside info text element
-
-              file_txt.prependTo(node); //add to node element //add to node element
-
-              progressBar.clone().appendTo(file_txt); //add progress bar
-
-              if (!index){
-                  node.prepend(file.preview); //add image preview
-              }
-
-              node.appendTo(data.context); //attach node to data context
-          });
-      });
-
-      this.fi.on('fileuploadprogress', function (e, data) {
-
-          var progress = parseInt(data.loaded / data.total * 100, 10);
-          if (data.context) {
-              data.context.each(function () {
-                  $(this).find('.progress').attr('aria-valuenow', progress).children().first().css('width',progress + '%').text(progress + '%');
-              });
-          }
-      });
-
-      this.fi.on('fileuploaddone', function (e, data) { // invoke callback method on success
-         console.log('on done  ' + JSON.stringify(data) );
-        /*  $.each(data.result.files, function (index, file) { //loop though each file
-              if (file.url){ //successful upload returns a file url
-                  var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
-                  $(data.context.children()[index]).addClass('file-uploaded');
-                  $(data.context.children()[index]).find('canvas').wrap(link); //create a link to uploaded file url
-                  $(data.context.children()[index]).find('.file-remove').hide(); //hide remove button
-                  var done = $('<span class="text-success"/>').text('Uploaded!'); //show success message
-                  $(data.context.children()[index]).append(done); //add everything to data context
-              } else if (file.error) {
-                  var error = $('<span class="text-danger"/>').text(file.error); //error text
-                  $(data.context.children()[index]).append(error); //add to data context
-              }
-          });*/
-      });
-
-      this.fi.on('fileuploadfail', function (e, data) {
-        //on file upload fail
-        console.log('on fail data ' + + JSON.stringify(data));
-
-
-      });
-
-    },
-    destroyFileUploader: function(){
-      $('.file-wrapper').remove();
-
-  //$('#fileupload').fileupload('destroy');
-    console.log('destroy fileuploader ');
-
+        var mediaType = data.files[0].type;
+        console.log('file media type ' + data.files[0].type);
+        var array = mediaType.split('/');
+        var invalidFileType = true;
+        if(array[0] == 'image'
+        && (array[1] == 'jpeg')
+        || (array[1] == 'png')
+        || (array[1] == 'jpg')
+      ){
+        invalidFileType = false;
+      }
+      if(array[0] == 'application'
+      && (array[1] == 'excel')
+      || (array[1] == 'vnd.ms-excel')
+      || (array[1] == 'x-excel')
+      || (array[1] == 'pdf')
+    ){
+      invalidFileType = false;
     }
 
-  }
-  return controller;
+    if(data.files[0].size > 5242880 || invalidFileType){
+
+      var alertSting = '';
+      if(data.files[0].size > 5242880 ){
+        alertSting  = 'Maximmum file upload size is 5mb';
+      }
+
+      if(invalidFileType){
+        alertSting  = alertSting  + ' and only file types of jpg,jpeg,png,pdf,xls accepted';
+      }
+
+
+      utility.getAlerts(alertSting,'alert-warning','','.modal-body');
+
+    }else{
+
+
+      data.context = $('<div/>').addClass('file-wrapper').appendTo('#files'); //create new DIV with "file-wrapper" class
+
+      var fileObj = {};
+
+      $.each(data.files, function (index, file){  //loop though each file
+
+
+        fileObj.id = controller.fileUploadIdCount;
+        fileObj.name =  file.name;
+        model.uploadedFileList.push(fileObj);
+
+        controller.fileUploadIdCount++;
+
+        var node = $('<div/>').addClass('file-row'); //create a new node with "file-row" class
+
+        var removeBtn  = $('<button/>').addClass('btn btn-info ').text('Remove'); //create new remove button
+
+        removeBtn.on('click', (function(lfile){ //remove button function
+
+          return function(){
+            console.log('removing file with id ' + lfile.id + ' name ' + lfile.name);
+            console.log('before removing ' + JSON.stringify(model.uploadedFileList));
+            controller.currentRemoveFileId  = lfile.id;
+            controller.removeFileWithId();
+            controller.currentRemoveFileId  = 0;
+            console.log('after removing ' + JSON.stringify(model.uploadedFileList));
+            $(this).parent().parent().remove(); //remove file's wrapper to remove queued file
+          }
+
+        })(fileObj));
+
+        //create file info text, name and file size
+        var file_txt = $('<div/>').addClass('file-row-text').append('<span>'+file.name  + '</span>');
+
+        file_txt.append(removeBtn); //add remove button inside info text element
+
+        file_txt.prependTo(node); //add to node element //add to node element
+
+        progressBar.clone().appendTo(file_txt); //add progress bar
+
+        if (!index){
+          node.prepend(file.preview); //add image preview
+        }
+
+        node.appendTo(data.context); //attach node to data context
+      });
+
+      //posting the file for upload
+      console.log(JSON.stringify(data));
+      data.formData = {
+        'uploadId': controller.getUniqueId(),
+        'fileId': fileObj.id
+      }
+
+      data.submit();
+
+    }
+  });
+
+  this.fi.on('fileuploadprogress', function (e, data) {
+
+    var progress = parseInt(data.loaded / data.total * 100, 10);
+    if (data.context) {
+      data.context.each(function () {
+        $(this).find('.progress').attr('aria-valuenow', progress).children().first().css('width',progress + '%').text(progress + '%');
+      });
+    }
+  });
+
+  this.fi.on('fileuploaddone', function (e, data) { // invoke callback method on success
+    console.log('on done  ' + JSON.stringify(data) );
+    /*  $.each(data.result.files, function (index, file) { //loop though each file
+    if (file.url){ //successful upload returns a file url
+    var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
+    $(data.context.children()[index]).addClass('file-uploaded');
+    $(data.context.children()[index]).find('canvas').wrap(link); //create a link to uploaded file url
+    $(data.context.children()[index]).find('.file-remove').hide(); //hide remove button
+    var done = $('<span class="text-success"/>').text('Uploaded!'); //show success message
+    $(data.context.children()[index]).append(done); //add everything to data context
+  } else if (file.error) {
+  var error = $('<span class="text-danger"/>').text(file.error); //error text
+  $(data.context.children()[index]).append(error); //add to data context
+}
+});*/
+});
+
+this.fi.on('fileuploadfail', function (e, data) {
+  //on file upload fail
+  console.log('on fail data ' + + JSON.stringify(data));
+
+
+});
+
+},
+destroyFileUploader: function(){
+  $('.file-wrapper').remove();
+
+  //$('#fileupload').fileupload('destroy');
+  console.log('destroy fileuploader ');
+
+}
+
+}
+return controller;
 
 }

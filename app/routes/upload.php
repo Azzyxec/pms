@@ -44,22 +44,24 @@ $app->group('/Upload',function(){
 
       $postedData = $request->getParsedBody();
       $uniqueCloseAppointmentId = $postedData['uploadId'];
+      $fileId = $postedData['fileId'];
 
       $files = $request->getUploadedFiles();
-      $MaxfileSize = 1048576; //make5mb
+      $MaxfileSize = 5242880; //make5mb
       foreach ($files['files'] as $key => $value) {
         if ($value->getError() === UPLOAD_ERR_OK) {
           $uploadFileName = $value->getClientFilename();
           $fileSize =  $value->getSize();
           $mediaType =  $value->getClientMediaType(); //check file extension
-          $uniqueFileName = $uploadFileName;
+          $uniqueFileNameGenerate = uniqid();
+          $uniqueFileName = $uniqueFileNameGenerate.$uploadFileName;
 
           //generate a random  file name
           if($fileSize <= $MaxfileSize){
-            $value->moveTo("images/scannedDoc/$uploadFileName");
+            $value->moveTo("images/scannedDoc/$uniqueFileName");
           }
 
-          UserSessionManager::addUploadedfile($uniqueCloseAppointmentId, $uploadFileName , $uniqueFileName);
+          UserSessionManager::addUploadedfile($uniqueCloseAppointmentId, $fileId, $uploadFileName, $uniqueFileName);
 
         }
 
@@ -88,42 +90,99 @@ $app->group('/Upload',function(){
 
   $this->post('/PatientImageUpload',function($request, $response){
     try{
-      $upload_dir = 'images/patientUserImages/';
-      $upload_handler = new CustomUploadHandler(array(
-        'max_file_size' => 1048576, //1MB file size
-        'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
-        'upload_dir' => $upload_dir,
-        'upload_url' => 'index.php/Upload/upload',
-        'thumbnail' => array('max_width' => 180,'max_height' => 180)
-      ));
-      $data = array('status' => "1", 'data' => $upload_handler, 'message' => "success" );
+
+      $postedData = $request->getParsedBody();
+      $uniquefileId = $postedData['uploadId'];
+
+      $files = $request->getUploadedFiles();
+      $MaxfileSize = 2097152; //make5mb
+      foreach ($files['files'] as $key => $value) {
+        if ($value->getError() === UPLOAD_ERR_OK) {
+          $uploadFileName = $value->getClientFilename();
+          $fileSize =  $value->getSize();
+          $mediaType =  $value->getClientMediaType(); //check file extension
+          $uniqueFileName = uniqid().$uploadFileName;
+
+          //generate a random  file name
+          if($fileSize <= $MaxfileSize){
+            $value->moveTo("images/patientUserImages/$uniqueFileName");
+          }
+          $type="P";// upload type patient image;
+
+          UserSessionManager::singleAddUploadfile($uniquefileId, $type, $uploadFileName , $uniqueFileName);
+
+        }
+
+      }
+
+      //forming the return object
+      $returnFiles = array();
+      $returnFiles['files'] =  array(
+          'name'=>$uploadFileName
+          , 'size' => $fileSize
+          , 'type'=> 'image/jpeg'
+          , 'url' => 'images/patientUserImages/' . $uniqueFileName
+      );
+
+      //return $response;
+      $data = array('status' => "1", 'data' => $uniquefileId, 'message' => "success" );
       return $response->withJson($data);
     } catch (Exception $e){
+
       $data = array('status' => "-1", 'data' => "", 'message' => "exception in controller " . $e->getMessage() );
       return $response->withJson($data);
 
     }
-
   });
 
 
   $this->post('/GuardianImageUpload',function($request, $response){
-    try{
-      $upload_dir = 'images/guardianUserImages/';
-      $upload_handler = new CustomUploadHandler(array(
-        'max_file_size' => 1048576, //1MB file size
-        'image_file_types' => '/\.(gif|jpe?g|png|mp4|mp3)$/i',
-        'upload_dir' => $upload_dir,
-        'upload_url' => 'index.php/Upload/upload',
-        'thumbnail' => array('max_width' => 80,'max_height' => 80)
-      ));
-      $data = array('status' => "1", 'data' => $upload_handler, 'message' => "success" );
-      return $response->withJson($data);
-    } catch (Exception $e){
-      $data = array('status' => "-1", 'data' => "", 'message' => "exception in controller " . $e->getMessage() );
-      return $response->withJson($data);
 
-    }
+      try{
+
+        $postedData = $request->getParsedBody();
+        $uniquefileId = $postedData['uploadId'];
+
+        $files = $request->getUploadedFiles();
+        $MaxfileSize = 2097152; //make2mb
+        foreach ($files['files'] as $key => $value) {
+          if ($value->getError() === UPLOAD_ERR_OK) {
+            $uploadFileName = $value->getClientFilename();
+            $fileSize =  $value->getSize();
+            $mediaType =  $value->getClientMediaType(); //check file extension
+            $uniqueFileName = uniqid().$uploadFileName;
+
+            //generate a random  file name
+            if($fileSize <= $MaxfileSize){
+              $value->moveTo("images/guardianUserImages/$uniqueFileName");
+            }
+
+            $type="G";// upload type Guardian image;
+
+            UserSessionManager::singleAddUploadfile($uniquefileId, $type, $uploadFileName , $uniqueFileName);
+
+          }
+
+        }
+
+        //forming the return object
+        $returnFiles = array();
+        $returnFiles['files'] =  array(
+            'name'=>$uploadFileName
+            , 'size' => $fileSize
+            , 'type'=> 'image/jpeg'
+            , 'url' => 'images/guardianUserImages/' . $uniqueFileName
+        );
+
+        //return $response;
+        $data = array('status' => "1", 'data' => $returnFiles, 'message' => "success" );
+        return $response->withJson($returnFiles);
+      } catch (Exception $e){
+
+        $data = array('status' => "-1", 'data' => "", 'message' => "exception in controller " . $e->getMessage() );
+        return $response->withJson($data);
+
+      }
 
   });
 

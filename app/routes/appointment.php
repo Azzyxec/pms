@@ -71,20 +71,45 @@ $app->group('/appointment', function(){
         $appointment = $postedData['appointment'];
 
         //checking for file uploadedFiles
-        if(isset( $appointment['uniqueId'])){
+        if(isset( $appointment['uniqueId']) && $appointment['uploadedFileList']){
 
-          $uniqueCloseAppointmentId =$appointment['uniqueId'];
+          $checkFileList = $appointment['uploadedFileList'];
+
+
+
+          $uniqueCloseAppointmentId = $appointment['uniqueId'];
           $uploadedFileList = UserSessionManager::getUploadedfileList($uniqueCloseAppointmentId);
+
+
+
+          $checkFileListCount = count($checkFileList);
+          $saveFileListArray = array();
+          for ($i = 0 ; $i  < $checkFileListCount ; $i++){
+            $checkFileId = $checkFileList[$i]['id'];
+
+            if(isset($uploadedFileList['_'.$checkFileId])){
+              $fileInfo = $uploadedFileList['_'.$checkFileId];
+              $saveFileListArray[] = $fileInfo;
+            }
+
+
+          }
+
+
+
+
+
+
 
           //check if there are any uploaded files
           $uploadedFileListXml = '';
-          $uploadedFileCount = count($uploadedFileList);
+          $uploadedFileCount = count($saveFileListArray);
           if($uploadedFileCount > 0){
 
             $uploadedFileListXml = "";
 
             $xml_data1 = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
-            XMLHelper::array_to_xml($uploadedFileList, $xml_data1);
+            XMLHelper::array_to_xml($saveFileListArray, $xml_data1);
             $uploadedFileListXml = $xml_data1->asXML();
 
           }
