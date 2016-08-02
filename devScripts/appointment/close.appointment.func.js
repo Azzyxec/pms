@@ -520,9 +520,9 @@ function getCloseAppointmentController(){
       this.fi.fileupload({
         url: process_url,
         dataType: 'json',
-        autoUpload: false,
+        autoUpload: true,
 
-        acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp4|mp3)$/i,
         maxFileSize: 5242880, //1MB
         maxNumberOfFiles:'1',
         // Enable image resizing, except for Android and Opera,
@@ -539,15 +539,15 @@ function getCloseAppointmentController(){
       var progressBar = $('<div/>').addClass('progress').append($('<div/>').addClass('progress-bar')); //create progress bar
       var uploadButton = $('<button/>').addClass('btn btn-info ').text('Upload');    //create upload button
 
-      uploadButton.on('click', function () {
-
-
-        //button click function
-        var $this = $(this), data = $this.data();
-        data.submit().always(function () { //upload the file
-          $this.remove(); //remove this button
-        });
-      });
+      // uploadButton.on('click', function () {
+      //
+      //
+      //   //button click function
+      //   var $this = $(this), data = $this.data();
+      //   data.submit().always(function () { //upload the file
+      //     $this.remove(); //remove this button
+      //   });
+      // });
 
       this.fi.on('fileuploadadd', function (e, data) {
 
@@ -562,6 +562,7 @@ function getCloseAppointmentController(){
       ){
         invalidFileType = false;
       }
+
       if(array[0] == 'application'
       && (array[1] == 'excel')
       || (array[1] == 'vnd.ms-excel')
@@ -678,7 +679,7 @@ this.fi.on('fileuploadfail', function (e, data) {
   //on file upload fail
   console.log('on fail data ' + + JSON.stringify(data));
 
- 
+
 });
 
 },

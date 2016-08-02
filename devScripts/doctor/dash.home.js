@@ -873,7 +873,7 @@ intilizeBookedAppointmentTemplate: function(template, appointmentItem){
     })(appointmentItem));
 
     var popoverSettings = {
-      placement:'left',
+      placement:'right',
       container: 'body',
       trigger: 'focus',
       html: true,
