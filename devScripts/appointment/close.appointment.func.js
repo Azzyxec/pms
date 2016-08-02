@@ -203,9 +203,9 @@ function getCloseAppointmentController(){
       this.medicineRemarks = $('#txt-medicine-remark');
       this.addEntry = $('#btn-add-row');
 
-      this.medicineText.typeahead({
-        source: ['Avil', 'Bcosules', 'Cough syrup', 'Crosin', 'Koflets']
-      });
+      // this.medicineText.typeahead({
+      //   source: ['Avil', 'Bcosules', 'Cough syrup', 'Crosin', 'Koflets']
+      // });
 
       this.addEntry.on('click', function(){
         var medicine = prescriptionListView.medicineText.val();

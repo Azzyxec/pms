@@ -288,7 +288,7 @@ gulp.task('publish-build-js', function(){
         gulp.src(filesList[i].files)
             .pipe(concat(filesList[i].buildName))
             .pipe(uglify())
-            //.pipe(stripDebug())
+            .pipe(stripDebug())
             .pipe(gulp.dest(objConfig.scriptDestinationFolder));
       }
   }
