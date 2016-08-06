@@ -255,6 +255,10 @@ class DoctorDB
           $product['name'] = $result['name'];
           $product['stock'] = $result['current_stock'];
           $product['locationId'] = $result['fk_location_id'];
+          $product['createdDate'] = $result['created_date'];
+          $product['createdBy'] = $result['created_by'];
+          $product['status'] = $result['status'];
+
           $allProducts[] = $product;
       }
 

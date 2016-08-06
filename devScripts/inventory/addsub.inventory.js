@@ -26,6 +26,7 @@ $(document).ready(function(){
         console.log('controller init, model ' + JSON.stringify(Model));
 
         StockView.init();
+        productListView.init();
         StockView.renderProductView();
         this.getLocations();
         this.getAllProductsServer();
@@ -76,12 +77,15 @@ $(document).ready(function(){
             Model.locationList = response.data;
 
             if(Model.locationList.length > 0){
+              Model.DefaultlocationId = Model.locationList[0].id;
               StockView.renderLocations();
-              if(Model.userType == 'D'){
-                Model.DefaultlocationId = Model.locationList[0].id;
-              }
               StockView.initTypeahead();
             }else{
+
+                console.log('disable buttons');
+                StockView.btnAddStock.prop('disabled', true);
+                StockView.btnSubstrsctStock.prop('disabled', true);
+
               //there are no locations
               StockView.locationSelect.prop('disabled', true);
               utility.getAlerts('could not find locations, please create work locations or active existing ones', 'alert-warning', '', '.container-fluid');
@@ -102,6 +106,8 @@ $(document).ready(function(){
           if(response.status == 1){
 
             Model.productList = response.data;
+
+            /*
             if(Model.userType == 'D'
             && Model.locationList
             && Model.locationList.length > 0
@@ -109,8 +115,9 @@ $(document).ready(function(){
               controller.DefaultLocationInit = true;
               Model.DefaultlocationId = Model.locationList[0].id;
             }
-
-            StockView.initTypeahead();
+            */
+            setTimeout(productListView.render(), 700);
+            setTimeout(StockView.initTypeahead(), 100);
           }
 
         });
@@ -182,6 +189,8 @@ $(document).ready(function(){
           StockView.reset();
 
           StockView.initTypeahead();
+
+          productListView.render();
 
 
         });
@@ -358,32 +367,51 @@ $(document).ready(function(){
 
     }
 
-    var modelView = {
-      init:function(){
+    var productListView = {
+      init: function(){
+        this.listingTable = $('#product-listing');
+
+        this.dataTable = this.listingTable.DataTable({
+
+        "bProcessing": true,
+        "data":  [],
+        "aoColumns": [
+          { "mData": "name" },
+          { "mData": "stock" },
+          { "mData": "createdDate" },
+          { "mData": "createdBy" }
+
+
+        ],
+        "order": [[1, 'asc']],
+        "fnInitComplete" : function(oSettings, json) {
+          console.log( 'DataTables has finished its initialisation.' );
+
+        }
+
+      } );
+
 
       },
-      render:function () {
-        //move to modal view
-        $('#example').DataTable( {
+      render: function(){
 
-          "bProcessing": true,
-          "data":  controller.getStockList(),
-          "aoColumns": [
-            { "mData": "medicineName" },
-            { "mData": "UpdatedOn" },
-            { "mData": "UpdatedBy" },
-            { "mData": "stock" }
+        var lprodList = controller.getProductListforLocation(Model.DefaultlocationId);
 
-          ],
-          "order": [[1, 'asc']],
-          "fnInitComplete" : function(oSettings, json) {
-            console.log( 'DataTables has finished its initialisation.' );
+        console.log('product list ' + lprodList);
 
-          }
+        table = this.listingTable.dataTable();
+        oSettings = table.fnSettings();
+        table.fnClearTable();
 
-        } );
+        for (var i=0; i<lprodList.length; i++)
+        {
+         table.oApi._fnAddData(oSettings, lprodList[i]);
+        }
+
+        oSettings.aiDisplay = oSettings.aiDisplayMaster.slice();
+        table.fnDraw();
+
       }
-
     }
 
 

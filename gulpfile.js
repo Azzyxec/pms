@@ -215,6 +215,7 @@ var filesList = [
               objConfig.scriptsBasePath +"bootstrapValidator.min.js",
               objConfig.scriptsBasePath + "doctor/doctorDashboard.js",
               objConfig.scriptsBasePath +"vendor/jquery.dataTables.min.js",
+              objConfig.scriptsBasePath +"vendor/dataTables.bootstrap.js",
               objConfig.scriptsBasePath + "inventory/addsub.inventory.js"
             ], buildName: "addsub.inventory.js"},
 {build:true, files: [
