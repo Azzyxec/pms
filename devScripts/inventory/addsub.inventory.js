@@ -103,7 +103,7 @@ $(document).ready(function(){
 
           console.log('response '  + JSON.stringify(response));
 
-          if(response.status == 1){
+          if(response.status == 1){ 
 
             Model.productList = response.data;
 

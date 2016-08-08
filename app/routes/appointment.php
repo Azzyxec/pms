@@ -6,6 +6,7 @@ use Pms\Entities\Patient;
 use Pms\Entities\UserSessionManager;
 use Pms\Datalayer\AppointmentDB;
 use Pms\Datalayer\PatientDB;
+use Pms\Datalayer\SmsDB;
 use Pms\Utilities\XMLHelper;
 use Pms\Utilities\SmsService;
 
@@ -16,16 +17,33 @@ $app->group('/appointment', function(){
 
     try {
 
-      $allGetVars = $request->getQueryParams();
+      $user = UserSessionManager::getUser();
 
-      $message = $allGetVars['message'];
-      $mobileNo =  $allGetVars['mobileNo'];
+      if($user->id != -1){
 
-      $sms = SmsService::getInstance();
+        $allGetVars = $request->getQueryParams();
 
-      $smsResponse = $sms->send($message, $mobileNo);
+        $message = $allGetVars['message'];
+        $mobileNo =  $allGetVars['mobileNo'];
+        //return $response->write('db id' . $id);
 
-      return $response->write($sms->sendUrl . ' resp ' . $smsResponse);
+        $sms = SmsService::getInstance();
+
+        $uniqueId = '';
+
+        $smsResponse = $sms->send($message, $mobileNo, $uniqueId);
+
+        $smsDB = new SmsDB();
+
+        $id = $smsDB->insertEntry($message, $mobileNo, $smsResponse);
+
+        return  $response->withJson(array('status' => 1, 'url' => $sms->sendUrl, 'response' => $smsResponse));
+        //return  $response->write($sms->sendUrl . ' response ' . $smsResponse);
+
+    }else{
+      return $response->withJson(array('status' => -1, "message" => 'you need to be logged in for this action'));
+    }
+
 
     } catch (Exception $e) {
       $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in appointment controller' . $e->getMessage());
