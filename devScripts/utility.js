@@ -22,7 +22,14 @@ var utility = {
     return mdate.format('hh:mm A');
 
   },
-
+  isInt: function (value) {
+  var x;
+  if (isNaN(value)) {
+    return false;
+  }
+  x = parseFloat(value);
+  return (x | 0) === x;
+  },
   getAlerts : function(msg,classnm,id,container){
 
      $('.pms-alerts').remove();
@@ -32,7 +39,6 @@ var utility = {
     console.log('alert created');
 
   },
-
   removeAlerts:function(){
     $('.pms-alerts').remove();
   }

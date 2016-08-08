@@ -5,6 +5,7 @@ namespace Pms\Utilities;
 class SmsService{
 
     public $sendUrl;
+    public $contactNo;
 
     public function send($message, $mobileNo, $uniqeSenderID){
 
@@ -17,6 +18,7 @@ class SmsService{
         $noLength = strlen($mobileNo);
         if($noLength == \AppConfig::$SmsConifg['addCodeWhenLength']){
           $mobileNo =  \AppConfig::$SmsConifg['countryCode'] . $mobileNo;
+          $this->contactNo = $mobileNo;
         }
 
         $chUrl = \curl_init();

@@ -276,7 +276,11 @@ function makeAppointmentController(){
 
         //appointmentView.patientsName.off("click change keyup select blur");
 
-      $.post(this.bookAppointmentUrl , {appointment: model.appointment, patient: patientModel})
+      model.appointment.appointmentTime = utility.getTimeFromMinutes(model.appointment.startTimeMins);
+
+      $.post(this.bookAppointmentUrl , {appointment: model.appointment
+                                        , patient: patientModel
+                                       })
       .done(function( response ) {
         console.log('response at ' + moment().format("HH:mm:ss SSS") +  ' ' + JSON.stringify(response));
 

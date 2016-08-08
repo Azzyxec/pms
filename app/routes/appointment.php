@@ -12,10 +12,30 @@ use Pms\Utilities\SmsService;
 
 $app->group('/appointment', function(){
 
+  $this->get('/smsText', function ($request, $response) {
+
+    $appointmentDB = new AppointmentDB();
+
+    $appointmentInfo = $appointmentDB->getAppointmentInfo(137);
+
+    //prepar sms text and send
+     $smsText = "Dear " . substr($appointmentInfo['patient'], 0, 10) . "," .
+                " your appointment is on " . $appointmentInfo['date'] .
+                " at " . $appointmentInfo['time'] .
+                " at Dr " . $appointmentInfo['doctor'] . "'s" .
+                " clinic, " . $appointmentInfo['location'];
+
+
+    $response->withJson(array('message' => $smsText));
+
+  });
+
 
   $this->get('/sendsms', function ($request, $response) {
 
     try {
+
+      //limit the sms to max 60 characters
 
       $user = UserSessionManager::getUser();
 
@@ -35,7 +55,7 @@ $app->group('/appointment', function(){
 
         $smsDB = new SmsDB();
 
-        $id = $smsDB->insertEntry($message, $mobileNo, $smsResponse);
+        $id = $smsDB->insertEntry($message, $smsService->contactNo, $smsResponse);
 
         return  $response->withJson(array('status' => 1, 'url' => $sms->sendUrl, 'response' => $smsResponse));
         //return  $response->write($sms->sendUrl . ' response ' . $smsResponse);
@@ -115,17 +135,16 @@ $app->group('/appointment', function(){
 
         $appointment = $postedData['appointment'];
 
+        $uploadedFileListXml = "";
+        $uploadedFileCount = 0;
+
         //checking for file uploadedFiles
-        if(isset( $appointment['uniqueId']) && $appointment['uploadedFileList']){
+        if(isset( $appointment['uniqueId']) && isset($appointment['uploadedFileList'])){
 
           $checkFileList = $appointment['uploadedFileList'];
 
-
-
           $uniqueCloseAppointmentId = $appointment['uniqueId'];
           $uploadedFileList = UserSessionManager::getUploadedfileList($uniqueCloseAppointmentId);
-
-
 
           $checkFileListCount = count($checkFileList);
           $saveFileListArray = array();
@@ -137,21 +156,13 @@ $app->group('/appointment', function(){
               $saveFileListArray[] = $fileInfo;
             }
 
-
           }
-
-
-
-
-
 
 
           //check if there are any uploaded files
           $uploadedFileListXml = '';
           $uploadedFileCount = count($saveFileListArray);
           if($uploadedFileCount > 0){
-
-            $uploadedFileListXml = "";
 
             $xml_data1 = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
             XMLHelper::array_to_xml($saveFileListArray, $xml_data1);
@@ -210,16 +221,46 @@ $app->group('/appointment', function(){
 
           //can book appointment/ make and new appointment entry
 
-          $appointmentDB->insertNextAppointmentEntry(
-          $appointmentId,
-          $appointmentDate,
-          $appointmentStartTime,
-          $appointmentEndTime,
-          $user->id,
-          $user->type
-        );
+          $appId = $appointmentDB->insertNextAppointmentEntry(
+                            $appointmentId,
+                            $appointmentDate,
+                            $appointmentStartTime,
+                            $appointmentEndTime,
+                            $user->id,
+                            $user->type
+                          );
 
+          if($appId != -1){
 
+             try{
+                  //for sending sms
+
+                  //get sms info
+                  $appointmentInfo = $appointmentDB->getAppointmentInfo($appId);
+
+                  //generate sms text
+                  $smsText = "Dear " . substr($appointmentInfo['patient'], 0, 10) . "," .
+                             " your next appointment is on " . $appointmentInfo['date'] .
+                             " at " . $appointmentInfo['time'] .
+                             " at Dr " . $appointmentInfo['doctor'] . "'s" .
+                             " clinic, " . $appointmentInfo['location'];
+                 //send sms
+                 $contact = $appointmentInfo['contact'];
+                 $smsService = SmsService::getInstance();
+                 $uniqueId = '';
+                 $smsResponse = $smsService->send($smsText, $contact, $uniqueId);
+
+                 $smsDB = new SmsDB();
+
+                 $id = $smsDB->insertEntry($smsText, $smsService->contactNo, $smsResponse);
+
+                 //$message = $smsService->$uploadedFileCount;
+
+             }catch (Exception $ex) {
+               $message = $message + " but problems in sms sending and recording in database" . $ex->getMessage();
+             }
+
+          }
 
       }
       //and get patient info using patient key
@@ -307,15 +348,51 @@ $this->post('/rescheduleAppointment', function ($request, $response) {
     if($status == 1){
 
 
-      $status = $appointmentDB->rescheduleAppointment(
-      $appointmentId,
-      $date,
-      $startTimeMins,
-      $endTimeMins,
-      $user->id,
-      $user->type,
-      $remarks
-    );
+      $appId = $appointmentDB->rescheduleAppointment(
+                  $appointmentId,
+                  $date,
+                  $startTimeMins,
+                  $endTimeMins,
+                  $user->id,
+                  $user->type,
+                  $remarks
+                );
+
+    if($appId != -1){
+
+      try{
+        //for sending sms
+
+        //get sms info
+        $appointmentInfo = $appointmentDB->getAppointmentInfo($appId);
+
+        //generate sms text
+        $smsText = "Dear " . substr($appointmentInfo['patient'], 0, 10) . "," .
+                   " your appointment is rescheduled on " . $appointmentInfo['date'] .
+                   " at " . $appointmentInfo['time'] .
+                   " at Dr " . $appointmentInfo['doctor'] . "'s" .
+                   " clinic, " . $appointmentInfo['location'];
+       //send sms
+       $contact = $appointmentInfo['contact'];
+       $smsService = SmsService::getInstance();
+       $uniqueId = '';
+       $smsResponse = $smsService->send($smsText, $contact, $uniqueId);
+
+       $smsDB = new SmsDB();
+
+       $id = $smsDB->insertEntry($smsText, $smsService->contactNo, $smsResponse);
+
+       //$message = $smsService->sendUrl;
+
+   }catch (Exception $ex) {
+     $message = $message + " but problems in sms sending and recording in database" . $ex->getMessage();
+   }
+
+
+    }else{
+     $status = -1;
+       $message = "could not reschedule";
+    }
 
 
   }
@@ -541,7 +618,38 @@ $this->post('/bookAppointment', function ($request, $response) {
         $appointment->patientId = $patientData['id'];
       }
 
-      $appointmentDB->insertAppointmentEntry($appointment, $user->doctorId, $user->id, $user->type);
+      $appointment->id = $appointmentDB->insertAppointmentEntry($appointment, $user->doctorId, $user->id, $user->type);
+
+
+      try{
+        //for sending sms
+
+        //get sms info
+        $appointmentInfo = $appointmentDB->getAppointmentInfo($appointment->id);
+
+        //generate sms text
+        $smsText = "Dear " . substr($appointmentInfo['patient'], 0, 10) . "," .
+                   " your appointment is on " . $appointmentInfo['date'] .
+                   " at " . $appointmentInfo['time'] .
+                   " at Dr " . $appointmentInfo['doctor'] . "'s" .
+                   " clinic, " . $appointmentInfo['location'];
+       //send sms
+       $contact = $appointmentInfo['contact'];
+       $smsService = SmsService::getInstance();
+       $uniqueId = '';
+       $smsResponse = $smsService->send($smsText, $contact, $uniqueId);
+
+       $smsDB = new SmsDB();
+
+       $id = $smsDB->insertEntry($smsText, $smsService->contactNo, $smsResponse);
+
+       //$message = $smsService->sendUrl;
+
+   }catch (Exception $ex) {
+     $message = $message + " but problems in sms sending and recording in database" . $ex->getMessage();
+   }
+
+
 
     }else if($status == 2){
       //schedule not added or appointment timings are not in work timing range

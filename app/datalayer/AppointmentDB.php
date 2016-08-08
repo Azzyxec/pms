@@ -3,10 +3,40 @@ namespace Pms\Datalayer;
 
 use \PDO;
 use Pms\Datalayer\DBHelper;
-use Pms\Entities\Appointment; 
+use Pms\Entities\Appointment;
 
 
 class AppointmentDB{
+
+  public function getAppointmentInfo($appointmentId){
+    try {
+
+      $paramArray = array(
+        'pappointment_id' => $appointmentId,
+
+      );
+
+      $statement = DBHelper::generateStatement('get_appointment_info',  $paramArray);
+
+      $statement->execute();
+
+      $result = $statement->fetch();
+
+      $appointmentInfo = array();
+      $appointmentInfo['date'] =  $result['appointment_date'];
+      $appointmentInfo['contact'] =  $result['contact'];
+      $appointmentInfo['time'] =  $result['appointment_time'];
+      $appointmentInfo['patient'] =  $result['patient'];
+      $appointmentInfo['doctor'] =  $result['doctor'];
+      $appointmentInfo['location'] =  $result['location'];
+
+      return $appointmentInfo;
+
+    } catch (Exception $e) {
+      return 1;
+    }
+
+  }
 
   public function getAppointmentsForTheDay($doctorId, $locationId, $date){
     try {
@@ -256,9 +286,11 @@ class AppointmentDB{
 
       $statement = DBHelper::generateStatement('insert_new_appointment',  $paramArray);
 
-      return $statement->execute();
+      $statement->execute();
 
+      $result = $statement->fetch();
 
+      return $result['id'];
 
 
     } catch (Exception $e) {
@@ -280,7 +312,15 @@ class AppointmentDB{
 
       $statement = DBHelper::generateStatement('insert_next_appointment',  $paramArray);
 
-      return $statement->execute();
+      $statement->execute();
+
+      $result = $statement->fetch();
+
+      if( $result['status'] == 1){
+        return $result['id'];
+      }else{
+        return -1;
+      }
 
     } catch (Exception $e) {
       return  -1;
@@ -302,7 +342,15 @@ class AppointmentDB{
 
       $statement = DBHelper::generateStatement('reschedule_appointment',  $paramArray);
 
-      return $statement->execute();
+      $statement->execute();
+
+      $result = $statement->fetch();
+
+      if( $result['status'] == 1){
+        return $result['id'];
+      }else{
+        return -1;
+      }
 
     } catch (Exception $e) {
       return  -1;

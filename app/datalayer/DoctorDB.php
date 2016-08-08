@@ -207,7 +207,7 @@ class DoctorDB
     }
   }
 
-  public function addUpdateProductStock($doctorId, $locationId, $productId, $name, $stock, $operationType, $loggedInUserId, $loggedInUserType){
+  public function addUpdateProductStock($doctorId, $locationId, $productId, $name, $stock, $loggedInUserId, $loggedInUserType){
     try {
 
       $paramArray = array(
@@ -216,7 +216,6 @@ class DoctorDB
                           'pproduct_id' => $productId,
                           'pname' => $name,
                           'pstock' => $stock,
-                          'poperation_type' => $operationType,
                           'ploggedin_user_id' => $loggedInUserId,
                           'ploggedin_user_type' => $loggedInUserType
                         );

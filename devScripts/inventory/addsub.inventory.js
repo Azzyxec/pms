@@ -103,7 +103,7 @@ $(document).ready(function(){
 
           console.log('response '  + JSON.stringify(response));
 
-          if(response.status == 1){ 
+          if(response.status == 1){
 
             Model.productList = response.data;
 
@@ -133,7 +133,7 @@ $(document).ready(function(){
         Model.selectedProduct = {id:0, name:'', stock: 0};
 
       },
-      AddUpdateToServer: function(opernType){
+      AddUpdateToServer: function(){
 
 
         if(Model.DefaultlocationId > 0){
@@ -141,8 +141,7 @@ $(document).ready(function(){
             locationId: Model.DefaultlocationId,
             id: Model.selectedProduct.id,
             name: Model.selectedProduct.name,
-            stock: Model.selectedProduct.stock,
-            operationType: opernType
+            stock: Model.selectedProduct.stock
           }
 
           $.post( controller.saveUpdateProductStock , data)
@@ -213,22 +212,35 @@ $(document).ready(function(){
                 }
               }
 
-            },  stockQuantityTxt : {
+            },
+            stockQuantityTxt : {
               validators : {
-                notEmpty : {
-                  message : 'Please enter the stock!'
-                },
-                regexp :{
-                  regexp: /^[0-9]+$/,
-                  message: 'Please enter a valid number'
-
-                }
+                  notEmpty: {
+                  message: 'please enter stock'
+               },
+               callback:{
+                  callback: function(value, validator, $field) {
+                    if(value && value.trim().length > 0 && !utility.isInt(value)){
+                      return {
+                            valid: false,
+                            message: 'please enter an whole number'
+                      }
+                    }else if(value && value.trim().length > 0 && +value == 0){
+                      return {
+                            valid: false,
+                            message: 'please enter a non zero stock'
+                      }
+                    }
+                    return true;
+                  }
+               }
               }
 
             }
 
           }
         });
+
         this.ProductNameHandler =  function(){
           console.log('reset patient model1');
           var name = StockView.productName.val();
@@ -280,12 +292,12 @@ $(document).ready(function(){
           if(StockView.form.data('bootstrapValidator').isValid()){
             console.log('validated');
             controller.updateProductFromView();
-            controller.AddUpdateToServer(1);
+            controller.AddUpdateToServer();
           }
-
 
         });
 
+        /*
         this.btnSubstrsctStock.on('click', function(){
           console.log('substract stock');
           StockView.form.data('bootstrapValidator').validate();
@@ -295,6 +307,7 @@ $(document).ready(function(){
             controller.AddUpdateToServer(-1);
           }
         });
+        */
 
       },
       initTypeahead: function(){

@@ -93,7 +93,6 @@ $app->group('/doctor', function(){
 
 
         // Send the message
-        //TODO uncomment in production
         $mailResult = $mailer->send($message);
 
     } catch (Exception $e) {
@@ -159,7 +158,7 @@ $app->group('/doctor', function(){
         $productId = $postedData['id'];
         $productName = $postedData['name'];
         $productStock = $postedData['stock'];
-        $operationType = $postedData['operationType']; // add substract
+        //$operationType = $postedData['operationType']; // add substract
 
         $doctorDB = new DoctorDB();
         //return $response->withJson($postedData);
@@ -170,7 +169,6 @@ $app->group('/doctor', function(){
                                                     $productId,
                                                     $productName,
                                                     $productStock,
-                                                    $operationType,
                                                     $user->id,
                                                     $user->type
                                                   );
