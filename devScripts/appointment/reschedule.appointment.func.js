@@ -113,15 +113,18 @@ function getRescheduleAppointmentController(){
       this.rescheduleButton = $('#btn-modal-reschedule-appt');
 
       //intilizing the date and time controls
+      this.appointmentDate.attr("readonly", true);
       this.appointmentDate.datetimepicker({
         inline: false,
         format:'DD-MM-YYYY',
-         minDate: moment()
+         minDate: moment(),
+         ignoreReadonly: true
       });
-
+      this.appointmentTime.attr("readonly", true);
       this.appointmentTime.datetimepicker({
         inline: false,
-        format : "LT"
+        format : "LT",
+        ignoreReadonly: true
       });
 
       this.rescheduleButton.on('click', function(){

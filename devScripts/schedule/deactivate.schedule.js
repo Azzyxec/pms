@@ -15,7 +15,7 @@ $(document).ready(function(){
     };
 
     var controller = {
-      init: function(){ 
+      init: function(){
         this.getLocationUrl = links.getActiveLocations1;
         this.getSechduleforDeactivation = links.getSechduleforDeactivation;
         this.deactivateScheduleDays = links.deactivateScheduleDays;
@@ -172,17 +172,19 @@ $(document).ready(function(){
         });
         this.initValidators();
 
-
+        this.fromDateControl.attr("readonly", true);
         this.fromDateControl.datetimepicker({
           inline: false,
           format:'DD-MM-YYYY',
-          minDate: moment().subtract(1,'d')
+          minDate: moment().subtract(1,'d'),
+          ignoreReadonly: true
         });
-
+        this.toDateControl.attr("readonly", true);
         this.toDateControl.datetimepicker({
           inline: false,
           format:'DD-MM-YYYY',
-          minDate: moment().subtract(1,'d')
+          minDate: moment().subtract(1,'d'),
+          ignoreReadonly: true
 
         });
 

@@ -43,6 +43,7 @@ return array(
     'Pms\\Datalayer\\PatientDB' => $baseDir . '/app/datalayer/PatientDB.php',
     'Pms\\Datalayer\\ProgrammeDB' => $baseDir . '/app/datalayer/ProgrammeDB.php',
     'Pms\\Datalayer\\ScheduleDB' => $baseDir . '/app/datalayer/scheduleDB.php',
+    'Pms\\Datalayer\\SmsDB' => $baseDir . '/app/datalayer/SmsDB.php',
     'Pms\\Datalayer\\StaffDB' => $baseDir . '/app/datalayer/StaffDB.php',
     'Pms\\Datalayer\\UserDB' => $baseDir . '/app/datalayer/UserDB.php',
     'Pms\\Datalayer\\bookAppointmentEntryDB' => $baseDir . '/app/datalayer/bookAppointmentAbstraction.php',

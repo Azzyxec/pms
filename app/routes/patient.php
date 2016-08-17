@@ -13,14 +13,13 @@ $app->group('/patient', function(){
 $this->get('/getDeliveryMethods', function ($request, $response) {
   try {
 
-
     $patient = new PatientDB();
     $data = $patient->getDeliveryMethods();
 
     $data = array('status' => "1", 'data' => $data['data'], 'message' => 'success' );
     return $response->withJson($data);
 
-  } catch (Exception $e) {
+  }catch (Exception $e) {
     $data = array('status' => "-1", 'data' => "-1", 'message' => 'exception in controller'  . $e->getMessage() );
     return $response->withJson($data);
   }

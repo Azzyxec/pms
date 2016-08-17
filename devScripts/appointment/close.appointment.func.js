@@ -322,19 +322,26 @@ function getCloseAppointmentController(){
       this.remarks = $('#close-appointment-remarks');
       this.closeAppointmentButton = $('#close-appointment-submit-btn');
 
+      this.closingDatePicker.attr("readonly", true);
+      this.closingTimePicker.attr("readonly", true);
+
       this.closingDatePicker.datetimepicker({
         inline:false,
-        format:'DD-MM-YYYY'
+        format:'DD-MM-YYYY',
+        ignoreReadonly: true
       });
+
 
       this.closeDatePickerIcon.on('click', function(){
         console.log('click cal');
         closeAppointmentView.closingDatePicker.data('DateTimePicker').show();
       });
 
+
       this.closingTimePicker.datetimepicker({
         inline:false,
-        format:'LT'
+        format:'LT',
+        ignoreReadonly: true
       });
 
       this.closeTimePickerIcon.on('click', function(){
@@ -358,10 +365,12 @@ function getCloseAppointmentController(){
         console.log('book appointment' + model.bookNextAppointment);
 
       });
-
+      this.nextAppointmentDatePicker.attr("readonly", true);
+      this.nextAppointmentTimePicker.attr("readonly", true);
       this.nextAppointmentDatePicker.datetimepicker({
         inline:false,
-        format:'DD-MM-YYYY'
+        format:'DD-MM-YYYY',
+        ignoreReadonly: true
       });
 
       this.nextAppointmentDatePickerIcon.on('click', function(){
@@ -371,7 +380,8 @@ function getCloseAppointmentController(){
 
       this.nextAppointmentTimePicker.datetimepicker({
         inline:false,
-        format:'LT'
+        format:'LT',
+        ignoreReadonly: true
       });
 
       this.nextAppointmentTimePickerIcon.on('click', function(){

@@ -432,9 +432,7 @@ var patientDetailsView = {
 
     this.patientHistorySection = $('#patient-history-panel');
 
-
-
-
+    this.dateOfbirth.attr("readonly", true);
 
 
 
@@ -446,7 +444,8 @@ var patientDetailsView = {
       maxDate: new Date(),
       widgetPositioning:{
         vertical:'bottom'
-      }
+      },
+      ignoreReadonly: true
     });
 
 
@@ -538,25 +537,25 @@ var patientDetailsView = {
       && (array[1] == 'jpeg')
       || (array[1] == 'png')
       || (array[1] == 'jpg')
-      ){
-        invalidFileType = false;
+    ){
+      invalidFileType = false;
+    }
+
+    if(data.files[0].size > 2097152 || invalidFileType){
+
+      var alertSting = '';
+      if(data.files[0].size > 2097152 ){
+        alertSting  = 'Maximmum file upload size is 2mb';
       }
 
-      if(data.files[0].size > 2097152 || invalidFileType){
-
-        var alertSting = '';
-        if(data.files[0].size > 2097152 ){
-          alertSting  = 'Maximmum file upload size is 2mb';
-        }
-
-        if(invalidFileType){
-          alertSting  = alertSting  + ' and only image type of jpg,jpeg and png accepted';
-        }
+      if(invalidFileType){
+        alertSting  = alertSting  + ' and only image type of jpg,jpeg and png accepted';
+      }
 
 
-        utility.getAlerts(alertSting,'alert-warning','','.tab-content');
+      utility.getAlerts(alertSting,'alert-warning','','.tab-content');
 
-      }else{
+    }else{
 
       $("#patient-picture").attr('disabled','disabled');
       data.context = $('<div/>').addClass('file-wrapper').appendTo('#files'); //create new DIV with "file-wrapper" class
@@ -590,160 +589,160 @@ var patientDetailsView = {
       }
       console.log(JSON.stringify(data.files[0].size));
 
-        data.submit();
-      }
+      data.submit();
+    }
 
-    });
-    this.picUpload.on('fileuploadprogress', function (e, data) {
-      var progress = parseInt(data.loaded / data.total * 100, 10);
-      if (data.context) {
-        data.context.each(function () {
-          $(this).find('.progress').attr('aria-valuenow', progress).children().first().css('width',progress + '%').text(progress + '%');
-        });
-      }
-    });
-    this.picUpload.on('fileuploaddone', function (e, data) { // invoke callback method on success
-      $.each(data.result.files, function (index, file) { //loop though each file
-        if (file.url){ //successful upload returns a file url
-          var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
-          $(data.context.children()[index]).addClass('file-uploaded');
-          $(data.context.children()[index]).find('canvas').wrap(link); //create a link to uploaded file url
-          $(data.context.children()[index]).find('.file-remove').hide(); //hide remove button
-          var done = $('<span class="text-success"/>').text('Uploaded!'); //show success message
-          $(data.context.children()[index]).append(done); //add everything to data context
-        } else if (file.error) {
-          var error = $('<span class="text-danger"/>').text(file.error); //error text
-          $(data.context.children()[index]).append(error); //add to data context
-        }
+  });
+  this.picUpload.on('fileuploadprogress', function (e, data) {
+    var progress = parseInt(data.loaded / data.total * 100, 10);
+    if (data.context) {
+      data.context.each(function () {
+        $(this).find('.progress').attr('aria-valuenow', progress).children().first().css('width',progress + '%').text(progress + '%');
       });
-    });
-    //this.tab.hide();
-  },
-  initValidators: function(){
-
-    //setting up validations
-    this.contact1.prop('maxlength', 15);
-
-    this.formValidator = this.patientForm.bootstrapValidator({
-      trigger:"focus click change keyup select blur ",
-      feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok ',
-        invalid: 'glyphicon glyphicon-remove ',
-        validating: 'glyphicon glyphicon-refresh'
-      },
-      excluded: [':disabled'],
-      fields:{
-        P_username : {
-          validators : {
-            notEmpty : {
-              message : 'Please Enter your  Name!'
-            }
-          }
-
-        },
-        P_Dob : {
-          validators : {
-            notEmpty :{
-              message : 'Please select date'
-            }
-          }
-        },
-        p_weight :{
-
-          validators : {
-            numeric :{
-              message : 'Please enter numbers',
-              separator: ','
-            }
-          }
-        },
-        p_height :{
-
-          validators : {
-            numeric :{
-              message : 'Please enter numbers',
-              separator: ','
-            }
-          }
-        },
-        p_phnNo :{
-
-          validators : {
-            notEmpty :{
-              message : 'Please enter Patients contact no'
-            },
-            regexp: {
-              regexp: /^\+?[0-9()-\s]+$/,
-              message: 'Please enter valid phone number'
-            }
-
-          }
-        }
+    }
+  });
+  this.picUpload.on('fileuploaddone', function (e, data) { // invoke callback method on success
+    $.each(data.result.files, function (index, file) { //loop though each file
+      if (file.url){ //successful upload returns a file url
+        var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
+        $(data.context.children()[index]).addClass('file-uploaded');
+        $(data.context.children()[index]).find('canvas').wrap(link); //create a link to uploaded file url
+        $(data.context.children()[index]).find('.file-remove').hide(); //hide remove button
+        var done = $('<span class="text-success"/>').text('Uploaded!'); //show success message
+        $(data.context.children()[index]).append(done); //add everything to data context
+      } else if (file.error) {
+        var error = $('<span class="text-danger"/>').text(file.error); //error text
+        $(data.context.children()[index]).append(error); //add to data context
       }
     });
+  });
+  //this.tab.hide();
+},
+initValidators: function(){
 
-  },
-  render: function(){
+  //setting up validations
+  this.contact1.prop('maxlength', 15);
 
-    //var model = controller.getPatientModel();
-    var lpatientInfo = controller.getPatientsInfoModel();
+  this.formValidator = this.patientForm.bootstrapValidator({
+    trigger:"focus click change keyup select blur ",
+    feedbackIcons: {
+      valid: 'glyphicon glyphicon-ok ',
+      invalid: 'glyphicon glyphicon-remove ',
+      validating: 'glyphicon glyphicon-refresh'
+    },
+    excluded: [':disabled'],
+    fields:{
+      P_username : {
+        validators : {
+          notEmpty : {
+            message : 'Please Enter your  Name!'
+          }
+        }
 
-    //  console.log('render patients info' + JSON.stringify(lpatientInfo));
+      },
+      P_Dob : {
+        validators : {
+          notEmpty :{
+            message : 'Please select date'
+          }
+        }
+      },
+      p_weight :{
 
-    this.name.val(lpatientInfo.name);
-    //var dateOfBirth = moment(lpatientInfo.dateOfBirth, 'DD-MM-YYYY');
-    //console.log('dob model' + lpatientInfo.dateOfBirth);
-    this.dateOfbirth.val(lpatientInfo.dateOfBirth);
-    //console.log('dob' + dateOfBirth.format('YYYY-MM-DD'));
-    this.bloodGroup.val(lpatientInfo.bloodGroup);
-    this.weight.val(lpatientInfo.weight);
-    this.height.val(lpatientInfo.height);
-    this.contact1.val(lpatientInfo.contact1);
-    //this.contact2.val(lpatientInfo.contact2);
-    this.address.val(lpatientInfo.address);
-    //  var picturePathe = '';
-    console.log('controller profile path' + controller.defaultProfilePath );
-    console.log('controller model path' + controller.patientsPicturePath );
-    var imageSource = '';
+        validators : {
+          numeric :{
+            message : 'Please enter numbers',
+            separator: ','
+          }
+        }
+      },
+      p_height :{
 
-    if(lpatientInfo.picturePath == 'null' || lpatientInfo.picturePath == null || !lpatientInfo.picturePath || 0 === lpatientInfo.picturePath.trim().length){
+        validators : {
+          numeric :{
+            message : 'Please enter numbers',
+            separator: ','
+          }
+        }
+      },
+      p_phnNo :{
 
-      imageSource = controller.defaultProfilePath + model.defaultPictureName;
+        validators : {
+          notEmpty :{
+            message : 'Please enter Patients contact no'
+          },
+          regexp: {
+            regexp: /^\+?[0-9()-\s]+$/,
+            message: 'Please enter valid phone number'
+          }
 
-      console.log('patient picture path is null'+ imageSource );
-    }else{
-      imageSource = controller.patientsPicturePath + lpatientInfo.picturePath;
-      console.log('patient picture path is set' + imageSource);
+        }
+      }
     }
-    console.log('full path' + imageSource);
-    this.imgBox.attr('src', imageSource);
-    //this.picUpload.val(model.);
+  });
 
+},
+render: function(){
 
-    console.log('patient status' + lpatientInfo.gender);
+  //var model = controller.getPatientModel();
+  var lpatientInfo = controller.getPatientsInfoModel();
 
-    //$('#rb-male').prop('checked', true);
+  //  console.log('render patients info' + JSON.stringify(lpatientInfo));
 
+  this.name.val(lpatientInfo.name);
+  //var dateOfBirth = moment(lpatientInfo.dateOfBirth, 'DD-MM-YYYY');
+  //console.log('dob model' + lpatientInfo.dateOfBirth);
+  this.dateOfbirth.val(lpatientInfo.dateOfBirth);
+  //console.log('dob' + dateOfBirth.format('YYYY-MM-DD'));
+  this.bloodGroup.val(lpatientInfo.bloodGroup);
+  this.weight.val(lpatientInfo.weight);
+  this.height.val(lpatientInfo.height);
+  this.contact1.val(lpatientInfo.contact1);
+  //this.contact2.val(lpatientInfo.contact2);
+  this.address.val(lpatientInfo.address);
+  //  var picturePathe = '';
+  console.log('controller profile path' + controller.defaultProfilePath );
+  console.log('controller model path' + controller.patientsPicturePath );
+  var imageSource = '';
 
-    if(+lpatientInfo.gender == 1){
-      console.log('gender male');
-      this.rbMale.prop('checked', true);
-      //  this.rbFemale.prop('checked', false);
-    } else{
-      console.log('gender female');
-      //this.rbMale.prop('checked', false);
-      this.rbFemale.prop('checked', true);
-    }
+  if(lpatientInfo.picturePath == 'null' || lpatientInfo.picturePath == null || !lpatientInfo.picturePath || 0 === lpatientInfo.picturePath.trim().length){
 
-    if(lpatientInfo.isActive == 1){
-      this.activeControl.prop('checked', true);
-      //this.inactiveControl.prop('checked', false);
-    }else{
-      //this.activeControl.prop('checked', false);
-      this.inactiveControl.prop('checked', true);
-    }
+    imageSource = controller.defaultProfilePath + model.defaultPictureName;
 
+    console.log('patient picture path is null'+ imageSource );
+  }else{
+    imageSource = controller.patientsPicturePath + lpatientInfo.picturePath;
+    console.log('patient picture path is set' + imageSource);
   }
+  console.log('full path' + imageSource);
+  this.imgBox.attr('src', imageSource);
+  //this.picUpload.val(model.);
+
+
+  console.log('patient status' + lpatientInfo.gender);
+
+  //$('#rb-male').prop('checked', true);
+
+
+  if(+lpatientInfo.gender == 1){
+    console.log('gender male');
+    this.rbMale.prop('checked', true);
+    //  this.rbFemale.prop('checked', false);
+  } else{
+    console.log('gender female');
+    //this.rbMale.prop('checked', false);
+    this.rbFemale.prop('checked', true);
+  }
+
+  if(lpatientInfo.isActive == 1){
+    this.activeControl.prop('checked', true);
+    //this.inactiveControl.prop('checked', false);
+  }else{
+    //this.activeControl.prop('checked', false);
+    this.inactiveControl.prop('checked', true);
+  }
+
+}
 };
 
 
@@ -801,25 +800,25 @@ var patientGuardianDetailsView = {
       && (array[1] == 'jpeg')
       || (array[1] == 'png')
       || (array[1] == 'jpg')
-      ){
-        invalidFileType = false;
+    ){
+      invalidFileType = false;
+    }
+
+    if(data.files[0].size > 2097152 || invalidFileType){
+
+      var alertSting = '';
+      if(data.files[0].size > 2097152 ){
+        alertSting  = 'Maximmum file upload size is 2mb';
       }
 
-      if(data.files[0].size > 2097152 || invalidFileType){
-
-        var alertSting = '';
-        if(data.files[0].size > 2097152 ){
-          alertSting  = 'Maximmum file upload size is 2mb';
-        }
-
-        if(invalidFileType){
-          alertSting  = alertSting  + ' and only image type of jpg,jpeg and png accepted';
-        }
+      if(invalidFileType){
+        alertSting  = alertSting  + ' and only image type of jpg,jpeg and png accepted';
+      }
 
 
-        utility.getAlerts(alertSting,'alert-warning','','.tab-content');
+      utility.getAlerts(alertSting,'alert-warning','','.tab-content');
 
-      }else{
+    }else{
       $("#guardian-picture").attr('disabled','disabled');
       data.context = $('<div/>').addClass('file-wrapper').appendTo('#files2'); //create new DIV with "file-wrapper" class
 
@@ -858,130 +857,131 @@ var patientGuardianDetailsView = {
       }
       console.log(JSON.stringify(data.files[0].size));
 
-        data.submit();
-      }
+      data.submit();
+    }
 
-    });
-    this.picUpload.on('fileuploadprogress', function (e, data) {
-      var progress = parseInt(data.loaded / data.total * 100, 10);
-      if (data.context) {
-        data.context.each(function () {
-          $(this).find('.progress').attr('aria-valuenow', progress).children().first().css('width',progress + '%').text(progress + '%');
-        });
-      }
-    });
-    this.picUpload.on('fileuploaddone', function (e, data) { // invoke callback method on success
-      $.each(data.result.files, function (index, file) { //loop though each file
-        if (file.url){ //successful upload returns a file url
-          var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
-          $(data.context.children()[index]).addClass('file-uploaded');
-          $(data.context.children()[index]).find('canvas').wrap(link); //create a link to uploaded file url
-          $(data.context.children()[index]).find('.file-remove').hide(); //hide remove button
-          var done = $('<span class="text-success"/>').text('Uploaded!'); //show success message
-          $(data.context.children()[index]).append(done); //add everything to data context
-        } else if (file.error) {
-          var error = $('<span class="text-danger"/>').text(file.error); //error text
-          $(data.context.children()[index]).append(error); //add to data context
-        }
+  });
+  this.picUpload.on('fileuploadprogress', function (e, data) {
+    var progress = parseInt(data.loaded / data.total * 100, 10);
+    if (data.context) {
+      data.context.each(function () {
+        $(this).find('.progress').attr('aria-valuenow', progress).children().first().css('width',progress + '%').text(progress + '%');
       });
+    }
+  });
+  this.picUpload.on('fileuploaddone', function (e, data) { // invoke callback method on success
+    $.each(data.result.files, function (index, file) { //loop though each file
+      if (file.url){ //successful upload returns a file url
+        var link = $('<a>') .attr('target', '_blank') .prop('href', file.url);
+        $(data.context.children()[index]).addClass('file-uploaded');
+        $(data.context.children()[index]).find('canvas').wrap(link); //create a link to uploaded file url
+        $(data.context.children()[index]).find('.file-remove').hide(); //hide remove button
+        var done = $('<span class="text-success"/>').text('Uploaded!'); //show success message
+        $(data.context.children()[index]).append(done); //add everything to data context
+      } else if (file.error) {
+        var error = $('<span class="text-danger"/>').text(file.error); //error text
+        $(data.context.children()[index]).append(error); //add to data context
+      }
     });
+  });
 
+  this.dateOfBirth.attr("readonly", true);
+  this.dateOfBirth.datetimepicker({
+    inline: false,
+    format:'DD-MM-YYYY',
+    maxDate: new Date(),
+    ignoreReadonly: true
+  });
 
-    this.dateOfBirth.datetimepicker({
-      inline: false,
-      format:'DD-MM-YYYY',
-      maxDate: new Date()
-    });
+},
+initValidators: function(){
 
-  },
-  initValidators: function(){
+  //maxlenght validation
+  this.contact1.prop('maxlength', 15);
 
-    //maxlenght validation
-    this.contact1.prop('maxlength', 15);
-
-    this.formValidator = this.form.bootstrapValidator({
-      trigger:"focus click change keyup select blur ",
-      feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok ',
-        invalid: 'glyphicon glyphicon-remove ',
-        validating: 'glyphicon glyphicon-refresh'
-      },
-      excluded: [':disabled'],
-      fields:{
-        guardianname : {
-          validators : {
-            notEmpty : {
-              message : 'Please Enter your  Name'
-            }
+  this.formValidator = this.form.bootstrapValidator({
+    trigger:"focus click change keyup select blur ",
+    feedbackIcons: {
+      valid: 'glyphicon glyphicon-ok ',
+      invalid: 'glyphicon glyphicon-remove ',
+      validating: 'glyphicon glyphicon-refresh'
+    },
+    excluded: [':disabled'],
+    fields:{
+      guardianname : {
+        validators : {
+          notEmpty : {
+            message : 'Please Enter your  Name'
           }
+        }
 
-        },
-        guardiancontact1 :{
+      },
+      guardiancontact1 :{
 
-          validators : {
-            notEmpty :{
-              message : 'Please enter a phone no.'
-            },
-            regexp: {
-              regexp: /^\+?[0-9()-\s]+$/,
-              message: 'Please enter a valid phone no.'
-            }
+        validators : {
+          notEmpty :{
+            message : 'Please enter a phone no.'
+          },
+          regexp: {
+            regexp: /^\+?[0-9()-\s]+$/,
+            message: 'Please enter a valid phone no.'
           }
         }
       }
-    });
-
-  },
-  isFormdirty: function(){
-
-    if( (this.name.val() && this.name.val().trim().length > 0) ||
-    (this.contact1.val() && this.contact1.val().trim().length > 0)  ){
-      return true;
     }
+  });
 
-    return false;
+},
+isFormdirty: function(){
 
-  },
-  render: function(){
-
-    var lguardianInfo = controller.getGuardianInfoModel();
-
-    this.name.val(lguardianInfo.name);
-
-    this.dateOfBirth.val(lguardianInfo.dateOfBirth);
-    //console.log('dob' + dateOfBirth.format('YYYY-MM-DD'));
-
-    this.contact1.val(lguardianInfo.contact1);
-    //this.contact2.val(lguardianInfo.contact2);
-    this.address.val(lguardianInfo.address);
-
-
-
-    if(lguardianInfo.picturePath == 'null' || lguardianInfo.picturePath == null || !lguardianInfo.picturePath || 0 === lguardianInfo.picturePath.trim().length){
-
-      this.PicturePath = controller.defaultProfilePath + model.defaultPictureName;
-
-    }else{
-
-      this.PicturePath = controller.guardianPicturePath + lguardianInfo.picturePath;
-
-    }
-
-    this.imgBox.attr('src',this.PicturePath);
-
-
-    //this.picUpload.val(model.);
-
-
-    if(lguardianInfo.gender == 1){
-      this.rbMale.prop('checked', true);
-      //this.rbFemale.prop('checked', false);
-    } else{
-      //this.rbMale.prop('checked', false);
-      this.rbFemale.prop('checked', true);
-
-    }
+  if( (this.name.val() && this.name.val().trim().length > 0) ||
+  (this.contact1.val() && this.contact1.val().trim().length > 0)  ){
+    return true;
   }
+
+  return false;
+
+},
+render: function(){
+
+  var lguardianInfo = controller.getGuardianInfoModel();
+
+  this.name.val(lguardianInfo.name);
+
+  this.dateOfBirth.val(lguardianInfo.dateOfBirth);
+  //console.log('dob' + dateOfBirth.format('YYYY-MM-DD'));
+
+  this.contact1.val(lguardianInfo.contact1);
+  //this.contact2.val(lguardianInfo.contact2);
+  this.address.val(lguardianInfo.address);
+
+
+
+  if(lguardianInfo.picturePath == 'null' || lguardianInfo.picturePath == null || !lguardianInfo.picturePath || 0 === lguardianInfo.picturePath.trim().length){
+
+    this.PicturePath = controller.defaultProfilePath + model.defaultPictureName;
+
+  }else{
+
+    this.PicturePath = controller.guardianPicturePath + lguardianInfo.picturePath;
+
+  }
+
+  this.imgBox.attr('src',this.PicturePath);
+
+
+  //this.picUpload.val(model.);
+
+
+  if(lguardianInfo.gender == 1){
+    this.rbMale.prop('checked', true);
+    //this.rbFemale.prop('checked', false);
+  } else{
+    //this.rbMale.prop('checked', false);
+    this.rbFemale.prop('checked', true);
+
+  }
+}
 }
 
 var patientProgrammeView = {
@@ -1100,13 +1100,14 @@ var patientProgrammesDetailsView = {
           dateDiv.append(dueOn);
           spanDate.append(dateGlyphicon);
           dateDiv.append(spanDate);
-
+          dueOn.attr("readonly", true);
           dueOn.datetimepicker({
             inline: false,
             format:'DD-MM-YYYY',
             widgetPositioning:{
               vertical:'bottom'
-            }
+            },
+            ignoreReadonly: true
             //minDate: moment()
           });
 
@@ -1138,13 +1139,14 @@ var patientProgrammesDetailsView = {
           dateDiv.append(givenOn);
           spanDate.append(dateGlyphicon);
           dateDiv.append(spanDate);
-
+          givenOn.attr("readonly", true);
           givenOn.datetimepicker({
             inline: false,
             format:'DD-MM-YYYY',
             widgetPositioning:{
               vertical:'bottom'
-            }
+            },
+            ignoreReadonly: true
           });
 
           if(programmeModel[i].list[j].dueOn){
@@ -1228,7 +1230,6 @@ var patientProgrammesDetailsView = {
     //cloneTablePanel.show();
 
   }//outer for loop
-
 
   this.tableParentPanel.append(this.tablePanelNode);
   this.tableParentPanel.removeClass('hidden');

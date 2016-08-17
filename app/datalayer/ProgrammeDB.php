@@ -94,8 +94,8 @@ class ProgrammeDB{
                                        'durationText' => $result['duration_text'],
                                        'medicine' => $result['medicine'],
                                        'doseNo' => $result['dose_no'],
-                                       'dueOn' => "",
-                                       'givenOn' => "",
+                                       'dueOn' => "00-00-0000",
+                                       'givenOn' => "00-00-0000",
                                        'batchNo' => ""
                                       );
       }

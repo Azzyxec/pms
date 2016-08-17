@@ -268,6 +268,7 @@ function makeAppointmentController(){
     if(controller.allowSubmit){
 
       controller.allowSubmit = false;
+      appointmentView.saveButton.attr('disabled', 'disabled');
 
       var patientModel  = this.getPatientModel();
       //patientModel.id = controller.getPatientId();
@@ -313,6 +314,7 @@ function makeAppointmentController(){
       }).always(function () {
         console.log('always after calls');
         controller.allowSubmit = true;
+        appointmentView.saveButton.removeAttr('disabled');
 
       });
 
@@ -408,23 +410,29 @@ function makeAppointmentController(){
 
         };
 
+        this.appointmentDate.attr("readonly", true);
+        this.appointmentTime.attr("readonly", true);
+        this.patientsDOB.attr("readonly", true);
+
       //intilizing the date and time controls
       this.appointmentDate.datetimepicker({
         inline: false,
         format:'DD-MM-YYYY',
-         minDate: moment()
-
+         minDate: moment(),
+         ignoreReadonly: true
       });
 
       this.appointmentTime.datetimepicker({
         inline: false,
-        format : "LT"
+        format : "LT",
+        ignoreReadonly: true
       });
 
       this.patientsDOB.datetimepicker({
         inline: false,
         format:'DD-MM-YYYY',
-        maxDate: new Date()
+        maxDate: new Date(),
+        ignoreReadonly: true
       });
 
       this.bookApptclear.on('click',function(){
@@ -700,7 +708,7 @@ function makeAppointmentController(){
     enablePatientEditing: function(enable){
       if(enable){
 
-        this.patientsDOB.removeAttr('readonly');
+        //this.patientsDOB.removeAttr('readonly');
 
         this.rbMale.removeAttr('disabled');
         this.rbFemale.removeAttr('disabled');

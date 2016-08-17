@@ -340,6 +340,7 @@ class PatientDB{
               $programme['id'] = $result['id'];
               $programme['programmeListId'] = $result['fk_medication_programme_list_id'];
               $programme['durationDays'] = $result['duration_days'];
+              $programme['durationText'] = $result['duration_text'];
               $programme['medicine'] = $result['medicine'];
               $programme['doseNo'] = $result['dose_no'];
               $programme['dueOn'] = $result['due_on'];

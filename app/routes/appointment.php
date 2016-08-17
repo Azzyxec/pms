@@ -55,7 +55,7 @@ $app->group('/appointment', function(){
 
         $smsDB = new SmsDB();
 
-        $id = $smsDB->insertEntry($message, $smsService->contactNo, $smsResponse);
+        $id = $smsDB->insertEntry($message, $mobileNo, $smsResponse);
 
         return  $response->withJson(array('status' => 1, 'url' => $sms->sendUrl, 'response' => $smsResponse));
         //return  $response->write($sms->sendUrl . ' response ' . $smsResponse);
@@ -136,7 +136,7 @@ $app->group('/appointment', function(){
         $appointment = $postedData['appointment'];
 
         $uploadedFileListXml = "";
-        $uploadedFileCount = 0;
+        $uploadedFileCount;
 
         //checking for file uploadedFiles
         if(isset( $appointment['uniqueId']) && isset($appointment['uploadedFileList'])){
@@ -163,6 +163,8 @@ $app->group('/appointment', function(){
           $uploadedFileListXml = '';
           $uploadedFileCount = count($saveFileListArray);
           if($uploadedFileCount > 0){
+
+
 
             $xml_data1 = new \SimpleXMLElement('<?xml version="1.0"?><list></list>');
             XMLHelper::array_to_xml($saveFileListArray, $xml_data1);
@@ -252,9 +254,9 @@ $app->group('/appointment', function(){
 
                  $smsDB = new SmsDB();
 
-                 $id = $smsDB->insertEntry($smsText, $smsService->contactNo, $smsResponse);
+                 $id = $smsDB->insertEntry($smsText, $contact, $smsResponse);
 
-                 //$message = $smsService->$uploadedFileCount;
+                 $message = $smsService->sendUrl;
 
              }catch (Exception $ex) {
                $message = $message + " but problems in sms sending and recording in database" . $ex->getMessage();
@@ -380,9 +382,9 @@ $this->post('/rescheduleAppointment', function ($request, $response) {
 
        $smsDB = new SmsDB();
 
-       $id = $smsDB->insertEntry($smsText, $smsService->contactNo, $smsResponse);
+       $id = $smsDB->insertEntry($smsText, $contact, $smsResponse);
 
-       //$message = $smsService->sendUrl;
+       $message = $smsService->sendUrl;
 
    }catch (Exception $ex) {
      $message = $message + " but problems in sms sending and recording in database" . $ex->getMessage();
@@ -641,9 +643,9 @@ $this->post('/bookAppointment', function ($request, $response) {
 
        $smsDB = new SmsDB();
 
-       $id = $smsDB->insertEntry($smsText, $smsService->contactNo, $smsResponse);
+       $id = $smsDB->insertEntry($smsText, $contact, $smsResponse);
 
-       //$message = $smsService->sendUrl;
+       $message = $smsService->sendUrl;
 
    }catch (Exception $ex) {
      $message = $message + " but problems in sms sending and recording in database" . $ex->getMessage();

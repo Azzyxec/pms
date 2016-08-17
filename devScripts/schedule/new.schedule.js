@@ -232,17 +232,19 @@ var stepOneView = {
     });
 
     this.initValidators();
-
+    this.fromDateControl.attr("readonly", true);
     this.fromDateControl.datetimepicker({
     inline: false,
     format:'DD-MM-YYYY',
-    minDate: moment().subtract(1,'d')
+    minDate: moment().subtract(1,'d'),
+    ignoreReadonly: true
     });
-
+    this.toDateControl.attr("readonly", true);
     this.toDateControl.datetimepicker({
     inline: false,
     format:'DD-MM-YYYY',
-    minDate: moment().subtract(1,'d')
+    minDate: moment().subtract(1,'d'),
+    ignoreReadonly: true
 
     });
     this.fromDateControl.on('dp.show dp.change',function(){
@@ -253,17 +255,19 @@ var stepOneView = {
         stepOneView.toDateControl.data("DateTimePicker").maxDate(momentSeletDate.format('DD-MM-YYYY'));
         console.log(momentSeletDate.format('DD-MM-YYYY'));
     });
-
+    this.fromTimeControl.attr("readonly", true);
     this.fromTimeControl.datetimepicker({
     inline: false,
-    format:'LT'
+    format:'LT',
+    ignoreReadonly: true
     });
     this.fromTimeControl.val("09:00:AM");
 
-
+    this.toTimeControl.attr("readonly", true);
     this.toTimeControl.datetimepicker({
     inline: false,
-    format:'LT'
+    format:'LT',
+    ignoreReadonly: true
     });
     this.toTimeControl.val("12:00:PM");
 
@@ -590,10 +594,11 @@ var createScheduleView = {
 
 
 
-
+        fromInput.attr("readonly", true);
         fromInput.datetimepicker({
         inline: false,
-        format:'LT'
+        format:'LT',
+        ignoreReadonly: true
         });
 
         fromInput.on('dp.change', (function(passesOn){
@@ -610,10 +615,11 @@ var createScheduleView = {
         }
         })({self:fromInput, scheduleObj: passedOn.item, label: passedOn.timeLabel}));
 
-
+        toInput.attr("readonly", true);
         toInput.datetimepicker({
         inline: false,
-        format:'LT'
+        format:'LT',
+        ignoreReadonly: true
         });
 
         toInput.on('dp.change', (function(passesOn){
