@@ -5,7 +5,7 @@ class Patient{
   public $id;
   public $name;
   public $dateOfBirth;
-  public $bloodGroup;
+  public $bloodGroup; 
   public $weight;
   public $height;
   public $gender;

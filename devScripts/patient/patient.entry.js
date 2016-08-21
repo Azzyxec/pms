@@ -286,6 +286,7 @@ MainController.prototype.addDoctorsProgramToPatient = function (programmeId, pro
       var programme = {
         id: programmeId,
         name: programmeName,
+        startDate : moment().format('DD-MM-YYYY'),
         count: response.data.length,
         list: response.data
       };
@@ -446,6 +447,15 @@ var patientDetailsView = {
         vertical:'bottom'
       },
       ignoreReadonly: true
+    });
+
+    this.dateOfbirth.on('dp.change', function(){
+      var dob = patientDetailsView.dateOfbirth.val();
+      console.log('dob ' + dob);
+      if(dob){
+        $('.program-bday').val(dob);
+        $('.bstart-date-radio').prop('disabled', false);
+      }
     });
 
 
@@ -1058,175 +1068,231 @@ var patientProgrammesDetailsView = {
         //console.log('name ' + programmeModel[i].name);
         var label = cloneTable.find('.header');
         label.text(programmeModel[i].name);
+        var label2 = cloneTable.find('.header2');
+        label2.text("Programe starts from :"+programmeModel[i].startDate);
 
 
         //cloneTablePanel.find('table').prepend('<h1>Header</h1>')
 
-
-        for(var j = 0; j <  programmeModel[i].list.length; j++ ){
-
-          var tr = $('<tr/>');
-
-          var td = $('<td/>');
-          td.text(programmeModel[i].list[j].durationText);
-          tr.append(td);
-
-          td = $('<td/>');
-          td.text(programmeModel[i].list[j].medicine);
-          tr.append(td);
-
-          td = $('<td/>');
-          td.text(programmeModel[i].list[j].doseNo);
-          tr.append(td);
-
-          //due on
-          var dateDiv = $('<div/>',{
-            class: 'input-group date',
-            style:'min-width:100px'
-          });
-          var spanDate = $('<span/>',{
-            class:'input-group-addon'
-          });
-          var dateGlyphicon = $('<span/>',{
-            class:"glyphicon glyphicon-calendar"
-          });
-
-          var dueOn = $('<input/>', {
-            type: 'text',
-            class:'form-control'
+        this.renderProgramDetails(programmeModel[i].list, cloneTablebody);
 
 
-          });
-          dateDiv.append(dueOn);
-          spanDate.append(dateGlyphicon);
-          dateDiv.append(spanDate);
-          dueOn.attr("readonly", true);
-          dueOn.datetimepicker({
-            inline: false,
-            format:'DD-MM-YYYY',
-            widgetPositioning:{
-              vertical:'bottom'
-            },
-            ignoreReadonly: true
-            //minDate: moment()
-          });
+    //bdate
 
-          dueOn.val(programmeModel[i].list[j].dueOn);
+    var bdatespan = $('<div/>',{
+      class: 'input-group date col-md-4 col-sm-4',
+      style:'min-width:100px'
+    });
+    var bSpan = $('<span/>',{
+      class:'input-group-addon'
+    });
+    var dateIcon = $('<span/>',{
+      class:"glyphicon glyphicon-calendar"
+    });
 
-          td = $('<td/>');
-          td.append(dateDiv);
-          tr.append(td);
+    var bdate = $('<input/>', {
+      type: 'text',
+      class:'form-control program-bday'
+    });
 
-          //givenOn
-          var dateDiv = $('<div/>',{
-            class: 'input-group date',
-            style:'min-width:100px'
-          });
+    bdatespan.append(bdate);
+    bSpan.append(dateIcon);
+    bdatespan.append(bSpan);
 
-          var spanDate = $('<span/>',{
-            class:'input-group-addon'
-          });
-
-          var dateGlyphicon = $('<span/>',{
-            class:"glyphicon glyphicon-calendar"
-          });
-
-          var givenOn = $('<input/>', {
-            type: 'text',
-            class:'form-control'
-          });
-
-          dateDiv.append(givenOn);
-          spanDate.append(dateGlyphicon);
-          dateDiv.append(spanDate);
-          givenOn.attr("readonly", true);
-          givenOn.datetimepicker({
-            inline: false,
-            format:'DD-MM-YYYY',
-            widgetPositioning:{
-              vertical:'bottom'
-            },
-            ignoreReadonly: true
-          });
-
-          if(programmeModel[i].list[j].dueOn){
-            //var mdueDate = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
-            //givenOn.data("DateTimePicker").minDate(programmeModel[i].list[j].dueOn);
-          }
-
-          //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
-          givenOn.val(programmeModel[i].list[j].givenOn);
-
-          givenOn.on('dp.change', (function(model, givenOnControl, dueOnControl){
-            return  function() {
-              //var dueDate = moment(model.dueOn, 'YYYY-MM-DD');
-              //var givenOn = moment(control.val(), 'YYYY-MM-DD');
-
-              //set min date of givenon to one day less then due date
-
-              model.givenOn = givenOnControl.val();
-
-              console.log('change + ' + JSON.stringify(model));
-            }
-          })(programmeModel[i].list[j], givenOn, dueOn));
+    bdate.attr("readonly", true);
+    //need to set the birth date from the date set from patient value
 
 
-          //event controller for dueon date picker
-          dueOn.on('dp.change', (function(model, dueOnControl, givenOnControl){
-            return  function() {
+    //adding dates to labels with radio buttons
 
-              var dueOnStr = dueOnControl.val();
+    var lblContainer = $('<div/>',{
+      class:"radio"
+    });
+    var lbl = $('<label/>',{
+      text:'Birth date'
+    });
 
-              /*
-              if(dueOnStr &&  model.givenOn){
+    var dRadio = $('<input/>',{
+      type: 'radio'
+      ,class: 'bstart-date-radio'
+      ,name: programmeModel[i].id
+    });
 
-              var dueOn = moment(dueOnControl.val(), 'DD-MM-YYYY');
-              var givenOn = moment(model.givenOn, 'DD-MM-YYYY');
 
-              givenOnControl.data("DateTimePicker").minDate(dueOnStr);
+    var patientInfo = controller.getPatientsInfoModel();
 
-              if(dueOn > givenOn){
-              model.givenOn = dueOnStr;
-              givenOnControl.val(dueOnStr);
-            }
+
+      if(!patientInfo.dateOfBirth || 0 === patientInfo.dateOfBirth.trim().length){
+        dRadio.prop('disabled', true);
+      }else{
+        dRadio.prop('disabled', false);
+        bdate.val(patientInfo.dateOfBirth);
+      }
+
+      var updatedueOnDateCallBack = function(programList, date){
+
+        var mDate = moment(date, 'DD-MM-YYYY');
+        for(var counter = 0; counter < programList.length; counter++ ){
+
+          var mdueOn = mDate.add(programList[counter].durationDays, 'days');
+          programList[counter].dueOn = mdueOn.format('DD-MM-YYYY');
+        }
+
+        return programList;
+      }
+
+    dRadio.on('change',(function(programModel, dateControl, updateCallback, tablebody, startDateLabel){
+
+      return function(){
+        console.log('ddate radio');
+
+        if($(this).is(":checked")){
+          console.log('bdate checked');
+
+          var bdateVal = dateControl.val();
+
+          if(bdateVal && bdateVal.trim().length > 0){
+           console.log('update the due on date');
+
+
+           programModel.startDate = bdateVal;
+           startDateLabel.text("Programe starts from :"+bdateVal);
+
+           var programList = programModel.list;
+
+           programModel.list = updateCallback(programList, bdateVal);
+
+           patientProgrammesDetailsView.renderProgramDetails(programModel.list, tablebody);
 
           }
-          */
-
-          model.dueOn = dueOnStr;
-          console.log('change + ' + JSON.stringify(model));
+          console.log('program model ' + JSON.stringify(programModel));
 
         }
-      })(programmeModel[i].list[j], dueOn, givenOn));
+      }
 
-      td = $('<td/>');
-      td.append(dateDiv);
-      tr.append(td);
+    })(programmeModel[i], bdate, updatedueOnDateCallBack, cloneTablebody, label2));
 
-      //batchNo
-      var input = $('<input/>', {
-        type: 'input',
-        class:'form-control'
-      });
 
-      input.val(programmeModel[i].list[j].batchNo);
+    lbl.prepend(dRadio);
+    lblContainer.append(lbl);
 
-      input.keyup((function(model, control){
-        return  function() {
-          model.batchNo = control.val();
-          console.log('change + ' + JSON.stringify(model));
-        }
-      })(programmeModel[i].list[j], input));
 
-      td = $('<td/>');
-      td.append(input);
-      tr.append(td);
+    panelBody.append('<label>Change programs start date:-</label>');
+    panelBody.append(lblContainer);
+    panelBody.append(bdatespan);
 
-      cloneTablebody.append(tr);
-    } //inner for loop
+    //second option for specific date
+
+    var specificDateDiv = $('<div/>',{
+      class: 'input-group date col-md-4 col-sm-4',
+      style:'min-width:100px'
+    });
+    var sSpan = $('<span/>',{
+      class:'input-group-addon'
+    });
+    var dateIcon = $('<span/>',{
+      class:"glyphicon glyphicon-calendar"
+    });
+
+    var sdate = $('<input/>', {
+      type: 'text',
+      class:'form-control '
+    });
+
+
+    specificDateDiv.append(sdate);
+    sSpan.append(dateIcon);
+    specificDateDiv.append(sSpan);
+    sdate.attr("readonly", true);
+    sdate.datetimepicker({
+      inline: false,
+      format:'DD-MM-YYYY',
+      widgetPositioning:{
+        vertical:'bottom'
+      },
+      ignoreReadonly: true
+    });
+
+    //setting todays date
+    sdate.val(moment().format('DD-MM-YYYY'));
+
+    var lblContainer = $('<div/>',{
+      class:'radio'
+    });
+    var lbl = $('<label/>',{
+      text:'Specific date:'
+    });
+
+    var sRadio = $('<input/>',{
+      type: 'radio'
+      ,name: programmeModel[i].id
+    });
+
+
+    sRadio.on('change', (function(programModel, dateControl, updateCallback, tablebody, startDateLabel){
+      return function(){
+          if($(this).is(":checked")){
+
+            var sdateVal = dateControl.val();
+
+            if(sdateVal && sdateVal.trim().length > 0){
+
+              programModel.startDate = sdateVal;
+              startDateLabel.text("Programe starts from :"+sdateVal);
+
+               var programList = programModel.list;
+
+               programModel.list = updateCallback(programList, sdateVal);
+
+
+               patientProgrammesDetailsView.renderProgramDetails(programModel.list, tablebody);
+               //patientProgrammesDetailsView.render();
+
+            }
+
+          }
+        //callback(programModel, dateControl);
+      }
+    })(programmeModel[i], sdate, updatedueOnDateCallBack, cloneTablebody, label2));
+
+    //lbl.append('Specific date');
+    lbl.prepend(sRadio);
+    //lbl.append(specificDateDiv);
+    lblContainer.append(lbl);
+    panelBody.append(lblContainer);
+    panelBody.append(specificDateDiv);
+    panelBody.append('<hr class="invisible">');
+
+    //panelBody.append(specifiedDatespan);
 
     panelBody.append(cloneTable);
     cloneTable.show();
+
+    sdate.on('dp.change', (function(programModel, updateCallback, tablebody, startDateLabel){
+
+      return function(){
+        console.log('date change');
+         var sdateVal = $(this).val();
+
+         if(sdateVal && sdateVal.trim().length > 0){
+
+           programModel.startDate = sdateVal;
+           startDateLabel.text("Programe starts from :"+sdateVal);
+
+            var programList = programModel.list;
+
+            programModel.list = updateCallback(programList, sdateVal);
+
+          //  programmetableRender(cloneTable,programmeModel);
+          patientProgrammesDetailsView.renderProgramDetails(programModel.list, tablebody);
+
+            //patientProgrammesDetailsView.render();
+
+         }
+      }
+
+    })(programmeModel[i], updatedueOnDateCallBack, cloneTablebody, label2));
+
     //cloneTablePanel.show();
 
   }//outer for loop
@@ -1238,6 +1304,176 @@ var patientProgrammesDetailsView = {
 }
 
 //adding the table panel
+
+},
+renderProgramDetails: function(programmeList, cloneTablebody){
+
+  cloneTablebody.empty();
+
+  for(var j = 0; j <  programmeList.length; j++ ){
+
+    var tr = $('<tr/>');
+
+    var td = $('<td/>');
+    td.text(programmeList[j].durationText);
+    tr.append(td);
+
+    td = $('<td/>');
+    td.text(programmeList[j].medicine);
+    tr.append(td);
+
+    td = $('<td/>');
+    td.text(programmeList[j].doseNo);
+    tr.append(td);
+
+    //due on
+    var dateDiv = $('<div/>',{
+      class: 'input-group date',
+      style:'min-width:100px'
+    });
+
+    var spanDate = $('<span/>',{
+      class:'input-group-addon'
+    });
+
+    var dateGlyphicon = $('<span/>',{
+      class:"glyphicon glyphicon-calendar"
+    });
+
+    var dueOn = $('<input/>', {
+      type: 'text',
+      class:'form-control'
+
+
+    });
+    dateDiv.append(dueOn);
+    spanDate.append(dateGlyphicon);
+    dateDiv.append(spanDate);
+    dueOn.attr("readonly", true);
+    dueOn.attr("disabled",true);
+    dueOn.datetimepicker({
+      inline: false,
+      format:'DD-MM-YYYY',
+      widgetPositioning:{
+        vertical:'bottom'
+      },
+      ignoreReadonly: true
+      //minDate: moment()
+    });
+
+    dueOn.val(programmeList[j].dueOn);
+
+    td = $('<td/>');
+    td.append(dateDiv);
+    tr.append(td);
+
+    //givenOn
+    var dateDiv = $('<div/>',{
+      class: 'input-group date',
+      style:'min-width:100px'
+    });
+
+    var spanDate = $('<span/>',{
+      class:'input-group-addon'
+    });
+
+    var dateGlyphicon = $('<span/>',{
+      class:"glyphicon glyphicon-calendar"
+    });
+
+    var givenOn = $('<input/>', {
+      type: 'text',
+      class:'form-control'
+    });
+
+    dateDiv.append(givenOn);
+    spanDate.append(dateGlyphicon);
+    dateDiv.append(spanDate);
+    givenOn.attr("readonly", true);
+    givenOn.datetimepicker({
+      inline: false,
+      format:'DD-MM-YYYY',
+      widgetPositioning:{
+        vertical:'bottom'
+      },
+      ignoreReadonly: true
+    });
+
+    if(programmeList[j].dueOn){
+      //var mdueDate = moment(programmeModel[i].list[j].dueOn, 'DD-MM-YYYY');
+      //givenOn.data("DateTimePicker").minDate(programmeModel[i].list[j].dueOn);
+    }
+
+    //var date = moment(programmeModel[i].list[j].givenOn, 'DD-MM-YYYY');
+    givenOn.val(programmeList[j].givenOn);
+
+    givenOn.on('dp.change', (function(model, givenOnControl, dueOnControl){
+      return  function() {
+        //var dueDate = moment(model.dueOn, 'YYYY-MM-DD');
+        //var givenOn = moment(control.val(), 'YYYY-MM-DD');
+
+        //set min date of givenon to one day less then due date
+
+        model.givenOn = givenOnControl.val();
+
+        console.log('change + ' + JSON.stringify(model));
+      }
+    })(programmeList[j], givenOn, dueOn));
+
+
+    //event controller for dueon date picker
+    dueOn.on('dp.change', (function(model, dueOnControl, givenOnControl){
+      return  function() {
+
+        var dueOnStr = dueOnControl.val();
+
+        /*
+        if(dueOnStr &&  model.givenOn){
+
+        var dueOn = moment(dueOnControl.val(), 'DD-MM-YYYY');
+        var givenOn = moment(model.givenOn, 'DD-MM-YYYY');
+
+        givenOnControl.data("DateTimePicker").minDate(dueOnStr);
+
+        if(dueOn > givenOn){
+        model.givenOn = dueOnStr;
+        givenOnControl.val(dueOnStr);
+      }
+
+    }
+    */
+
+    model.dueOn = dueOnStr;
+    console.log('change + ' + JSON.stringify(model));
+
+  }
+})(programmeList[j], dueOn, givenOn));
+
+td = $('<td/>');
+td.append(dateDiv);
+tr.append(td);
+
+//batchNo
+var input = $('<input/>', {
+  type: 'input',
+  class:'form-control'
+});
+
+input.val(programmeList[j].batchNo);
+
+input.keyup((function(model, control){
+  return  function() {
+    model.batchNo = control.val();
+    console.log('change + ' + JSON.stringify(model));
+  }
+})(programmeList[j], input));
+
+td = $('<td/>');
+td.append(input);
+tr.append(td);
+
+cloneTablebody.append(tr);
+} //inner for loop
 
 }
 }

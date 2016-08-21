@@ -380,6 +380,7 @@ class PatientDB{
 
           $programme['id'] = $programmeId;
           $programme['name'] = $result['name'];
+          $programme['startDate'] = $result['start_date'];
 
           $resultArray = $this->getPatientProgrammeDetails($patientId, $programmeId);
 

@@ -202,7 +202,7 @@ $(document).ready(function(){
                 }
               })(locations[i]));
 
-              var td = $('<span/>');
+              var td = $('<td/>'); 
               td.append(editLink);
 
 
